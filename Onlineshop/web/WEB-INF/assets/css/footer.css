@@ -1,0 +1,110 @@
+footer {
+  background-color: #fce4ec;
+  color: #4a148c;
+  padding: 50px 20px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Cột logo */
+.footer-logo {
+  flex: 1 1 200px;
+}
+
+.footer-logo h2 {
+  color: #d63384;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.footer-logo p {
+  font-size: 0.95rem;
+  color: #6a1b9a;
+}
+
+/* Cột blog */
+.footer-blog {
+  flex: 1 1 200px;
+}
+
+.footer-blog h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: #d63384;
+}
+
+.footer-blog ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-blog li {
+  margin-bottom: 10px;
+}
+
+.footer-blog a {
+  text-decoration: none;
+  color: #6a1b9a;
+  transition: color 0.3s;
+}
+
+.footer-blog a:hover {
+  color: #ab47bc;
+}
+
+/* Cột mạng xã hội */
+.footer-social {
+  flex: 1 1 200px;
+}
+
+.footer-social h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: #d63384;
+}
+
+.footer-social a {
+  display: inline-block;
+  margin-right: 10px;
+  color: #6a1b9a;
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+.footer-social a:hover {
+  color: #c2185b;
+}
+
+/* Cột liên hệ */
+.footer-contact {
+  flex: 1 1 200px;
+}
+
+.footer-contact h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: #d63384;
+}
+
+.footer-contact p {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+/* Copyright */
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.85rem;
+  color: #9c27b0;
+  border-top: 1px solid #f8bbd0;
+  padding-top: 15px;
+}
