@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="assets/css/header.css">
         <link rel="stylesheet" href="assets/css/topbar.css">
         <link rel="stylesheet" href="assets/css/footer.css">
+        <link rel="stylesheet" href="assets/css/banner.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body>
@@ -39,6 +40,59 @@
             </nav>
         </header>
 
+        <!-- Banner Section -->
+        <section class="banner">
+            <div class="banner-slider">
+                <div class="banner-slide">
+                    <img src="assets/images/banner1.jpg" alt="Banner 1">
+                    <div class="banner-content">
+                        <h2>Bộ Sưu Tập Mùa Xuân</h2>
+                        <p>Khám phá những bông hoa tươi thắm nhất của mùa xuân</p>
+                        <a href="#" class="btn-primary">Xem ngay</a>
+                    </div>
+                </div>
+                <div class="banner-slide">
+                    <img src="assets/images/banner2.jpg" alt="Banner 2">
+                    <div class="banner-content">
+                        <h2>Hoa Tươi Mỗi Ngày</h2>
+                        <p>Giao hàng miễn phí cho đơn hàng trên 500k</p>
+                        <a href="#" class="btn-primary">Đặt hàng</a>
+                    </div>
+                </div>
+                <div class="banner-slide">
+                    <img src="assets/images/banner3.jpg" alt="Banner 3">
+                    <div class="banner-content">
+                        <h2>Quà Tặng Đặc Biệt</h2>
+                        <p>Những bó hoa độc đáo cho người thân yêu</p>
+                        <a href="#" class="btn-primary">Khám phá</a>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-dots">
+                <span class="dot active" data-index="0"></span>
+                <span class="dot" data-index="1"></span>
+                <span class="dot" data-index="2"></span>
+            </div>
+        </section>
+
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <nav class="nav-container">
+                <div class="logo">Flower Shop</div>
+                <div class="nav-menu">
+                    <a href="#" class="nav-link">Trang chủ</a>
+                    <a href="#" class="nav-link">Sản phẩm</a>
+                    <a href="#" class="nav-link">Bộ sưu tập</a>
+                    <a href="#" class="nav-link">Liên hệ</a>
+                </div>
+            </nav>
+        </header>
 
         <!-- Hero Section -->
         <section class="hero">
@@ -99,6 +153,27 @@
                 </div>
             </div>
         </footer>
-       
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const dots = document.querySelectorAll(".dot");
+    const slider = document.querySelector(".banner-slider");
+
+    if (!slider || dots.length === 0) {
+        console.error("Không tìm thấy phần tử slider hoặc dots");
+        return;
+    }
+
+    dots.forEach(dot => {
+        dot.addEventListener("click", () => {
+            const index = parseInt(dot.dataset.index);
+            slider.style.transform = `translateX(-${index * 100}%)`;
+
+            dots.forEach(d => d.classList.remove("active"));
+            dot.classList.add("active");
+        });
+    });
+});
+</script>
+
     </body>
 </html>
