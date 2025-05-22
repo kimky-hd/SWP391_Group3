@@ -16,8 +16,8 @@ public class Product {
     private double price;
     private int quantity;
     private String description;
-    private String color;
-    private String season;
+    private int colorID;
+    private int seasonID;
     private String unit;
     private Date dateImport;
     private Date dateExpire;
@@ -25,15 +25,15 @@ public class Product {
     public Product() {
     }
 
-    public Product(int productID, String title, String image, double price, int quantity, String description, String color, String season, String unit, Date dateImport, Date dateExpire) {
+    public Product(int productID, String title, String image, double price, int quantity, String description, int colorID, int seasonID, String unit, Date dateImport, Date dateExpire) {
         this.productID = productID;
         this.title = title;
         this.image = image;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
-        this.color = color;
-        this.season = season;
+        this.colorID = colorID;
+        this.seasonID = seasonID;
         this.unit = unit;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
@@ -87,20 +87,20 @@ public class Product {
         this.description = description;
     }
 
-    public String getColor() {
-        return color;
+    public int getColorID() {
+        return colorID;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColorID(int colorID) {
+        this.colorID = colorID;
     }
 
-    public String getSeason() {
-        return season;
+    public int getSeasonID() {
+        return seasonID;
     }
 
-    public void setSeason(String season) {
-        this.season = season;
+    public void setSeasonID(int seasonID) {
+        this.seasonID = seasonID;
     }
 
     public String getUnit() {
@@ -126,11 +126,13 @@ public class Product {
     public void setDateExpire(Date dateExpire) {
         this.dateExpire = dateExpire;
     }
+
+    
     
 
     
     @Override
     public String toString(){
-        return "Product{" + "productID=" + productID + "title=" + title + "image=" + image + "price=" + price + "quantity=" + quantity + "description=" + description + "color=" + color + "season=" + season + "unit=" + unit + "dateImport=" + dateImport + "dateExpire=" + dateExpire +"}";
+        return "Product{" + "productID=" + productID + "title=" + title + "image=" + image + "price=" + price + "quantity=" + quantity + "description=" + description + "colorID=" + colorID + "seasonID=" + seasonID + "unit=" + unit + "dateImport=" + dateImport + "dateExpire=" + dateExpire +"}";
     }
 }
