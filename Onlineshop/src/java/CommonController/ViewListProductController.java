@@ -30,6 +30,7 @@ public class ViewListProductController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        ProductDAO productDAO = new ProductDAO();
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
@@ -43,6 +44,9 @@ public class ViewListProductController extends HttpServlet {
             out.println("</html>");
         }
         
+        List<Product> listAllProduct = productDAO.getAllProduct();
+        request.setAttribute("listAllProduct", listAllProduct);
+        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
         
     } 
 

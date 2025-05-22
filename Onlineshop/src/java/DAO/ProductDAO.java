@@ -31,8 +31,8 @@ public class ProductDAO extends DBContext{
                         rs.getDouble(4),
                         rs.getInt(5),
                         rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
+                        rs.getInt(7),
+                        rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
                         rs.getDate(11)));
