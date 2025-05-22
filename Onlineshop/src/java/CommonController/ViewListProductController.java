@@ -31,6 +31,9 @@ public class ViewListProductController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
+        String color = request.getParameter("color");
+        String season = request.getParameter("season");
+        List<Product> listproducts;
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
@@ -44,8 +47,24 @@ public class ViewListProductController extends HttpServlet {
             out.println("</html>");
         }
         
-        List<Product> listAllProduct = productDAO.getAllProduct();
-        request.setAttribute("listAllProduct", listAllProduct);
+        
+        if (color != null && season != null && !color.isEmpty() && !season.isEmpty()) {
+            listproducts = productDAO.getProductByColorAndSeason(color, season);
+        }
+        // Nếu chỉ chọn màu
+        else if (color != null && !color.isEmpty()) {
+            listproducts = productDAO.getProductByColor(color);
+        }
+        // Nếu chỉ chọn mùa
+        else if (season != null && !season.isEmpty()) {
+            listproducts = productDAO.getProductBySeason(season); // Bạn cần viết thêm hàm này
+        }
+        // Nếu không chọn gì thì list tất cả
+        else {
+            listproducts = productDAO.getAllProduct(); // Bạn cần viết hàm lấy toàn bộ sản phẩm
+        }
+
+        request.setAttribute("listAllProduct", listproducts);
         request.getRequestDispatcher("ProductList.jsp").forward(request, response);
         
     } 
