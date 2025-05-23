@@ -10,5 +10,13 @@
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/index.html</file>
         </group>
+        <group name="New Folder (2)">
+            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
+            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
+            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
+            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/index.html</file>
+            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/register.jsp</file>
+        </group>
     </open-files>
 </project-private>
