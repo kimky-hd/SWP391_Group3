@@ -9,9 +9,12 @@ public class Blog {
     private String createdAt;
     // Getter, Setter, Constructor
 
-    public Blog(int aInt, String string, String string0, String string1, String string2) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-
+    public Blog(int id, String title, String content, String author, String createdAt) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createdAt = createdAt;
     }
 
     public String getTitle() {
@@ -24,5 +27,13 @@ public class Blog {
 
     public String getAuthor() {
         return author;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 }
