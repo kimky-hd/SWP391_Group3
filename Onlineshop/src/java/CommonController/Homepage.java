@@ -11,14 +11,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import DAO.ProductDAO;
-import Model.Product;
-import java.util.List;
+
 /**
  *
- * @author Admin
+ * @author Duccon
  */
-public class ViewListProductController extends HttpServlet {
+public class Homepage extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -30,28 +28,8 @@ public class ViewListProductController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        ProductDAO productDAO = new ProductDAO();
-        String color = request.getParameter("color");
-        String season = request.getParameter("season");
-        List<Product> listproducts;
         
-        if (color != null && season != null && !color.isEmpty() && !season.isEmpty()) {
-            listproducts = productDAO.getProductByColorAndSeason(color, season);
-        }
-        else if (color != null && !color.isEmpty()) {
-            listproducts = productDAO.getProductByColor(color);
-        }
-        else if (season != null && !season.isEmpty()) {
-            listproducts = productDAO.getProductBySeason(season);
-        }
-        else {
-            listproducts = productDAO.getAllProduct();
-        }
-        System.out.println(listproducts);
-
-        request.setAttribute("productList", listproducts);
-        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
-        
+        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
