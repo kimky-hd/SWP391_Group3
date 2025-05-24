@@ -1,73 +1,65 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
 
-/**
- *
- * @author Admin
- */
 public class Account {
-    private int Account_ID;
-    private String Email;
-    private String Password;
-    private String Status;
-    private String Role;
+    private int accountID;
+    private String username;
+    private String password;
+    private int role;
+    private String email;
 
     public Account() {
     }
 
-    public Account(int Account_ID, String Email, String Password, String Status, String Role) {
-        this.Account_ID = Account_ID;
-        this.Email = Email;
-        this.Password = Password;
-        this.Status = Status;
-        this.Role = Role;
+    public Account(int accountID, String username, String password, int role, String email) {
+        this.accountID = accountID;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.email = email;
     }
 
-    public int getAccount_ID() {
-        return Account_ID;
+    public int getAccountID() {
+        return accountID;
     }
 
-    public void setAccount_ID(int Account_ID) {
-        this.Account_ID = Account_ID;
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
     }
 
-    public String getEmail() {
-        return Email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String Email) {
-        this.Email = Email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getStatus() {
-        return Status;
+    public int getRole() {
+        return role;
     }
 
-    public void setStatus(String Status) {
-        this.Status = Status;
+    public void setRole(int role) {
+        this.role = role;
     }
 
-    public String getRole() {
-        return Role;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRole(String Role) {
-        this.Role = Role;
+    public void setEmail(String email) {
+        this.email = email;
     }
-    
+
     @Override
     public String toString() {
-        return "Account{" + "Account_ID=" + Account_ID + ", Email=" + Email + ", Password=" + Password + ", Status=" + Status + ", Role=" + Role + '}';
+        return "Account{" + "accountID=" + accountID + ", username=" + username + ", password=" + password + ", role=" + role + ", email=" + email + '}';
     }
 }
