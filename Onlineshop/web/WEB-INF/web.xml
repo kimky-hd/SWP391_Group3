@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+<web-app version="6.0"
+    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>ViewListProductController</servlet-name>
         <servlet-class>CommonController.ViewListProductController</servlet-class>
@@ -7,5 +10,13 @@
     <servlet-mapping>
         <servlet-name>ViewListProductController</servlet-name>
         <url-pattern>/ViewListProductController</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>BlogServlet</servlet-name>
+        <servlet-class>CommonController.BlogServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BlogServlet</servlet-name>
+        <url-pattern>/blog</url-pattern>
     </servlet-mapping>
 </web-app>
