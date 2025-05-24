@@ -18,7 +18,7 @@
         <div class="container mt-5">
             <h2 class="mb-4 text-center text-pink">Danh sách Blog</h2>
             <div class="row">
-                <c:forEach var="blog" items="${blogs}">                   
+                <c:forEach var="blog" items="${blogs}">
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
@@ -26,8 +26,8 @@
                                 <p class="card-text">${blog.content}</p>
                             </div>
                             <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
-                                <span class="text-muted"><i class="fa fa-user mr-1"></i>${blog.author}</span>
-                                <span class="text-muted"><i class="fa fa-calendar-alt mr-1"></i>${blog.createdAt}</span>
+                                <span class="text-muted"><i class="fa fa-user mr-1"></i>${blog.accountID}</span>
+                                <span class="text-muted"><i class="fa fa-calendar-alt mr-1"></i>${blog.datePosted}</span>
                             </div>
                         </div>
                     </div>

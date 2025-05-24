@@ -1,39 +1,26 @@
 package Model;
 
 public class Blog {
-
-    private int id;
+    private int blogID;
+    private int accountID;
     private String title;
     private String content;
-    private String author;
-    private String createdAt;
-    // Getter, Setter, Constructor
+    private String image;
+    private String datePosted;
 
-    public Blog(int id, String title, String content, String author, String createdAt) {
-        this.id = id;
+    public Blog(int blogID, int accountID, String title, String content, String image, String datePosted) {
+        this.blogID = blogID;
+        this.accountID = accountID;
         this.title = title;
         this.content = content;
-        this.author = author;
-        this.createdAt = createdAt;
+        this.image = image;
+        this.datePosted = datePosted;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
+    public int getBlogID() { return blogID; }
+    public int getAccountID() { return accountID; }
+    public String getTitle() { return title; }
+    public String getContent() { return content; }
+    public String getImage() { return image; }
+    public String getDatePosted() { return datePosted; }
 }
