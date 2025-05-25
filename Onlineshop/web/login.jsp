@@ -70,7 +70,7 @@
                                 <%= request.getAttribute("success") %>
                             </div>
                         <% } %>
-                        <form action="login" method="post" onsubmit="return validateForm()">
+                        <form action="LoginServlet" method="post" onsubmit="return validateForm()">
                             <div class="mb-3">
                                 <label for="userInput" class="form-label">Email hoặc Tên đăng nhập</label>
                                 <input type="text" class="form-control" id="userInput" name="userInput" required>
