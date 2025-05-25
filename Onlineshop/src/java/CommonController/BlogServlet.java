@@ -17,8 +17,9 @@ public class BlogServlet extends HttpServlet {
             req.getRequestDispatcher("BlogList.jsp").forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendError(500, "Lỗi lấy dữ liệu blog");
+            resp.sendError(500, e.getMessage());
         }
+        req.getRequestDispatcher("BlogList.jsp").forward(req, resp);
     }
 
     @Override
@@ -37,4 +38,5 @@ public class BlogServlet extends HttpServlet {
             resp.sendError(500, "Lỗi thêm blog");
         }
     }
+    
 }
