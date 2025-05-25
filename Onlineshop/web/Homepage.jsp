@@ -48,26 +48,21 @@
                 </div>
                 <div class="col-lg-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                <% if(session.getAttribute("account") != null) { 
-                                    Account acc = (Account)session.getAttribute("account");
-                                %>
+                        <% if(session.getAttribute("account") != null) { 
+                            Account acc = (Account)session.getAttribute("account");
+                        %>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
                                     <%= acc.getUsername() %>
-                                <% } else { %>
-                                    My Account
-                                <% } %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <% if(session.getAttribute("account") != null) { %>
-                                    <a href="LogoutServlet" class="dropdown-item">Đăng xuất</a>
-                                <% } else { %>
-                                    <a href="login.jsp" class="dropdown-item">Sign in</a>
-                                    <button class="dropdown-item" type="button">Sign up</button>
-                                <% } %>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
+                                </div>
                             </div>
-                        </div>
-
+                        <% } else { %>
+                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
                         <a href="" class="btn px-0 ml-2">
@@ -620,5 +615,30 @@
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
     </body>
-
+    <script>
+        function confirmLogout() {
+            return confirm("Bạn có chắc chắn muốn đăng xuất không?");
+        }
+    </script>
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title font-weight-bold" id="logoutModalLabel">XÁC NHẬN ĐĂNG XUẤT</h4>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <h5 class="font-weight-bold">Bạn có chắc chắn muốn đăng xuất không?</h5>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-lg px-4" data-dismiss="modal">Hủy</button>
+                    <a href="LogoutServlet" class="btn btn-primary btn-lg px-4">Đăng xuất</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
 </html>
