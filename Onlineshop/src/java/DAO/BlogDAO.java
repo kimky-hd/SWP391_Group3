@@ -1,8 +1,9 @@
 package DAO;
 
 import java.sql.*;
-import java.util.*;
 import Model.Blog;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BlogDAO extends DBContext {
 
