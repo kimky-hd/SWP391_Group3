@@ -110,6 +110,15 @@
         .home-link a:hover {
             color: #A06060;
         }
+         .text-danger {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+    
+    input:invalid {
+        border-color: #dc3545;
+    }
     </style>
 </head>
 <body>
@@ -138,6 +147,12 @@
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
+               <div class="form-group">
+    <label for="phone">Số điện thoại</label>
+    <input type="text" class="form-control" id="phone" name="phone" required>
+    <small class="form-text text-muted">Ví dụ: 0912345678, 0328888999</small>
+    <span id="phone-error" class="text-danger" style="display: none;"></span>
+</div>
                 
                 <div class="form-group">
                     <label for="password">Mật khẩu</label>
@@ -176,6 +191,89 @@
             
             return true;
         }
+        
+    // Đợi cho trang tải xong
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy tham chiếu đến trường nhập số điện thoại
+        var phoneInput = document.getElementById('phone');
+        
+        // Nếu trường tồn tại, thêm sự kiện kiểm tra
+        if (phoneInput) {
+            phoneInput.addEventListener('input', validateVietnamesePhone);
+            phoneInput.addEventListener('blur', validateVietnamesePhone);
+        }
+        
+        function validateVietnamesePhone(e) {
+            // Lấy giá trị và loại bỏ khoảng trắng, dấu gạch ngang
+            const phone = e.target.value.replace(/\s|-/g, '');
+            
+            // Danh sách đầu số hợp lệ của Việt Nam
+            const validPrefixes = [
+                // Viettel
+                "032", "033", "034", "035", "036", "037", "038", "039",
+                // Vinaphone
+                "081", "082", "083", "084", "085", "086", "088", "089",
+                // Mobifone
+                "070", "076", "077", "078", "079",
+                // Vietnamobile
+                "056", "058", "059",
+                // Gmobile
+                "099", "059",
+                // Cố định
+                "024", "028"
+            ];
+            
+            // Kiểm tra tính hợp lệ
+            let isValid = false;
+            let errorMessage = '';
+            
+            // Kiểm tra độ dài và bắt đầu bằng số 0
+            if (!phone.startsWith('0')) {
+                errorMessage = 'Số điện thoại phải bắt đầu bằng số 0';
+            } else if (phone.length !== 10 && phone.length !== 11) {
+                errorMessage = 'Số điện thoại phải có 10 hoặc 11 chữ số';
+            } else {
+                // Kiểm tra đầu số
+                for (const prefix of validPrefixes) {
+                    if (phone.startsWith(prefix)) {
+                        isValid = true;
+                        break;
+                    }
+                }
+                
+                if (!isValid) {
+                    errorMessage = 'Đầu số không hợp lệ. Vui lòng nhập đúng đầu số nhà mạng Việt Nam';
+                }
+            }
+            
+            // Hiển thị thông báo lỗi hoặc xóa thông báo lỗi
+            if (isValid) {
+                e.target.setCustomValidity('');
+                // Xóa thông báo lỗi nếu có
+                var errorSpan = document.getElementById('phone-error');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                    errorSpan.style.display = 'none';
+                }
+            } else {
+                e.target.setCustomValidity(errorMessage);
+                
+                // Hiển thị thông báo lỗi
+                var errorSpan = document.getElementById('phone-error');
+                if (!errorSpan) {
+                    // Tạo phần tử hiển thị lỗi nếu chưa có
+                    errorSpan = document.createElement('span');
+                    errorSpan.id = 'phone-error';
+                    errorSpan.className = 'text-danger';
+                    e.target.parentNode.appendChild(errorSpan);
+                }
+                errorSpan.textContent = errorMessage;
+                errorSpan.style.display = 'block';
+            }
+        }
+    });
+
     </script>
+    
 </body>
 </html>
