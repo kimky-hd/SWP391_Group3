@@ -104,7 +104,7 @@
                         </script>
                         <div class="text-center mt-3">
                             <p>Chưa có tài khoản? <a href="register.jsp" class="text-pink">Đăng ký ngay</a></p>
-                            <a href="home.jsp" class="text-decoration-none text-muted">
+                            <a href="Homepage" class="text-decoration-none text-muted">
                                 <i class="fas fa-arrow-left"></i> Quay về trang chủ
                             </a>
                         </div>
