@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="Model.Account"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,7 +60,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <% if(session.getAttribute("account") != null) { %>
-                                    <a href="logout" class="dropdown-item">Đăng xuất</a>
+                                    <a href="LogoutServlet" class="dropdown-item">Đăng xuất</a>
                                 <% } else { %>
                                     <a href="login.jsp" class="dropdown-item">Sign in</a>
                                     <button class="dropdown-item" type="button">Sign up</button>
@@ -621,5 +622,3 @@
     </body>
 
 </html>
-<%@page import="Model.Account"%>
-
