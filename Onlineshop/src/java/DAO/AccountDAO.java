@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import java.sql.Connection;
@@ -13,12 +9,10 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import DAO.DBContext;
-
-public class AccountDAO {
+public class AccountDAO extends DBContext {
     private Connection conn = null;
     private PreparedStatement ps = null;
-    private ResultSet rs = null;
-    
+    private ResultSet rs = null;    
     private void closeResources() {
         try {
             if (rs != null) rs.close();
@@ -27,41 +21,17 @@ public class AccountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }   
     
-    public Account login(String username, String password) {
-        String query = "SELECT * FROM Account WHERE username = ? AND password = ?";
-        try {
-            conn = new DBContext().getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setString(1, username);
-            ps.setString(2, password);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                return new Account(
-                    rs.getInt("accountID"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getInt("role"),
-                    rs.getString("email")
-                );
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return null;
-    }
-    
-    public boolean register(String username, String password, String email) {
-        String query = "INSERT INTO Account (username, password, role, email) VALUES (?, ?, 1, ?)";
+    public boolean register(String username, String password, String email, String phone) {
+        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, username);
             ps.setString(2, password);
             ps.setString(3, email);
+            ps.setString(4, phone);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,8 +39,7 @@ public class AccountDAO {
             closeResources();
         }
         return false;
-    }
-    
+    }  
     public Account checkAccountExist(String username) {
         String query = "SELECT * FROM Account WHERE username = ?";
         try {
@@ -80,11 +49,13 @@ public class AccountDAO {
             rs = ps.executeQuery();
             if (rs.next()) {
                 return new Account(
-                    rs.getInt("accountID"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getInt("role"),
-                    rs.getString("email")
+                rs.getInt("accountID"),
+                rs.getString("username"),
+                rs.getString("password"),
+                rs.getInt("role"),
+                rs.getString("email"),
+                rs.getString("phone")
+                        
                 );
             }
         } catch (Exception e) {
@@ -93,8 +64,7 @@ public class AccountDAO {
             closeResources();
         }
         return null;
-    }
-    
+    }    
     public Account checkEmailExist(String email) {
         String query = "SELECT * FROM Account WHERE email = ?";
         try {
@@ -107,8 +77,9 @@ public class AccountDAO {
                     rs.getInt("accountID"),
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getInt("role"),
-                    rs.getString("email")
+                   rs.getInt("role"),
+                rs.getString("email"),
+                rs.getString("phone")
                 );
             }
         } catch (Exception e) {
