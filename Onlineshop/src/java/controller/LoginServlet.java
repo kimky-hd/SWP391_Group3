@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
             
             // Chuyển hướng về trang chủ sau khi đăng nhập thành công
             // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-            response.sendRedirect("home");  // Thay đổi từ home.jsp thành home
+            response.sendRedirect("Homepage");  // Giữ nguyên như vậy vì đã đúng với URL pattern
         } else {
             request.setAttribute("error", "Thông tin đăng nhập không đúng!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
