@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Model.Color;
 import Model.Product;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,8 +40,8 @@ public class ProductDAO extends DBContext {
                         rs.getDate(10),
                         rs.getDate(11)));
             }
-        } catch (SQLException ex) {
-
+        } catch (SQLException e) {
+            System.out.println("getAllProduct" + e.getMessage());
         }
         return list;
     }
@@ -65,7 +66,7 @@ public class ProductDAO extends DBContext {
                         rs.getDate(11));
             }
         } catch (SQLException e) {
-
+            System.out.println("getProductById" + e.getMessage());
         }
         return null;
 
@@ -94,7 +95,7 @@ public class ProductDAO extends DBContext {
                         rs.getDate(11)));
             }
         } catch (SQLException e) {
-
+            System.out.println("getProductByColor" + e.getMessage());
         }
         return list;
     }
@@ -122,7 +123,7 @@ public class ProductDAO extends DBContext {
                         rs.getDate(11)));
             }
         } catch (SQLException e) {
-
+            System.out.println("getProductBySeason" + e.getMessage());
         }
         return list;
     }
@@ -152,7 +153,7 @@ public class ProductDAO extends DBContext {
                         rs.getDate(11)));
             }
         } catch (SQLException e) {
-
+            System.out.println("getProductByColorAndSeason" + e.getMessage());
         }
         return list;
     }
@@ -177,7 +178,7 @@ public class ProductDAO extends DBContext {
                         rs.getDate(11)));
             }
         } catch (SQLException e) {
-
+            System.out.println("getProductByTitle" + e.getMessage());
         }
         return list;
     }
@@ -212,7 +213,7 @@ public class ProductDAO extends DBContext {
             ps.setDate(9, new java.sql.Date(newproduct.getDateImport().getTime()));
             ps.setDate(10, new java.sql.Date(newproduct.getDateExpire().getTime()));
         } catch (SQLException e) {
-
+            System.out.println("addProduct" + e.getMessage());
         }
 
     }
@@ -224,7 +225,7 @@ public class ProductDAO extends DBContext {
             ps.setInt(1, productID);
             ps.executeUpdate();
         } catch (SQLException e) {
-
+            System.out.println("deleteProduct" + e.getMessage());
         }
     }
 
@@ -241,7 +242,7 @@ public class ProductDAO extends DBContext {
                 + "            dateImport = ?,\n"
                 + "            dateExpire = ?\n"
                 + "        WHERE productID = ?";
-        try{
+        try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, updateproduct.getTitle());
             ps.setString(2, updateproduct.getImage());
@@ -255,10 +256,26 @@ public class ProductDAO extends DBContext {
             ps.setDate(10, new java.sql.Date(updateproduct.getDateExpire().getTime()));
             ps.setInt(11, updateproduct.getProductID());
             ps.executeUpdate();
-            
-        }catch(SQLException e){
-            
+
+        } catch (SQLException e) {
+            System.out.println("updateProduct" + e.getMessage());
         }
+    }
+
+    public List<Color> getAllColor() {
+        List<Color> list = new ArrayList<>();
+        String sql = "Select * from PhanLoaiTheoColor";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                list.add(new Color(rs.getInt(1),
+                        rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllColor" + e.getMessage());
+        }
+        return list;
     }
 
 }
