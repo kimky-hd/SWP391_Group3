@@ -44,6 +44,10 @@
                 border-radius: 8px;
                 padding: 20px;
             }
+            .black-link {
+                color: black;
+                text-decoration: none; /* nếu không muốn gạch chân */
+            }
         </style>
     </head>
 
@@ -163,56 +167,40 @@
                 <!-- SIDEBAR BÊN TRÁI -->
                 <div class="col-lg-3 mb-5 sidebar-pink">
                     <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
-                    <form action="filter" method="get">
-                        <!-- MÀU -->
-                        <div class="mb-3">
 
-                            <h6 class="font-weight-medium mb-2">Màu</h6>
-                            <c:forEach items="${listAllColors}" var="color">
-                                <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                    <a href="ViewListProductController?ColorID=${color.getColorId()}" class="custom-control-label" for="color-purple">${color.getColorName()}</a>
-                                    
-                                </div>
-                            </c:forEach>
+                    <!-- MÀU -->
+                    <h3>Màu</h3>
+                    <div class="mb-3">
+                        <c:forEach items="${listAllColors}" var="color">
+                            <a href="searchproductbycolor?colorId=${color.getColorID()}" class="black-link font-weight-medium mb-2">${color.getColorName()} <br></a>
 
+                        </c:forEach>
+
+                    </div>
+
+                    <!-- GIÁ -->
+                    <div class="mb-3">
+                        <h6 class="font-weight-medium mb-2">Giá</h6>
+                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
+                            <input type="radio" class="custom-control-input" id="price1" name="price" value="0-10000">
+                            <label class="custom-control-label" for="price1">Dưới 10.000</label>
                         </div>
-
-                        <!-- GIÁ -->
-                        <div class="mb-3">
-                            <h6 class="font-weight-medium mb-2">Giá</h6>
-                            <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                                <input type="radio" class="custom-control-input" id="price1" name="price" value="0-10000">
-                                <label class="custom-control-label" for="price1">Dưới 10.000</label>
-                            </div>
-                            <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                                <input type="radio" class="custom-control-input" id="price2" name="price" value="10000-15000">
-                                <label class="custom-control-label" for="price2">10.000 - 15.000</label>
-                            </div>
+                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
+                            <input type="radio" class="custom-control-input" id="price2" name="price" value="10000-15000">
+                            <label class="custom-control-label" for="price2">10.000 - 15.000</label>
                         </div>
+                    </div>
 
-                        <!-- MÙA -->
-                        <div class="mb-4">
-                            <h6 class="font-weight-medium mb-2">Mùa</h6>
-                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="season-spring" name="season" value="xuân">
-                                <label class="custom-control-label" for="season-spring">Xuân</label>
-                            </div>
-                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="hạ">
-                                <label class="custom-control-label" for="season-summer">Hè</label>
-                            </div>
-                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="thu">
-                                <label class="custom-control-label" for="season-summer">Thu</label>
-                            </div>
-                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="đông">
-                                <label class="custom-control-label" for="season-summer">Đông</label>
-                            </div>
-                        </div>
+                    <!-- MÙA -->
+                    <h3>Mùa</h3>
+                    <div class="mb-4">
 
-                        <button type="submit" class="btn btn-primary btn-block">Lọc</button>
-                    </form>
+                        <c:forEach items="${listAllSeasons}" var="season">
+                            <a href="searchproductbyseason?seasonId=${season.getSeasonID()}" class="black-link font-weight-medium mb-2">${season.getSeasonName()} <br></a>
+
+                        </c:forEach>                 
+                    </div>
+
                 </div>
 
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
@@ -223,7 +211,6 @@
 
                     <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
-                            <c:if test="${status.index < 8}">
                                 <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
                                     <div class="card product-item border-0 mb-4">
                                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
@@ -245,9 +232,35 @@
                                         </div>
                                     </div>
                                 </div>
-                            </c:if>
                         </c:forEach>
+
+
+
                     </div>
+
+
+                    <c:if test="${tag != null}">
+                        <ul class="pagination">
+                            <c:if test="${tag != 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
+                                </li>
+                            </c:if>
+                            <c:forEach begin="1" end="${endPage}" var="i">
+                                <li class="page-item ${tag == i ? 'active' : ''}">
+                                    <a class="page-link" href="ViewListProductController?index=${i}" 
+                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                                </li>
+                            </c:forEach>
+                            <c:if test="${tag != endPage}">
+                                <li class="page-item">
+                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </c:if>
+
+
                 </div>
             </div>
         </div>

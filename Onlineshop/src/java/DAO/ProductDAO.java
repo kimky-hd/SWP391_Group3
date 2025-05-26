@@ -6,11 +6,13 @@ package DAO;
 
 import Model.Color;
 import Model.Product;
+import Model.Season;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
+import Model.WishList;
 
 /**
  *
@@ -25,8 +27,8 @@ public class ProductDAO extends DBContext {
         List<Product> list = new ArrayList<>();
         String sql = "Select * from Product";
         try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            ResultSet rs = stm.executeQuery();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
@@ -49,9 +51,9 @@ public class ProductDAO extends DBContext {
     public Product getProductById(int id) {
         String sql = "Select * from product where [productID] = ?";
         try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, 1);
-            ResultSet rs = stm.executeQuery();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, 1);
+            rs = ps.executeQuery();
             if (rs.next()) {
                 return new Product(rs.getInt(1),
                         rs.getString(2),
@@ -72,14 +74,14 @@ public class ProductDAO extends DBContext {
 
     }
 
-    public List<Product> getProductByColor(String colorName) {
+    public List<Product> getProductByColor(String colorId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.* FROM Product p "
-                + "JOIN PhanLoaiTheoColor c ON p.colorID = c.colorID "
-                + "WHERE c.colorName = ?";
+        String sql = "SELECT p.* FROM Product p\n"
+                + "                JOIN PhanLoaiTheoColor c ON p.colorID = c.colorID \n"
+                + "                WHERE c.colorID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, colorName);
+            ps.setString(1, colorId);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Product(rs.getInt(1),
@@ -100,14 +102,14 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Product> getProductBySeason(String seasonName) {
+    public List<Product> getProductBySeason(String seasonId) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.* FROM Product p "
-                + "JOIN PhanLoaiTheoSeason s ON p.séasonID = s.seasonID "
-                + "WHERE s.seasonName = ?";
+                + "JOIN PhanLoaiTheoSeason s ON p.seasonID = s.seasonID "
+                + "WHERE s.seasonID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, seasonName);
+            ps.setString(1, seasonId);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Product(rs.getInt(1),
@@ -266,8 +268,8 @@ public class ProductDAO extends DBContext {
         List<Color> list = new ArrayList<>();
         String sql = "Select * from PhanLoaiTheoColor";
         try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            ResultSet rs = stm.executeQuery();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Color(rs.getInt(1),
                         rs.getString(2)));
@@ -278,4 +280,102 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
+    public List<Season> getAllSeason() {
+        List<Season> list = new ArrayList<>();
+        String sql = "Select * from PhanLoaiTheoSeason";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Season(rs.getInt(1),
+                        rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllSeason" + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> getProductByIndex(int indexPage) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (indexPage - 1) * 8); // tính offset
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getInt(5),
+                        rs.getString(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getString(9),
+                        rs.getDate(10),
+                        rs.getDate(11)
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductByIndex: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public int countAllProduct() {
+        String sql = "select count(*) from Product";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("countAllProduct" + e.getMessage());
+        }
+        return 0;
+    }
+
+    public WishList checkWishListExist(int accountID, int productID) {
+        String sql = "select * from WishList where accountID = ? and productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setInt(2, productID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return new WishList(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3));
+            }
+        } catch (SQLException e) {
+            System.out.println("checkWishLishExist" + e.getMessage());
+        }
+        return null;
+    }
+
+    public void insertWishList(int accountID, int productID) {
+        String sql = "insert WishList (accountID, productID) values(?,?) ";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setInt(2, productID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertWishList" + e.getMessage());
+        }
+    }
+
+    public void deleteWishList(int wishlistID) {
+        String sql = "DELETE FROM WishList WHERE wishlistID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, wishlistID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("deleteWishList" + e.getMessage());
+        }
+    }
 }
