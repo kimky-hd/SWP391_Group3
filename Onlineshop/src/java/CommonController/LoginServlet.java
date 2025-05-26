@@ -18,7 +18,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         
-        String userInput = request.getParameter("userInput");
+        String userInput = request.getParameter("userInput");//lấy dữ liệu người dùng nhập từ from
         String password = request.getParameter("password");
         
         // Kiểm tra đầu vào

@@ -12,7 +12,7 @@
             --primary-hover: #FFA5B5;
         }
         body {
-            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            background: linear-gradient(135deg, #e0f7f1 0%, #c5f1e6 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -56,7 +56,7 @@
         .form-control {
             border-radius: 10px;
             padding: 0.8rem 1rem;
-            border: 2px solid #FFE4E8;
+            border: 2px solid #d0f0e9;
             transition: all 0.3s ease;
             background-color: #FFFFFF;
         }
@@ -78,7 +78,7 @@
             border-left: 4px solid #FFB6C1;
         }
         .alert-success {
-            background-color: #F0FFF0;
+            background-color: #e0f7f1;
             color: #4CAF50;
             border-left: 4px solid #4CAF50;
         }
@@ -169,3 +169,157 @@
     </script>
 </body>
 </html>
+
+<style>
+    .modal-confirm {
+        max-width: 450px;
+        margin: 2rem auto;
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+    }
+    .modal.show .modal-confirm {
+        transform: scale(1);
+    }
+    .modal-confirm .modal-content {
+        border-radius: 20px;
+        border: none;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    .modal-confirm .modal-header {
+        background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+        border-radius: 20px 20px 0 0;
+        border: none;
+        text-align: center;
+        padding: 25px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .modal-confirm .modal-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+        pointer-events: none;
+    }
+    .modal-confirm .modal-title {
+        color: white;
+        font-size: 1.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        margin: 0;
+    }
+    .modal-confirm .modal-body {
+        padding: 35px 25px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #444;
+        background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+    }
+    .modal-confirm .icon-box {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 25px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FFF0F5, #FFB6C1);
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(255, 182, 193, 0.3);
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .modal-confirm .icon-box i {
+        font-size: 50px;
+        color: #FF69B4;
+        text-shadow: 2px 2px 8px rgba(255, 105, 180, 0.3);
+        line-height: 60px;
+    }
+    .modal-confirm .modal-footer {
+        border: none;
+        border-radius: 0 0 20px 20px;
+        padding: 20px 25px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+    }
+    .modal-confirm .btn {
+        padding: 12px 35px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-radius: 50px;
+        transition: all 0.4s ease;
+        margin: 0 10px;
+        position: relative;
+        overflow: hidden;
+    }
+    .modal-confirm .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+        transition: all 0.4s ease;
+    }
+    .modal-confirm .btn:hover::before {
+        transform: translateX(100%);
+    }
+    .modal-confirm .btn-secondary {
+        background: linear-gradient(135deg, #F5F5F5, #E0E0E0);
+        border: none;
+        color: #666;
+    }
+    .modal-confirm .btn-secondary:hover {
+        background: linear-gradient(135deg, #E0E0E0, #D5D5D5);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+    .modal-confirm .btn-danger {
+        background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+        border: none;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .modal-confirm .btn-danger:hover {
+        background: linear-gradient(135deg, #FF69B4, #FF1493);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+    }
+    .modal-backdrop.show {
+        opacity: 0.7;
+    }
+</style>
+
+<!-- Modal Xác nhận đăng xuất -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Xác nhận đăng xuất</h5>
+            </div>
+            <div class="modal-body">
+                <div class="icon-box">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <a href="logout" class="btn btn-danger">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+</div>
