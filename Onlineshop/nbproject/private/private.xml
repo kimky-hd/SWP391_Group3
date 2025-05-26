@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/css/style.css</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/BlogList.jsp</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/CommonController/BlogServlet.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/Model/Blog.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/BlogDAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/writeBlog.jsp</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/scss/style.scss</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/js/main.js</file>
         </group>
     </open-files>
 </project-private>

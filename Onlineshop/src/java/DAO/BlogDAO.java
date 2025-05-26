@@ -35,4 +35,23 @@ public class BlogDAO extends DBContext {
             ps.executeUpdate();
         }
     }
+
+    public void deleteBlog(int blogID) throws Exception {
+        String sql = "DELETE FROM Blog WHERE blogID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, blogID);
+            ps.executeUpdate();
+        }
+    }
+
+    public void updateBlog(Blog blog) throws Exception {
+        String sql = "UPDATE Blog SET title = ?, content = ?, image = ? WHERE blogID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, blog.getTitle());
+            ps.setString(2, blog.getContent());
+            ps.setString(3, blog.getImage());
+            ps.setInt(4, blog.getBlogID());
+            ps.executeUpdate();
+        }
+    }
 }
