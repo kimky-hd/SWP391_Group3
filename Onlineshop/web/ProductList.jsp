@@ -166,15 +166,15 @@
                     <form action="filter" method="get">
                         <!-- MÀU -->
                         <div class="mb-3">
+
                             <h6 class="font-weight-medium mb-2">Màu</h6>
-                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="color-red" name="color" value="red">
-                                <label class="custom-control-label" for="color-red">Đỏ</label>
-                            </div>
-                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="color-purple" name="color" value="purple">
-                                <label class="custom-control-label" for="color-purple">Tím</label>
-                            </div>
+                            <c:forEach items="${listAllColors}" var="color">
+                                <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                                    <a href="ViewListProductController?ColorID=${color.getColorId()}" class="custom-control-label" for="color-purple">${color.getColorName()}</a>
+                                    
+                                </div>
+                            </c:forEach>
+
                         </div>
 
                         <!-- GIÁ -->
@@ -194,12 +194,20 @@
                         <div class="mb-4">
                             <h6 class="font-weight-medium mb-2">Mùa</h6>
                             <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="season-spring" name="season" value="spring">
+                                <input type="checkbox" class="custom-control-input" id="season-spring" name="season" value="xuân">
                                 <label class="custom-control-label" for="season-spring">Xuân</label>
                             </div>
                             <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="summer">
+                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="hạ">
                                 <label class="custom-control-label" for="season-summer">Hè</label>
+                            </div>
+                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="thu">
+                                <label class="custom-control-label" for="season-summer">Thu</label>
+                            </div>
+                            <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
+                                <input type="checkbox" class="custom-control-input" id="season-summer" name="season" value="đông">
+                                <label class="custom-control-label" for="season-summer">Đông</label>
                             </div>
                         </div>
 
@@ -210,7 +218,7 @@
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
                 <div class="col-lg-9">
                     <div class="text-center mb-4">
-                        <h2 class="section-title px-5"><span class="px-2">Danh Sách Sản Phẩm</span></h2>
+                        <h2 class="section-title px-5"><span class="px-2">Danh sách sản phẩm</span></h2>
                     </div>
 
                     <div class="row">

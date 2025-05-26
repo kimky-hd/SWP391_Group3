@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DAO.ProductDAO;
 import Model.Product;
+import Model.Color;
 import java.util.List;
 /**
  *
@@ -31,25 +32,16 @@ public class ViewListProductController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
-        String color = request.getParameter("color");
-        String season = request.getParameter("season");
-        List<Product> listproducts;
+        List<Product> listproducts = productDAO.getAllProduct();
+        List<Color> listAllColors = productDAO.getAllColor();
         
-        if (color != null && season != null && !color.isEmpty() && !season.isEmpty()) {
-            listproducts = productDAO.getProductByColorAndSeason(color, season);
-        }
-        else if (color != null && !color.isEmpty()) {
-            listproducts = productDAO.getProductByColor(color);
-        }
-        else if (season != null && !season.isEmpty()) {
-            listproducts = productDAO.getProductBySeason(season);
-        }
-        else {
-            listproducts = productDAO.getAllProduct();
-        }
+        
         System.out.println(listproducts);
+        System.out.println(listAllColors);
+        
 
         request.setAttribute("productList", listproducts);
+        request.setAttribute("listAllColors", listAllColors);
         request.getRequestDispatcher("ProductList.jsp").forward(request, response);
         
     } 

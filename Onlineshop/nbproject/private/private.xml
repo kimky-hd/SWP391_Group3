@@ -5,9 +5,9 @@
         <group>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/Homepage.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/Homepage.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/Color.java</file>
         </group>
     </open-files>
 </project-private>
