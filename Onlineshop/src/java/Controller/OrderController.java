@@ -89,7 +89,7 @@ public class OrderController extends HttpServlet {
 
             // Tạo đơn hàng mới
             Order order = new Order();
-            order.setAccountId(account.getAccountID());
+            order.setAccountId(account.getAccount_ID());
             order.setOrderDate(new Date());
             order.setFullName(fullName);
             order.setPhone(phone);
@@ -101,10 +101,10 @@ public class OrderController extends HttpServlet {
 
             // Tạo chi tiết đơn hàng
             List<OrderDetail> orderDetails = new ArrayList<>();
-            for (CartItem item : cart.getItems().values()) {
+            for (CartItem item : cart.getItems()) {
                 // Kiểm tra số lượng tồn kho
                 if (!cartDAO.checkProductAvailability(item.getProduct().getProductID(), item.getQuantity())) {
-                    sendJsonResponse(response, createErrorResponse("Sản phẩm " + item.getProduct().getName() + " không đủ số lượng"));
+                    sendJsonResponse(response, createErrorResponse("Sản phẩm " + item.getProduct().getTitle() + " không đủ số lượng"));
                     return;
                 }
 
@@ -144,7 +144,7 @@ public class OrderController extends HttpServlet {
             return;
         }
 
-        List<Order> orders = orderDAO.getOrdersByAccountId(account.getAccountID());
+        List<Order> orders = orderDAO.getOrdersByAccountId(account.getAccount_ID());
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("orders.jsp").forward(request, response);
     }
@@ -161,7 +161,7 @@ public class OrderController extends HttpServlet {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             Order order = orderDAO.getOrderById(orderId);
 
-            if (order == null || order.getAccountId() != account.getAccountID()) {
+            if (order == null || order.getAccountId() != account.getAccount_ID()) {
                 sendJsonResponse(response, createErrorResponse("Không tìm thấy đơn hàng"));
                 return;
             }

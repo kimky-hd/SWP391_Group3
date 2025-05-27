@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -165,49 +167,92 @@
                             </tr>
                         </thead>
                         <tbody class="align-middle">
-                            <tr>
-                                <td class="align-middle"><img src="img/product-1.jpg" alt="" style="width: 50px;"> Hoa Hồng</td>
-                                <td class="align-middle">150.000đ</td>
-                                <td class="align-middle">
-                                    <div class="input-group quantity mx-auto" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-minus">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-plus">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">150.000đ</td>
-                                <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${empty sessionScope.cart or empty sessionScope.cart.items}">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">
+                                            <h5>Giỏ hàng của bạn đang trống</h5>
+                                            <a href="ProductList.jsp" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="item" items="${sessionScope.cart.items}">
+                                        <tr>
+                                            <td class="align-middle">
+                                                <img src="${item.product.image}" alt="${item.product.name}" style="width: 50px;"> 
+                                                ${item.product.name}
+                                            </td>
+                                            <td class="align-middle">
+                                                <fmt:formatNumber value="${item.product.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="input-group quantity mx-auto" style="width: 120px;">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-primary btn-minus" onclick="updateQuantity(${item.product.productID}, ${item.quantity - 1})">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" 
+                                                           value="${item.quantity}" 
+                                                           onchange="updateQuantity(${item.product.productID}, this.value)"
+                                                           min="1" max="${item.product.quantity}">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-primary btn-plus" onclick="updateQuantity(${item.product.productID}, ${item.quantity + 1})">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <small class="text-muted">Còn lại: ${item.product.quantity}</small>
+                                            </td>
+                                            <td class="align-middle">
+                                                <fmt:formatNumber value="${item.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                            </td>
+                                            <td class="align-middle">
+                                                <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.product.productID})">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-lg-4">
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng giỏ hàng</span></h5>
                     <div class="bg-light p-30 mb-5">
+                        <c:set var="shippingFee" value="30000" />
                         <div class="border-bottom pb-2">
                             <div class="d-flex justify-content-between mb-3">
                                 <h6>Tổng tiền hàng</h6>
-                                <h6>150.000đ</h6>
+                                <h6>
+                                    <fmt:formatNumber value="${sessionScope.cart.total != null ? sessionScope.cart.total : 0}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                </h6>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <h6 class="font-weight-medium">Phí vận chuyển</h6>
-                                <h6 class="font-weight-medium">30.000đ</h6>
+                                <h6 class="font-weight-medium">
+                                    <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                </h6>
                             </div>
                         </div>
                         <div class="pt-2">
                             <div class="d-flex justify-content-between mt-2">
                                 <h5>Tổng thanh toán</h5>
-                                <h5>180.000đ</h5>
+                                <h5>
+                                    <fmt:formatNumber value="${sessionScope.cart.total + shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                </h5>
                             </div>
-                            <a href="checkout.html" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
+                            <c:choose>
+                                <c:when test="${empty sessionScope.cart or empty sessionScope.cart.items}">
+                                    <button class="btn btn-block btn-secondary font-weight-bold my-3 py-3" disabled>Giỏ hàng trống</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="CheckOut.jsp" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </div>
@@ -286,5 +331,77 @@
 
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+        
+        <script>
+            function updateQuantity(productId, newQuantity) {
+                // Validate quantity
+                if (newQuantity < 1) {
+                    alert('Số lượng phải lớn hơn 0');
+                    return;
+                }
+                
+                $.ajax({
+                    url: 'cart',
+                    type: 'POST',
+                    data: {
+                        action: 'update',
+                        productId: productId,
+                        quantity: newQuantity
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                            location.reload();
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi cập nhật giỏ hàng');
+                    }
+                });
+            }
+            
+            function removeFromCart(productId) {
+                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                    $.ajax({
+                        url: 'cart',
+                        type: 'POST',
+                        data: {
+                            action: 'remove',
+                            productId: productId
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                location.reload();
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Có lỗi xảy ra khi xóa sản phẩm');
+                        }
+                    });
+                }
+            }
+            
+            function clearCart() {
+                if (confirm('Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?')) {
+                    $.ajax({
+                        url: 'cart',
+                        type: 'POST',
+                        data: {
+                            action: 'clear'
+                        },
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function() {
+                            alert('Có lỗi xảy ra khi xóa giỏ hàng');
+                        }
+                    });
+                }
+            }
+        </script>
     </body>
 </html>
