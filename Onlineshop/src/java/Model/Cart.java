@@ -27,26 +27,44 @@ public class Cart {
         }
     }
 
-    public void updateItem(int productId, int quantity) {
+    public void addItem(CartItem item) {
+        if (item == null || item.getProduct() == null) {
+            return;
+        }
+        
+        int productId = item.getProduct().getProductID();
         if (items.containsKey(productId)) {
-            if (quantity > 0) {
-                CartItem item = items.get(productId);
-                item.setQuantity(quantity);
-            } else {
-                removeItem(productId);
-            }
+            CartItem existingItem = items.get(productId);
+            existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+        } else {
+            items.put(productId, item);
+        }
+        calculateTotal();
+    }
+
+    public void updateItem(int productId, int quantity) {
+        if (quantity <= 0) {
+            removeItem(productId);
+            return;
+        }
+        
+        if (items.containsKey(productId)) {
+            CartItem item = items.get(productId);
+            item.setQuantity(quantity);
             calculateTotal();
         }
     }
 
     public void removeItem(int productId) {
-        items.remove(productId);
-        calculateTotal();
+        boolean removed = items.remove(productId) != null;
+        if (removed) {
+            calculateTotal();
+        }
     }
 
     public void clear() {
         items.clear();
-        total = 0;
+        total = 0.0;
     }
 
     public List<CartItem> getItems() {
@@ -66,10 +84,9 @@ public class Cart {
     }
 
     private void calculateTotal() {
-        total = 0;
-        for (CartItem item : items.values()) {
-            total += item.getTotal();
-        }
+        total = items.values().stream()
+                .mapToDouble(CartItem::getTotal)
+                .sum();
     }
 
     public boolean isEmpty() {
@@ -78,5 +95,11 @@ public class Cart {
 
     public boolean containsProduct(int productId) {
         return items.containsKey(productId);
+    }
+
+    public int getTotalItems() {
+        return items.values().stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
     }
 }
