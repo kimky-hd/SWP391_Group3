@@ -8,15 +8,15 @@ package Model;
  *
  * @author Admin
  */
-public class WhishList {
+public class WishList {
     private int Wishlist_ID;
     private int Product_ID;
     private int Account_ID;
 
-    public WhishList() {
+    public WishList() {
     }
 
-    public WhishList(int Wishlist_ID, int Product_ID, int Account_ID) {
+    public WishList(int Wishlist_ID, int Product_ID, int Account_ID) {
         this.Wishlist_ID = Wishlist_ID;
         this.Product_ID = Product_ID;
         this.Account_ID = Account_ID;
