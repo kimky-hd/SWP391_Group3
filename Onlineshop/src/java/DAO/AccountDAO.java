@@ -22,11 +22,11 @@ public class AccountDAO extends DBContext {
             e.printStackTrace();
         }
     }   
-    
-    public boolean register(String username, String password, String email, String phone) {
+        public boolean register(String username, String password, String email, String phone) {
         String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
         try {
-            conn = new DBContext().getConnection();
+            conn = this.connection;
+
             ps = conn.prepareStatement(query);
             ps.setString(1, username);
             ps.setString(2, password);
@@ -43,7 +43,7 @@ public class AccountDAO extends DBContext {
     public Account checkAccountExist(String username) {
         String query = "SELECT * FROM Account WHERE username = ?";
         try {
-            conn = new DBContext().getConnection();
+           conn = this.connection; 
             ps = conn.prepareStatement(query);
             ps.setString(1, username);
             rs = ps.executeQuery();
@@ -68,7 +68,7 @@ public class AccountDAO extends DBContext {
     public Account checkEmailExist(String email) {
         String query = "SELECT * FROM Account WHERE email = ?";
         try {
-            conn = new DBContext().getConnection();
+           conn = this.connection; 
             ps = conn.prepareStatement(query);
             ps.setString(1, email);
             rs = ps.executeQuery();
