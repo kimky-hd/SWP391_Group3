@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 public class Account {
@@ -16,7 +12,8 @@ public class Account {
     public Account() {
     }
 
-    public Account(int accountID, String username, String password, int role, String email) {
+    // Constructor đầy đủ
+    public Account(int accountID, String username, String password, int role, String email, String phone) {
         this.accountID = accountID;
         this.username = username;
         this.password = password;
@@ -29,8 +26,9 @@ public class Account {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    // Constructor không có phone (gán phone mặc định là "")
+    public Account(int accountID, String username, String password, int role, String email) {
+        this(accountID, username, password, role, email, "");
     }
 
     public int getAccountID() {
@@ -71,5 +69,25 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountID=" + accountID +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
     }
 }
