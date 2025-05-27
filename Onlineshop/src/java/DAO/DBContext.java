@@ -9,19 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
-
-    public static Connection getConnection() {
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://localhost:3306/FlowerShopDb";
-        String user = "root";
-        String password = "123";
-        return DriverManager.getConnection(url, user, password);
-    } catch (ClassNotFoundException | SQLException e) {
-        e.printStackTrace();
-        return null;
-    }
-}
     protected Connection connection;
 
     public DBContext() {
@@ -44,4 +31,6 @@ public class DBContext {
             System.out.println("Kết nối thất bại.");
         }
     }
+
+    
 }    

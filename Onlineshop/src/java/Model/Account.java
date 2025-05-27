@@ -14,23 +14,14 @@ public class Account {
     public Account() {
     }
 
-    public Account(int accountID, String username, String password, int role, String email,String phone) {
+    public Account(int accountID, String username, String password, int role, String email, String phone) {
         this.accountID = accountID;
         this.username = username;
         this.password = password;
         this.role = role;
         this.email = email;
         this.phone = phone;
-    }
- public Account(int accountID, String username, String password, int role, String email) {
-        this.accountID = accountID;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.email = email;
-        this.phone = ""; 
-    }
-    
+    }  
     public String getPhone() {
         return phone;
     }
