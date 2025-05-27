@@ -300,6 +300,7 @@ public class ProductDAO extends DBContext {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
         try {
+            
             ps = connection.prepareStatement(sql);
             ps.setInt(1, (indexPage - 1) * 8); // tính offset
             rs = ps.executeQuery();
@@ -318,6 +319,9 @@ public class ProductDAO extends DBContext {
                         rs.getDate(11)
                 ));
             }
+
+            
+
         } catch (SQLException e) {
             System.out.println("getProductByIndex: " + e.getMessage());
         }
