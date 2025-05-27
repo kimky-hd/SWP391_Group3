@@ -4,23 +4,22 @@
  */
 package CommonController;
 
+import DAO.ProductDAO;
+import Model.Color;
+import Model.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import DAO.ProductDAO;
-import Model.Product;
-import Model.Color;
-import Model.Season;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class ViewListProductController extends HttpServlet {
+public class SearchProductByColor extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,31 +34,15 @@ public class ViewListProductController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
-        String index = request.getParameter("index");
-        if (index == null || index.isEmpty()) {
-            index = "1";
-        }
-        int indexPage = Integer.parseInt(index);
+        String colorId = request.getParameter("colorId");
+        System.out.println(colorId);
 
-        List<Product> listProductByIndex = productDAO.getProductByIndex(indexPage);
-        //List<Product> listproducts = productDAO.getAllProduct();
-
-        int allProduct = productDAO.countAllProduct();
-        int endPage = allProduct / 8;
-        if (allProduct % 8 != 0) {
-            endPage++;
-        }
+        List<Product> listproductByColor = productDAO.getProductByColor(colorId);
         List<Color> listAllColors = productDAO.getAllColor();
-        List<Season> listAllSeasons = productDAO.getAllSeason();
-
-        request.setAttribute("tag", indexPage);
-        request.setAttribute("count", allProduct);
-        request.setAttribute("endPage", endPage);
-        request.setAttribute("productList", listProductByIndex);
+        request.setAttribute("productList", listproductByColor);
         request.setAttribute("listAllColors", listAllColors);
-        request.setAttribute("listAllSeasons", listAllSeasons);
-        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
 
+        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
