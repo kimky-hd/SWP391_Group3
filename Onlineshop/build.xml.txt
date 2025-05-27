@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Onlineshop" default="build" basedir=".">
+    
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir"    value="dist"/>
+    <property name="war.name"    value="Onlineshop.war"/>
+    <property name="web.dir"     value="web"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+    </target>
+
+    <target name="build" depends="clean,compile">
+        <mkdir dir="${dist.dir}"/>
+        <war destfile="${dist.dir}/${war.name}" webxml="${web.dir}/WEB-INF/web.xml">
+            <fileset dir="${web.dir}"/>
+            <classes dir="${classes.dir}"/>
+        </war>
+    </target>
+
+    <target name="run">
+        <echo message="Deploy the WAR manually to your server (e.g., Tomcat)"/>
+    </target>
+
+</project>

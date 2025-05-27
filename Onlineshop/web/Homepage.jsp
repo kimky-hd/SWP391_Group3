@@ -70,7 +70,7 @@
             </div>
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
-                    <a href="" class="text-decoration-none">
+                    <a href="Homepage" class="text-decoration-none">
                         <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
                         <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
