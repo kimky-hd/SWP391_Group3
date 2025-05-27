@@ -4,8 +4,47 @@
         <servlet-name>ViewListProductController</servlet-name>
         <servlet-class>CommonController.ViewListProductController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Homepage</servlet-name>
+        <servlet-class>CommonController.Homepage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchProductByColor</servlet-name>
+        <servlet-class>CommonController.SearchProductByColor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchProductBySeason</servlet-name>
+        <servlet-class>CommonController.SearchProductBySeason</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ViewListProductController</servlet-name>
         <url-pattern>/ViewListProductController</url-pattern>
+    </servlet-mapping>
+    <!-- Thêm cấu hình cho CartController -->
+    <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>Controller.CartController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Thêm welcome file -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductByColor</servlet-name>
+        <url-pattern>/searchproductbycolor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductBySeason</servlet-name>
+        <url-pattern>/searchproductbyseason</url-pattern>
     </servlet-mapping>
 </web-app>

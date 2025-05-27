@@ -9,6 +9,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
+
+    public static Connection getConnection() {
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        String url = "jdbc:mysql://localhost:3306/FlowerShopDb";
+        String user = "root";
+        String password = "123";
+        return DriverManager.getConnection(url, user, password);
+    } catch (ClassNotFoundException | SQLException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
     protected Connection connection;
 
     public DBContext() {
@@ -22,6 +35,21 @@ public class DBContext {
             e.printStackTrace();
         }
     }
+        public Connection getConnection() {
+            try {
+                if (connection == null || connection.isClosed()) {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    String url = "jdbc:mysql://localhost:3306/FlowerShopDb";
+                    String user = "root";
+                    String password = "123";
+                    connection = DriverManager.getConnection(url, user, password);
+                }
+                return connection;
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     
     public static void main(String[] args) {
         DBContext db = new DBContext();
@@ -31,4 +59,4 @@ public class DBContext {
             System.out.println("Kết nối thất bại.");
         }
     }
-}    
+}
