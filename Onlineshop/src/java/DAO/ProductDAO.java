@@ -162,7 +162,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%'"+ txt +"'%');";
+        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%"+ txt +"%')";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
