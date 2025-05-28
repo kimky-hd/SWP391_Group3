@@ -15,10 +15,9 @@
             <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/register.jsp</file>
         </group>
         <group>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/Homepage.jsp</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/Model/Blog.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/index.html</file>
         </group>
     </open-files>
 </project-private>
