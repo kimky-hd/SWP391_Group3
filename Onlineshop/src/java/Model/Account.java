@@ -1,6 +1,7 @@
 package model;
 
 public class Account {
+
     private int accountID;
     private String username;
     private String password;
@@ -18,7 +19,11 @@ public class Account {
         this.password = password;
         this.role = role;
         this.email = email;
-        this.phone = phone;
+        this.phone = "";
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     // Constructor không có phone (gán phone mặc định là "")
