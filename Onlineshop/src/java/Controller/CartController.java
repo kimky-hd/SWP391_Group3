@@ -1,7 +1,6 @@
 package Controller;
 
 import DAO.CartDAO;
-import Model.Account;
 import Model.Cart;
 import Model.CartItem;
 import Model.Product;
@@ -15,7 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import model.Account;
 /**
  * CartController xử lý các thao tác liên quan đến giỏ hàng
  * 
@@ -198,11 +197,11 @@ public class CartController extends HttpServlet {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             
-            boolean success = cartDAO.removeFromCart(account.getAccount_ID(), productId);
+            boolean success = cartDAO.removeFromCart(account.getAccountID(), productId);
             
             if (success) {
                 cart.removeItem(productId);
-                updateSessionCart(session, account.getAccount_ID());
+                updateSessionCart(session, account.getAccountID());
                 sendJsonResponse(response, createSuccessResponse("Đã xóa sản phẩm khỏi giỏ hàng"));
             } else {
                 sendJsonResponse(response, createErrorResponse("Không thể xóa sản phẩm"));
@@ -231,11 +230,11 @@ public class CartController extends HttpServlet {
             return;
         }
         
-        boolean success = cartDAO.clearCart(account.getAccount_ID());
+        boolean success = cartDAO.clearCart(account.getAccountID());
         
         if (success) {
             cart.clear();
-            updateSessionCart(session, account.getAccount_ID());
+            updateSessionCart(session, account.getAccountID());
             sendJsonResponse(response, createSuccessResponse("Đã xóa toàn bộ giỏ hàng"));
         } else {
             sendJsonResponse(response, createErrorResponse("Không thể xóa giỏ hàng"));
