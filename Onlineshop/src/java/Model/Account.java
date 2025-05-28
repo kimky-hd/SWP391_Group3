@@ -1,35 +1,28 @@
-package model;
+package Model;
 
 public class Account {
+
     private int accountID;
     private String username;
     private String password;
     private int role;
     private String email;
-    private String phone; 
-
+    private String phone;
 
     public Account() {
     }
 
-
+    // Constructor đầy đủ
     public Account(int accountID, String username, String password, int role, String email, String phone) {
         this.accountID = accountID;
         this.username = username;
         this.password = password;
         this.role = role;
         this.email = email;
-        this.phone = phone;
+        this.phone = "";
     }
 
-    
-
-    
-    
-    public String getPhone() {
-        return phone;
-    }
-
+   
 
     // Constructor không có phone (gán phone mặc định là "")
     public Account(int accountID, String username, String password, int role, String email) {
@@ -76,6 +69,9 @@ public class Account {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
 
     public void setPhone(String phone) {
         this.phone = phone;
@@ -93,4 +89,3 @@ public class Account {
                 '}';
     }
 }
-
