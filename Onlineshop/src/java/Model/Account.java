@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 public class Account {
 
@@ -22,9 +22,7 @@ public class Account {
         this.phone = "";
     }
 
-    public String getPhone() {
-        return phone;
-    }
+   
 
     // Constructor không có phone (gán phone mặc định là "")
     public Account(int accountID, String username, String password, int role, String email) {
