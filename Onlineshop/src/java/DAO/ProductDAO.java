@@ -160,9 +160,9 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Product> getProductByTitle(String title) {
+    public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product WHERE title LIKE ?";
+        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%'"+ txt +"'%');";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
