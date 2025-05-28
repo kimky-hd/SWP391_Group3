@@ -36,12 +36,12 @@ public class SearchProductByTitle extends HttpServlet {
         String txt = request.getParameter("txt").trim();
         ProductDAO productDAO = new ProductDAO();
         List<Product> list = productDAO.getProductByTitle(txt);
-        List<Product> listallproducts = productDAO.getAllProduct();
         List<Season> listAllSeasons = productDAO.getAllSeason();
         List<Color> listAllColors = productDAO.getAllColor();
         
+        
         request.setAttribute("txt", txt);
-        request.setAttribute("list", list);
+        request.setAttribute("productList", list);
         request.setAttribute("listAllColors", listAllColors);
         request.setAttribute("listAllSeasons", listAllSeasons);
         
