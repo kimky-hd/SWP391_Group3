@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @WebServlet(name = "OrderController", urlPatterns = {"/order"})
 public class OrderController extends HttpServlet {
 
@@ -89,7 +90,7 @@ public class OrderController extends HttpServlet {
 
             // Tạo đơn hàng mới
             Order order = new Order();
-            order.setAccountId(account.getAccount_ID());
+            order.setAccountId(account.getAccountID());
             order.setOrderDate(new Date());
             order.setFullName(fullName);
             order.setPhone(phone);
@@ -144,7 +145,7 @@ public class OrderController extends HttpServlet {
             return;
         }
 
-        List<Order> orders = orderDAO.getOrdersByAccountId(account.getAccount_ID());
+        List<Order> orders = orderDAO.getOrdersByAccountId(account.getAccountID());
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("orders.jsp").forward(request, response);
     }
@@ -161,7 +162,7 @@ public class OrderController extends HttpServlet {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             Order order = orderDAO.getOrderById(orderId);
 
-            if (order == null || order.getAccountId() != account.getAccount_ID()) {
+            if (order == null || order.getAccountId() != account.getAccountID()) {
                 sendJsonResponse(response, createErrorResponse("Không tìm thấy đơn hàng"));
                 return;
             }
