@@ -48,6 +48,15 @@
                 color: black;
                 text-decoration: none; /* nếu không muốn gạch chân */
             }
+            .icon-search-button {
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+            }
+            .icon-search-button .icon {
+                font-size: 20px; /* Điều chỉnh kích thước icon */
+                color: #333; /* Màu của icon */
+            }
         </style>
     </head>
 
@@ -91,20 +100,18 @@
             </div>
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
-                    <a href="" class="text-decoration-none">
+                    <a href="Homepage" class="text-decoration-none">
                         <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
                         <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
-                    <form action="">
+                    <form action="SearchProductByTitle">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for products">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
+                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
+                            <button type="submit" class="icon-search-button">
+                                <i class="icon icon-search"></i> 
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -211,27 +218,27 @@
 
                     <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                    <div class="card product-item border-0 mb-4">
-                                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                            <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                        </div>
-                                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                            <h6 class="text-truncate mb-3">${product.getTitle()}</h6>
-                                            <div class="d-flex justify-content-center">
-                                                <h6>$${product.getPrice()}</h6>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between bg-light border">
-                                            <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                            </a>
-                                            <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
-                                            </a>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">${product.getTitle()}</h6>
+                                        <div class="d-flex justify-content-center">
+                                            <h6>$${product.getPrice()}</h6>
                                         </div>
                                     </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                        </a>
+                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                            <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
+                                        </a>
+                                    </div>
                                 </div>
+                            </div>
                         </c:forEach>
 
 
