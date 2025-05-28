@@ -1,0 +1,55 @@
+:root {
+    --primary: #D19C97;
+    --primary-hover: #B98E89;
+}
+
+.bg-pink {
+    background-color: var(--primary) !important;
+}
+
+.text-pink {
+    color: var(--primary) !important;
+}
+
+.btn-pink {
+    background-color: var(--primary);
+    color: #fff;
+}
+
+.btn-pink:hover {
+    background-color: var(--primary-hover);
+    color: #fff;
+}
+
+.hero-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.product-card {
+    transition: transform 0.3s;
+    border: none;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.social-links a {
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: var(--primary) !important;
+}
