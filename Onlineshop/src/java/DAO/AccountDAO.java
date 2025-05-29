@@ -19,51 +19,13 @@ public class AccountDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
 
-    /**
-     * Đăng nhập bằng username hoặc email và password.
-     */
-    public Account login(String userInput, String password) {
+    }   
+        public boolean register(String username, String password, String email, String phone) {
+        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 0, ?, ?)";
         try {
-            if (userInput == null || password == null || userInput.trim().isEmpty() || password.trim().isEmpty()) {
-                System.out.println("Thông tin đăng nhập trống");
-                return null;
-            }
+            conn = this.connection;
 
-            String query = "SELECT * FROM Account WHERE (email = ? OR username = ?) AND password = ?";
-            conn = new DBContext().getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setString(1, userInput.trim());
-            ps.setString(2, userInput.trim());
-            ps.setString(3, password);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return new Account(
-                    rs.getInt("accountID"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getInt("role"),
-                    rs.getString("email"),
-                    rs.getString("phone")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return null;
-    }
-
-    /**
-     * Đăng ký tài khoản mới.
-     */
-    public boolean register(String username, String password, String email, String phone) {
-        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
-        try {
-            conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, username);
             ps.setString(2, password);
@@ -84,7 +46,7 @@ public class AccountDAO extends DBContext {
     public Account checkAccountExist(String username) {
         String query = "SELECT * FROM Account WHERE username = ?";
         try {
-            conn = new DBContext().getConnection();
+           conn = this.connection; 
             ps = conn.prepareStatement(query);
             ps.setString(1, username);
             rs = ps.executeQuery();
@@ -112,7 +74,7 @@ public class AccountDAO extends DBContext {
     public Account checkEmailExist(String email) {
         String query = "SELECT * FROM Account WHERE email = ?";
         try {
-            conn = new DBContext().getConnection();
+           conn = this.connection; 
             ps = conn.prepareStatement(query);
             ps.setString(1, email);
             rs = ps.executeQuery();
