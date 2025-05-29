@@ -23,7 +23,7 @@ public class AccountDAO extends DBContext {
         }
     }   
         public boolean register(String username, String password, String email, String phone) {
-        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
+        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 0, ?, ?)";
         try {
             conn = this.connection;
 

@@ -11,17 +11,11 @@
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/index.html</file>
         </group>
         <group name="New Folder (2)">
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/CommonController/BlogServlet.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/DAO/BlogDAO.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/Model/Rating.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/index.html</file>
-            <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/register.jsp</file>
+            <file>file:/D:/swp4/SWP391_Group3/Onlineshop/nbproject/build-impl.xml</file>
+            <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
+            <file>file:/D:/swp4/SWP391_Group3/Onlineshop/web/register.jsp</file>
+            <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
         </group>
     </open-files>
 </project-private>
