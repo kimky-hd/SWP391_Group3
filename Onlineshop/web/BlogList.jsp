@@ -100,7 +100,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Bạn có chắc chắn muốn xóa blog này không?
+                            <!-- Bạn có chắc chắn muốn xóa blog này không? --> 
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Hủy bỏ</button>
