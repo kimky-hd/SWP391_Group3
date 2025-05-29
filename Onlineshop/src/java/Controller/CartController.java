@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.CartDAO;
+import Model.Account;
 import Model.Cart;
 import Model.CartItem;
 import Model.Product;
@@ -14,7 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import model.Account;
+
 /**
  * CartController xử lý các thao tác liên quan đến giỏ hàng
  * 
@@ -104,13 +105,17 @@ public class CartController extends HttpServlet {
 
             // Validate input
             if (quantity <= 0) {
-                sendJsonResponse(response, createErrorResponse("Số lượng phải lớn hơn 0"));
+                request.getSession().setAttribute("message", "Số lượng phải lớn hơn 0");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
 
             Product product = cartDAO.getProductById(productId);
             if (product == null) {
-                sendJsonResponse(response, createErrorResponse("Sản phẩm không tồn tại"));
+                request.getSession().setAttribute("message", "Sản phẩm không tồn tại");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
 
@@ -123,14 +128,21 @@ public class CartController extends HttpServlet {
             // Check if total quantity exceeds available stock
             int totalQuantity = currentQuantityInCart + quantity;
             if (!cartDAO.checkProductAvailability(productId, totalQuantity)) {
-                sendJsonResponse(response, createErrorResponse("Số lượng yêu cầu vượt quá số lượng có sẵn trong kho"));
+                request.getSession().setAttribute("message", "Số lượng yêu cầu vượt quá số lượng có sẵn trong kho");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
 
             cart.addItem(product, quantity);
-            sendJsonResponse(response, createSuccessResponse("Sản phẩm đã được thêm vào giỏ hàng"));
+            request.getSession().setAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng");
+            request.getSession().setAttribute("messageType", "success");
+            response.sendRedirect(request.getHeader("referer"));
+            
         } catch (NumberFormatException e) {
-            sendJsonResponse(response, createErrorResponse("Dữ liệu không hợp lệ"));
+            request.getSession().setAttribute("message", "Dữ liệu không hợp lệ");
+            request.getSession().setAttribute("messageType", "error");
+            response.sendRedirect(request.getHeader("referer"));
         }
     }
 
