@@ -3,7 +3,7 @@
     Created on : May 22, 2025, 4:26:19 AM
     Author     : Admin
 --%>
-
+<%@ page import="Model.Account" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -77,14 +77,21 @@
                 </div>
                 <div class="col-lg-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <button class="dropdown-item" type="button">Sign in</button>
-                                <button class="dropdown-item" type="button">Sign up</button>
+                        <% if(session.getAttribute("account") != null) { 
+                            Account acc = (Account)session.getAttribute("account");
+                        %>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                    <%= acc.getUsername() %>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
+                                </div>
                             </div>
-                        </div>
-
+                        <% } else { %>
+                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
                         <a href="" class="btn px-0 ml-2">
@@ -184,20 +191,6 @@
                         </c:forEach>
 
                     </div>
-
-                    <!-- GIÁ -->
-                    <div class="mb-3">
-                        <h6 class="font-weight-medium mb-2">Giá</h6>
-                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                            <input type="radio" class="custom-control-input" id="price1" name="price" value="0-10000">
-                            <label class="custom-control-label" for="price1">Dưới 10.000</label>
-                        </div>
-                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                            <input type="radio" class="custom-control-input" id="price2" name="price" value="10000-15000">
-                            <label class="custom-control-label" for="price2">10.000 - 15.000</label>
-                        </div>
-                    </div>
-
                     <!-- MÙA -->
                     <h3>Mùa</h3>
                     <div class="mb-4">
@@ -207,6 +200,47 @@
 
                         </c:forEach>                 
                     </div>
+                    <!-- GIÁ -->
+                    <div class="mb-3">
+                        <h3 class="font-weight-medium mb-2">Giá</h3>
+                        <div class="d-flex mb-2">
+
+                            <a href="SearchPrice0to50" class="black-link font-weight-medium mb-2" >0 Đến 50.000</a>
+                        </div>
+                        <div class="d-flex mb-2">
+
+                            <a href="SearchPriceAbove50" class="black-link font-weight-medium mb-2" >Trên 50.000</a>  
+                        </div>
+                        <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
+                            <div class="form-row align-items-end">
+                                <!-- Min Price -->
+                                <div class="col">
+                                    <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
+                                    <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
+                                </div>
+
+                                <!-- Separator -->
+                                <div class="col-auto d-flex align-items-center justify-content-center">
+                                    <span class="text-muted px-2">–</span>
+                                </div>
+
+                                <!-- Max Price -->
+                                <div class="col">
+                                    <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
+                                    <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
+                                </div>
+
+                                <!-- Search Button -->
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary mt-3">Lọc</button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                    </div>
+
+
 
                 </div>
 
