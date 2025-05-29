@@ -120,17 +120,13 @@
                             </div>
                         <% } %>
                         <form action="LoginServlet" method="post" onsubmit="return validateForm()">
-                            <div class="mb-4">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="userInput" name="userInput" placeholder="Email hoặc Tên đăng nhập" required>
-                                    <label for="userInput"><i class="fas fa-user me-2"></i>Email hoặc Tên đăng nhập</label>
-                                </div>
+                            <div class="mb-3">
+                                <label for="userInput" class="form-label">Email hoặc Tên đăng nhập</label>
+                                <input type="text" class="form-control" id="userInput" name="userInput" required>
                             </div>
-                            <div class="mb-4">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
-                                    <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
-                                </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-pink py-3">
