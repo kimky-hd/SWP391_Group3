@@ -1,17 +1,16 @@
-<%-- 
-    Document   : ProductList
-    Created on : May 22, 2025, 4:26:19 AM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="utf-8">
-        <title>Flower Shop - Product List</title>
+        <title>Liên Hệ - Flower Shop</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="Free HTML Templates" name="keywords">
+        <meta content="Free HTML Templates" name="description">
+
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -26,44 +25,9 @@
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
-        <style>
-            .product-img {
-                height: 250px; /* Hoặc chiều cao mong muốn */
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .product-img img {
-                height: 100%;
-                width: auto;
-                object-fit: contain;
-            }
-            .sidebar-pink {
-                background-color: #fce4ec;
-                border-radius: 8px;
-                padding: 20px;
-            }
-            .black-link {
-                color: black;
-                text-decoration: none; /* nếu không muốn gạch chân */
-            }
-            .icon-search-button {
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-            }
-            .icon-search-button .icon {
-                font-size: 20px; /* Điều chỉnh kích thước icon */
-                color: #333; /* Màu của icon */
-            }
-        </style>
     </head>
 
-
-
     <body>
-
         <!-- Topbar Start -->
         <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
@@ -84,34 +48,25 @@
                                 <button class="dropdown-item" type="button">Sign up</button>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="d-inline-flex align-items-center d-block d-lg-none">
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-heart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-shopping-cart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
                     </div>
                 </div>
             </div>
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
-                    <a href="Homepage" class="text-decoration-none">
+                    <a href="index.html" class="text-decoration-none">
                         <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
                         <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
-                    <form action="SearchProductByTitle">
+                    <form action="">
                         <div class="input-group">
-                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
-                            <button type="submit" class="icon-search-button">
-                                <i class="icon icon-search"></i> 
-                            </button>
+                            <input type="text" class="form-control" placeholder="Search for products">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-transparent text-primary">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -123,14 +78,35 @@
         </div>
         <!-- Topbar End -->
 
-
         <!-- Navbar Start -->
         <div class="container-fluid bg-pink mb-30">
             <div class="row px-xl-5">
-
+                <div class="col-lg-3 d-none d-lg-block">
+                    <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
+                        <div class="navbar-nav w-100">
+                            <div class="nav-item dropdown dropright">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dresses <i class="fa fa-angle-right float-right mt-1"></i></a>
+                                <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+                                    <a href="" class="dropdown-item">Men's Dresses</a>
+                                    <a href="" class="dropdown-item">Women's Dresses</a>
+                                    <a href="" class="dropdown-item">Baby's Dresses</a>
+                                </div>
+                            </div>
+                            <a href="" class="nav-item nav-link">Shirts</a>
+                            <a href="" class="nav-item nav-link">Jeans</a>
+                            <a href="" class="nav-item nav-link">Swimwear</a>
+                            <a href="" class="nav-item nav-link">Sleepwear</a>
+                            <a href="" class="nav-item nav-link">Sportswear</a>
+                            <a href="" class="nav-item nav-link">Jumpsuits</a>
+                            <a href="" class="nav-item nav-link">Blazers</a>
+                            <a href="" class="nav-item nav-link">Jackets</a>
+                            <a href="" class="nav-item nav-link">Shoes</a>
+                        </div>
+                    </nav>
+                </div>
                 <div class="col-lg-9">
                     <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
-                        <a href="" class="text-decoration-none d-block d-lg-none">
+                        <a href="index.html" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
@@ -138,9 +114,9 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                            <div class="navbar-nav mr-auto py-0">
-                                <a href="Homepage" class="nav-item nav-link">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
+                            <div class="navbar-nav mx-auto py-0">
+                                <a href="index.html" class="nav-item nav-link">Home</a>
+                                <a href="shop.html" class="nav-item nav-link">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
@@ -149,14 +125,14 @@
                                         <a href="checkout.html" class="dropdown-item">Checkout</a>
                                     </div>
                                 </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                                <a href="contact.html" class="nav-item nav-link active">Contact</a>
                             </div>
                             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                                 <a href="" class="btn px-0">
                                     <i class="fas fa-heart text-primary"></i>
                                     <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                                 </a>
-                                <a href="" class="btn px-0 ml-3">
+                                <a href="cart.html" class="btn px-0 ml-3">
                                     <i class="fas fa-shopping-cart text-primary"></i>
                                     <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                                 </a>
@@ -167,114 +143,55 @@
             </div>
         </div>
         <!-- Navbar End -->
-        <!-- Products Start -->
 
-        <div class="container-fluid pt-5">
+        <!-- Contact Start -->
+        <div class="container-fluid">
+            <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Liên Hệ Với Chúng Tôi</span></h2>
             <div class="row px-xl-5">
-                <!-- SIDEBAR BÊN TRÁI -->
-                <div class="col-lg-3 mb-5 sidebar-pink">
-                    <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
-
-                    <!-- MÀU -->
-                    <h3>Màu</h3>
-                    <div class="mb-3">
-                        <c:forEach items="${listAllColors}" var="color">
-                            <a href="searchproductbycolor?colorId=${color.getColorID()}" class="black-link font-weight-medium mb-2">${color.getColorName()} <br></a>
-
-                        </c:forEach>
-
-                    </div>
-
-                    <!-- GIÁ -->
-                    <div class="mb-3">
-                        <h6 class="font-weight-medium mb-2">Giá</h6>
-                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                            <input type="radio" class="custom-control-input" id="price1" name="price" value="0-10000">
-                            <label class="custom-control-label" for="price1">Dưới 10.000</label>
-                        </div>
-                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                            <input type="radio" class="custom-control-input" id="price2" name="price" value="10000-15000">
-                            <label class="custom-control-label" for="price2">10.000 - 15.000</label>
-                        </div>
-                    </div>
-
-                    <!-- MÙA -->
-                    <h3>Mùa</h3>
-                    <div class="mb-4">
-
-                        <c:forEach items="${listAllSeasons}" var="season">
-                            <a href="searchproductbyseason?seasonId=${season.getSeasonID()}" class="black-link font-weight-medium mb-2">${season.getSeasonName()} <br></a>
-
-                        </c:forEach>                 
-                    </div>
-
-                </div>
-
-                <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
-                <div class="col-lg-9">
-                    <div class="text-center mb-4">
-                        <h2 class="section-title px-5"><span class="px-2">Danh sách sản phẩm</span></h2>
-                    </div>
-
-                    <div class="row">
-                        <c:forEach items="${productList}" var="product" varStatus="status">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                <div class="card product-item border-0 mb-4">
-                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                    </div>
-                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3">${product.getTitle()}</h6>
-                                        <div class="d-flex justify-content-center">
-                                            <h6>$${product.getPrice()}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between bg-light border">
-                                        <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                        </a>
-                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
-                                        </a>
-                                    </div>
-                                </div>
+                <div class="col-lg-7 mb-5">
+                    <div class="contact-form bg-light p-30">
+                        <div id="success"></div>
+                        <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                            <div class="control-group">
+                                <input type="text" class="form-control" id="name" placeholder="Họ và tên"
+                                    required="required" data-validation-required-message="Vui lòng nhập họ tên" />
+                                <p class="help-block text-danger"></p>
                             </div>
-                        </c:forEach>
-
-
-
+                            <div class="control-group">
+                                <input type="email" class="form-control" id="email" placeholder="Email"
+                                    required="required" data-validation-required-message="Vui lòng nhập email" />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="control-group">
+                                <textarea class="form-control" rows="8" id="message" placeholder="Tin nhắn"
+                                    required="required"
+                                    data-validation-required-message="Vui lòng nhập tin nhắn"></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton">Gửi
+                                    Tin Nhắn</button>
+                            </div>
+                        </form>
                     </div>
-
-
-                    <c:if test="${tag != null}">
-                        <ul class="pagination">
-                            <c:if test="${tag != 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
-                                </li>
-                            </c:if>
-                            <c:forEach begin="1" end="${endPage}" var="i">
-                                <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="ViewListProductController?index=${i}" 
-                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                </li>
-                            </c:forEach>
-                            <c:if test="${tag != endPage}">
-                                <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </c:if>
-
-
+                </div>
+                <div class="col-lg-5 mb-5">
+                    <div class="bg-light p-30 mb-30">
+                        <iframe style="width: 100%; height: 250px;"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001156.4288297426!2d-78.01371936852176!3d42.72876761954724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4ccc4bf0f123a5a9%3A0xddcfc6c1de189567!2sNew%20York%2C%20USA!5e0!3m2!1sen!2sbd!4v1603794290143!5m2!1sen!2sbd"
+                        frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                    </div>
+                    <div class="bg-light p-30 mb-3">
+                        <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
+                        <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                        <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- Contact End -->
 
-
-        <!-- Products End -->
-
+        <!-- Footer Start -->
         <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
             <div class="row px-xl-5 pt-5">
                 <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
@@ -330,18 +247,36 @@
                     </div>
                 </div>
             </div>
+            <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+                <div class="col-md-6 px-xl-0">
+                    <p class="mb-md-0 text-center text-md-left text-secondary">
+                        &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved. Designed
+                        by
+                        <a class="text-primary" href="https://htmlcodex.com">HTML Codex</a>
+                    </p>
+                </div>
+                <div class="col-md-6 px-xl-0 text-center text-md-right">
+                    <img class="img-fluid" src="img/payments.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
 
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-            <!-- JavaScript Libraries -->
-            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-            <script src="lib/easing/easing.min.js"></script>
-            <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-            <!-- Template Javascript -->
-            <script src="js/main.js"></script>
+        <!-- Contact Javascript File -->
+        <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script>
+
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
     </body>
+
 </html>
-
-
-

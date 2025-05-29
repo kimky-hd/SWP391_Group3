@@ -1,18 +1,16 @@
 package DAO;
 
+import Model.Account;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import model.Account;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import DAO.DBContext;
+
 public class AccountDAO extends DBContext {
     private Connection conn = null;
     private PreparedStatement ps = null;
-    private ResultSet rs = null;    
+    private ResultSet rs = null;
+
     private void closeResources() {
         try {
             if (rs != null) rs.close();
@@ -21,6 +19,7 @@ public class AccountDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }   
         public boolean register(String username, String password, String email, String phone) {
         String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 0, ?, ?)";
@@ -39,7 +38,11 @@ public class AccountDAO extends DBContext {
             closeResources();
         }
         return false;
-    }  
+    }
+
+    /**
+     * Kiểm tra username đã tồn tại chưa.
+     */
     public Account checkAccountExist(String username) {
         String query = "SELECT * FROM Account WHERE username = ?";
         try {
@@ -49,13 +52,12 @@ public class AccountDAO extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 return new Account(
-                rs.getInt("accountID"),
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getInt("role"),
-                rs.getString("email"),
-                rs.getString("phone")
-                        
+                    rs.getInt("accountID"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getInt("role"),
+                    rs.getString("email"),
+                    rs.getString("phone")
                 );
             }
         } catch (Exception e) {
@@ -64,7 +66,11 @@ public class AccountDAO extends DBContext {
             closeResources();
         }
         return null;
-    }    
+    }
+
+    /**
+     * Kiểm tra email đã tồn tại chưa.
+     */
     public Account checkEmailExist(String email) {
         String query = "SELECT * FROM Account WHERE email = ?";
         try {
@@ -77,9 +83,9 @@ public class AccountDAO extends DBContext {
                     rs.getInt("accountID"),
                     rs.getString("username"),
                     rs.getString("password"),
-                   rs.getInt("role"),
-                rs.getString("email"),
-                rs.getString("phone")
+                    rs.getInt("role"),
+                    rs.getString("email"),
+                    rs.getString("phone")
                 );
             }
         } catch (Exception e) {
