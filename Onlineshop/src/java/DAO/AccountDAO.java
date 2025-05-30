@@ -53,22 +53,23 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
-
+    public boolean register(String username, String password, String email, String phone) {
+        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, email);
+            ps.setString(4, phone);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        if (e.getMessage().contains("Duplicate entry")) {
-            if (e.getMessage().contains("username")) {
-                return "Tên đăng nhập đã tồn tại";
-            } else if (e.getMessage().contains("email")) {
-                return "Email đã tồn tại";
-            }
-        }
-        return "Lỗi: " + e.getMessage();
-    } finally {
-        closeResources();
+        return false;
     }
-}
 
     public Account checkAccountExist(String username) {
         String query = "SELECT * FROM Account WHERE username = ?";

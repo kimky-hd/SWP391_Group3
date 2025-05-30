@@ -50,7 +50,17 @@
                         <% if(session.getAttribute("account") != null) { 
                             Account acc = (Account)session.getAttribute("account");
                         %>
-
+                        <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                    <%= acc.getUsername() %>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
                         <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -862,4 +872,3 @@
     </body>
 
 </html>
-
