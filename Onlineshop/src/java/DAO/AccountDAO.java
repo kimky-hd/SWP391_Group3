@@ -60,23 +60,38 @@ public class AccountDAO extends DBContext {
     /**
      * Đăng ký tài khoản mới.
      */
-    public boolean register(String username, String password, String email, String phone) {
-        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
-        try {
-            conn = new DBContext().getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setString(1, username);
-            ps.setString(2, password);
-            ps.setString(3, email);
-            ps.setString(4, phone);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
+   public String register(String username, String password, String email, String phone) {
+    String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 0, ?, ?)";
+    try {
+        conn = new DBContext().getConnection();
+        if (conn == null) {
+            return "Không thể kết nối đến cơ sở dữ liệu";
         }
-        return false;
+        ps = conn.prepareStatement(query);
+        ps.setString(1, username);
+        ps.setString(2, password);
+        ps.setString(3, email);
+        ps.setString(4, phone);
+        int result = ps.executeUpdate();
+        if (result > 0) {
+            return "success";
+        } else {
+            return "Đăng ký không thành công";
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        if (e.getMessage().contains("Duplicate entry")) {
+            if (e.getMessage().contains("username")) {
+                return "Tên đăng nhập đã tồn tại";
+            } else if (e.getMessage().contains("email")) {
+                return "Email đã tồn tại";
+            }
+        }
+        return "Lỗi: " + e.getMessage();
+    } finally {
+        closeResources();
     }
+}
 
     /**
      * Kiểm tra username đã tồn tại chưa.
