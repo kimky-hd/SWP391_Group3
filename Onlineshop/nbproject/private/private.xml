@@ -15,43 +15,10 @@
             <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/register.jsp</file>
         </group>
         <group>
-<<<<<<< HEAD
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/OrderController.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/conf/MANIFEST.MF</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/OrderDetail.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/BlogDAO.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Blog.java</file>
             <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/BlogList.jsp</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/META-INF/context.xml</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/orders.jsp</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
             <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
             <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/nbproject/build-impl.xml~</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/BlogServlet.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CheckOut.jsp</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/AddressDAO.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/CartDAO.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/CartItem.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/index.html</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Cart.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/contact.jsp</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Order.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/NewServlet.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
-=======
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByTitle.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
->>>>>>> origin/main
         </group>
     </open-files>
 </project-private>
