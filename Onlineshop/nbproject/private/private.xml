@@ -15,10 +15,8 @@
             <file>file:/D:/SWP1/SWP391_Group3/Onlineshop/web/register.jsp</file>
         </group>
         <group>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByTitle.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/Feedback.java</file>
         </group>
     </open-files>
 </project-private>
