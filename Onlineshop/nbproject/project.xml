@@ -10,12 +10,6 @@
                     <file>${&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD}</file>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.gson-2.10.1.jar}</file>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.mysql-connector-j-9.3.0.jar-1}</file>
-                </library>
-                <library dirs="200">
                     <file>${file.reference.jakarta.servlet.jsp.jstl-2.0.0.jar-1}</file>
                 </library>
                 <library dirs="200">
@@ -35,20 +29,9 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.mysql-connector-j-9.3.0.jar-2}</file>
-                    <file>${file.reference.jakarta.servlet.jsp.jstl-2.0.0.jar-1}</file>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.jakarta.servlet.jsp.jstl-api-2.0.0.jar-1}</file>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.json-20210307.jar}</file>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.mysql-connector-j-9.3.0.jar-2}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.gson-2.10.1.jar}</file>
+                    <file>${file.reference.mysql-connector-j-9.3.0.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

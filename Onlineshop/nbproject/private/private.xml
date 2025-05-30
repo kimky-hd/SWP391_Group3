@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/nbproject/build-impl.xml~</file>
-        </group>
         <group name="New Folder (2)">
             <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
             <file>file:/D:/swp4/SWP391_Group3/Onlineshop/nbproject/build-impl.xml</file>
@@ -19,6 +13,15 @@
             <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
             <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
             <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
+        </group>
+        <group>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Homepage.jsp</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/css/style.css</file>
+            <file>file:/D:/SWP_Project_Group3/SWP_Project_Group3/SWP391_Group3/Onlineshop/nbproject/build-impl.xml~</file>
         </group>
     </open-files>
 </project-private>
