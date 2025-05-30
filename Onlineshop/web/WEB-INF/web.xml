@@ -62,8 +62,8 @@
         <url-pattern>/SearchPriceMinToMax</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>Homepage</welcome-file>
+        <welcome-file>Homepage.jsp</welcome-file>
     </welcome-file-list>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
