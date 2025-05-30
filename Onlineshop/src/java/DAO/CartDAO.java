@@ -13,7 +13,7 @@ import Model.Product;
 public class CartDAO extends DBContext {
     
     public Product getProductById(int productId) {
-        String sql = "SELECT * FROM Product WHERE productID = ?";
+        String sql = "SELECT * FROM Products WHERE product_id = ?";
         
         Connection conn = getConnection();
         if (conn == null) {
@@ -27,8 +27,8 @@ public class CartDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Product product = new Product();
-                    product.setProductID(rs.getInt("productID"));
-                    product.setTitle(rs.getString("title"));
+                    product.setProductID(rs.getInt("product_id"));
+                    product.setTitle(rs.getString("name"));
                     product.setPrice(rs.getDouble("price"));
                     product.setDescription(rs.getString("description"));
                     product.setImage(rs.getString("image"));
@@ -45,7 +45,7 @@ public class CartDAO extends DBContext {
     }
     
     public boolean checkProductAvailability(int productId, int requestedQuantity) {
-        String sql = "SELECT quantity FROM Product WHERE productID = ?";
+        String sql = "SELECT quantity FROM Products WHERE product_id = ?";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -67,7 +67,7 @@ public class CartDAO extends DBContext {
     }
     
     public boolean updateProductQuantity(int productId, int quantityChange) {
-        String sql = "UPDATE Products SET quantity = quantity + ? WHERE productID = ?";
+        String sql = "UPDATE Products SET quantity = quantity + ? WHERE product_id = ?";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
