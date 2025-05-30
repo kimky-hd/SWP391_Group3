@@ -160,9 +160,9 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Product> getProductByTitle(String txt) {
+    public List<Product> getProductByTitle(String title) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
+        String sql = "SELECT * FROM Product WHERE title LIKE ?";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -264,18 +264,6 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public void updateAddQuantity(int quantityAdd, int productID) {
-        String sql = "Update product set quantity = quantity + ? where productID = ?";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, quantityAdd);
-            ps.setInt(2, productID);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("updateAddQuantity" + e.getMessage());
-        }
-    }
-
     public List<Color> getAllColor() {
         List<Color> list = new ArrayList<>();
         String sql = "Select * from PhanLoaiTheoColor";
@@ -348,90 +336,6 @@ public class ProductDAO extends DBContext {
             System.out.println("countAllProduct" + e.getMessage());
         }
         return 0;
-    }
-
-    public List<Product> searchPrice0to50() {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product \n"
-                + "WHERE price >= 0 AND price <= 50000";
-        try{
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
-                        rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getString(9),
-                        rs.getDate(10),
-                        rs.getDate(11)));
-                
-            }
-        }catch (SQLException e){
-            System.out.println("searchPrice0to50" + e.getMessage());
-        }
-        return list;
-    }
-    
-    public List<Product> searchPriceAbove50() {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product \n"
-                + "WHERE price > 50000";
-        try{
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
-                        rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getString(9),
-                        rs.getDate(10),
-                        rs.getDate(11)));
-                
-            }
-        }catch (SQLException e){
-            System.out.println("searchPriceAbove50" + e.getMessage());
-        }
-        return list;
-    }
-    
-    public List<Product> searchPriceMinToMax( String priceMin, String priceMax){
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product \n"
-                + "WHERE price >= ? AND price <= ?";
-        try{
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, priceMin);
-            ps.setString(2, priceMax);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(new Product(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
-                        rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getString(9),
-                        rs.getDate(10),
-                        rs.getDate(11)
-                ));
-            }
-        }catch (SQLException e){
-            System.out.println("searchPriceAbove50" + e.getMessage());
-        }
-        return list;
     }
 
     public WishList checkWishListExist(int accountID, int productID) {
