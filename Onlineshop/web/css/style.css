@@ -9721,3 +9721,28 @@ a.text-dark:hover, a.text-dark:focus {
         transform: translateY(-15px);
     }
 }
+.btn-light {
+    background-color: #fce4ec; /* pastel pink */
+    color: #5f375f;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-light:hover {
+    background-color: #f48fb1;
+    color: white;
+}
+
+/* Responsive kích thước nhỏ */
+.btn-sm {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+}
+
+/* Khoảng cách bên phải */
+.mr-2 {
+    margin-right: 0.5rem;
+}

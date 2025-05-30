@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.CartDAO;
+import Model.Account;
 import Model.Cart;
 import Model.CartItem;
 import Model.Product;
@@ -14,7 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import Model.Account;
+
 /**
  * CartController xử lý các thao tác liên quan đến giỏ hàng
  * 
