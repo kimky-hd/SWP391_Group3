@@ -23,12 +23,7 @@ public class Account {
 
     }
 
-   
 
-    // Constructor không có phone (gán phone mặc định là "")
-    public Account(int accountID, String username, String password, int role, String email) {
-        this(accountID, username, password, role, email, "");
-    }
 
     public int getAccountID() {
         return accountID;

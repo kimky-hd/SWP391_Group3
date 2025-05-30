@@ -197,8 +197,6 @@ public class CartController extends HttpServlet {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
 
-            boolean success = cartDAO.removeFromCart(account.getAccountID(), productId);
-
             if (success) {
                 cart.removeItem(productId);
                 updateSessionCart(session, account.getAccountID());
@@ -226,8 +224,6 @@ public class CartController extends HttpServlet {
             sendJsonResponse(response, createErrorResponse("Vui lòng đăng nhập"));
             return;
         }
-
-        boolean success = cartDAO.clearCart(account.getAccountID());
 
         if (success) {
             cart.clear();

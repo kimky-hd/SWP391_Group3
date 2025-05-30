@@ -9,7 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
-    protected Connection connection;
 
     public DBContext() {
         try {
@@ -46,6 +45,4 @@ public class DBContext {
             System.out.println("Kết nối thất bại.");
         }
     }
-
-}
 
