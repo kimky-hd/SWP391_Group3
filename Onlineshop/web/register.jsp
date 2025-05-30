@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLOWER SHOP - Đăng ký</title>
+     <!-- Thêm script reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -163,7 +165,10 @@
                     <label for="confirm-password">Xác nhận mật khẩu</label>
                     <input type="password" id="confirm-password" name="confirm-password" required>
                 </div>
-                
+                <!-- Thêm reCAPTCHA widget -->
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LdWek4rAAAAAPy1lqXYjQHUiVHyjS5KOj3eEwRs"></div>
+                    </div>
                 <button type="submit" class="register-btn">Đăng ký</button>
             </form>
             
@@ -186,6 +191,12 @@
             
             if (password !== confirmPassword) {
                 alert("Mật khẩu xác nhận không khớp!");
+                return false;
+            }
+            // Kiểm tra xem người dùng đã hoàn thành reCAPTCHA chưa
+            var recaptchaResponse = grecaptcha.getResponse();
+            if(recaptchaResponse.length === 0) {
+                alert("Vui lòng xác nhận bạn không phải là robot!");
                 return false;
             }
             

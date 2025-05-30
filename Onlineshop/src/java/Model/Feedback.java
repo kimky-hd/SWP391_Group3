@@ -80,8 +80,6 @@ public class Feedback {
 
     @Override
     public String toString() {
-        return "Feedback{" + "FeedbackID=" + FeedbackID + ", Star=" + Star + ", CreateAt=" + CreateAt + ", Comment=" + Comment + ", Account_ID=" + Account_ID + ", Product_ID=" + Product_ID + '}';
+        return "Rating{" + "FeedbackID=" + FeedbackID + ", Star=" + Star + ", CreateAt=" + CreateAt + ", Comment=" + Comment + ", Account_ID=" + Account_ID + ", Product_ID=" + Product_ID + '}';
     }
-
-    
 }

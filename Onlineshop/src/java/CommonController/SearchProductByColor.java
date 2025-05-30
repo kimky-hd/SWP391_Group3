@@ -7,7 +7,6 @@ package CommonController;
 import DAO.ProductDAO;
 import Model.Color;
 import Model.Product;
-import Model.Season;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -37,12 +36,12 @@ public class SearchProductByColor extends HttpServlet {
         ProductDAO productDAO = new ProductDAO();
         String colorId = request.getParameter("colorId");
         System.out.println(colorId);
-        List<Season> listAllSeasons = productDAO.getAllSeason();
+
         List<Product> listproductByColor = productDAO.getProductByColor(colorId);
         List<Color> listAllColors = productDAO.getAllColor();
         request.setAttribute("productList", listproductByColor);
         request.setAttribute("listAllColors", listAllColors);
-        request.setAttribute("listAllSeasons", listAllSeasons);
+
         request.getRequestDispatcher("ProductList.jsp").forward(request, response);
     }
 
