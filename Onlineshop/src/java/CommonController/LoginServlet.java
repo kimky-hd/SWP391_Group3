@@ -15,31 +15,27 @@ import jakarta.servlet.http.HttpSession;
 public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        System.out.println("Raw userInput: " + request.getParameter("userInput"));
+        System.out.println("Raw password: " + request.getParameter("password"));
+        System.out.println("\n=== Login Request ===\n");
         
-        String userInput = request.getParameter("userInput");//lấy dữ liệu người dùng nhập từ from
+        String userInput = request.getParameter("userInput");
         String password = request.getParameter("password");
         
-        // Kiểm tra đầu vào
-        if (userInput == null || password == null || userInput.trim().isEmpty() || password.trim().isEmpty()) {
-            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin đăng nhập!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
+        System.out.println("Received login request with username/email: " + userInput);
         
         AccountDAO dao = new AccountDAO();
         Account account = dao.login(userInput, password);
         
         if(account != null) {
+            System.out.println("Login successful, creating session");
             HttpSession session = request.getSession(true);
             session.setAttribute("account", account);
-            session.setMaxInactiveInterval(30*60); // Session hết hạn sau 30 phút
-            
-            // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-            // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-            response.sendRedirect("Homepage");  // Giữ nguyên như vậy vì đã đúng với URL pattern
+            response.sendRedirect("Homepage");
         } else {
+            System.out.println("Login failed, redirecting back to login page");
             request.setAttribute("error", "Thông tin đăng nhập không đúng!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
