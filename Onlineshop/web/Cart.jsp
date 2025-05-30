@@ -1,9 +1,9 @@
-<%-- 
+<%--
     Document   : Cartmain
     Created on : May 26, 2025, 10:25:03 AM
     Author     : kimky
 --%>
-
+<%@ page import="Model.Account" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -17,26 +17,91 @@
         <meta content="Free HTML Templates" name="keywords">
         <meta content="Free HTML Templates" name="description">
 
-        <!-- Favicon -->
         <link href="img/favicon.ico" rel="icon">
 
-        <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
 
-        <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-        <!-- Libraries Stylesheet -->
         <link href="lib/animate/animate.min.css" rel="stylesheet">
         <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-        <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
+
+        <style>
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh; /* Đảm bảo body chiếm ít nhất 100% chiều cao của viewport */
+                margin: 0 !important; /* Loại bỏ margin mặc định của body do trình duyệt hoặc Bootstrap */
+                padding: 0 !important; /* Loại bỏ padding mặc định của body */
+            }
+
+            /* Wrapper cho nội dung chính, sẽ co giãn để đẩy footer xuống */
+            .page-content-wrapper {
+                flex: 1; /* Cho phép vùng này co giãn để lấp đầy không gian còn lại */
+                display: flex; /* Dùng flex để các phần tử bên trong nó cũng có thể sắp xếp */
+                flex-direction: column; /* Sắp xếp nội dung bên trong theo cột */
+            }
+
+            /* Đảm bảo các phần tử như Topbar, Navbar không bị co lại */
+            .container-fluid.bg-secondary.py-1.px-xl-5, /* Topbar */
+            .container-fluid.bg-pink.mb-30 /* Navbar */ {
+                flex-shrink: 0;
+            }
+
+            /* Footer của bạn, đảm bảo không bị co lại và dính xuống cuối */
+            .container-fluid.bg-pink.text-secondary.mt-5.pt-5 {
+                flex-shrink: 0;
+                margin-top: auto; /* Đẩy footer xuống dưới cùng khi dùng flex-direction: column trên body */
+            }
+
+            /* Styles for Toast Message Container */
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .toast {
+                padding: 15px 25px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+                color: #5f375f;
+                background-color: #fce4ec; /* pastel pink background */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.4s ease-in-out;
+                border-left: 6px solid #f48fb1; /* pastel rose accent */
+            }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .toast.success {
+                background-color: #f8bbd0; /* light pastel pink */
+                border-left-color: #40ec46;
+            }
+
+            .toast.error {
+                background-color: #fce4ec;
+                border-left-color: #d81b60;
+            }
+        </style>
     </head>
 
     <body>
-        <!-- Topbar Start -->
         <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
                 <div class="col-lg-6 d-none d-lg-block">
@@ -49,19 +114,37 @@
                 </div>
                 <div class="col-lg-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
+                        <% if(session.getAttribute("account") != null) { 
+                                Account acc = (Account)session.getAttribute("account");
+                        %>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                <%= acc.getUsername() %>
+                            </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <button class="dropdown-item" type="button">Sign in</button>
-                                <button class="dropdown-item" type="button">Sign up</button>
+                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
+                        <% } else { %>
+                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <% } %>
+                    </div>
+                    <div class="d-inline-flex align-items-center d-block d-lg-none">
+                        <a href="" class="btn px-0 ml-2">
+                            <i class="fas fa-heart text-dark"></i>
+                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                        </a>
+                        <a href="" class="btn px-0 ml-2">
+                            <i class="fas fa-shopping-cart text-dark"></i>
+                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
-                    <a href="index.html" class="text-decoration-none">
+                    <a href="" class="text-decoration-none">
                         <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
                         <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
@@ -84,184 +167,159 @@
                 </div>
             </div>
         </div>
-        <!-- Topbar End -->
-
-        <!-- Navbar Start -->
         <div class="container-fluid bg-pink mb-30">
             <div class="row px-xl-5">
-                <div class="col-lg-3 d-none d-lg-block">
-                    <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
-                        <div class="navbar-nav w-100">
-                            <div class="nav-item dropdown dropright">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dresses <i class="fa fa-angle-right float-right mt-1"></i></a>
-                                <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                    <a href="" class="dropdown-item">Men's Dresses</a>
-                                    <a href="" class="dropdown-item">Women's Dresses</a>
-                                    <a href="" class="dropdown-item">Baby's Dresses</a>
-                                </div>
-                            </div>
-                            <a href="" class="nav-item nav-link">Shirts</a>
-                            <a href="" class="nav-item nav-link">Jeans</a>
-                            <a href="" class="nav-item nav-link">Swimwear</a>
-                            <a href="" class="nav-item nav-link">Sleepwear</a>
-                            <a href="" class="nav-item nav-link">Sportswear</a>
-                            <a href="" class="nav-item nav-link">Jumpsuits</a>
-                            <a href="" class="nav-item nav-link">Blazers</a>
-                            <a href="" class="nav-item nav-link">Jackets</a>
-                            <a href="" class="nav-item nav-link">Shoes</a>
-                        </div>
-                    </nav>
-                </div>
-                <div class="col-lg-9">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
-                        <a href="index.html" class="text-decoration-none d-block d-lg-none">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
+
+                        <a href="#" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
+
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                            <div class="navbar-nav mx-auto py-0">
-                                <a href="index.html" class="nav-item nav-link">Home</a>
-                                <a href="shop.html" class="nav-item nav-link">Shop</a>
+
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <div class="navbar-nav py-0">
+                                <a href="Homepage" class="nav-item nav-link active">Home</a>
+                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item active">Shopping Cart</a>
+                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
                                         <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
                                     </div>
                                 </div>
                                 <a href="contact.html" class="nav-item nav-link">Contact</a>
                             </div>
-                            <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                                <a href="" class="btn px-0">
-                                    <i class="fas fa-heart text-primary"></i>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                                </a>
-                                <a href="cart.html" class="btn px-0 ml-3">
-                                    <i class="fas fa-shopping-cart text-primary"></i>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                                </a>
-                            </div>
                         </div>
+
+                        <div class="d-none d-lg-flex align-items-center ml-auto">
+                            <a href="#" class="btn px-0">
+                                <i class="fas fa-heart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                            <a href="Cart.jsp" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                        </div>
+
                     </nav>
                 </div>
             </div>
         </div>
-        <!-- Navbar End -->
-
-        <!-- Cart Start -->
-        <div class="container-fluid">
-            <div class="row px-xl-5">
-                <div class="col-lg-8 table-responsive mb-5">
-                    <table class="table table-light table-borderless table-hover text-center mb-0">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Sản phẩm</th>
-                                <th>Giá</th>
-                                <th>Số lượng</th>
-                                <th>Tổng</th>
-                                <th>Xóa</th>
-                            </tr>
-                        </thead>
-                        <tbody class="align-middle">
-                            <c:choose>
-                                <c:when test="${empty sessionScope.cart or empty sessionScope.cart.items}">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-5">
-                                            <h5>Giỏ hàng của bạn đang trống</h5>
-                                            <a href="ProductList.jsp" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
-                                        </td>
-                                    </tr>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="item" items="${sessionScope.cart.items}">
+        <div class="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row px-xl-5">
+                    <div class="col-lg-8 table-responsive mb-5">
+                        <table class="table table-light table-borderless table-hover text-center mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Tổng</th>
+                                    <th>Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                <c:choose>
+                                    <c:when test="${empty sessionScope.cart or empty sessionScope.cart.items}">
                                         <tr>
-                                            <td class="align-middle">
-                                                <img src="${item.product.image}" alt="${item.product.name}" style="width: 50px;"> 
-                                                ${item.product.name}
-                                            </td>
-                                            <td class="align-middle">
-                                                <fmt:formatNumber value="${item.product.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="input-group quantity mx-auto" style="width: 120px;">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-sm btn-primary btn-minus" onclick="updateQuantity(${item.product.productID}, ${item.quantity - 1})">
-                                                            <i class="fa fa-minus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" 
-                                                           value="${item.quantity}" 
-                                                           onchange="updateQuantity(${item.product.productID}, this.value)"
-                                                           min="1" max="${item.product.quantity}">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-sm btn-primary btn-plus" onclick="updateQuantity(${item.product.productID}, ${item.quantity + 1})">
-                                                            <i class="fa fa-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <small class="text-muted">Còn lại: ${item.product.quantity}</small>
-                                            </td>
-                                            <td class="align-middle">
-                                                <fmt:formatNumber value="${item.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-                                            </td>
-                                            <td class="align-middle">
-                                                <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.product.productID})">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
+                                            <td colspan="5" class="text-center py-5">
+                                                <h5>Giỏ hàng của bạn đang trống</h5>
+                                                <a href="ViewListProductController" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
                                             </td>
                                         </tr>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-4">
-                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng giỏ hàng</span></h5>
-                    <div class="bg-light p-30 mb-5">
-                        <c:set var="shippingFee" value="30000" />
-                        <div class="border-bottom pb-2">
-                            <div class="d-flex justify-content-between mb-3">
-                                <h6>Tổng tiền hàng</h6>
-                                <h6>
-                                    <fmt:formatNumber value="${sessionScope.cart.total != null ? sessionScope.cart.total : 0}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-                                </h6>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach var="item" items="${sessionScope.cart.items}">
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <img src="${item.product.image}" alt="${item.product.title}" style="width: 50px;">
+                                                    ${item.product.title}
+                                                </td>
+                                                <td class="align-middle">
+                                                    <fmt:formatNumber value="${item.product.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                                </td>
+                                                <td class="align-middle">
+                                                    <div class="input-group quantity mx-auto" style="width: 120px;">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-sm btn-primary btn-minus" onclick="updateQuantity(${item.product.productID}, ${item.quantity - 1})">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" 
+                                                               value="${item.quantity}" 
+                                                               onchange="updateQuantity(${item.product.productID}, this.value)"
+                                                               min="1" max="${item.product.quantity}">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-sm btn-primary btn-plus" onclick="updateQuantity(${item.product.productID}, ${item.quantity + 1})">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted">Còn lại: ${item.product.quantity}</small>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <fmt:formatNumber value="${item.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                                </td>
+                                                <td class="align-middle">
+                                                    <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.product.productID})">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng giỏ hàng</span></h5>
+                        <div class="bg-light p-30 mb-5">
+                            <c:set var="shippingFee" value="30000" />
+                            <div class="border-bottom pb-2">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <h6>Tổng tiền hàng</h6>
+                                    <h6>
+                                        <fmt:formatNumber value="${sessionScope.cart.total != null ? sessionScope.cart.total : 0}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                    </h6>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                                    <h6 class="font-weight-medium">
+                                        <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                    </h6>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <h6 class="font-weight-medium">Phí vận chuyển</h6>
-                                <h6 class="font-weight-medium">
-                                    <fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-                                </h6>
+                            <div class="pt-2">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <h5>Tổng thanh toán</h5>
+                                    <h5>
+                                        <fmt:formatNumber value="${sessionScope.cart.total + shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                    </h5>
+                                </div>
+                                <c:choose>
+                                    <c:when test="${empty sessionScope.cart or empty sessionScope.cart.items}">
+                                        <button class="btn btn-block btn-secondary font-weight-bold my-3 py-3" disabled>Giỏ hàng trống</button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="CheckOut.jsp" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
-                        </div>
-                        <div class="pt-2">
-                            <div class="d-flex justify-content-between mt-2">
-                                <h5>Tổng thanh toán</h5>
-                                <h5>
-                                    <fmt:formatNumber value="${sessionScope.cart.total + shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-                                </h5>
-                            </div>
-                            <c:choose>
-                                <c:when test="${empty sessionScope.cart or empty sessionScope.cart.items}">
-                                    <button class="btn btn-block btn-secondary font-weight-bold my-3 py-3" disabled>Giỏ hàng trống</button>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="CheckOut.jsp" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
-                                </c:otherwise>
-                            </c:choose>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="toast-container"></div>
         </div>
-        <!-- Cart End -->
-
-        !-- Footer Start -->
-
         <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
             <div class="row px-xl-5 pt-5">
                 <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
@@ -317,91 +375,153 @@
                     </div>
                 </div>
             </div>
-            
-        <!-- Footer End -->
-
-        <!-- Back to Top -->
+            <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+                <div class="col-md-6 px-xl-0">
+                    <p class="mb-md-0 text-center text-md-left text-secondary">
+                        &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 px-xl-0 text-center text-md-right">
+                    <img class="img-fluid" src="img/payments.png" alt="">
+                </div>
+            </div>
+        </div>
         <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-        <!-- JavaScript Libraries -->
+
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
         <script src="lib/easing/easing.min.js"></script>
         <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-        <!-- Template Javascript -->
         <script src="js/main.js"></script>
-        
+
         <script>
-            function updateQuantity(productId, newQuantity) {
-                // Validate quantity
-                if (newQuantity < 1) {
-                    alert('Số lượng phải lớn hơn 0');
-                    return;
-                }
-                
-                $.ajax({
-                    url: 'cart',
-                    type: 'POST',
-                    data: {
-                        action: 'update',
-                        productId: productId,
-                        quantity: newQuantity
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            location.reload();
-                        } else {
-                            alert(response.message);
-                            location.reload();
-                        }
-                    },
-                    error: function() {
-                        alert('Có lỗi xảy ra khi cập nhật giỏ hàng');
-                    }
-                });
+                                                        function updateQuantity(productId, newQuantity) {
+                                                            if (newQuantity < 1) {
+                                                                showToast('Số lượng phải lớn hơn 0', 'error');
+                                                                return;
+                                                            }
+                                                            $.ajax({
+                                                                url: 'cart',
+                                                                type: 'POST',
+                                                                data: {
+                                                                    action: 'update',
+                                                                    productId: productId,
+                                                                    quantity: newQuantity
+                                                                },
+                                                                success: function (response) {
+                                                                    if (response.success) {
+                                                                        location.reload();
+                                                                    } else {
+                                                                        showToast(response.success, 'error');
+                                                                        location.reload();
+                                                                    }
+                                                                },
+                                                                error: function () {
+                                                                    showToast('Có lỗi xảy ra khi cập nhật giỏ hàng', 'error');
+                                                                    location.reload();
+                                                                }
+                                                            });
+                                                        }
+
+                                                        function removeFromCart(productId) {
+                                                            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                                                                $.ajax({
+                                                                    url: 'cart',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        action: 'remove',
+                                                                        productId: productId
+                                                                    },
+                                                                    success: function (response) {
+                                                                        if (response.success) {
+                                                                            location.reload();
+                                                                        } else {
+                                                                            showToast(response.message, 'error');
+                                                                        }
+                                                                    },
+                                                                    error: function () {
+                                                                        showToast('Có lỗi xảy ra khi xóa sản phẩm', 'error');
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+
+                                                        function clearCart() {
+                                                            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?')) {
+                                                                $.ajax({
+                                                                    url: 'cart',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        action: 'clear'
+                                                                    },
+                                                                    success: function (response) {
+                                                                        location.reload();
+                                                                    },
+                                                                    error: function () {
+                                                                        showToast('Có lỗi xảy ra khi xóa giỏ hàng', 'error');
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+        </script>
+
+        <script>
+            function showToast(message, type) {
+                const container = document.querySelector('.toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+
+                container.appendChild(toast);
+
+                // Trigger reflow to enable transition
+                toast.offsetHeight;
+
+                // Show toast
+                toast.classList.add('show');
+
+                // Remove toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        container.removeChild(toast);
+                    }, 400);
+                }, 3000);
             }
-            
-            function removeFromCart(productId) {
-                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                    $.ajax({
-                        url: 'cart',
-                        type: 'POST',
-                        data: {
-                            action: 'remove',
-                            productId: productId
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                location.reload();
-                            } else {
-                                alert(response.message);
-                            }
-                        },
-                        error: function() {
-                            alert('Có lỗi xảy ra khi xóa sản phẩm');
-                        }
-                    });
-                }
-            }
-            
-            function clearCart() {
-                if (confirm('Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?')) {
-                    $.ajax({
-                        url: 'cart',
-                        type: 'POST',
-                        data: {
-                            action: 'clear'
-                        },
-                        success: function(response) {
-                            location.reload();
-                        },
-                        error: function() {
-                            alert('Có lỗi xảy ra khi xóa giỏ hàng');
-                        }
-                    });
-                }
+
+            // Check for message in session
+            const message = '${sessionScope.message}';
+            const messageType = '${sessionScope.messageType}';
+            if (message && messageType) {
+                showToast(message, messageType);
+                // Clear the message from session
+            <% 
+            session.removeAttribute("message");
+            session.removeAttribute("messageType");
+            %>
             }
         </script>
+
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Xác nhận đăng xuất</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc chắn muốn đăng xuất không?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <a href="LogoutController" class="btn btn-primary">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

@@ -15,12 +15,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import static org.apache.tomcat.jakartaee.commons.lang3.StringUtils.isNumeric;
 
 /**
  *
  * @author Admin
  */
-public class SearchProductByColor extends HttpServlet {
+public class SearchPriceMinToMax extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,16 +35,32 @@ public class SearchProductByColor extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String priceMin = request.getParameter("priceMin").trim();
+        String priceMax = request.getParameter("priceMax").trim();
         ProductDAO productDAO = new ProductDAO();
-        String colorId = request.getParameter("colorId");
-        System.out.println(colorId);
-        List<Season> listAllSeasons = productDAO.getAllSeason();
-        List<Product> listproductByColor = productDAO.getProductByColor(colorId);
-        List<Color> listAllColors = productDAO.getAllColor();
-        request.setAttribute("productList", listproductByColor);
-        request.setAttribute("listAllColors", listAllColors);
-        request.setAttribute("listAllSeasons", listAllSeasons);
-        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
+        if ((priceMin == null || priceMin.trim().isEmpty())
+                && (priceMax == null || priceMax.trim().isEmpty())) {
+            response.sendRedirect("productList");
+        } else {
+            if (!isNumeric(priceMin) || !isNumeric(priceMax)) {
+                request.setAttribute("err", "Bạn cần nhập số lớn hơn 0!");
+                request.getRequestDispatcher("productList").forward(request, response);
+            }
+            if (Integer.parseInt(priceMin) > Integer.parseInt(priceMax)) {
+                request.setAttribute("err", "Bạn cần nhập giá Min nhỏ hơn giá Max!");
+                request.getRequestDispatcher("productList").forward(request, response);
+            }
+            List<Product> list = productDAO.searchPriceMinToMax(priceMin, priceMax);
+            List<Season> listAllSeasons = productDAO.getAllSeason();
+            List<Color> listAllColors = productDAO.getAllColor();
+            request.setAttribute("priceMin", priceMin);
+            request.setAttribute("priceMax", priceMax);
+            request.setAttribute("productList", list);
+            request.setAttribute("listAllColors", listAllColors);
+            request.setAttribute("listAllSeasons", listAllSeasons);
+            request.getRequestDispatcher("ProductList.jsp").forward(request, response);
+
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

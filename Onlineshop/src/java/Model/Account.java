@@ -1,6 +1,7 @@
 package Model;
 
 public class Account {
+
     private int accountID;
     private String username;
     private String password;
@@ -11,17 +12,18 @@ public class Account {
     public Account() {
     }
 
-    // Constructor đầy đủ
     public Account(int accountID, String username, String password, int role, String email, String phone) {
         this.accountID = accountID;
         this.username = username;
         this.password = password;
         this.role = role;
         this.email = email;
-        this.phone = phone;
+
+        this.phone = "";
+
     }
 
- 
+
 
     public int getAccountID() {
         return accountID;
