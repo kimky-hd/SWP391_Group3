@@ -80,17 +80,17 @@
                         <% if(session.getAttribute("account") != null) { 
                             Account acc = (Account)session.getAttribute("account");
                         %>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                    <%= acc.getUsername() %>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
-                                </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                <%= acc.getUsername() %>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
+                        </div>
                         <% } else { %>
-                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
                         <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -383,84 +383,160 @@
 
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
+
             <!-- Toast Message Container -->
+
             <style>
+
                 .toast-container {
+
                     position: fixed;
+
                     top: 20px;
+
                     right: 20px;
+
                     z-index: 9999;
+
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
                 }
+
+
 
                 .toast {
+
                     padding: 15px 25px;
+
                     margin-bottom: 12px;
+
                     border-radius: 12px;
+
                     color: #5f375f;
+
                     background-color: #fce4ec; /* pastel pink background */
+
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
                     opacity: 0;
+
                     transform: translateX(100%);
+
                     transition: all 0.4s ease-in-out;
+
                     border-left: 6px solid #f48fb1; /* pastel rose accent */
+
                 }
+
+
 
                 .toast.show {
+
                     opacity: 1;
+
                     transform: translateX(0);
+
                 }
+
+
 
                 .toast.success {
+
                     background-color: #f8bbd0; /* light pastel pink */
+
                     border-left-color: #ec407a;
+
                 }
 
+
+
                 .toast.error {
+
                     background-color: #fce4ec;
+
                     border-left-color: #d81b60;
+
                 }
+
             </style>
+
+
 
             <div class="toast-container"></div>
 
+
+
             <script>
-                function showToast(message, type) {
-                    const container = document.querySelector('.toast-container');
-                    const toast = document.createElement('div');
-                    toast.className = `toast ${type}`;
-                    toast.textContent = message;
 
-                    container.appendChild(toast);
+                            function showToast(message, type) {
 
-                    // Trigger reflow to enable transition
-                    toast.offsetHeight;
+                                const container = document.querySelector('.toast-container');
 
-                    // Show toast
-                    toast.classList.add('show');
+                                const toast = document.createElement('div');
 
-                    // Remove toast after 3 seconds
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                        setTimeout(() => {
-                            container.removeChild(toast);
-                        }, 400);
-                    }, 3000);
-                }
+                                toast.className = `toast ${type}`;
 
-                // Check for message in session
-                const message = '${sessionScope.message}';
-                const messageType = '${sessionScope.messageType}';
-                if (message && messageType) {
-                    showToast(message, messageType);
-                    // Clear the message from session
+                                toast.textContent = message;
+
+
+
+                                container.appendChild(toast);
+
+
+
+                                // Trigger reflow to enable transition
+
+                                toast.offsetHeight;
+
+
+
+                                // Show toast
+
+                                toast.classList.add('show');
+
+
+
+                                // Remove toast after 3 seconds
+
+                                setTimeout(() => {
+
+                                    toast.classList.remove('show');
+
+                                    setTimeout(() => {
+
+                                        container.removeChild(toast);
+
+                                    }, 400);
+
+                                }, 3000);
+
+                            }
+
+
+
+                            // Check for message in session
+
+                            const message = '${sessionScope.message}';
+
+                            const messageType = '${sessionScope.messageType}';
+
+                            if (message && messageType) {
+
+                                showToast(message, messageType);
+
+                                // Clear the message from session
+
                 <% 
-                session.removeAttribute("message");
-                session.removeAttribute("messageType");
-                %>
-                }
-            </script>
 
+                session.removeAttribute("message");
+
+                session.removeAttribute("messageType");
+
+                %>
+
+                            }
+
+            </script>
     </body>
 </html>
 

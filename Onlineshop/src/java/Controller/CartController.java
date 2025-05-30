@@ -96,7 +96,7 @@ public class CartController extends HttpServlet {
             // Validate input
             if (quantity <= 0) {
                 request.getSession().setAttribute("message", "Số lượng phải lớn hơn 0");
-                request.getSession().setAttribute("messageType", "success");
+                request.getSession().setAttribute("messageType", "error");
                 response.sendRedirect(request.getHeader("referer"));
                 return;
             }
@@ -164,7 +164,9 @@ public class CartController extends HttpServlet {
             // Check if new quantity exceeds available stock
             if (!cartDAO.checkProductAvailability(productId, quantity)) {
                 sendJsonResponse(response, createErrorResponse("Số lượng yêu cầu vượt quá số lượng có sẵn trong kho"));
-
+//                request.setAttribute("message", "Thêm sản phẩm thành công!");
+//                request.setAttribute("messageType", "error");
+//                request.getRequestDispatcher("/cart");
                 return;
             }
 
