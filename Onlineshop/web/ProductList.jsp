@@ -169,6 +169,20 @@
                                 </a>
                             </div>
                         </div>
+
+                        <!-- ✅ Icon bên phải -->
+                        <div class="d-none d-lg-flex align-items-center ml-auto">
+                            <a href="#" class="btn px-0">
+                                <i class="fas fa-heart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                            <a href="Cart.jsp" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+                            </a>
+                        </div>
                     </nav>
                 </div>
             </div>
@@ -374,5 +388,85 @@
 
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
+
+            <!-- Toast Message Container -->
+            <style>
+                .toast-container {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+
+                .toast {
+                    padding: 15px 25px;
+                    margin-bottom: 12px;
+                    border-radius: 12px;
+                    color: #5f375f;
+                    background-color: #fce4ec;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.4s ease-in-out;
+                    border-left: 6px solid #f48fb1;
+                }
+
+                .toast.show {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                .toast.success {
+                    background-color: #f8bbd0;
+                    border-left-color: #40ec46;
+                }
+
+                .toast.error {
+                    background-color: #fce4ec;
+                    border-left-color: #d81b60;
+                }
+            </style>
+
+            <div class="toast-container"></div>
+
+            <script>
+                                        function showToast(message, type) {
+                                            const container = document.querySelector('.toast-container');
+                                            const toast = document.createElement('div');
+                                            toast.className = `toast ${type}`;
+                                            toast.textContent = message;
+
+                                            container.appendChild(toast);
+
+                                            // Reflow để kích hoạt animation
+                                            toast.offsetHeight;
+
+                                            // Show toast
+                                            toast.classList.add('show');
+
+                                            // Tự động biến mất sau 3s
+                                            setTimeout(() => {
+                                                toast.classList.remove('show');
+                                                setTimeout(() => {
+                                                    container.removeChild(toast);
+                                                }, 400);
+                                            }, 3000);
+                                        }
+
+                                        // Lấy message từ session JSP
+                                        const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                                        const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+
+                                        if (message && messageType) {
+                                            showToast(message, messageType);
+                                        }
+            </script>
+
+            <%
+                // Xoá session sau khi hiển thị
+                session.removeAttribute("message");
+                session.removeAttribute("messageType");
+            %>
     </body>
 </html>
