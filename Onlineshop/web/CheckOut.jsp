@@ -145,7 +145,11 @@
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+
                             </a>
                         </div>
 
@@ -230,17 +234,23 @@
                 <div class="col-lg-4">
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng đơn hàng</span></h5>
                     <div class="bg-light p-30 mb-5">
+                        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+                        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+                        <!-- Trong phần hiển thị sản phẩm -->
                         <div class="border-bottom">
                             <h6 class="mb-3">Sản phẩm</h6>
-                            <div class="d-flex justify-content-between">
-                                <p>Hoa Hồng x 1</p>
-                                <p>150.000đ</p>
-                            </div>
+                            <c:forEach items="${cart.items}" var="item">
+                                <div class="d-flex justify-content-between">
+                                    <p>${item.product.title} x ${item.quantity}</p>
+                                    <p><fmt:formatNumber value="${item.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ</p>
+                                </div>
+                            </c:forEach>
                         </div>
                         <div class="border-bottom pt-3 pb-2">
                             <div class="d-flex justify-content-between mb-3">
                                 <h6>Tổng tiền hàng</h6>
-                                <h6>150.000đ</h6>
+                                <h6><fmt:formatNumber value="${cart.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ</h6>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <h6 class="font-weight-medium">Phí vận chuyển</h6>
@@ -250,7 +260,7 @@
                         <div class="pt-2">
                             <div class="d-flex justify-content-between mt-2">
                                 <h5>Tổng thanh toán</h5>
-                                <h5>180.000đ</h5>
+                                <h5><fmt:formatNumber value="${cart.total + 30000}" type="currency" currencySymbol="" pattern="#,##0"/>đ</h5>
                             </div>
                         </div>
                     </div>
@@ -275,7 +285,57 @@
                                     <label class="custom-control-label" for="banktransfer">Ví điện tử</label>
                                 </div>
                             </div>
-                            <button class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
+                            <!-- Thay thế nút đặt hàng bằng form submit -->
+                            <form action="order" method="post" id="orderForm">
+                                <input type="hidden" name="action" value="place">
+                                <input type="hidden" name="fullName" id="fullName">
+                                <input type="hidden" name="phone" id="phone">
+                                <input type="hidden" name="email" id="email">
+                                <input type="hidden" name="address" id="address">
+                                <input type="hidden" name="city" id="city">
+                                <input type="hidden" name="district" id="district">
+                                <input type="hidden" name="ward" id="ward">
+                                <input type="hidden" name="paymentMethod" id="paymentMethod">
+                                <button type="button" onclick="submitOrder()" class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
+                            </form>
+                            
+                            <script>
+                                function submitOrder() {
+                                    // Lấy thông tin từ form địa chỉ giao hàng
+                                    document.getElementById('fullName').value = document.querySelector('input[placeholder="Nguyễn Văn A"]').value;
+                                    document.getElementById('phone').value = document.querySelector('input[placeholder="+84 123 456 789"]').value;
+                                    document.getElementById('email').value = document.querySelector('input[placeholder="example@email.com"]').value;
+                                    document.getElementById('address').value = document.querySelector('input[placeholder="123 Đường ABC"]').value;
+                                    document.getElementById('district').value = document.querySelector('input[placeholder="Quận 1"]').value;
+                                    document.getElementById('city').value = document.querySelector('input[placeholder="TP.HCM"]').value;
+                                    document.getElementById('ward').value = "Phường X"; // Thêm field cho ward nếu cần
+                                    
+                                    // Lấy phương thức thanh toán đã chọn
+                                    const paymentMethods = document.getElementsByName('payment');
+                                    for (let i = 0; i < paymentMethods.length; i++) {
+                                        if (paymentMethods[i].checked) {
+                                            document.getElementById('paymentMethod').value = paymentMethods[i].id;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // Kiểm tra thông tin bắt buộc
+                                    const requiredFields = ['fullName', 'phone', 'address', 'city', 'district', 'paymentMethod'];
+                                    let isValid = true;
+                                    
+                                    for (let field of requiredFields) {
+                                        if (!document.getElementById(field).value) {
+                                            alert('Vui lòng điền đầy đủ thông tin giao hàng');
+                                            isValid = false;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    if (isValid) {
+                                        document.getElementById('orderForm').submit();
+                                    }
+                                }
+                            </script>
                         </div>
                     </div>
                 </div>
