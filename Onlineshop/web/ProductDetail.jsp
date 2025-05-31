@@ -1,13 +1,9 @@
-<%-- 
-    Document   : ProductList
-    Created on : May 22, 2025, 4:26:19 AM
-    Author     : Admin
---%>
 <%@ page import="Model.Account" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html lang="en">
+<!DOCTYPE html>
+<html>
     <head>
         <meta charset="utf-8">
         <title>Flower Shop - Product List</title>
@@ -169,175 +165,15 @@
                                 </a>
                             </div>
                         </div>
-
-                        <!-- ✅ Icon bên phải -->
-                        <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                            </a>
-                            <a href="Cart.jsp" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                                </span>
-                            </a>
-                        </div>
                     </nav>
                 </div>
             </div>
         </div>
         <!-- Navbar End -->
-        <!-- Products Start -->
-
-        <div class="container-fluid pt-5">
-            <div class="row px-xl-5">
-                <!-- SIDEBAR BÊN TRÁI -->
-                <div class="col-lg-3 mb-5 sidebar-pink">
-                    <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
-
-                    <!-- MÀU -->
-                    <h3>Màu</h3>
-                    <div class="mb-3">
-                        <c:forEach items="${listAllColors}" var="color">
-                            <a href="searchproductbycolor?colorId=${color.getColorID()}" class="black-link font-weight-medium mb-2">${color.getColorName()} <br></a>
-
-                        </c:forEach>
-
-                    </div>
-                    <!-- MÙA -->
-                    <h3>Mùa</h3>
-                    <div class="mb-4">
-
-                        <c:forEach items="${listAllSeasons}" var="season">
-                            <a href="searchproductbyseason?seasonId=${season.getSeasonID()}" class="black-link font-weight-medium mb-2">${season.getSeasonName()} <br></a>
-
-                        </c:forEach>                 
-                    </div>
-                    <!-- GIÁ -->
-                    <div class="mb-3">
-                        <h3 class="font-weight-medium mb-2">Giá</h3>
-                        <div class="d-flex mb-2">
-
-                            <a href="SearchPrice0to50" class="black-link font-weight-medium mb-2" >0 Đến 50.000</a>
-                        </div>
-                        <div class="d-flex mb-2">
-
-                            <a href="SearchPriceAbove50" class="black-link font-weight-medium mb-2" >Trên 50.000</a>  
-                        </div>
-                        <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
-                            <div class="form-row align-items-end">
-                                <!-- Min Price -->
-                                <div class="col">
-                                    <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
-                                    <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
-                                </div>
-
-                                <!-- Separator -->
-                                <div class="col-auto d-flex align-items-center justify-content-center">
-                                    <span class="text-muted px-2">–</span>
-                                </div>
-
-                                <!-- Max Price -->
-                                <div class="col">
-                                    <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
-                                    <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
-                                </div>
-
-                                <!-- Search Button -->
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary mt-3">Lọc</button>
-                                </div>
-                            </div>
-                        </form>
-
-
-                    </div>
-
-
-
-                </div>
-
-                <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
-                <div class="col-lg-9">
-                    <div class="text-center mb-4">
-                        <h2 class="section-title px-5"><span class="px-2">Danh sách sản phẩm</span></h2>
-                    </div>
-
-                    <div class="row">
-                        <c:forEach items="${productList}" var="product" varStatus="status">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                <div class="card product-item border-0 mb-4">
-                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                    </div>
-                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3">
-                                            <a href="ViewProductDetail?id=${product.getProductID()}" class="text-dark">
-                                                ${product.getTitle()}
-                                            </a>
-                                        </h6>
-
-                                        <div class="d-flex justify-content-center">
-                                            <h6>$${product.getPrice()}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-center">
-                                        <c:choose>
-                                            <c:when test="${product.getQuantity() == 0}">
-                                                <small class="text-danger">Hết Hàng</small>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between bg-light border">
-                                        <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                        </a>
-                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-
-
-
-                    </div>
-
-
-                    <c:if test="${tag != null}">
-                        <ul class="pagination">
-                            <c:if test="${tag != 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
-                                </li>
-                            </c:if>
-                            <c:forEach begin="1" end="${endPage}" var="i">
-                                <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="ViewListProductController?index=${i}" 
-                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                </li>
-                            </c:forEach>
-                            <c:if test="${tag != endPage}">
-                                <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </c:if>
-
-
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Products End -->
-
+        
+        
+        
+        <!-- Footer Start -->
         <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
             <div class="row px-xl-5 pt-5">
                 <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
@@ -393,6 +229,8 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Footer End -->
 
 
             <!-- JavaScript Libraries -->
@@ -404,84 +242,6 @@
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
 
-            <!-- Toast Message Container -->
-            <style>
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                }
-
-                .toast {
-                    padding: 15px 25px;
-                    margin-bottom: 12px;
-                    border-radius: 12px;
-                    color: #5f375f;
-                    background-color: #fce4ec;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                    opacity: 0;
-                    transform: translateX(100%);
-                    transition: all 0.4s ease-in-out;
-                    border-left: 6px solid #f48fb1;
-                }
-
-                .toast.show {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .toast.success {
-                    background-color: #f8bbd0;
-                    border-left-color: #40ec46;
-                }
-
-                .toast.error {
-                    background-color: #fce4ec;
-                    border-left-color: #d81b60;
-                }
-            </style>
-
-            <div class="toast-container"></div>
-
-            <script>
-                                        function showToast(message, type) {
-                                            const container = document.querySelector('.toast-container');
-                                            const toast = document.createElement('div');
-                                            toast.className = `toast ${type}`;
-                                            toast.textContent = message;
-
-                                            container.appendChild(toast);
-
-                                            // Reflow để kích hoạt animation
-                                            toast.offsetHeight;
-
-                                            // Show toast
-                                            toast.classList.add('show');
-
-                                            // Tự động biến mất sau 3s
-                                            setTimeout(() => {
-                                                toast.classList.remove('show');
-                                                setTimeout(() => {
-                                                    container.removeChild(toast);
-                                                }, 400);
-                                            }, 3000);
-                                        }
-
-                                        // Lấy message từ session JSP
-                                        const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
-                                        const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
-
-                                        if (message && messageType) {
-                                            showToast(message, messageType);
-                                        }
-            </script>
-
-            <%
-                // Xoá session sau khi hiển thị
-                session.removeAttribute("message");
-                session.removeAttribute("messageType");
-            %>
     </body>
 </html>
+

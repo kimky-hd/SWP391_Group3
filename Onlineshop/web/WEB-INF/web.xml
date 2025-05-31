@@ -17,6 +17,10 @@
         <servlet-class>CommonController.SearchProductBySeason</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SearchProductByTitle</servlet-name>
+        <servlet-class>CommonController.SearchProductByTitle</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SearchPrice0to50</servlet-name>
         <servlet-class>CommonController.SearchPrice0to50</servlet-class>
     </servlet>
@@ -29,8 +33,8 @@
         <servlet-class>CommonController.SearchPriceMinToMax</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SearchProductByTitle</servlet-name>
-        <servlet-class>CommonController.SearchProductByTitle</servlet-class>
+        <servlet-name>ViewProductDetail</servlet-name>
+        <servlet-class>CommonController.ViewProductDetail</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ViewListProductController</servlet-name>
@@ -47,6 +51,10 @@
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>SearchProductByTitle</servlet-name>
+        <url-pattern>/SearchProductByTitle</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>SearchPrice0to50</servlet-name>
         <url-pattern>/SearchPrice0to50</url-pattern>
     </servlet-mapping>
@@ -59,8 +67,8 @@
         <url-pattern>/SearchPriceMinToMax</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchProductByTitle</servlet-name>
-        <url-pattern>/SearchProductByTitle</url-pattern>
+        <servlet-name>ViewProductDetail</servlet-name>
+        <url-pattern>/ViewProductDetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

@@ -29,6 +29,7 @@ public class LoginServlet extends HttpServlet {
 
         System.out.println("Received login request with username/email/phone: " + userInput);
 
+
         
         AccountDAO dao = new AccountDAO();
         Account account = dao.login(userInput, password);
@@ -42,13 +43,11 @@ public class LoginServlet extends HttpServlet {
             String rememberMe = request.getParameter("rememberMe");
             if (rememberMe != null) {
                 Cookie userCookie = new Cookie("userInput", userInput);
-
-                
+             
                 // Mã hóa mật khẩu sử dụng Base64
                 String encryptedPassword = Base64.getEncoder().encodeToString(password.getBytes());
                 Cookie passCookie = new Cookie("password", encryptedPassword);
-
-                
+             
                 userCookie.setMaxAge(30 * 24 * 60 * 60); // Cookie tồn tại 30 ngày
                 passCookie.setMaxAge(30 * 24 * 60 * 60);
                 
