@@ -18,14 +18,21 @@ import java.util.Map;
 
 /**
  * CartController xử lý các thao tác liên quan đến giỏ hàng
- *
- * Luồng xử lý chính: 1. Kiểm tra session và khởi tạo giỏ hàng nếu chưa tồn tại
- * 2. Xử lý các action từ request: - add: Thêm sản phẩm vào giỏ - update: Cập
- * nhật số lượng sản phẩm - remove: Xóa sản phẩm khỏi giỏ - clear: Xóa toàn bộ
- * giỏ hàng - view: Hiển thị trang giỏ hàng 3. Mỗi action đều kiểm tra: - Tính
- * hợp lệ của dữ liệu đầu vào - Tồn tại của sản phẩm - Số lượng tồn kho - Trạng
- * thái đăng nhập (với một số action) 4. Kết quả trả về dưới dạng JSON hoặc
- * chuyển hướng trang
+ * 
+ * Luồng xử lý chính:
+ * 1. Kiểm tra session và khởi tạo giỏ hàng nếu chưa tồn tại
+ * 2. Xử lý các action từ request:
+ *    - add: Thêm sản phẩm vào giỏ
+ *    - update: Cập nhật số lượng sản phẩm
+ *    - remove: Xóa sản phẩm khỏi giỏ
+ *    - clear: Xóa toàn bộ giỏ hàng
+ *    - view: Hiển thị trang giỏ hàng
+ * 3. Mỗi action đều kiểm tra:
+ *    - Tính hợp lệ của dữ liệu đầu vào
+ *    - Tồn tại của sản phẩm
+ *    - Số lượng tồn kho
+ *    - Trạng thái đăng nhập (với một số action)
+ * 4. Kết quả trả về dưới dạng JSON hoặc chuyển hướng trang
  */
 @WebServlet(name = "CartController", urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
@@ -35,8 +42,8 @@ public class CartController extends HttpServlet {
 
     /**
      * Xử lý các request đến controller
-     *
-     * @param request HTTP request
+     * 
+     * @param request  HTTP request
      * @param response HTTP response
      * @throws ServletException
      * @throws IOException
@@ -82,10 +89,13 @@ public class CartController extends HttpServlet {
 
     /**
      * Thêm sản phẩm vào giỏ hàng
-     *
-     * Quy trình: 1. Kiểm tra tính hợp lệ của productId và quantity 2. Kiểm tra
-     * sự tồn tại của sản phẩm 3. Kiểm tra số lượng trong giỏ hiện tại 4. Kiểm
-     * tra số lượng tồn kho 5. Thêm vào giỏ và trả về kết quả
+     * 
+     * Quy trình:
+     * 1. Kiểm tra tính hợp lệ của productId và quantity
+     * 2. Kiểm tra sự tồn tại của sản phẩm
+     * 3. Kiểm tra số lượng trong giỏ hiện tại
+     * 4. Kiểm tra số lượng tồn kho
+     * 5. Thêm vào giỏ và trả về kết quả
      */
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
@@ -95,17 +105,13 @@ public class CartController extends HttpServlet {
 
             // Validate input
             if (quantity <= 0) {
-                request.getSession().setAttribute("message", "Số lượng phải lớn hơn 0");
-                request.getSession().setAttribute("messageType", "error");
-                response.sendRedirect(request.getHeader("referer"));
+                sendJsonResponse(response, createErrorResponse("Số lượng phải lớn hơn 0"));
                 return;
             }
 
             Product product = cartDAO.getProductById(productId);
             if (product == null) {
-                request.getSession().setAttribute("message", "Sản phẩm không tồn tại");
-                request.getSession().setAttribute("messageType", "error");
-                response.sendRedirect(request.getHeader("referer"));
+                sendJsonResponse(response, createErrorResponse("Sản phẩm không tồn tại"));
                 return;
             }
 
@@ -118,31 +124,26 @@ public class CartController extends HttpServlet {
             // Check if total quantity exceeds available stock
             int totalQuantity = currentQuantityInCart + quantity;
             if (!cartDAO.checkProductAvailability(productId, totalQuantity)) {
-                request.getSession().setAttribute("message", "Số lượng yêu cầu vượt quá số lượng có sẵn trong kho");
-                request.getSession().setAttribute("messageType", "error");
-                response.sendRedirect(request.getHeader("referer"));
+                sendJsonResponse(response, createErrorResponse("Số lượng yêu cầu vượt quá số lượng có sẵn trong kho"));
                 return;
             }
 
             cart.addItem(product, quantity);
-            request.getSession().setAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng");
-            request.getSession().setAttribute("messageType", "success");
-            response.sendRedirect(request.getHeader("referer"));
-
+            sendJsonResponse(response, createSuccessResponse("Sản phẩm đã được thêm vào giỏ hàng"));
         } catch (NumberFormatException e) {
-            request.getSession().setAttribute("message", "Dữ liệu không hợp lệ");
-            request.getSession().setAttribute("messageType", "error");
-            response.sendRedirect(request.getHeader("referer"));
+            sendJsonResponse(response, createErrorResponse("Dữ liệu không hợp lệ"));
         }
     }
 
     /**
      * Cập nhật số lượng sản phẩm trong giỏ hàng
-     *
-     * Quy trình: 1. Kiểm tra tính hợp lệ của productId và quantity 2. Nếu
-     * quantity <= 0, xóa sản phẩm khỏi giỏ 3. Kiểm tra sự tồn tại của sản phẩm
-     * trong giỏ 4. Kiểm tra số lượng tồn kho 5. Cập nhật số lượng và trả về kết
-     * quả
+     * 
+     * Quy trình:
+     * 1. Kiểm tra tính hợp lệ của productId và quantity
+     * 2. Nếu quantity <= 0, xóa sản phẩm khỏi giỏ
+     * 3. Kiểm tra sự tồn tại của sản phẩm trong giỏ
+     * 4. Kiểm tra số lượng tồn kho
+     * 5. Cập nhật số lượng và trả về kết quả
      */
     private void updateCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
@@ -187,16 +188,18 @@ public class CartController extends HttpServlet {
 
     /**
      * Xóa sản phẩm khỏi giỏ hàng
-     *
-     * Quy trình: 1. Kiểm tra trạng thái đăng nhập 2. Kiểm tra tính hợp lệ của
-     * productId 3. Xóa sản phẩm từ database 4. Cập nhật giỏ hàng trong session
+     * 
+     * Quy trình:
+     * 1. Kiểm tra trạng thái đăng nhập
+     * 2. Kiểm tra tính hợp lệ của productId
+     * 3. Xóa sản phẩm từ database
+     * 4. Cập nhật giỏ hàng trong session
      * 5. Trả về kết quả
      */
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-    
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             boolean success = true;
@@ -223,22 +226,25 @@ public class CartController extends HttpServlet {
 
     /**
      * Xóa toàn bộ giỏ hàng
-     *
-     * Quy trình: 1. Kiểm tra trạng thái đăng nhập 2. Xóa giỏ hàng từ database
-     * 3. Xóa giỏ hàng trong session 4. Trả về kết quả
+     * 
+     * Quy trình:
+     * 1. Kiểm tra trạng thái đăng nhập
+     * 2. Xóa giỏ hàng từ database
+     * 3. Xóa giỏ hàng trong session
+     * 4. Trả về kết quả
      */
     private void clearCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-
+        
         if (account == null) {
             sendJsonResponse(response, createErrorResponse("Vui lòng đăng nhập"));
             return;
         }
-
+        
         boolean success = cartDAO.clearCart(account.getAccountID());
-
+        
         if (success) {
             cart.clear();
             updateSessionCart(session, account.getAccountID());
@@ -247,13 +253,15 @@ public class CartController extends HttpServlet {
             sendJsonResponse(response, createErrorResponse("Không thể xóa giỏ hàng"));
         }
     }
-
+    
     /**
      * Cập nhật thông tin giỏ hàng trong session
-     *
-     * Quy trình: 1. Lấy giỏ hàng từ database theo accountId 2. Cập nhật giỏ
-     * hàng vào session 3. Cập nhật số lượng sản phẩm trong giỏ để hiển thị 4.
-     * Xử lý trường hợp lỗi bằng cách tạo giỏ hàng trống
+     * 
+     * Quy trình:
+     * 1. Lấy giỏ hàng từ database theo accountId
+     * 2. Cập nhật giỏ hàng vào session
+     * 3. Cập nhật số lượng sản phẩm trong giỏ để hiển thị
+     * 4. Xử lý trường hợp lỗi bằng cách tạo giỏ hàng trống
      */
     private void updateSessionCart(HttpSession session, int accountId) {
         try {
@@ -262,7 +270,7 @@ public class CartController extends HttpServlet {
                 cart = new Cart();
             }
             session.setAttribute("cart", cart);
-
+            
             // Also update cart item count for header display
             int itemCount = cartDAO.getCartItemCount(accountId);
             session.setAttribute("cartItemCount", itemCount);
@@ -273,9 +281,10 @@ public class CartController extends HttpServlet {
             session.setAttribute("cartItemCount", 0);
         }
     }
-
+    
     /**
-     * Hiển thị trang giỏ hàng Chuyển hướng người dùng đến trang Cart.jsp
+     * Hiển thị trang giỏ hàng
+     * Chuyển hướng người dùng đến trang Cart.jsp
      */
     private void displayCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -284,9 +293,10 @@ public class CartController extends HttpServlet {
 
     /**
      * Xem giỏ hàng
-     *
-     * Quy trình: 1. Đặt giỏ hàng vào request attribute 2. Chuyển hướng đến
-     * trang giỏ hàng
+     * 
+     * Quy trình:
+     * 1. Đặt giỏ hàng vào request attribute
+     * 2. Chuyển hướng đến trang giỏ hàng
      */
     private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
@@ -296,9 +306,9 @@ public class CartController extends HttpServlet {
 
     /**
      * Gửi response dạng JSON
-     *
+     * 
      * @param response HTTP response
-     * @param data Dữ liệu cần gửi
+     * @param data     Dữ liệu cần gửi
      */
     private void sendJsonResponse(HttpServletResponse response, Map<String, Object> data)
             throws IOException {
@@ -309,7 +319,7 @@ public class CartController extends HttpServlet {
 
     /**
      * Tạo response thành công
-     *
+     * 
      * @param message Thông báo thành công
      * @return Map chứa thông tin response
      */
@@ -322,7 +332,7 @@ public class CartController extends HttpServlet {
 
     /**
      * Tạo response lỗi
-     *
+     * 
      * @param message Thông báo lỗi
      * @return Map chứa thông tin response
      */

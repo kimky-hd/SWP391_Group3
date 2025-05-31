@@ -51,16 +51,16 @@
                             Account acc = (Account)session.getAttribute("account");
                         %>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                <%= acc.getUsername() %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
+                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                    <%= acc.getUsername() %>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
+                                </div>
                             </div>
-                        </div>
                         <% } else { %>
-                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
                         <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -106,25 +106,20 @@
         <!-- Navbar Start -->
         <div class="container-fluid bg-pink mb-30">
             <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                        <!-- Logo (mobile) -->
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
+                <div class="col-lg-9">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
+                        <a href="" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
-
-                        <!-- Toggle button (mobile) -->
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-
-                        <!-- ✅ Phần chính giữa: Menu -->
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
+                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                            <div class="navbar-nav mr-auto py-0">
+                                <a href="Homepage" class="nav-item nav-link">Home</a>
+                                <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
@@ -134,6 +129,16 @@
                                     </div>
                                 </div>
                                 <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            </div>
+                            <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+                                <a href="" class="btn px-0">
+                                    <i class="fas fa-heart text-primary"></i>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                </a>
+                                <a href="" class="btn px-0 ml-3">
+                                    <i class="fas fa-shopping-cart text-primary"></i>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                </a>
                             </div>
                         </div>
 
@@ -150,7 +155,6 @@
                                 </span>
                             </a>
                         </div>
-
                     </nav>
                 </div>
             </div>
@@ -613,6 +617,102 @@
             <!-- Back to Top -->
             <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-pink text-white">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Xác nhận đăng xuất
+                            </h5>
+                            <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-question-circle text-pink" style="font-size: 3rem;"></i>
+                            </div>
+                            <p class="text-center mb-0" style="font-size: 1.1rem; color: #000000; font-weight: 600;">
+                                Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?
+                            </p>
+                        </div>
+                        <div class="modal-footer justify-content-center border-0 pt-0">
+                            <button class="btn btn-secondary px-4" type="button" data-dismiss="modal">
+                                <i class="fas fa-times mr-2"></i>Hủy
+                            </button>
+                            <a class="btn btn-pink px-4" href="LogoutServlet">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thêm style cho modal -->
+            <style>
+                .modal-content {
+                    border: none;
+                    border-radius: 15px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                }
+                
+                .modal-header {
+                    border-top-left-radius: 15px;
+                    border-top-right-radius: 15px;
+                    border-bottom: none;
+                }
+                
+                .btn-pink {
+                    background: linear-gradient(45deg, #FFB6C1, #FFA5B5);
+                    border: none;
+                    color: white;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-pink:hover {
+                    background: linear-gradient(45deg, #FFA5B5, #FFB6C1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
+                }
+                
+                .btn-secondary {
+                    background: #f8f9fa;
+                    color: #6c757d;
+                    border: none;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-secondary:hover {
+                    background: #e9ecef;
+                    transform: translateY(-2px);
+                }
+                
+                .modal-dialog-centered {
+                    display: flex;
+                    align-items: center;
+                    min-height: calc(100% - 1rem);
+                }
+                
+                .text-pink {
+                    color: #FFB6C1 !important;
+                }
+                
+                .bg-pink {
+                    background: linear-gradient(45deg, #FFB6C1, #FFA5B5) !important;
+                }
+            </style>
+
+            <!-- Custom Javascript -->
+            <script>
+                $(document).ready(function() {
+                    // Xử lý sự kiện khi nhấn vào nút đăng xuất
+                    $('.dropdown-item[data-toggle="modal"]').on('click', function(e) {
+                        e.preventDefault();
+                        $('#logoutModal').modal('show');
+                    });
+                });
+            </script>
 
             <!-- JavaScript Libraries -->
             <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -627,6 +727,4 @@
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
     </body>
-
 </html>
-

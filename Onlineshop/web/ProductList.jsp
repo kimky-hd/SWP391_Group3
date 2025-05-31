@@ -80,17 +80,17 @@
                         <% if(session.getAttribute("account") != null) { 
                             Account acc = (Account)session.getAttribute("account");
                         %>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                <%= acc.getUsername() %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                    <%= acc.getUsername() %>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
+                                </div>
                             </div>
-                        </div>
                         <% } else { %>
-                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
                         <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -134,34 +134,39 @@
         <!-- Navbar Start -->
         <div class="container-fluid bg-pink mb-30">
             <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                        <!-- Logo (mobile) -->
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
+                <div class="col-lg-9">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
+                        <a href="" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
-
-                        <!-- Toggle button (mobile) -->
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-
-                        <!-- ✅ Phần chính giữa: Menu -->
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
+                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                            <div class="navbar-nav mr-auto py-0">
+                                <a href="Homepage" class="nav-item nav-link">Home</a>
+                                <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
+                                        <a href="cart.html" class="dropdown-item">Shopping Cart</a>
+                                        <a href="checkout.html" class="dropdown-item">Checkout</a>
                                     </div>
                                 </div>
                                 <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            </div>
+                            <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+                                <a href="" class="btn px-0">
+                                    <i class="fas fa-heart text-primary"></i>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                </a>
+                                <a href="" class="btn px-0 ml-3">
+                                    <i class="fas fa-shopping-cart text-primary"></i>
+                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                </a>
                             </div>
                         </div>
 
@@ -178,13 +183,11 @@
                                 </span>
                             </a>
                         </div>
-
                     </nav>
                 </div>
             </div>
         </div>
         <!-- Navbar End -->
-
         <!-- Products Start -->
 
         <div class="container-fluid pt-5">
@@ -275,7 +278,7 @@
                                         </div>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between bg-light border">
-                                        <a href="${pageContext.request.contextPath}/cart?action=add&productId=${product.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
+                                        <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
                                             <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
                                         </a>
                                         <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
@@ -465,9 +468,5 @@
                 session.removeAttribute("message");
                 session.removeAttribute("messageType");
             %>
-
     </body>
 </html>
-
-
-
