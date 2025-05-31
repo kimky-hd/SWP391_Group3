@@ -122,8 +122,8 @@
                         <form action="LoginServlet" method="post" onsubmit="return validateForm()">
                             <div class="mb-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="userInput" name="userInput" placeholder="Email hoặc Tên đăng nhập" required>
-                                    <label for="userInput"><i class="fas fa-user me-2"></i>Email hoặc Tên đăng nhập</label>
+                                    <input type="text" class="form-control" id="userInput" name="userInput" placeholder="Email, SĐT hoặc Tên đăng nhập" required>
+                                    <label for="userInput"><i class="fas fa-user me-2"></i>Email, SĐT  hoặc Tên đăng nhập</label>
                                 </div>
                             </div>
                             <div class="mb-4">
@@ -156,21 +156,44 @@
     <script>
         // Hàm lấy giá trị cookie
         function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
+                if (cookieName === name) {
+                    return decodeURIComponent(cookieValue);
+                }
+            }
             return null;
         }
         
+        // Hàm giải mã Base64
+        function decodeBase64(str) {
+            try {
+                return atob(decodeURIComponent(str));
+            } catch (e) {
+                console.error('Lỗi giải mã Base64:', e);
+                return '';
+            }
+        }
+        
+
         // Tự động điền thông tin đăng nhập nếu có cookie
         window.onload = function() {
             const savedUser = getCookie('userInput');
             const savedPass = getCookie('password');
             
             if (savedUser && savedPass) {
-                document.getElementById('userInput').value = savedUser;
-                document.getElementById('password').value = savedPass;
-                document.getElementById('rememberMe').checked = true;
+
+                try {
+                    document.getElementById('userInput').value = savedUser;
+                    document.getElementById('password').value = decodeBase64(savedPass);
+                    document.getElementById('rememberMe').checked = true;
+                    console.log('Đã điền thông tin đăng nhập từ cookie');
+                } catch (e) {
+                    console.error('Lỗi khi điền thông tin đăng nhập:', e);
+                }
+
             }
         }
         
