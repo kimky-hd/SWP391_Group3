@@ -49,6 +49,7 @@
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>SearchProductByTitle</servlet-name>
         <url-pattern>/SearchProductByTitle</url-pattern>
@@ -78,8 +79,9 @@
         <url-pattern>/Homepage</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>Homepage</welcome-file>
-        <!-- dùng URL mapping -->
+
+        <welcome-file>Homepage</welcome-file> <!-- dùng URL mapping -->
+
     </welcome-file-list>
     <servlet-mapping>
         <servlet-name>SearchProductByColor</servlet-name>
