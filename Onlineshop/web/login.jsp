@@ -156,10 +156,24 @@
     <script>
         // Hàm lấy giá trị cookie
         function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
+                if (cookieName === name) {
+                    return decodeURIComponent(cookieValue);
+                }
+            }
             return null;
+        }
+        
+        // Hàm giải mã Base64
+        function decodeBase64(str) {
+            try {
+                return atob(decodeURIComponent(str));
+            } catch (e) {
+                console.error('Lỗi giải mã Base64:', e);
+                return '';
+            }
         }
         
         // Tự động điền thông tin đăng nhập nếu có cookie
@@ -168,9 +182,14 @@
             const savedPass = getCookie('password');
             
             if (savedUser && savedPass) {
-                document.getElementById('userInput').value = savedUser;
-                document.getElementById('password').value = savedPass;
-                document.getElementById('rememberMe').checked = true;
+                try {
+                    document.getElementById('userInput').value = savedUser;
+                    document.getElementById('password').value = decodeBase64(savedPass);
+                    document.getElementById('rememberMe').checked = true;
+                    console.log('Đã điền thông tin đăng nhập từ cookie');
+                } catch (e) {
+                    console.error('Lỗi khi điền thông tin đăng nhập:', e);
+                }
             }
         }
         
