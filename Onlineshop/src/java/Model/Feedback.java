@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Feedback {
     private int FeedbackID;
-    private float Star;
+    private float Rate;
     private Date CreateAt;
     private String Comment;
     private int Account_ID;
@@ -21,9 +21,9 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(int FeedbackID, float Star, Date CreateAt, String Comment, int Account_ID, int Product_ID) {
+    public Feedback(int FeedbackID, float Rate, Date CreateAt, String Comment, int Account_ID, int Product_ID) {
         this.FeedbackID = FeedbackID;
-        this.Star = Star;
+        this.Rate = Rate;
         this.CreateAt = CreateAt;
         this.Comment = Comment;
         this.Account_ID = Account_ID;
@@ -38,12 +38,12 @@ public class Feedback {
         this.FeedbackID = FeedbackID;
     }
 
-    public float getStar() {
-        return Star;
+    public float getRate() {
+        return Rate;
     }
 
-    public void setStar(float Star) {
-        this.Star = Star;
+    public void setRate(float Rate) {
+        this.Rate = Rate;
     }
 
     public Date getCreateAt() {
@@ -80,6 +80,6 @@ public class Feedback {
 
     @Override
     public String toString() {
-        return "Rating{" + "FeedbackID=" + FeedbackID + ", Star=" + Star + ", CreateAt=" + CreateAt + ", Comment=" + Comment + ", Account_ID=" + Account_ID + ", Product_ID=" + Product_ID + '}';
+        return "Rating{" + "FeedbackID=" + FeedbackID + ", Rate=" + Rate + ", CreateAt=" + CreateAt + ", Comment=" + Comment + ", Account_ID=" + Account_ID + ", Product_ID=" + Product_ID + '}';
     }
 }

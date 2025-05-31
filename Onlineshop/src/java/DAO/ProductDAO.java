@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Model.AccountProfile;
 import Model.Color;
 import Model.Feedback;
 import Model.Product;
@@ -14,16 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
 import Model.WishList;
+import java.time.LocalDateTime;
 
 /**
  *
  * @author Admin
  */
 public class ProductDAO extends DBContext {
-    
+
     PreparedStatement ps;
     ResultSet rs;
-    
+
     public List<Product> getAllProduct() {
         List<Product> list = new ArrayList<>();
         String sql = "Select * from Product";
@@ -48,12 +50,12 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
-    public Product getProductById(int id) {
-        String sql = "Select * from product where [productID] = ?";
+
+    public Product getProductById(String id) {
+        String sql = "Select * from product where productID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, 1);
+            ps.setString(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
                 return new Product(rs.getInt(1),
@@ -72,9 +74,9 @@ public class ProductDAO extends DBContext {
             System.out.println("getProductById" + e.getMessage());
         }
         return null;
-        
+
     }
-    
+
     public List<Product> getProductByColor(String colorId) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.* FROM Product p\n"
@@ -102,7 +104,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Product> getProductBySeason(String seasonId) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.* FROM Product p "
@@ -130,7 +132,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Product> getProductByColorAndSeason(String colorName, String seasonName) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.* FROM Product p "
@@ -160,7 +162,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
@@ -185,7 +187,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public void addProduct(Product newproduct) {
         String sql = "INSERT INTO Product (\n"
                 + "            title,\n"
@@ -204,7 +206,7 @@ public class ProductDAO extends DBContext {
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
-            
+
             ps.setString(1, newproduct.getTitle());
             ps.setString(2, newproduct.getImage());
             ps.setDouble(3, newproduct.getPrice());
@@ -218,9 +220,9 @@ public class ProductDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("addProduct" + e.getMessage());
         }
-        
+
     }
-    
+
     public void deleteProduct(int productID) {
         String sql = "DELETE FROM PRODUCT Where productID = ?";
         try {
@@ -231,7 +233,7 @@ public class ProductDAO extends DBContext {
             System.out.println("deleteProduct" + e.getMessage());
         }
     }
-    
+
     public void updateProduct(Product updateproduct) {
         String sql = "UPDATE Product SET\n"
                 + "            title = ?,\n"
@@ -259,12 +261,12 @@ public class ProductDAO extends DBContext {
             ps.setDate(10, new java.sql.Date(updateproduct.getDateExpire().getTime()));
             ps.setInt(11, updateproduct.getProductID());
             ps.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.out.println("updateProduct" + e.getMessage());
         }
     }
-    
+
     public void updateAddQuantity(int quantityAdd, int productID) {
         String sql = "Update product set quantity = quantity + ? where productID = ?";
         try {
@@ -276,7 +278,7 @@ public class ProductDAO extends DBContext {
             System.out.println("updateAddQuantity" + e.getMessage());
         }
     }
-    
+
     public List<Color> getAllColor() {
         List<Color> list = new ArrayList<>();
         String sql = "Select * from PhanLoaiTheoColor";
@@ -292,7 +294,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Season> getAllSeason() {
         List<Season> list = new ArrayList<>();
         String sql = "Select * from PhanLoaiTheoSeason";
@@ -308,7 +310,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Product> getProductByIndex(int indexPage) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
@@ -336,7 +338,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public int countAllProduct() {
         String sql = "select count(*) from Product";
         try {
@@ -350,7 +352,7 @@ public class ProductDAO extends DBContext {
         }
         return 0;
     }
-    
+
     public List<Product> searchPrice0to50() {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product \n"
@@ -370,14 +372,14 @@ public class ProductDAO extends DBContext {
                         rs.getString(9),
                         rs.getDate(10),
                         rs.getDate(11)));
-                
+
             }
         } catch (SQLException e) {
             System.out.println("searchPrice0to50" + e.getMessage());
         }
         return list;
     }
-    
+
     public List<Product> searchPriceAbove50() {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product \n"
@@ -397,14 +399,14 @@ public class ProductDAO extends DBContext {
                         rs.getString(9),
                         rs.getDate(10),
                         rs.getDate(11)));
-                
+
             }
         } catch (SQLException e) {
             System.out.println("searchPriceAbove50" + e.getMessage());
         }
         return list;
     }
-    
+
     public List<Product> searchPriceMinToMax(String priceMin, String priceMax) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product \n"
@@ -434,7 +436,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Feedback> getAllReviewByProductID(String id) {
         List<Feedback> list = new ArrayList<>();
         String sql = "Select * from Feedback where productID = ?";
@@ -451,12 +453,73 @@ public class ProductDAO extends DBContext {
                         rs.getInt(6)
                 ));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("getAllReviewByProductID" + e.getMessage());
         }
         return list;
     }
+
+    public float getRateByProductID(String id) {
+        String sql = "SELECT ROUND(AVG(Rate), 1) AS rate FROM Feedback WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getFloat(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("getRateByProductID" + e.getMessage());
+        }
+        return 0;
+    }
+    private static java.sql.Date getCurrentDate() {
+        java.util.Date today = new java.util.Date();
+        return new java.sql.Date(today.getTime());
+    }
+
+    public void insertFeedback(int accountID,String productID,String comment , String rate, LocalDateTime currentDateTime) {
+        String sql = "INSERT INTO Feedback (accountID, productID, comment, rate, dateReview)\n"
+                + "VALUES \n"
+                + "(?, ?, ?, ?, ?)";
+        try{
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setString(2, productID);
+            ps.setString(3, comment);
+            ps.setString(4, rate);
+            ps.setDate(5, getCurrentDate());
+            
+            ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("insertFeedback" + e.getMessage());
+        }
+    }
     
+    public List<AccountProfile> getAllAccountProfile(){
+        List<AccountProfile> list = new ArrayList<>();
+        String sql = "Select * from Profile";
+        try{
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(new AccountProfile(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getDate(6),
+                        rs.getString(7),
+                        rs.getDate(8),
+                        rs.getInt(9)
+                ));
+            }
+        }catch (SQLException e){
+            System.out.println("getAllAccontProfile" + e.getMessage());
+        }
+        return list;
+    }
+
     public WishList checkWishListExist(int accountID, int productID) {
         String sql = "select * from WishList where accountID = ? and productID = ?";
         try {
@@ -474,7 +537,7 @@ public class ProductDAO extends DBContext {
         }
         return null;
     }
-    
+
     public void insertWishList(int accountID, int productID) {
         String sql = "insert WishList (accountID, productID) values(?,?) ";
         try {
@@ -486,7 +549,7 @@ public class ProductDAO extends DBContext {
             System.out.println("insertWishList" + e.getMessage());
         }
     }
-    
+
     public void deleteWishList(int wishlistID) {
         String sql = "DELETE FROM WishList WHERE wishlistID = ?";
         try {
