@@ -173,7 +173,9 @@
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
                             </a>
                         </div>
 
@@ -385,158 +387,85 @@
             <script src="js/main.js"></script>
 
             <!-- Toast Message Container -->
-
             <style>
-
                 .toast-container {
-
                     position: fixed;
-
                     top: 20px;
-
                     right: 20px;
-
                     z-index: 9999;
-
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
                 }
-
-
 
                 .toast {
-
                     padding: 15px 25px;
-
                     margin-bottom: 12px;
-
                     border-radius: 12px;
-
                     color: #5f375f;
-
-                    background-color: #fce4ec; /* pastel pink background */
-
+                    background-color: #fce4ec;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
                     opacity: 0;
-
                     transform: translateX(100%);
-
                     transition: all 0.4s ease-in-out;
-
-                    border-left: 6px solid #f48fb1; /* pastel rose accent */
-
+                    border-left: 6px solid #f48fb1;
                 }
-
-
 
                 .toast.show {
-
                     opacity: 1;
-
                     transform: translateX(0);
-
                 }
-
-
 
                 .toast.success {
-
-                    background-color: #f8bbd0; /* light pastel pink */
-
-                    border-left-color: #ec407a;
-
+                    background-color: #f8bbd0;
+                    border-left-color: #40ec46;
                 }
-
-
 
                 .toast.error {
-
                     background-color: #fce4ec;
-
                     border-left-color: #d81b60;
-
                 }
-
             </style>
-
-
 
             <div class="toast-container"></div>
 
-
-
             <script>
+                                        function showToast(message, type) {
+                                            const container = document.querySelector('.toast-container');
+                                            const toast = document.createElement('div');
+                                            toast.className = `toast ${type}`;
+                                            toast.textContent = message;
 
-                            function showToast(message, type) {
+                                            container.appendChild(toast);
 
-                                const container = document.querySelector('.toast-container');
+                                            // Reflow để kích hoạt animation
+                                            toast.offsetHeight;
 
-                                const toast = document.createElement('div');
+                                            // Show toast
+                                            toast.classList.add('show');
 
-                                toast.className = `toast ${type}`;
+                                            // Tự động biến mất sau 3s
+                                            setTimeout(() => {
+                                                toast.classList.remove('show');
+                                                setTimeout(() => {
+                                                    container.removeChild(toast);
+                                                }, 400);
+                                            }, 3000);
+                                        }
 
-                                toast.textContent = message;
+                                        // Lấy message từ session JSP
+                                        const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                                        const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
 
-
-
-                                container.appendChild(toast);
-
-
-
-                                // Trigger reflow to enable transition
-
-                                toast.offsetHeight;
-
-
-
-                                // Show toast
-
-                                toast.classList.add('show');
-
-
-
-                                // Remove toast after 3 seconds
-
-                                setTimeout(() => {
-
-                                    toast.classList.remove('show');
-
-                                    setTimeout(() => {
-
-                                        container.removeChild(toast);
-
-                                    }, 400);
-
-                                }, 3000);
-
-                            }
-
-
-
-                            // Check for message in session
-
-                            const message = '${sessionScope.message}';
-
-                            const messageType = '${sessionScope.messageType}';
-
-                            if (message && messageType) {
-
-                                showToast(message, messageType);
-
-                                // Clear the message from session
-
-                <% 
-
-                session.removeAttribute("message");
-
-                session.removeAttribute("messageType");
-
-                %>
-
-                            }
-
+                                        if (message && messageType) {
+                                            showToast(message, messageType);
+                                        }
             </script>
+
+            <%
+                // Xoá session sau khi hiển thị
+                session.removeAttribute("message");
+                session.removeAttribute("messageType");
+            %>
+
     </body>
 </html>
 
