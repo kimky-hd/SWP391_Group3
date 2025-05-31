@@ -15,6 +15,7 @@
             <file>file:/D:/swp4/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
         </group>
         <group>
+
             <file>file:/D:/SWP_SU24/SWP391_Group3/Onlineshop/src/java/CommonController/LogoutServlet.java</file>
             <file>file:/D:/SWP_SU24/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
             <file>file:/D:/SWP_SU24/SWP391_Group3/Onlineshop/src/java/Controller/OrderController.java</file>
@@ -84,5 +85,6 @@
             <file>file:/D:/SWP_SU24/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
             <file>file:/D:/SWP_SU24/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
         </group>
+        <group/>
     </open-files>
 </project-private>

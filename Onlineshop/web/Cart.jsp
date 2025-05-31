@@ -98,6 +98,8 @@
                 background-color: #fce4ec;
                 border-left-color: #d81b60;
             }
+
+
             .bg-pink-pastel {
                 background-color: #fddde6;
             }
@@ -105,6 +107,7 @@
             .text-dark-purple {
                 color: #5c4b51;
             }
+
         </style>
     </head>
 
@@ -211,9 +214,11 @@
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
+
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
                                     ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
                                 </span>
+
                             </a>
                         </div>
 
@@ -226,7 +231,9 @@
                 <div class="row px-xl-5">
                     <div class="col-lg-8 table-responsive mb-5">
                         <table class="table table-light table-borderless table-hover text-center mb-0">
+
                             <thead class="bg-pink-pastel text-dark-purple">
+
                                 <tr>
                                     <th>Sản phẩm</th>
                                     <th>Giá</th>
@@ -257,6 +264,7 @@
                                                     <fmt:formatNumber value="${item.product.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
                                                 </td>
                                                 <td class="align-middle">
+
                                                     <div class="input-group quantity mx-auto" style="width: 150px;">
                                                         <div class="input-group-btn">
                                                             <button class="btn btn-sm btn-minus" onclick="updateQuantity(${item.product.productID}, ${item.quantity - 1})">
@@ -264,11 +272,14 @@
                                                             </button>
                                                         </div>
                                                         <input type="text" class="form-control form-control-sm border-0 text-center quantity-input" 
+
                                                                value="${item.quantity}" 
                                                                onchange="updateQuantity(${item.product.productID}, this.value)"
                                                                min="1" max="${item.product.quantity}">
                                                         <div class="input-group-btn">
+
                                                             <button class="btn btn-sm btn-plus" onclick="updateQuantity(${item.product.productID}, ${item.quantity + 1})">
+
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </div>
@@ -293,7 +304,9 @@
                     <div class="col-lg-4">
                         <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng giỏ hàng</span></h5>
                         <div class="bg-light p-30 mb-5">
+
                             <c:set var="shippingFee"/>
+
                             <div class="border-bottom pb-2">
                                 <div class="d-flex justify-content-between mb-3">
                                     <h6>Tổng tiền hàng</h6>
@@ -312,7 +325,9 @@
                                 <div class="d-flex justify-content-between mt-2">
                                     <h5>Tổng thanh toán</h5>
                                     <h5>
+
                                         <fmt:formatNumber value="${sessionScope.cart.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+
                                     </h5>
                                 </div>
                                 <c:choose>
@@ -320,7 +335,9 @@
                                         <button class="btn btn-block btn-secondary font-weight-bold my-3 py-3" disabled>Giỏ hàng trống</button>
                                     </c:when>
                                     <c:otherwise>
+
                                         <a href="checkout" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
+
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -413,6 +430,7 @@
                                                                 return;
                                                             }
 
+
                                                             // Lấy số lượng tồn kho từ dữ liệu hiển thị
                                                             //const maxQuantity = parseInt(document.querySelector(`input[onchange*="updateQuantity(${productId}"]`).getAttribute('max'));
 
@@ -421,6 +439,7 @@
                                                                 showToast('Số lượng yêu cầu vượt quá số lượng có sẵn trong kho', 'error');
                                                                 return;
                                                             }
+
 
                                                             $.ajax({
                                                                 url: 'cart',
@@ -434,18 +453,22 @@
                                                                     if (response.success) {
                                                                         location.reload();
                                                                     } else {
+
                                                                         showToast(response.message, 'error');
                                                                         // Không reload ngay lập tức để người dùng có thể đọc thông báo
                                                                         setTimeout(function () {
                                                                             location.reload();
                                                                         }, 2000); // Đợi 2 giây trước khi reload
+
                                                                     }
                                                                 },
                                                                 error: function () {
                                                                     showToast('Có lỗi xảy ra khi cập nhật giỏ hàng', 'error');
+
                                                                     setTimeout(function () {
                                                                         location.reload();
                                                                     }, 2000);
+
                                                                 }
                                                             });
                                                         }
@@ -549,6 +572,7 @@
             </div>
         </div>
     </body>
+
 </html>
 </body>
 <script>
@@ -741,3 +765,4 @@
         background-size: 100px;
     }
 </style>
+
