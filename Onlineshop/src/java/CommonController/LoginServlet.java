@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Base64;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
@@ -25,7 +26,7 @@ public class LoginServlet extends HttpServlet {
         String userInput = request.getParameter("userInput");
         String password = request.getParameter("password");
         
-        System.out.println("Received login request with username/email: " + userInput);
+        System.out.println("Received login request with username/email/phone: " + userInput);
         
         AccountDAO dao = new AccountDAO();
         Account account = dao.login(userInput, password);
@@ -39,7 +40,10 @@ public class LoginServlet extends HttpServlet {
             String rememberMe = request.getParameter("rememberMe");
             if (rememberMe != null) {
                 Cookie userCookie = new Cookie("userInput", userInput);
-                Cookie passCookie = new Cookie("password", password); // Nên mã hóa mật khẩu trước khi lưu
+                
+                // Mã hóa mật khẩu sử dụng Base64
+                String encryptedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+                Cookie passCookie = new Cookie("password", encryptedPassword);
                 
                 userCookie.setMaxAge(30 * 24 * 60 * 60); // Cookie tồn tại 30 ngày
                 passCookie.setMaxAge(30 * 24 * 60 * 60);
