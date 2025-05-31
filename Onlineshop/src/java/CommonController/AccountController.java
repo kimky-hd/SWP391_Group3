@@ -11,70 +11,51 @@ import java.io.IOException;
 import Model.Account;
 @WebServlet(name = "AccountController", urlPatterns = {"/account"})
 public class AccountController extends HttpServlet {
-    private static final String RECAPTCHA_SECRET_KEY = "6LdWek4rAAAAAHR2RlMPrcovlK_b_hsCSdHeBNL-";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
-    request.setCharacterEncoding("UTF-8");       
-    String action = request.getParameter("action");
-    AccountDAO dao = new AccountDAO();     
-    
-     if ("register".equals(action)) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email"); 
-        String phone = request.getParameter("phone");
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");       
+        String action = request.getParameter("action");
+        AccountDAO dao = new AccountDAO();     
         
-        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-        
-        // Xác thực reCAPTCHA
-        RecaptchaVerifier verifier = new RecaptchaVerifier(RECAPTCHA_SECRET_KEY);
-        boolean isRecaptchaValid = verifier.verify(gRecaptchaResponse, request.getRemoteAddr());
-        
-        if (!isRecaptchaValid) {
-            request.setAttribute("error", "Xác thực reCAPTCHA thất bại. Vui lòng thử lại.");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        
-        
-         if (password == null || !isValidPassword(password)) {
-            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số! ");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-         }
-         
-        if (phone == null || !isValidVietnamesePhoneNumber(phone)) {
-            request.setAttribute("error", "Số điện thoại không hợp lệ! Vui lòng nhập đúng định dạng số điện thoại. ");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        Account checkUser = dao.checkAccountExist(username);
-        Account checkEmail = dao.checkEmailExist(email);            
-        
-        if (checkUser != null) {
-            request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        
-        if (checkEmail != null) {
-            request.setAttribute("error", "Email đã tồn tại!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-        
-        String registerResult = dao.register(username, password, email, phone);
-        if ("success".equals(registerResult)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
-            response.sendRedirect("login.jsp");
-        } else {
-            request.setAttribute("error", registerResult);
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-        }
+         if ("register".equals(action)) {
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            String email = request.getParameter("email"); 
+            String phone = request.getParameter("phone");
+            
+             if (password == null || !isValidPassword(password)) {
+                request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số! ");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+             }
+             
+            if (phone == null || !isValidVietnamesePhoneNumber(phone)) {
+        request.setAttribute("error", "Số điện thoại không hợp lệ! Vui lòng nhập đúng định dạng số điện thoại. ");
+        request.getRequestDispatcher("register.jsp").forward(request, response);
+        return;
     }
-} 
+            Account checkUser = dao.checkAccountExist(username);
+            Account checkEmail = dao.checkEmailExist(email);            
+            if (checkUser != null) {
+                request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+            } else if (checkEmail != null) {
+                request.setAttribute("error", "Email đã được sử dụng!");
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+            } else {
+                boolean success = dao.register(username, password, email, phone);
+                if (success) {
+                   HttpSession session = request.getSession();
+                    session.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("error", "Đăng ký thất bại! Vui lòng thử lại.");
+                    request.getRequestDispatcher("register.jsp").forward(request, response);
+                }
+            }
+        }  
+    }
     private boolean isValidPassword(String password) {
         // Kiểm tra độ dài tối thiểu 8 ký tự
         if (password.length() < 8) {
