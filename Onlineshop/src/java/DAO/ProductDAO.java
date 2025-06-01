@@ -4,7 +4,9 @@
  */
 package DAO;
 
+import Model.AccountProfile;
 import Model.Color;
+import Model.Feedback;
 import Model.Product;
 import Model.Season;
 import java.sql.PreparedStatement;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
 import Model.WishList;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -48,11 +51,11 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public Product getProductById(int id) {
-        String sql = "Select * from product where [productID] = ?";
+    public Product getProductById(String id) {
+        String sql = "Select * from product where productID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, 1);
+            ps.setString(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
                 return new Product(rs.getInt(1),
@@ -160,9 +163,9 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Product> getProductByTitle(String title) {
+    public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product WHERE title LIKE ?";
+        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -264,6 +267,18 @@ public class ProductDAO extends DBContext {
         }
     }
 
+    public void updateAddQuantity(int quantityAdd, int productID) {
+        String sql = "Update product set quantity = quantity + ? where productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, quantityAdd);
+            ps.setInt(2, productID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateAddQuantity" + e.getMessage());
+        }
+    }
+
     public List<Color> getAllColor() {
         List<Color> list = new ArrayList<>();
         String sql = "Select * from PhanLoaiTheoColor";
@@ -336,6 +351,173 @@ public class ProductDAO extends DBContext {
             System.out.println("countAllProduct" + e.getMessage());
         }
         return 0;
+    }
+
+    public List<Product> searchPrice0to50() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product \n"
+                + "WHERE price >= 0 AND price <= 50000";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getInt(5),
+                        rs.getString(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getString(9),
+                        rs.getDate(10),
+                        rs.getDate(11)));
+
+            }
+        } catch (SQLException e) {
+            System.out.println("searchPrice0to50" + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> searchPriceAbove50() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product \n"
+                + "WHERE price > 50000";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getInt(5),
+                        rs.getString(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getString(9),
+                        rs.getDate(10),
+                        rs.getDate(11)));
+
+            }
+        } catch (SQLException e) {
+            System.out.println("searchPriceAbove50" + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> searchPriceMinToMax(String priceMin, String priceMax) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product \n"
+                + "WHERE price >= ? AND price <= ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, priceMin);
+            ps.setString(2, priceMax);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getInt(5),
+                        rs.getString(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getString(9),
+                        rs.getDate(10),
+                        rs.getDate(11)
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("searchPriceAbove50" + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Feedback> getAllReviewByProductID(String id) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "Select * from Feedback where productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Feedback(rs.getInt(1),
+                        rs.getFloat(2),
+                        rs.getDate(3),
+                        rs.getString(4),
+                        rs.getInt(5),
+                        rs.getInt(6)
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllReviewByProductID" + e.getMessage());
+        }
+        return list;
+    }
+
+    public float getRateByProductID(String id) {
+        String sql = "SELECT ROUND(AVG(Rate), 1) AS rate FROM Feedback WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getFloat(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("getRateByProductID" + e.getMessage());
+        }
+        return 0;
+    }
+    private static java.sql.Date getCurrentDate() {
+        java.util.Date today = new java.util.Date();
+        return new java.sql.Date(today.getTime());
+    }
+
+    public void insertFeedback(int accountID,String productID,String comment , String rate, LocalDateTime currentDateTime) {
+        String sql = "INSERT INTO Feedback (accountID, productID, comment, rate, dateReview)\n"
+                + "VALUES \n"
+                + "(?, ?, ?, ?, ?)";
+        try{
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setString(2, productID);
+            ps.setString(3, comment);
+            ps.setString(4, rate);
+            ps.setDate(5, getCurrentDate());
+            
+            ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("insertFeedback" + e.getMessage());
+        }
+    }
+    
+    public List<AccountProfile> getAllAccountProfile(){
+        List<AccountProfile> list = new ArrayList<>();
+        String sql = "Select * from Profile";
+        try{
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(new AccountProfile(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getDate(6),
+                        rs.getString(7),
+                        rs.getDate(8),
+                        rs.getInt(9)
+                ));
+            }
+        }catch (SQLException e){
+            System.out.println("getAllAccontProfile" + e.getMessage());
+        }
+        return list;
     }
 
     public WishList checkWishListExist(int accountID, int productID) {

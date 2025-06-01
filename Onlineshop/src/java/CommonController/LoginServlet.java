@@ -6,27 +6,30 @@ import Model.Account;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Base64;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        System.out.println("Raw userInput: " + request.getParameter("userInput"));
+        System.out.println("Raw password: " + request.getParameter("password"));
+        System.out.println("\n=== Login Request ===\n");
         
-        String userInput = request.getParameter("userInput");//lấy dữ liệu người dùng nhập từ from
+        String userInput = request.getParameter("userInput");
         String password = request.getParameter("password");
         
-        // Kiểm tra đầu vào
-        if (userInput == null || password == null || userInput.trim().isEmpty() || password.trim().isEmpty()) {
-            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin đăng nhập!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
+
+        System.out.println("Received login request with username/email/phone: " + userInput);
+
+
         
         AccountDAO dao = new AccountDAO();
         Account account = dao.login(userInput, password);
@@ -36,11 +39,26 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("account", account);
             session.setMaxInactiveInterval(30*60); // Session hết hạn sau 30 phút
             
-            // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-            // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-            response.sendRedirect("Homepage");  // Giữ nguyên như vậy vì đã đúng với URL pattern
+            // Xử lý Remember Me
+            String rememberMe = request.getParameter("rememberMe");
+            if (rememberMe != null) {
+                Cookie userCookie = new Cookie("userInput", userInput);
+             
+                // Mã hóa mật khẩu sử dụng Base64
+                String encryptedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+                Cookie passCookie = new Cookie("password", encryptedPassword);
+             
+                userCookie.setMaxAge(30 * 24 * 60 * 60); // Cookie tồn tại 30 ngày
+                passCookie.setMaxAge(30 * 24 * 60 * 60);
+                
+                response.addCookie(userCookie);
+                response.addCookie(passCookie);
+            }
+            
+            // Chuyển hướng về trang chủ
+            response.sendRedirect("Homepage");
         } else {
-            request.setAttribute("error", "Thông tin đăng nhập không đúng!");
+            request.setAttribute("error", "Thông tin đăng nhập không chính xác!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
