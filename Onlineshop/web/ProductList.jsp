@@ -3,7 +3,7 @@
     Created on : May 22, 2025, 4:26:19 AM
     Author     : Admin
 --%>
-
+<%@ page import="Model.Account" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -48,6 +48,15 @@
                 color: black;
                 text-decoration: none; /* nếu không muốn gạch chân */
             }
+            .icon-search-button {
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+            }
+            .icon-search-button .icon {
+                font-size: 20px; /* Điều chỉnh kích thước icon */
+                color: #333; /* Màu của icon */
+            }
         </style>
     </head>
 
@@ -68,14 +77,21 @@
                 </div>
                 <div class="col-lg-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
+                        <% if(session.getAttribute("account") != null) { 
+                            Account acc = (Account)session.getAttribute("account");
+                        %>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                <%= acc.getUsername() %>
+                            </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <button class="dropdown-item" type="button">Sign in</button>
-                                <button class="dropdown-item" type="button">Sign up</button>
+                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
-
+                        <% } else { %>
+                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
                         <a href="" class="btn px-0 ml-2">
@@ -91,20 +107,18 @@
             </div>
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
-                    <a href="" class="text-decoration-none">
+                    <a href="Homepage" class="text-decoration-none">
                         <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
                         <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
-                    <form action="">
+                    <form action="SearchProductByTitle">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for products">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
+                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
+                            <button type="submit" class="icon-search-button">
+                                <i class="icon icon-search"></i> 
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -155,6 +169,20 @@
                                 </a>
                             </div>
                         </div>
+
+                        <!-- ✅ Icon bên phải -->
+                        <div class="d-none d-lg-flex align-items-center ml-auto">
+                            <a href="#" class="btn px-0">
+                                <i class="fas fa-heart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                            <a href="Cart.jsp" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+                            </a>
+                        </div>
                     </nav>
                 </div>
             </div>
@@ -177,20 +205,6 @@
                         </c:forEach>
 
                     </div>
-
-                    <!-- GIÁ -->
-                    <div class="mb-3">
-                        <h6 class="font-weight-medium mb-2">Giá</h6>
-                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                            <input type="radio" class="custom-control-input" id="price1" name="price" value="0-10000">
-                            <label class="custom-control-label" for="price1">Dưới 10.000</label>
-                        </div>
-                        <div class="custom-control custom-radio d-flex align-items-center mb-2">
-                            <input type="radio" class="custom-control-input" id="price2" name="price" value="10000-15000">
-                            <label class="custom-control-label" for="price2">10.000 - 15.000</label>
-                        </div>
-                    </div>
-
                     <!-- MÙA -->
                     <h3>Mùa</h3>
                     <div class="mb-4">
@@ -200,6 +214,47 @@
 
                         </c:forEach>                 
                     </div>
+                    <!-- GIÁ -->
+                    <div class="mb-3">
+                        <h3 class="font-weight-medium mb-2">Giá</h3>
+                        <div class="d-flex mb-2">
+
+                            <a href="SearchPrice0to50" class="black-link font-weight-medium mb-2" >0 Đến 50.000</a>
+                        </div>
+                        <div class="d-flex mb-2">
+
+                            <a href="SearchPriceAbove50" class="black-link font-weight-medium mb-2" >Trên 50.000</a>  
+                        </div>
+                        <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
+                            <div class="form-row align-items-end">
+                                <!-- Min Price -->
+                                <div class="col">
+                                    <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
+                                    <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
+                                </div>
+
+                                <!-- Separator -->
+                                <div class="col-auto d-flex align-items-center justify-content-center">
+                                    <span class="text-muted px-2">–</span>
+                                </div>
+
+                                <!-- Max Price -->
+                                <div class="col">
+                                    <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
+                                    <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
+                                </div>
+
+                                <!-- Search Button -->
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary mt-3">Lọc</button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                    </div>
+
+
 
                 </div>
 
@@ -211,27 +266,42 @@
 
                     <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                    <div class="card product-item border-0 mb-4">
-                                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                            <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                        </div>
-                                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                            <h6 class="text-truncate mb-3">${product.getTitle()}</h6>
-                                            <div class="d-flex justify-content-center">
-                                                <h6>$${product.getPrice()}</h6>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between bg-light border">
-                                            <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">
+                                            <a href="ViewProductDetail?id=${product.getProductID()}" class="text-dark">
+                                                ${product.getTitle()}
                                             </a>
-                                            <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
-                                            </a>
+                                        </h6>
+
+                                        <div class="d-flex justify-content-center">
+                                            <h6>$${product.getPrice()}</h6>
                                         </div>
                                     </div>
+                                    <div class="d-flex justify-content-center">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <small class="text-danger">Hết Hàng</small>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                        </a>
+                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                            <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
+                                        </a>
+                                    </div>
                                 </div>
+                            </div>
                         </c:forEach>
 
 
@@ -333,8 +403,85 @@
 
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
+
+            <!-- Toast Message Container -->
+            <style>
+                .toast-container {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+
+                .toast {
+                    padding: 15px 25px;
+                    margin-bottom: 12px;
+                    border-radius: 12px;
+                    color: #5f375f;
+                    background-color: #fce4ec;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.4s ease-in-out;
+                    border-left: 6px solid #f48fb1;
+                }
+
+                .toast.show {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                .toast.success {
+                    background-color: #f8bbd0;
+                    border-left-color: #40ec46;
+                }
+
+                .toast.error {
+                    background-color: #fce4ec;
+                    border-left-color: #d81b60;
+                }
+            </style>
+
+            <div class="toast-container"></div>
+
+            <script>
+                                        function showToast(message, type) {
+                                            const container = document.querySelector('.toast-container');
+                                            const toast = document.createElement('div');
+                                            toast.className = `toast ${type}`;
+                                            toast.textContent = message;
+
+                                            container.appendChild(toast);
+
+                                            // Reflow để kích hoạt animation
+                                            toast.offsetHeight;
+
+                                            // Show toast
+                                            toast.classList.add('show');
+
+                                            // Tự động biến mất sau 3s
+                                            setTimeout(() => {
+                                                toast.classList.remove('show');
+                                                setTimeout(() => {
+                                                    container.removeChild(toast);
+                                                }, 400);
+                                            }, 3000);
+                                        }
+
+                                        // Lấy message từ session JSP
+                                        const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                                        const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+
+                                        if (message && messageType) {
+                                            showToast(message, messageType);
+                                        }
+            </script>
+
+            <%
+                // Xoá session sau khi hiển thị
+                session.removeAttribute("message");
+                session.removeAttribute("messageType");
+            %>
     </body>
 </html>
-
-
-

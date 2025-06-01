@@ -10,7 +10,7 @@ CREATE TABLE Orders (
     payment_method VARCHAR(50) NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     status VARCHAR(20) NOT NULL,
-    FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
+    FOREIGN KEY (account_id) REFERENCES Account(account_id)
 );
 
 -- Create index for Orders table

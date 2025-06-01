@@ -20,6 +20,27 @@
         <servlet-class>CommonController.SearchProductBySeason</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>SearchProductByTitle</servlet-name>
+        <servlet-class>CommonController.SearchProductByTitle</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPrice0to50</servlet-name>
+        <servlet-class>CommonController.SearchPrice0to50</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPriceAbove50</servlet-name>
+        <servlet-class>CommonController.SearchPriceAbove50</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPriceMinToMax</servlet-name>
+        <servlet-class>CommonController.SearchPriceMinToMax</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewProductDetail</servlet-name>
+        <servlet-class>CommonController.ViewProductDetail</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>BlogServlet</servlet-name>
         <url-pattern>/blog</url-pattern>
@@ -34,16 +55,40 @@
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
-    
-    <!-- Thêm welcome file -->
+
+    <servlet-mapping>
+        <servlet-name>SearchProductByTitle</servlet-name>
+        <url-pattern>/SearchProductByTitle</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPrice0to50</servlet-name>
+        <url-pattern>/SearchPrice0to50</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPriceAbove50</servlet-name>
+        <url-pattern>/SearchPriceAbove50</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPriceMinToMax</servlet-name>
+        <url-pattern>/SearchPriceMinToMax</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewProductDetail</servlet-name>
+        <url-pattern>/ViewProductDetail</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>Homepage</welcome-file>
+        <welcome-file>Homepage.jsp</welcome-file>
     </welcome-file-list>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
     </servlet-mapping>
+    <welcome-file-list>
+
+        <welcome-file>Homepage</welcome-file> <!-- dùng URL mapping -->
+
+    </welcome-file-list>
     <servlet-mapping>
         <servlet-name>SearchProductByColor</servlet-name>
         <url-pattern>/searchproductbycolor</url-pattern>
