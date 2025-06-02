@@ -23,6 +23,7 @@
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
         <style>
+
             .product-img {
                 height: 250px; /* Hoặc chiều cao mong muốn */
                 display: flex;
@@ -170,9 +171,118 @@
             </div>
         </div>
         <!-- Navbar End -->
-        
-        
-        
+
+        <!-- Product Start -->
+
+
+
+        <section id="product-detail" class="leaf-pattern-overlay">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <figure class="products-thumb">
+                                    <img src="${detail.getImage()}" 
+                                         alt="product" class="single-image" height="700px" width="350px">
+                                </figure>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="product-entry">
+                                    <h2 class="section-title divider">${detail.getTitle()}</h2>
+                                    <div class="products-content">
+                                        <div class="item-title">Mô tả: ${detail.getDescription()}</div><br>
+                                        <div class="price-wrapper">
+                                            <span class="price">Giá: <fmt:formatNumber value="${detail.getPrice()}" type="currency" currencySymbol="VNĐ" /></span>
+                                        </div>
+                                        <div class="price-wrapper">
+                                            <span class="price">Còn lại: ${detail.getQuantity()} sản phẩm</span>
+                                        </div>
+                                        <div class="price-wrapper">
+                                            <span class="price">AVG Rate: ${rate} ★</span>
+                                        </div>
+                                        <div class="btns-wrapper d-flex justify-content-center mt-3">
+                                            <div class="btn-wrap mr-3">
+                                                <form action="cart" method="get">
+                                                    <input type="hidden" name="action" value="add">
+                                                    <input type="hidden" name="id" value="${detail.getProductID()}">
+                                                    <button class="btn-accent-arrow">THÊM VÀO GIỎ <i class="icon icon-ns-arrow-right"></i></button>
+                                                </form>
+                                            </div>
+                                            <div class="btn-wrap">
+                                                <a href="wishlist?action=add&id=${detail.getProductID()}" class="btn-accent-arrow wishlist-btn">
+                                                    YÊU THÍCH <i class="icon icon-ns-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Product End -->
+
+        <!<!-- Rate and Comment -->
+
+        <div class="comment-section">
+            <div id="comment-list">
+                <h4 class="comment-title">Tổng cộng: ${totalFeedback} bình luận</h4>
+                <ul id="comments-display" class="comment-list">
+                    <c:forEach items="${listFeedback}" var="feedback">
+                        <c:forEach items="${listAccountProfile}" var="profile">
+                            <c:if test="${feedback.getAccount_ID() == profile.getAccount_ID()}">
+                                <li class="comment-item">
+                                    <span class="comment-author">${profile.getFullName()}</span>
+                                    <span class="comment-text">${feedback.getComment()}</span>
+                                    <span class="comment-star">${feedback.getRate()} ★</span>
+                                </li>
+                            </c:if>
+                        </c:forEach>
+                    </c:forEach>
+                </ul>
+            </div>
+
+            <hr class="comment-divider">
+
+            <form id="comment-form" action="AddRatingController" class="comment-form">
+                <input type="hidden" name="pid" value="${detail.getProductID()}" />
+
+                <label for="rating" class="form-label">Đánh giá:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" />
+                    <label for="star5" title="5 sao">&#9733;</label>
+
+                    <input type="radio" id="star4" name="rating" value="4" />
+                    <label for="star4" title="4 sao">&#9733;</label>
+
+                    <input type="radio" id="star3" name="rating" value="3" />
+                    <label for="star3" title="3 sao">&#9733;</label>
+
+                    <input type="radio" id="star2" name="rating" value="2" />
+                    <label for="star2" title="2 sao">&#9733;</label>
+
+                    <input type="radio" id="star1" name="rating" value="1" />
+                    <label for="star1" title="1 sao">&#9733;</label>
+                </div>
+
+                <label for="comment" class="form-label">Bình luận: *</label>
+                <textarea id="comment" name="comment" rows="4" class="form-control" placeholder="Nhập bình luận..." required></textarea>
+
+                <div class="text-center">
+                    <button type="submit" class="submit-button">GỬI BÌNH LUẬN <i class="fas fa-paper-plane"></i></button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
         <!-- Footer Start -->
         <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
             <div class="row px-xl-5 pt-5">
@@ -229,9 +339,116 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Footer End -->
 
+            <style>.comment-section {
+                    background: #fff;
+                    padding: 25px;
+                    border-radius: 12px;
+                    box-shadow: 0 0 15px rgba(0,0,0,0.07);
+                    max-width: 700px;
+                    margin: 0 auto;
+                    font-family: 'Segoe UI', sans-serif;
+                }
+
+                .comment-title {
+                    font-size: 20px;
+                    margin-bottom: 20px;
+                    color: #333;
+                }
+
+                .comment-list {
+                    list-style: none;
+                    padding-left: 0;
+                    margin-bottom: 20px;
+                }
+
+                .comment-item {
+                    padding: 12px 15px;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 10px;
+                }
+
+                .comment-author {
+                    font-weight: bold;
+                    color: #2c3e50;
+                }
+
+                .comment-text {
+                    margin-top: 5px;
+                    color: #555;
+                }
+
+                .comment-star {
+                    margin-top: 5px;
+                    color: #f39c12;
+                    font-weight: bold;
+                }
+
+                .comment-divider {
+                    border-top: 1px solid #ccc;
+                    margin: 30px 0;
+                }
+
+                .comment-form .form-label {
+                    font-weight: bold;
+                    margin-top: 10px;
+                    display: block;
+                }
+
+            
+
+        
+
+                textarea.form-control {
+                    width: 100%;
+                    padding: 12px;
+                    border-radius: 8px;
+                    border: 1px solid #ccc;
+                    resize: vertical;
+                    margin-top: 5px;
+                    font-size: 14px;
+                }
+
+                .submit-button {
+                    background-color: #3498db;
+                    color: #fff;
+                    padding: 10px 25px;
+                    border: none;
+                    border-radius: 30px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                    margin-top: 15px;
+                }
+
+                .submit-button:hover {
+                    background-color: #2980b9;
+                }
+            </style>
+            <style>
+                .star-rating {
+                    direction: rtl; /* đảo ngược thứ tự hiển thị */
+                    unicode-bidi: bidi-override; /* fix hiển thị ngược */
+                    font-size: 24px;
+                    display: inline-flex;
+                }
+                .star-rating input[type="radio"] {
+                    display: none;
+                }
+                .star-rating label {
+                    color: #ccc;
+                    cursor: pointer;
+                }
+                .star-rating input:checked ~ label,
+                .star-rating label:hover,
+                .star-rating label:hover ~ label {
+                    color: #f39c12;
+                }
+            </style>
 
             <!-- JavaScript Libraries -->
             <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -242,6 +459,17 @@
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var messageBox = document.getElementById("message-box");
+                    if (messageBox.innerHTML.trim() !== "") {
+                        messageBox.style.display = "block";
+                        setTimeout(function () {
+                            messageBox.style.display = "none";
+                        }, 3000); // Ẩn sau 3 giây
+                    }
+                });
+            </script>
     </body>
 </html>
 
