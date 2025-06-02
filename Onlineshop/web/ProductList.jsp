@@ -80,17 +80,17 @@
                         <% if(session.getAttribute("account") != null) { 
                             Account acc = (Account)session.getAttribute("account");
                         %>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                    <%= acc.getUsername() %>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
-                                </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                <%= acc.getUsername() %>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
+                        </div>
                         <% } else { %>
-                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
                         <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -168,6 +168,20 @@
                                     <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                                 </a>
                             </div>
+                        </div>
+
+                        <!-- ✅ Icon bên phải -->
+                        <div class="d-none d-lg-flex align-items-center ml-auto">
+                            <a href="#" class="btn px-0">
+                                <i class="fas fa-heart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                            <a href="Cart.jsp" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+                            </a>
                         </div>
                     </nav>
                 </div>
@@ -258,10 +272,25 @@
                                         <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
                                     </div>
                                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3">${product.getTitle()}</h6>
+                                        <h6 class="text-truncate mb-3">
+                                            <a href="ViewProductDetail?id=${product.getProductID()}" class="text-dark">
+                                                ${product.getTitle()}
+                                            </a>
+                                        </h6>
+
                                         <div class="d-flex justify-content-center">
                                             <h6>$${product.getPrice()}</h6>
                                         </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <small class="text-danger">Hết Hàng</small>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between bg-light border">
                                         <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
@@ -374,5 +403,85 @@
 
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
+
+            <!-- Toast Message Container -->
+            <style>
+                .toast-container {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+
+                .toast {
+                    padding: 15px 25px;
+                    margin-bottom: 12px;
+                    border-radius: 12px;
+                    color: #5f375f;
+                    background-color: #fce4ec;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.4s ease-in-out;
+                    border-left: 6px solid #f48fb1;
+                }
+
+                .toast.show {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                .toast.success {
+                    background-color: #f8bbd0;
+                    border-left-color: #40ec46;
+                }
+
+                .toast.error {
+                    background-color: #fce4ec;
+                    border-left-color: #d81b60;
+                }
+            </style>
+
+            <div class="toast-container"></div>
+
+            <script>
+                                        function showToast(message, type) {
+                                            const container = document.querySelector('.toast-container');
+                                            const toast = document.createElement('div');
+                                            toast.className = `toast ${type}`;
+                                            toast.textContent = message;
+
+                                            container.appendChild(toast);
+
+                                            // Reflow để kích hoạt animation
+                                            toast.offsetHeight;
+
+                                            // Show toast
+                                            toast.classList.add('show');
+
+                                            // Tự động biến mất sau 3s
+                                            setTimeout(() => {
+                                                toast.classList.remove('show');
+                                                setTimeout(() => {
+                                                    container.removeChild(toast);
+                                                }, 400);
+                                            }, 3000);
+                                        }
+
+                                        // Lấy message từ session JSP
+                                        const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                                        const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+
+                                        if (message && messageType) {
+                                            showToast(message, messageType);
+                                        }
+            </script>
+
+            <%
+                // Xoá session sau khi hiển thị
+                session.removeAttribute("message");
+                session.removeAttribute("messageType");
+            %>
     </body>
 </html>

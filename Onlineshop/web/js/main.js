@@ -101,4 +101,15 @@
     });
     
 })(jQuery);
+function editBlog(blogID) {
+    // Mở modal chỉnh sửa và tải dữ liệu blog hiện tại
+    // Bạn cần tạo modal tương tự như modal thêm blog
+}
+
+function deleteBlog(blogID) {
+    if (confirm('Bạn có chắc chắn muốn xóa blog này không?')) {
+        // Gửi yêu cầu xóa đến server
+        window.location.href = 'deleteBlog?blogID=' + blogID;
+    }
+}
 

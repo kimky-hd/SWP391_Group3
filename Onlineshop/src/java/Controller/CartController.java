@@ -151,6 +151,7 @@ public class CartController extends HttpServlet {
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+            // Nếu số lượng <= 0 thì xoá sản phẩm khỏi giỏ
             if (quantity <= 0) {
                 removeFromCart(request, response, cart);
                 return;
@@ -158,20 +159,30 @@ public class CartController extends HttpServlet {
 
             CartItem item = cart.getItem(productId);
             if (item == null) {
-                sendJsonResponse(response, createErrorResponse("Sản phẩm không tồn tại trong giỏ hàng"));
+                request.getSession().setAttribute("message", "Sản phẩm không tồn tại trong giỏ hàng");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
 
-            // Check if new quantity exceeds available stock
+            // Kiểm tra vượt quá tồn kho
             if (!cartDAO.checkProductAvailability(productId, quantity)) {
-                sendJsonResponse(response, createErrorResponse("Số lượng yêu cầu vượt quá số lượng có sẵn trong kho"));
+                request.getSession().setAttribute("message", "Số lượng yêu cầu vượt quá số lượng có sẵn trong kho");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
 
+            // Cập nhật số lượng
             cart.updateItem(productId, quantity);
-            sendJsonResponse(response, createSuccessResponse("Giỏ hàng đã được cập nhật"));
+            request.getSession().setAttribute("message", "Cập nhật giỏ hàng thành công");
+            request.getSession().setAttribute("messageType", "success");
+            response.sendRedirect(request.getHeader("referer"));
+
         } catch (NumberFormatException e) {
-            sendJsonResponse(response, createErrorResponse("Dữ liệu không hợp lệ"));
+            request.getSession().setAttribute("message", "Dữ liệu không hợp lệ");
+            request.getSession().setAttribute("messageType", "error");
+            response.sendRedirect(request.getHeader("referer"));
         }
     }
 
@@ -189,20 +200,21 @@ public class CartController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-        
-        if (account == null) {
-            sendJsonResponse(response, createErrorResponse("Vui lòng đăng nhập"));
-            return;
-        }
-        
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
+            boolean success = true;
             
-            boolean success = cartDAO.removeFromCart(account.getAccountID(), productId);
+            // Nếu đã đăng nhập, xóa sản phẩm trong database
+            if (account != null) {
+                success = cartDAO.removeFromCart(account.getAccountID(), productId);
+                if (success) {
+                    updateSessionCart(session, account.getAccountID());
+                }
+            }
             
+            // Luôn xóa sản phẩm khỏi giỏ hàng trong session
             if (success) {
                 cart.removeItem(productId);
-                updateSessionCart(session, account.getAccountID());
                 sendJsonResponse(response, createSuccessResponse("Đã xóa sản phẩm khỏi giỏ hàng"));
             } else {
                 sendJsonResponse(response, createErrorResponse("Không thể xóa sản phẩm"));
