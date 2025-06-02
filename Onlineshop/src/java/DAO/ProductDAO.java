@@ -53,7 +53,7 @@ public class ProductDAO extends DBContext {
         String sql = "Select * from product where [productID] = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, 1);
+            ps.setInt(1, id); // Sửa thành tham số id được truyền vào
             rs = ps.executeQuery();
             if (rs.next()) {
                 return new Product(rs.getInt(1),
