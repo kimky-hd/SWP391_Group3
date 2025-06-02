@@ -18,7 +18,7 @@ public class DBContext {
             String user = "root";
             String password = "123";
             connection = DriverManager.getConnection(url, user, password);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) { 
             e.printStackTrace();
         }
     }
