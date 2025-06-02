@@ -40,7 +40,11 @@ public class ViewProductDetail extends HttpServlet {
         int countAllFeedback = listAllFeedback.size();
         float rate = productDAO.getRateByProductID(id);
         List<AccountProfile> listAllAccountprofile = productDAO.getAllAccountProfile();
-        
+        System.out.println(rate);
+        System.out.println(p);
+        System.out.println(listAllAccountprofile);
+        System.out.println(listAllFeedback);
+        System.out.println(countAllFeedback);
         request.setAttribute("listFeedback", listAllFeedback);
         request.setAttribute("detail", p);
         request.setAttribute("totalFeedback", countAllFeedback);
