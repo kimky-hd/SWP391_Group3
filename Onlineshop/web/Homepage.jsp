@@ -35,7 +35,7 @@
 
     <body>
         <!-- Topbar Start -->
-        <div class="container-fluid">
+       <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
                 <div class="col-lg-6 d-none d-lg-block">
                     <div class="d-inline-flex align-items-center h-100">
@@ -55,6 +55,7 @@
                                     <%= acc.getUsername() %>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                     <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
                                 </div>
                             </div>
@@ -123,6 +124,7 @@
                                 <a href="Homepage" class="nav-item nav-link active">Home</a>
                                 <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
@@ -146,7 +148,6 @@
                                 </span>
                             </a>
                         </div>
-
                     </nav>
                 </div>
             </div>
