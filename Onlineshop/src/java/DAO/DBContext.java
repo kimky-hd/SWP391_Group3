@@ -26,7 +26,7 @@ public class DBContext {
             try {
                 if (connection == null || connection.isClosed()) {
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    String url = "jdbc:mysql://localhost:3306/FlowerShopDb";
+                    String url = "jdbc:mysql://localhost:3306/FlowerShopDB";
                     String user = "root";
                     String password = "123";
                     connection = DriverManager.getConnection(url, user, password);
