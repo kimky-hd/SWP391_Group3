@@ -100,38 +100,66 @@ public class CartController extends HttpServlet {
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
         try {
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-
-            // Validate input
+            // Kiểm tra cả id và productId
+            String productIdParam = request.getParameter("productId");
+            if (productIdParam == null) {
+                productIdParam = request.getParameter("id");
+            }
+            
+            int productId = Integer.parseInt(productIdParam);
+            
+            // Kiểm tra quantity, nếu không có thì mặc định là 1
+            String quantityParam = request.getParameter("quantity");
+            int quantity = 1; // Mặc định là 1
+            if (quantityParam != null && !quantityParam.isEmpty()) {
+                quantity = Integer.parseInt(quantityParam);
+            }
+            
+            // Kiểm tra số lượng hợp lệ
             if (quantity <= 0) {
-                sendJsonResponse(response, createErrorResponse("Số lượng phải lớn hơn 0"));
+                request.getSession().setAttribute("message", "Số lượng phải lớn hơn 0");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
-
+            
+            // Kiểm tra sản phẩm tồn tại
             Product product = cartDAO.getProductById(productId);
             if (product == null) {
-                sendJsonResponse(response, createErrorResponse("Sản phẩm không tồn tại"));
+                request.getSession().setAttribute("message", "Sản phẩm không tồn tại");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
-
-            // Check current quantity in cart
-            int currentQuantityInCart = 0;
-            if (cart.containsProduct(productId)) {
-                currentQuantityInCart = cart.getItem(productId).getQuantity();
-            }
-
-            // Check if total quantity exceeds available stock
-            int totalQuantity = currentQuantityInCart + quantity;
-            if (!cartDAO.checkProductAvailability(productId, totalQuantity)) {
-                sendJsonResponse(response, createErrorResponse("Số lượng yêu cầu vượt quá số lượng có sẵn trong kho"));
+            
+            // Kiểm tra số lượng tồn kho
+            if (!cartDAO.checkProductAvailability(productId, quantity)) {
+                request.getSession().setAttribute("message", "Số lượng yêu cầu vượt quá số lượng có sẵn trong kho");
+                request.getSession().setAttribute("messageType", "error");
+                response.sendRedirect(request.getHeader("referer"));
                 return;
             }
-
+            
+            // Thêm vào giỏ hàng
             cart.addItem(product, quantity);
-            sendJsonResponse(response, createSuccessResponse("Sản phẩm đã được thêm vào giỏ hàng"));
+            
+            // Lưu vào database nếu đã đăng nhập
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+            if (account != null) {
+                cartDAO.addToCart(account.getAccountID(), productId, quantity);
+            }
+            
+            // Đặt thông báo thành công vào session
+            request.getSession().setAttribute("message", "Đã thêm sản phẩm vào giỏ hàng");
+            request.getSession().setAttribute("messageType", "success");
+            
+            // Chuyển hướng người dùng trở lại trang trước đó
+            response.sendRedirect(request.getHeader("referer"));
         } catch (NumberFormatException e) {
-            sendJsonResponse(response, createErrorResponse("Dữ liệu không hợp lệ"));
+            request.getSession().setAttribute("message", "Dữ liệu không hợp lệ");
+            request.getSession().setAttribute("messageType", "error");
+            response.sendRedirect(request.getHeader("referer"));
         }
     }
 

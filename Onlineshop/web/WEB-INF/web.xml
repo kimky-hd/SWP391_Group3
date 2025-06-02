@@ -41,10 +41,12 @@
         <servlet-name>ViewListProductController</servlet-name>
         <servlet-class>CommonController.ViewListProductController</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>AddRatingController</servlet-name>
         <servlet-class>CustomerController.AddRatingController</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>BlogServlet</servlet-name>
         <url-pattern>/blog</url-pattern>
@@ -75,17 +77,19 @@
         <url-pattern>/SearchPriceMinToMax</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ViewProductDetail</servlet-name>
+<servlet-name>ViewProductDetail</servlet-name>
         <url-pattern>/ViewProductDetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ViewListProductController</servlet-name>
         <url-pattern>/ViewListProductController</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>AddRatingController</servlet-name>
         <url-pattern>/AddRatingController</url-pattern>
     </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
         <welcome-file>Homepage.jsp</welcome-file>
@@ -106,4 +110,6 @@
         <servlet-name>SearchProductBySeason</servlet-name>
         <url-pattern>/searchproductbyseason</url-pattern>
     </servlet-mapping>
+
 </web-app>
+
