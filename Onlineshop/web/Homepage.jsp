@@ -35,7 +35,7 @@
 
     <body>
         <!-- Topbar Start -->
-        <div class="container-fluid">
+       <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
                 <div class="col-lg-6 d-none d-lg-block">
                     <div class="d-inline-flex align-items-center h-100">
@@ -55,6 +55,7 @@
                                     <%= acc.getUsername() %>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                     <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
                                 </div>
                             </div>
@@ -106,18 +107,22 @@
         <!-- Navbar Start -->
         <div class="container-fluid bg-pink mb-30">
             <div class="row px-xl-5">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                <div class="col-lg-9">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
-                        <a href="" class="text-decoration-none d-block d-lg-none">
+
+                        <a href="#" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
+
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                            <div class="navbar-nav mr-auto py-0">
+
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <div class="navbar-nav py-0">
+
                                 <a href="Homepage" class="nav-item nav-link active">Home</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
