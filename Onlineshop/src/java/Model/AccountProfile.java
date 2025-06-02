@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Admin
  */
 public class AccountProfile {
-    private int Profile_ID;
+    private int ProfileID;
     private String FullName;
     private String PhoneNumber;
     private String Address;
@@ -24,8 +24,8 @@ public class AccountProfile {
     public AccountProfile() {
     }
 
-    public AccountProfile(int Profile_ID, String FullName, String PhoneNumber, String Address, String Img, Date DOB, String Gender, Date CreateAT, int Account_ID) {
-        this.Profile_ID = Profile_ID;
+    public AccountProfile(int ProfileID, String FullName, String PhoneNumber, String Address, String Img, Date DOB, String Gender, Date CreateAT, int Account_ID) {
+        this.ProfileID = ProfileID;
         this.FullName = FullName;
         this.PhoneNumber = PhoneNumber;
         this.Address = Address;
@@ -36,12 +36,12 @@ public class AccountProfile {
         this.Account_ID = Account_ID;
     }
 
-    public int getProfile_ID() {
-        return Profile_ID;
+    public int getProfileID() {
+        return ProfileID;
     }
 
-    public void setProfile_ID(int Profile_ID) {
-        this.Profile_ID = Profile_ID;
+    public void setProfileID(int ProfileID) {
+        this.ProfileID = ProfileID;
     }
 
     public String getFullName() {
@@ -110,6 +110,6 @@ public class AccountProfile {
 
     @Override
     public String toString() {
-        return "AccountProfile{" + "Profile_ID=" + Profile_ID + ", FullName=" + FullName + ", PhoneNumber=" + PhoneNumber + ", Address=" + Address + ", Img=" + Img + ", DOB=" + DOB + ", Gender=" + Gender + ", CreateAT=" + CreateAT + ", Account_ID=" + Account_ID + '}';
+        return "AccountProfile{" + "ProfileID=" + ProfileID + ", FullName=" + FullName + ", PhoneNumber=" + PhoneNumber + ", Address=" + Address + ", Img=" + Img + ", DOB=" + DOB + ", Gender=" + Gender + ", CreateAT=" + CreateAT + ", Account_ID=" + Account_ID + '}';
     }
 }
