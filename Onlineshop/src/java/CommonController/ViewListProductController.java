@@ -51,7 +51,9 @@ public class ViewListProductController extends HttpServlet {
         }
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
-
+        
+        System.out.println(listAllSeasons);
+        
         request.setAttribute("tag", indexPage);
         request.setAttribute("count", allProduct);
         request.setAttribute("endPage", endPage);
