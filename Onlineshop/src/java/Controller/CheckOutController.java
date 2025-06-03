@@ -27,13 +27,13 @@ public class CheckOutController extends HttpServlet {
         }
         
         // Kiểm tra người dùng đã đăng nhập chưa
-        Account account = (Account) session.getAttribute("account");
-        if (account == null) {
-            request.getSession().setAttribute("message", "Vui lòng đăng nhập để tiến hành thanh toán");
-            request.getSession().setAttribute("messageType", "error");
-            response.sendRedirect("login.jsp");
-            return;
-        }
+//        Account account = (Account) session.getAttribute("account");
+//        if (account == null) {
+//            request.getSession().setAttribute("message", "Vui lòng đăng nhập để tiến hành thanh toán");
+//            request.getSession().setAttribute("messageType", "error");
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
         
         // Truyền thông tin giỏ hàng vào request để hiển thị trên trang thanh toán
         request.setAttribute("cart", cart);
