@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
 
     <servlet>
         <servlet-name>Homepage</servlet-name>
@@ -26,6 +28,7 @@
         <servlet-name>SearchProductBySeason</servlet-name>
         <servlet-class>CommonController.SearchProductBySeason</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>SearchProductBySeason</servlet-name>
         <url-pattern>/searchproductbyseason</url-pattern>
@@ -71,10 +74,24 @@
         <servlet-name>ViewProductDetail</servlet-name>
         <servlet-class>CommonController.ViewProductDetail</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>ViewListProductController</servlet-name>
+        <servlet-class>CommonController.ViewListProductController</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AddRatingController</servlet-name>
+        <servlet-class>CustomerController.AddRatingController</servlet-class>
+    </servlet>
+
+
     <servlet-mapping>
         <servlet-name>ViewProductDetail</servlet-name>
         <url-pattern>/ViewProductDetail</url-pattern>
     </servlet-mapping>
+
+    <!-- Thêm cấu hình cho CartController -->
 
     <servlet>
         <servlet-name>CartController</servlet-name>
@@ -85,7 +102,61 @@
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
 
+
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file> <welcome-file>index.jsp</welcome-file> </welcome-file-list>
+
+    <servlet-mapping>
+        <servlet-name>SearchProductByTitle</servlet-name>
+        <url-pattern>/SearchProductByTitle</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPrice0to50</servlet-name>
+        <url-pattern>/SearchPrice0to50</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPriceAbove50</servlet-name>
+        <url-pattern>/SearchPriceAbove50</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPriceMinToMax</servlet-name>
+        <url-pattern>/SearchPriceMinToMax</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+<servlet-name>ViewProductDetail</servlet-name>
+        <url-pattern>/ViewProductDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewListProductController</servlet-name>
+        <url-pattern>/ViewListProductController</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AddRatingController</servlet-name>
+        <url-pattern>/AddRatingController</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>Homepage</welcome-file>
+        <welcome-file>Homepage.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>Homepage</welcome-file>
+        <!-- dùng URL mapping -->
+    </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>SearchProductByColor</servlet-name>
+        <url-pattern>/searchproductbycolor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductBySeason</servlet-name>
+        <url-pattern>/searchproductbyseason</url-pattern>
+    </servlet-mapping>
+
+</web-app>
 
 </web-app>
