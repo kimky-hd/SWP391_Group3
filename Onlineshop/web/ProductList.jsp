@@ -80,17 +80,17 @@
                         <% if(session.getAttribute("account") != null) { 
                             Account acc = (Account)session.getAttribute("account");
                         %>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                    <%= acc.getUsername() %>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
-                                </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                                <%= acc.getUsername() %>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
+                        </div>
                         <% } else { %>
-                            <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                            <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
+                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
+                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
                         <% } %>
                     </div>
                     <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -264,10 +264,25 @@
                                         <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
                                     </div>
                                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3">${product.getTitle()}</h6>
+                                        <h6 class="text-truncate mb-3">
+                                            <a href="ViewProductDetail?id=${product.getProductID()}" class="text-dark">
+                                                ${product.getTitle()}
+                                            </a>
+                                        </h6>
+
                                         <div class="d-flex justify-content-center">
                                             <h6>$${product.getPrice()}</h6>
                                         </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <small class="text-danger">Hết Hàng</small>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between bg-light border">
                                         <a href="cart?action=add&productId=${product.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
