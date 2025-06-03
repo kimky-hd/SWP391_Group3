@@ -156,6 +156,7 @@
     <script>
         // Hàm lấy giá trị cookie
         function getCookie(name) {
+
             const cookies = document.cookie.split(';');
             for (let cookie of cookies) {
                 const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
@@ -176,12 +177,14 @@
             }
         }
         
+
         // Tự động điền thông tin đăng nhập nếu có cookie
         window.onload = function() {
             const savedUser = getCookie('userInput');
             const savedPass = getCookie('password');
             
             if (savedUser && savedPass) {
+
                 try {
                     document.getElementById('userInput').value = savedUser;
                     document.getElementById('password').value = decodeBase64(savedPass);
@@ -190,6 +193,7 @@
                 } catch (e) {
                     console.error('Lỗi khi điền thông tin đăng nhập:', e);
                 }
+
             }
         }
         
