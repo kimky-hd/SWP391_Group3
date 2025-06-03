@@ -694,6 +694,7 @@
                 .bg-pink {
                     background: linear-gradient(45deg, #FFB6C1, #FFA5B5) !important;
                 }
+                
             </style>
 
             <!-- Custom Javascript -->

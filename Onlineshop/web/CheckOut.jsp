@@ -31,9 +31,27 @@
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
+        
+        <style>
+            .error-message {
+                color: red;
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
+            
+            .form-group.error .form-control {
+                border-color: red;
+            }
+            
+            .form-group.error .error-message {
+                display: block;
+            }
+        </style>
     </head>
 
     <body>
+        <toast-container></toast-container>
         <!-- Topbar Start -->
         <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
@@ -109,23 +127,21 @@
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                        <!-- Logo (mobile) -->
                         <a href="#" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
 
-                        <!-- Toggle button (mobile) -->
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
-                        <!-- ✅ Phần chính giữa: Menu -->
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link active">Home</a>
                                 <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
@@ -137,7 +153,6 @@
                             </div>
                         </div>
 
-                        <!-- ✅ Icon bên phải -->
                         <div class="d-none d-lg-flex align-items-center ml-auto">
                             <a href="#" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
@@ -145,14 +160,11 @@
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
-
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
                                     ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
                                 </span>
-
                             </a>
                         </div>
-
                     </nav>
                 </div>
             </div>
@@ -168,65 +180,34 @@
                     <div class="bg-light p-30 mb-5">
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label>Họ và tên</label>
-                                <input class="form-control" type="text" placeholder="Nguyễn Văn A">
+                                <label>Họ và tên <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="Nguyễn Văn A" id="fullNameInput">
+                                <div class="error-message" id="fullNameError"></div>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Email</label>
-                                <input class="form-control" type="text" placeholder="example@email.com">
+                                <input class="form-control" type="text" placeholder="example@email.com" id="emailInput">
+                                <div class="error-message" id="emailError"></div>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Số điện thoại</label>
-                                <input class="form-control" type="text" placeholder="+84 123 456 789">
+                                <label>Số điện thoại <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="+84 123 456 789" id="phoneInput">
+                                <div class="error-message" id="phoneError"></div>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Địa chỉ</label>
-                                <input class="form-control" type="text" placeholder="123 Đường ABC">
+                                <label>Địa chỉ <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="123 Đường ABC" id="addressInput">
+                                <div class="error-message" id="addressError"></div>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Quận/Huyện</label>
-                                <input class="form-control" type="text" placeholder="Quận 1">
+                                <label>Quận/Huyện <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="Quận 1" id="districtInput">
+                                <div class="error-message" id="districtError"></div>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Thành phố</label>
-                                <input class="form-control" type="text" placeholder="TP.HCM">
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="shipto">
-                                    <label class="custom-control-label" for="shipto" data-toggle="collapse" data-target="#shipping-address">Giao đến địa chỉ khác</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapse mb-5" id="shipping-address">
-                        <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Địa chỉ giao hàng khác</span></h5>
-                        <div class="bg-light p-30">
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label>Họ và tên</label>
-                                    <input class="form-control" type="text" placeholder="Nguyễn Văn A">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Email</label>
-                                    <input class="form-control" type="text" placeholder="example@email.com">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Số điện thoại</label>
-                                    <input class="form-control" type="text" placeholder="+84 123 456 789">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Địa chỉ</label>
-                                    <input class="form-control" type="text" placeholder="123 Đường ABC">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Quận/Huyện</label>
-                                    <input class="form-control" type="text" placeholder="Quận 1">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Thành phố</label>
-                                    <input class="form-control" type="text" placeholder="TP.HCM">
-                                </div>
+                                <label>Thành phố <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="TP.HCM" id="cityInput">
+                                <div class="error-message" id="cityError"></div>
                             </div>
                         </div>
                     </div>
@@ -292,48 +273,127 @@
                                 <input type="hidden" name="phone" id="phone">
                                 <input type="hidden" name="email" id="email">
                                 <input type="hidden" name="address" id="address">
-                                <input type="hidden" name="city" id="city">
                                 <input type="hidden" name="district" id="district">
-                                <input type="hidden" name="ward" id="ward">
+                                <input type="hidden" name="city" id="city">
                                 <input type="hidden" name="paymentMethod" id="paymentMethod">
-                                <button type="button" onclick="submitOrder()" class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
+                                <button type="button" onclick="validateAndSubmit()" class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
                             </form>
                             
                             <script>
-                                function submitOrder() {
-                                    // Lấy thông tin từ form địa chỉ giao hàng
-                                    document.getElementById('fullName').value = document.querySelector('input[placeholder="Nguyễn Văn A"]').value;
-                                    document.getElementById('phone').value = document.querySelector('input[placeholder="+84 123 456 789"]').value;
-                                    document.getElementById('email').value = document.querySelector('input[placeholder="example@email.com"]').value;
-                                    document.getElementById('address').value = document.querySelector('input[placeholder="123 Đường ABC"]').value;
-                                    document.getElementById('district').value = document.querySelector('input[placeholder="Quận 1"]').value;
-                                    document.getElementById('city').value = document.querySelector('input[placeholder="TP.HCM"]').value;
-                                    document.getElementById('ward').value = "Phường X"; // Thêm field cho ward nếu cần
+                                function validateAndSubmit() {
+                                    // Lấy giá trị từ các trường input
+                                    const fullName = document.getElementById('fullNameInput').value.trim();
+                                    const email = document.getElementById('emailInput').value.trim();
+                                    const phone = document.getElementById('phoneInput').value.trim();
+                                    const address = document.getElementById('addressInput').value.trim();
+                                    const district = document.getElementById('districtInput').value.trim();
+                                    const city = document.getElementById('cityInput').value.trim();
                                     
-                                    // Lấy phương thức thanh toán đã chọn
-                                    const paymentMethods = document.getElementsByName('payment');
-                                    for (let i = 0; i < paymentMethods.length; i++) {
-                                        if (paymentMethods[i].checked) {
-                                            document.getElementById('paymentMethod').value = paymentMethods[i].id;
-                                            break;
-                                        }
-                                    }
+                                    // Reset trạng thái lỗi
+                                    resetErrors();
                                     
-                                    // Kiểm tra thông tin bắt buộc
-                                    const requiredFields = ['fullName', 'phone', 'address', 'city', 'district', 'paymentMethod'];
+                                    // Kiểm tra các trường bắt buộc
                                     let isValid = true;
                                     
-                                    for (let field of requiredFields) {
-                                        if (!document.getElementById(field).value) {
-                                            alert('Vui lòng điền đầy đủ thông tin giao hàng');
-                                            isValid = false;
+                                    // Kiểm tra họ tên
+                                    if (!fullName) {
+                                        showError('fullNameInput', 'fullNameError', 'Vui lòng nhập họ và tên');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Kiểm tra email (nếu có)
+                                    if (email && !validateEmail(email)) {
+                                        showError('emailInput', 'emailError', 'Email không hợp lệ');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Kiểm tra số điện thoại
+                                    if (!phone) {
+                                        showError('phoneInput', 'phoneError', 'Vui lòng nhập số điện thoại');
+                                        isValid = false;
+                                    } else if (!validatePhone(phone)) {
+                                        showError('phoneInput', 'phoneError', 'Số điện thoại không hợp lệ');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Kiểm tra địa chỉ
+                                    if (!address) {
+                                        showError('addressInput', 'addressError', 'Vui lòng nhập địa chỉ');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Kiểm tra quận/huyện
+                                    if (!district) {
+                                        showError('districtInput', 'districtError', 'Vui lòng nhập quận/huyện');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Kiểm tra thành phố
+                                    if (!city) {
+                                        showError('cityInput', 'cityError', 'Vui lòng nhập thành phố');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Kiểm tra phương thức thanh toán
+                                    const paymentMethods = document.getElementsByName('payment');
+                                    let selectedPayment = '';
+                                    for (let i = 0; i < paymentMethods.length; i++) {
+                                        if (paymentMethods[i].checked) {
+                                            selectedPayment = paymentMethods[i].id;
                                             break;
                                         }
                                     }
                                     
+                                    if (!selectedPayment) {
+                                        alert('Vui lòng chọn phương thức thanh toán');
+                                        isValid = false;
+                                    }
+                                    
+                                    // Nếu hợp lệ, gán giá trị và submit form
                                     if (isValid) {
+                                        document.getElementById('fullName').value = fullName;
+                                        document.getElementById('phone').value = phone;
+                                        document.getElementById('email').value = email;
+                                        document.getElementById('address').value = address;
+                                        document.getElementById('district').value = district;
+                                        document.getElementById('city').value = city;
+                                        document.getElementById('paymentMethod').value = selectedPayment;
+                                        
                                         document.getElementById('orderForm').submit();
                                     }
+                                }
+                                
+                                function showError(inputId, errorId, message) {
+                                    const inputElement = document.getElementById(inputId);
+                                    const errorElement = document.getElementById(errorId);
+                                    
+                                    inputElement.parentElement.classList.add('error');
+                                    errorElement.textContent = message;
+                                    errorElement.style.display = 'block';
+                                }
+                                
+                                function resetErrors() {
+                                    const formGroups = document.querySelectorAll('.form-group');
+                                    formGroups.forEach(group => {
+                                        group.classList.remove('error');
+                                    });
+                                    
+                                    const errorMessages = document.querySelectorAll('.error-message');
+                                    errorMessages.forEach(error => {
+                                        error.style.display = 'none';
+                                    });
+                                }
+                                
+                                function validateEmail(email) {
+                                    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                                    return re.test(String(email).toLowerCase());
+                                }
+                                
+                                function validatePhone(phone) {
+                                    // Kiểm tra số điện thoại Việt Nam
+                                    // Bắt đầu bằng 0 hoặc +84, theo sau là 9 chữ số
+                                    const re = /^(0|\+84)([0-9]{9})$/;
+                                    return re.test(phone.replace(/\s/g, ''));
                                 }
                             </script>
                         </div>
@@ -344,8 +404,7 @@
         <!-- Checkout End -->
 
         <!-- Footer Start -->
-
-        <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
+<div class="container-fluid bg-pink text-secondary mt-5 pt-5">
             <div class="row px-xl-5 pt-5">
                 <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                     <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
@@ -400,19 +459,82 @@
                     </div>
                 </div>
             </div>
+            <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+                <div class="col-md-6 px-xl-0">
+                    <p class="mb-md-0 text-center text-md-left text-secondary">
+                        &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 px-xl-0 text-center text-md-right">
+                    <img class="img-fluid" src="img/payments.png" alt="">
+                </div>
+            </div>
+        </div>
+        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-            <!-- Footer End -->
 
-            <!-- Back to Top -->
-            <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-            <!-- JavaScript Libraries -->
-            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-            <script src="lib/easing/easing.min.js"></script>
-            <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="js/main.js"></script>
+        <!-- Footer End -->
 
-            <!-- Template Javascript -->
-            <script src="js/main.js"></script>
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+        <!-- Contact Javascript File -->
+        <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script>
+
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
     </body>
+
 </html>
+
+<style>
+    /* Styles for Toast Message Container */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .toast {
+        padding: 15px 25px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        color: #5f375f;
+        background-color: #fce4ec; /* pastel pink background */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.4s ease-in-out;
+        border-left: 6px solid #f48fb1; /* pastel rose accent */
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .toast.success {
+        background-color: #f8bbd0; /* light pastel pink */
+        border-left-color: #40ec46;
+    }
+
+    .toast.error {
+        background-color: #fce4ec;
+        border-left-color: #d81b60;
+    }
+</style>

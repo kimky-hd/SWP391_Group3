@@ -14,25 +14,26 @@ import DAO.DBContext;
 public class OrderDAO extends DBContext {
     
     public boolean createOrder(Order order, List<OrderDetail> orderDetails) {
-        String orderSql = "INSERT INTO Orders (account_id, order_date, full_name, phone, email, address, payment_method, total, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Câu lệnh SQL để chèn vào bảng HoaDon
+        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID) "
+                + "VALUES (?, ?, ?, ?)";
         
-        String detailSql = "INSERT INTO OrderDetails (order_id, product_id, quantity, price, total) "
+        // Câu lệnh SQL để chèn vào bảng InforLine
+        String infoSql = "INSERT INTO InforLine (maHD, name, email, address, phoneNumber) "
                 + "VALUES (?, ?, ?, ?, ?)";
+        
+        // Câu lệnh SQL để chèn vào bảng OrderDetail
+        String detailSql = "INSERT INTO OrderDetail (maHD, productID, price, quantity) "
+                + "VALUES (?, ?, ?, ?)";
         
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
             
             try (PreparedStatement ps = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getAccountId());
-                ps.setTimestamp(2, new java.sql.Timestamp(order.getOrderDate().getTime()));
-                ps.setString(3, order.getFullName());
-                ps.setString(4, order.getPhone());
-                ps.setString(5, order.getEmail());
-                ps.setString(6, order.getAddress());
-                ps.setString(7, order.getPaymentMethod());
-                ps.setDouble(8, order.getTotal());
-                ps.setString(9, order.getStatus());
+                ps.setDouble(2, order.getTotal());
+                ps.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
+                ps.setInt(4, 1); // Mặc định là "Đang Chuẩn Bị"
                 
                 int affectedRows = ps.executeUpdate();
                 
@@ -44,14 +45,23 @@ public class OrderDAO extends DBContext {
                     if (generatedKeys.next()) {
                         int orderId = generatedKeys.getInt(1);
                         
-                        // Insert order details
+                        // Chèn thông tin khách hàng
+                        try (PreparedStatement infoPs = conn.prepareStatement(infoSql)) {
+                            infoPs.setInt(1, orderId);
+                            infoPs.setString(2, order.getFullName());
+                            infoPs.setString(3, order.getEmail());
+                            infoPs.setString(4, order.getAddress());
+                            infoPs.setString(5, order.getPhone());
+                            infoPs.executeUpdate();
+                        }
+                        
+                        // Chèn chi tiết đơn hàng
                         try (PreparedStatement detailPs = conn.prepareStatement(detailSql)) {
                             for (OrderDetail detail : orderDetails) {
                                 detailPs.setInt(1, orderId);
                                 detailPs.setInt(2, detail.getProductId());
-                                detailPs.setInt(3, detail.getQuantity());
-                                detailPs.setDouble(4, detail.getPrice());
-                                detailPs.setDouble(5, detail.getTotal());
+                                detailPs.setDouble(3, detail.getPrice());
+                                detailPs.setInt(4, detail.getQuantity());
                                 detailPs.addBatch();
                             }
                             detailPs.executeBatch();
@@ -67,6 +77,7 @@ public class OrderDAO extends DBContext {
             
         } catch (SQLException e) {
             System.out.println("Error creating order: " + e.getMessage());
+            e.printStackTrace(); // In chi tiết lỗi để dễ dàng debug
             return false;
         }
     }
