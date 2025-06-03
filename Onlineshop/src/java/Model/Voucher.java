@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Voucher {
     private int voucherId;
-    private int accountId;
+    private int accountID;
     private String code;
     private double discountAmount;
     private Date expiryDate;
@@ -22,12 +22,12 @@ public class Voucher {
         this.voucherId = voucherId;
     }
     
-    public int getAccountId() {
-        return accountId;
+    public int getAccountID() {
+        return accountID;
     }
     
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
     }
     
     public String getCode() {
