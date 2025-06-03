@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class VoucherDAO extends DBContext {
     
-    public List<Voucher> getVouchersByAccountID(int accountId) {
+    public List<Voucher> getVouchersByAccountId(int accountId) {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = "SELECT * FROM Voucher WHERE accountId = ? AND isUsed = 0";
         
@@ -22,7 +22,7 @@ public class VoucherDAO extends DBContext {
             while (rs.next()) {
                 Voucher voucher = new Voucher();
                 voucher.setVoucherId(rs.getInt("voucherId"));
-                voucher.setAccountID(rs.getInt("accountId"));
+                voucher.setAccountId(rs.getInt("accountId"));
                 voucher.setCode(rs.getString("code"));
                 voucher.setDiscountAmount(rs.getDouble("discountAmount"));
                 voucher.setExpiryDate(rs.getDate("expiryDate"));
@@ -30,7 +30,7 @@ public class VoucherDAO extends DBContext {
                 vouchers.add(voucher);
             }
         } catch (SQLException e) {
-            System.out.println("getVouchersByAccountID: " + e.getMessage());
+            System.out.println("getVouchersByAccountId: " + e.getMessage());
         }
         return vouchers;
     }
@@ -71,10 +71,10 @@ public class VoucherDAO extends DBContext {
             if (rs.next()) {
                 Voucher voucher = new Voucher();
                 voucher.setVoucherId(rs.getInt("voucherId"));
-                voucher.setAccountID(rs.getInt("accountId"));
+                voucher.setAccountId(rs.getInt("accountId"));
                 voucher.setCode(rs.getString("code"));
                 voucher.setDiscountAmount(rs.getDouble("discountAmount"));
-voucher.setExpiryDate(rs.getDate("expiryDate"));
+                voucher.setExpiryDate(rs.getDate("expiryDate"));
                 voucher.setIsUsed(rs.getBoolean("isUsed"));
                 return voucher;
             }

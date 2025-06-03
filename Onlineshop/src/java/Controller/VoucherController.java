@@ -51,7 +51,7 @@ public class VoucherController extends HttpServlet {
             return;
         }
         
-        List<Voucher> vouchers = voucherDAO.getVouchersByAccountID(account.getAccountID());
+        List<Voucher> vouchers = voucherDAO.getVouchersByAccountId(account.getAccountID());
         request.setAttribute("vouchers", vouchers);
         request.getRequestDispatcher("vouchers.jsp").forward(request, response);
     }
