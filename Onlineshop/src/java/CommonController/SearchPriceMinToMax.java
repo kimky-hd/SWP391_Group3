@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import static org.apache.tomcat.jakartaee.commons.lang3.StringUtils.isNumeric;
 
 /**
  *
@@ -38,6 +37,7 @@ public class SearchPriceMinToMax extends HttpServlet {
         String priceMin = request.getParameter("priceMin").trim();
         String priceMax = request.getParameter("priceMax").trim();
         ProductDAO productDAO = new ProductDAO();
+
         if ((priceMin == null || priceMin.trim().isEmpty())
                 && (priceMax == null || priceMax.trim().isEmpty())) {
             response.sendRedirect("productList");
@@ -102,4 +102,7 @@ public class SearchPriceMinToMax extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public static boolean isNumeric(String str) {
+        return str != null && str.matches("\\d+");
+    }
 }

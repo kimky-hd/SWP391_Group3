@@ -208,10 +208,10 @@
                 }
                 return true;
             }
-
-            <% if(request.getAttribute("success") != null) { %>
-            setTimeout(function () {
-                window.location.href = "index.html";
+        
+        <% if(request.getAttribute("success") != null) { %>
+            setTimeout(function() {
+                window.location.href = "Homepage.jsp";
             }, 1500);
             <% } %>
         </script>
