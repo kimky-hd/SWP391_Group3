@@ -473,7 +473,7 @@
                         <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng giỏ hàng</span></h5>
                         <div class="bg-light p-30 mb-5">
 
-                            <c:set var="shippingFee"/>
+                            <c:set var="shippingFee" value="30000"/>
 
                             <div class="border-bottom pb-2">
                                 <div class="d-flex justify-content-between mb-3">
@@ -493,9 +493,7 @@
                                 <div class="d-flex justify-content-between mt-2">
                                     <h5>Tổng thanh toán</h5>
                                     <h5>
-
-                                        <fmt:formatNumber value="${sessionScope.cart.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-
+                                        <fmt:formatNumber value="${sessionScope.cart.total + shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
                                     </h5>
                                 </div>
                                 <c:choose>
@@ -503,9 +501,7 @@
                                         <button class="btn btn-block btn-secondary font-weight-bold my-3 py-3" disabled>Giỏ hàng trống</button>
                                     </c:when>
                                     <c:otherwise>
-
                                         <a href="checkout" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
-
                                     </c:otherwise>
                                 </c:choose>
                             </div>
