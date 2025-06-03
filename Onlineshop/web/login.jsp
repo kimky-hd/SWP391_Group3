@@ -210,7 +210,7 @@
         
         <% if(request.getAttribute("success") != null) { %>
             setTimeout(function() {
-                window.location.href = "index.html";
+                window.location.href = "Homepage.jsp";
             }, 1500);
         <% } %>
     </script>
