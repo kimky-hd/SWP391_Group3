@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.util.Date" %>
+<% pageContext.setAttribute("now", new Date()); %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -134,27 +136,30 @@
                 <c:otherwise>
                     <c:forEach items="${vouchers}" var="voucher">
                         <div class="col-lg-4 col-md-6 mb-4 voucher-item">
-                            <div class="card ${voucher.expiryDate lt now ? 'expired' : ''}">
-                                <div class="card-header bg-primary text-white text-center py-4">
+                            <div class="card ${voucher.expiryDate.time lt now.time ? 'expired' : ''}" 
+                                 data-voucher-id="${voucher.voucherId}"
+                                 data-expiry-date="${voucher.expiryDate}">
+                                <div class="card-header ${voucher.expiryDate lt now ? 'bg-secondary' : 'bg-primary'} text-white text-center py-4">
                                     <h3 class="mb-0 font-weight-bold">${voucher.discountAmount}đ</h3>
                                 </div>
                                 <div class="card-body text-center">
                                     <h5 class="card-title">Mã: ${voucher.code}</h5>
                                     <p class="text-muted">Hết hạn: ${voucher.expiryDate}</p>
                                     <c:if test="${voucher.expiryDate lt now}">
-                                        <p class="text-danger small mb-3">Voucher này đã hết hạn</p>
+                                        <p class="text-danger font-weight-bold mb-3">Voucher này đã hết hạn</p>
                                     </c:if>
                                     <div class="mt-4">
                                         <c:choose>
-                                            <c:when test="${voucher.expiryDate lt now}">
-                                                <button type="button" class="btn btn-primary mr-2" disabled>
-                                                    <i class="fas fa-check mr-2"></i>Đã hết hạn
+                                            <c:when test="${voucher.expiryDate.time lt now.time}">
+                                                <button type="button" class="btn btn-secondary mr-2" disabled>
+                                                    <i class="fas fa-clock mr-2"></i>Đã hết hạn
                                                 </button>
                                             </c:when>
                                             <c:otherwise>
                                                 <button type="button" 
-                                                        onclick="useVoucher('${voucher.code}', '${voucher.discountAmount}', ${voucher.voucherId})" 
-                                                        class="btn btn-primary mr-2">
+                                                        onclick="useVoucher('${voucher.code}', '${voucher.discountAmount}', ${voucher.voucherId}, '${voucher.expiryDate}')" 
+                                                        class="btn btn-primary mr-2"
+                                                        ${voucher.expiryDate.time lt now.time ? 'disabled' : ''}>
                                                     <i class="fas fa-check mr-2"></i>Sử dụng
                                                 </button>
                                             </c:otherwise>
@@ -199,6 +204,7 @@
     </div>
 
     <!-- Modal Xác nhận xóa voucher -->
+    <!-- Remove this entire modal section -->
     <div class="modal fade" id="deleteVoucherModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -228,7 +234,7 @@
     <!-- Custom JavaScript -->
     <script>
         let selectedVoucherId = null;
-
+        
         // Khởi tạo các modal khi trang được tải
         $(document).ready(function() {
             $('#useVoucherModal').modal({
@@ -238,26 +244,76 @@
                 show: false
             });
         });
-
-        function useVoucher(code, amount, voucherId) {
-            selectedVoucherId = voucherId;
-            $('#voucherCode').text(code);
-            $('#voucherAmount').text(amount);
-            $('#useVoucherModal').modal('show');
+    
+        function useVoucher(code, amount, voucherId, expiryDate) {
+            const now = new Date();
+            const expiry = new Date(expiryDate);
+            
+            if (expiry < now) {
+                alert('Voucher đã hết hạn!');
+                return;
+            }
+            
+            // Tạo form và submit trực tiếp
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'VoucherController';
+            
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = 'use';
+            
+            const voucherInput = document.createElement('input');
+            voucherInput.type = 'hidden';
+            voucherInput.name = 'voucherId';
+            voucherInput.value = voucherId;
+            
+            form.appendChild(actionInput);
+            form.appendChild(voucherInput);
+            document.body.appendChild(form);
+            form.submit();
         }
-
+    
         function deleteVoucher(code, amount, voucherId) {
-            selectedVoucherId = voucherId;
-            $('#deleteVoucherCode').text(code);
-            $('#deleteVoucherAmount').text(amount);
-            $('#deleteVoucherModal').modal('show');
+            const voucherElement = document.querySelector(`.voucher-item button[onclick*="${voucherId}"]`).closest('.voucher-item');
+            
+            fetch(`VoucherController?action=delete&voucherId=${voucherId}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                // Xóa phần tử voucher
+                voucherElement.remove();
+                
+                // Kiểm tra và hiển thị thông báo nếu không còn voucher
+                const remainingVouchers = document.querySelectorAll('.voucher-item');
+                if (remainingVouchers.length === 0) {
+                    document.getElementById('voucherContainer').innerHTML = `
+                        <div class="col-12 text-center">
+                            <div class="p-5 bg-light rounded">
+                                <i class="fas fa-ticket-alt fa-4x text-primary mb-4"></i>
+                                <h4>Bạn chưa có voucher</h4>
+                                <p class="text-muted">Hãy tiếp tục mua sắm để nhận thêm voucher mới!</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi xóa voucher');
+            });
         }
-
+    
         function handleVoucherDisplay() {
             const selectValue = document.getElementById('sortAndFilter').value;
             const voucherItems = Array.from(document.querySelectorAll('.voucher-item'));
             const container = document.getElementById('voucherContainer');
-
+            
             // Lọc voucher
             voucherItems.forEach(item => {
                 const card = item.querySelector('.card');
@@ -269,7 +325,7 @@
                     item.style.display = !card.classList.contains('expired') ? 'block' : 'none';
                 }
             });
-
+            
             // Sắp xếp voucher
             if (['amount_asc', 'amount_desc', 'date_asc', 'date_desc'].includes(selectValue)) {
                 const visibleItems = voucherItems.filter(item => item.style.display !== 'none');
@@ -291,24 +347,43 @@
                 visibleItems.forEach(item => container.appendChild(item));
             }
         }
-
+    
         function confirmUseVoucher() {
             if (selectedVoucherId) {
-                fetch(`VoucherController?action=use&voucherId=${selectedVoucherId}`, {
-                    method: 'POST'
-                })
-                .then(response => {
+                const voucherElement = document.querySelector(`[data-voucher-id="${selectedVoucherId}"]`);
+                const expiryDate = new Date(voucherElement.dataset.expiryDate);
+                const now = new Date();
+                
+                if (expiryDate < now) {
+                    alert('Voucher đã hết hạn!');
                     $('#useVoucherModal').modal('hide');
-                    window.location.href = 'Cart.jsp';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Có lỗi xảy ra khi sử dụng voucher');
-                    $('#useVoucherModal').modal('hide');
-                });
+                    return;
+                }
+                
+                // Tạo form và submit
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'VoucherController';
+                
+                const actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = 'use';
+                
+                const voucherInput = document.createElement('input');
+                voucherInput.type = 'hidden';
+                voucherInput.name = 'voucherId';
+                voucherInput.value = selectedVoucherId;
+                
+                form.appendChild(actionInput);
+                form.appendChild(voucherInput);
+                document.body.appendChild(form);
+                
+                $('#useVoucherModal').modal('hide');
+                form.submit();
             }
         }
-
+    
         function confirmDeleteVoucher() {
             if (selectedVoucherId) {
                 const voucherElement = document.querySelector(`.voucher-item button[onclick*="${selectedVoucherId}"]`).closest('.voucher-item');
@@ -347,5 +422,5 @@
             }
         }
     </script>
-</body>
-</html>
+                </body>
+                </html>
