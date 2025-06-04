@@ -30,7 +30,7 @@ public class AccountDAO extends DBContext {
             }
             
             conn = getConnection();
-            // Sửa câu query để thêm điều kiện phone
+            // Sửa câu query để thêm điều kiện phone.
             String query = "SELECT * FROM Account WHERE (email = ? OR username = ? OR phone = ?) AND password = ?";
             ps = conn.prepareStatement(query);
             ps.setString(1, userInput.trim());
