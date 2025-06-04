@@ -132,23 +132,28 @@
                                         <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
                                     </div>
                                 </div>
-                                <div class="mb-3 form-check">
-                                    <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-                                    <label class="form-check-label" for="rememberMe">Nhớ mật khẩu</label>
-                                </div>
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-pink py-3">
-                                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
-                                    </button>
-                                </div>
-                            </form>
-                            <div class="text-center mt-4">
-                                <p class="mb-2">Chưa có tài khoản? <a href="register.jsp" class="text-pink fw-bold">Đăng ký ngay</a></p>
-                                <a href="Homepage" class="text-decoration-none back-to-home">
-                                    <i class="fas fa-arrow-left me-1"></i> Quay về trang chủ
-                                </a>
+                              
+                          
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Nhớ mật khẩu</label>
                             </div>
-                        </div>
+                            
+                            <div class="d-grid gap-2">
+                             
+                                <button type="submit" class="btn btn-pink py-3">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                                </button>
+                            </div>
+                        </form>
+                         <div class="text-center mt-4">
+                            <p class="mb-2">Chưa có tài khoản? <a href="register.jsp" class="text-pink fw-bold">Đăng ký ngay</a></p>
+                            <p class="mb-2"><a href="forgotpassword.jsp" class="text-pink fw-bold">Quên mật khẩu?</a></p>
+                            <a href="Homepage" class="text-decoration-none back-to-home">
+                                <i class="fas fa-arrow-left me-1"></i> Quay về trang chủ
+                            </a>
+                          </div>
                     </div>
                 </div>
             </div>
@@ -209,13 +214,19 @@
                 return true;
             }
         
-        <% if(request.getAttribute("success") != null) { %>
-            setTimeout(function() {
-                window.location.href = "Homepage.jsp";
-            }, 1500);
-            <% } %>
-        </script>
-    </body>
+
+        <% 
+   String successMsg = (String)request.getAttribute("success");
+   if(successMsg != null && !successMsg.contains("Đăng ký thành công")) { 
+%>
+    
+    setTimeout(function() {
+        window.location.href = "Homepage";
+    }, 1500);
+<% } %>
+    </script>
+</body>
+
 </html>
 
 <style>

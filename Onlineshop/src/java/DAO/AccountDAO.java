@@ -56,7 +56,7 @@ public class AccountDAO extends DBContext {
         return null;
     }
     public boolean register(String username, String password, String email, String phone) {
-        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 1, ?, ?)";
+        String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 0, ?, ?)";
         try {
             conn = getConnection();
             ps = conn.prepareStatement(query);
@@ -101,6 +101,7 @@ public class AccountDAO extends DBContext {
     public Account checkEmailExist(String email) {
         String query = "SELECT * FROM Account WHERE email = ?";
         try {
+             conn = getConnection();
             ps = connection.prepareStatement(query);
             ps.setString(1, email);
             rs = ps.executeQuery();
@@ -121,4 +122,103 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
+     public Account findAccountByEmailOrPhone(String emailOrPhone) {
+        String query = "SELECT * FROM Account WHERE email = ? OR phone = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, emailOrPhone);
+            ps.setString(2, emailOrPhone);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                return new Account(
+                    rs.getInt("accountID"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getInt("role"),
+                    rs.getString("email"),
+                    rs.getString("phone")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+     
+     // Phương thức cập nhật mật khẩu
+    public boolean updatePassword(String email, String newPassword) {
+        String query = "UPDATE Account SET password = ? WHERE email = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+    
+    // Phương thức kiểm tra mật khẩu cũ trước khi đổi
+    public boolean checkOldPassword(int accountID, String oldPassword) {
+        String query = "SELECT * FROM Account WHERE accountID = ? AND password = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountID);
+            ps.setString(2, oldPassword);
+            rs = ps.executeQuery();
+            return rs.next(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+    
+    // Phương thức đổi mật khẩu
+     public boolean changePassword(int accountID, String currentPassword, String newPassword) {
+        // Đầu tiên kiểm tra mật khẩu hiện tại có đúng không
+        String checkQuery = "SELECT * FROM Account WHERE accountID = ? AND password = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(checkQuery);
+            ps.setInt(1, accountID);
+            ps.setString(2, currentPassword);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                // Mật khẩu hiện tại đúng, tiến hành cập nhật mật khẩu mới
+                String updateQuery = "UPDATE Account SET password = ? WHERE accountID = ?";
+                ps = conn.prepareStatement(updateQuery);
+                ps.setString(1, newPassword);
+                ps.setInt(2, accountID);
+                return ps.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+    
+    // Phương thức tạo mã xác nhận ngẫu nhiên
+    public String generateResetToken() {
+        // Tạo mã xác nhận ngẫu nhiên 6 chữ số
+        return String.format("%06d", new java.util.Random().nextInt(999999));
+    }
+
+    public boolean changePassword(int accountID, String newPassword) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
+
