@@ -3,6 +3,13 @@ package Model;
 import java.util.Date;
 
 public class Order {
+    // Thêm các trường mới phù hợp với cấu trúc bảng HoaDon
+    private int maHD; // thay cho orderId
+    private int statusID; // thay cho status (String)
+    private Date ngayXuat; // thay cho orderDate
+    private double tongGia; // thay cho total
+
+    // Cập nhật các getter và setter tương ứng
     private int orderId;
     private int accountId;
     private Date orderDate;
