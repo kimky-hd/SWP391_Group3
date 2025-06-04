@@ -257,22 +257,27 @@
                     </div>
 
                     <div class="row">
-                        <c:forEach items="${productList}" var="product" varStatus="status">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                <div class="card product-item border-0 mb-4">
-                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                    </div>
-                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3">
-                                            <a href="ViewProductDetail?id=${product.getProductID()}" class="text-dark">
-                                                ${product.getTitle()}
-                                            </a>
-                                        </h6>
-
-                                        <div class="d-flex justify-content-center">
-                                            <h6>$${product.getPrice()}</h6>
+                        <c:if test="${empty productList}">
+                            <p>Không có sản phẩm.</p>
+                        </c:if>
+                        <c:if test="${not empty productList}">
+                            <c:forEach items="${productList}" var="product">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
+                                    <div class="card product-item border-0 mb-4">
+                                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                                            <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
                                         </div>
+                                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                            <h6 class="text-truncate mb-3">
+                                                <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
+                                                    ${product.getTitle()}
+                                                </a>
+                                            </h6>
+
+                                            <div class="d-flex justify-content-center">
+                                                <h6>$${product.getPrice()}</h6>
+                                            </div>
+                                        
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <c:choose>
@@ -291,10 +296,11 @@
                                         <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
                                             <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
                                         </a>
+
                                     </div>
                                 </div>
-                            </div>
-                        </c:forEach>
+                            </c:forEach>
+                        </c:if>
 
 
 
@@ -438,36 +444,36 @@
             <div class="toast-container"></div>
 
             <script>
-                                        function showToast(message, type) {
-                                            const container = document.querySelector('.toast-container');
-                                            const toast = document.createElement('div');
-                                            toast.className = `toast ${type}`;
-                                            toast.textContent = message;
+                            function showToast(message, type) {
+                                const container = document.querySelector('.toast-container');
+                                const toast = document.createElement('div');
+                                toast.className = `toast ${type}`;
+                                toast.textContent = message;
 
-                                            container.appendChild(toast);
+                                container.appendChild(toast);
 
-                                            // Reflow để kích hoạt animation
-                                            toast.offsetHeight;
+                                // Reflow để kích hoạt animation
+                                toast.offsetHeight;
 
-                                            // Show toast
-                                            toast.classList.add('show');
+                                // Show toast
+                                toast.classList.add('show');
 
-                                            // Tự động biến mất sau 3s
-                                            setTimeout(() => {
-                                                toast.classList.remove('show');
-                                                setTimeout(() => {
-                                                    container.removeChild(toast);
-                                                }, 400);
-                                            }, 3000);
-                                        }
+                                // Tự động biến mất sau 3s
+                                setTimeout(() => {
+                                    toast.classList.remove('show');
+                                    setTimeout(() => {
+                                        container.removeChild(toast);
+                                    }, 400);
+                                }, 3000);
+                            }
 
-                                        // Lấy message từ session JSP
-                                        const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
-                                        const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+                            // Lấy message từ session JSP
+                            const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                            const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
 
-                                        if (message && messageType) {
-                                            showToast(message, messageType);
-                                        }
+                            if (message && messageType) {
+                                showToast(message, messageType);
+                            }
             </script>
 
             <%
