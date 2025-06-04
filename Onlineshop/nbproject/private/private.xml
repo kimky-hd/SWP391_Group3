@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewProductDetail.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
-        </group>
         <group name="New Folder (2)">
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/CommonController/ChangePasswordServlet.java</file>
@@ -45,6 +36,19 @@
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/Controller/CheckOutController.java</file>
+        </group>
+        <group>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/login.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ForgotPasswordServlet.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CustomerController/ManageWishListController.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewProductDetail.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
         </group>
     </open-files>
 </project-private>
