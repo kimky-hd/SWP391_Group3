@@ -133,7 +133,15 @@ public class CartController extends HttpServlet {
             }
             
             // Kiểm tra số lượng tồn kho
-            if (!cartDAO.checkProductAvailability(productId, quantity)) {
+            // Kiểm tra số lượng hiện có trong giỏ hàng (nếu có)
+            int currentQuantityInCart = 0;
+            CartItem existingItem = cart.getItem(productId);
+            if (existingItem != null) {
+                currentQuantityInCart = existingItem.getQuantity();
+            }
+            
+            // Kiểm tra tổng số lượng
+            if (!cartDAO.checkProductAvailability(productId, currentQuantityInCart + quantity)) {
                 request.getSession().setAttribute("message", "Số lượng yêu cầu vượt quá số lượng có sẵn trong kho");
                 request.getSession().setAttribute("messageType", "error");
                 response.sendRedirect(request.getHeader("referer"));
