@@ -133,35 +133,6 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Product> getProductByColorAndSeason(String colorName, String seasonName) {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.* FROM Product p "
-                + "JOIN PhanLoaiTheoColor c ON p.colorID = c.colorID "
-                + "JOIN PhanLoaiTheoSeason s ON p.seasonID = s.seasonID "
-                + "WHERE c.colorName = ? AND s.seasonName = ?";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, colorName);
-            ps.setString(2, seasonName);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
-                        rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getString(9),
-                        rs.getDate(10),
-                        rs.getDate(11)));
-            }
-        } catch (SQLException e) {
-            System.out.println("getProductByColorAndSeason" + e.getMessage());
-        }
-        return list;
-    }
 
     public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
@@ -446,11 +417,11 @@ public class ProductDAO extends DBContext {
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Feedback(rs.getInt(1),
-                        rs.getFloat(2),
-                        rs.getDate(3),
+                        rs.getFloat(5),
+                        rs.getDate(6),
                         rs.getString(4),
-                        rs.getInt(5),
-                        rs.getInt(6)
+                        rs.getInt(2),
+                        rs.getInt(3)
                 ));
             }
         } catch (SQLException e) {

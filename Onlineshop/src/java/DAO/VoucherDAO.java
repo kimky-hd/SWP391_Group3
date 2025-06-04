@@ -36,7 +36,7 @@ public class VoucherDAO extends DBContext {
     }
     
     public boolean deleteVoucher(int voucherId, int accountId) {
-        String sql = "DELETE FROM Voucher WHERE voucher_id = ? AND account_id = ?";
+        String sql = "DELETE FROM Voucher WHERE voucherId = ? AND accountId = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, voucherId);
@@ -48,16 +48,39 @@ public class VoucherDAO extends DBContext {
         }
     }
     
-    public boolean useVoucher(int voucherId, int accountId) {
-        String sql = "UPDATE Voucher SET is_used = 1 WHERE voucher_id = ? AND account_id = ?";
+    public boolean markVoucherAsUsed(int voucherId, int accountId) {
+        String sql = "UPDATE Voucher SET isUsed = 1 WHERE voucherId = ? AND accountId = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, voucherId);
             ps.setInt(2, accountId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("useVoucher: " + e.getMessage());
+            System.out.println("markVoucherAsUsed: " + e.getMessage());
             return false;
         }
+    }
+    
+    public Voucher getVoucherById(int voucherId) {
+        String sql = "SELECT * FROM Voucher WHERE voucherId = ?";        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, voucherId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                Voucher voucher = new Voucher();
+                voucher.setVoucherId(rs.getInt("voucherId"));
+                voucher.setAccountId(rs.getInt("accountId"));
+                voucher.setCode(rs.getString("code"));
+                voucher.setDiscountAmount(rs.getDouble("discountAmount"));
+                voucher.setExpiryDate(rs.getDate("expiryDate"));
+                voucher.setIsUsed(rs.getBoolean("isUsed"));
+                return voucher;
+            }
+        } catch (SQLException e) {
+            System.out.println("getVoucherById: " + e.getMessage());
+        }
+        return null;
     }
 }
