@@ -75,14 +75,13 @@ public class OrderController extends HttpServlet {
             String phone = request.getParameter("phone");
             String email = request.getParameter("email");
             String address = request.getParameter("address");
-            String city = request.getParameter("city");
             String district = request.getParameter("district");
-            String ward = request.getParameter("ward");
+            String city = request.getParameter("city");
             String paymentMethod = request.getParameter("paymentMethod");
 
             // Kiểm tra thông tin bắt buộc
             if (fullName == null || phone == null || address == null ||
-                city == null || district == null || ward == null || paymentMethod == null) {
+                city == null || district == null || paymentMethod == null) {
                 sendJsonResponse(response, createErrorResponse("Vui lòng điền đầy đủ thông tin"));
                 return;
             }
@@ -94,9 +93,13 @@ public class OrderController extends HttpServlet {
             order.setFullName(fullName);
             order.setPhone(phone);
             order.setEmail(email);
-            order.setAddress(address + ", " + ward + ", " + district + ", " + city);
+            
+            // Ghép các trường địa chỉ thành một chuỗi
+            String fullAddress = address + ", " + district + ", " + city;
+            order.setAddress(fullAddress);
+            
             order.setPaymentMethod(paymentMethod);
-            order.setTotal(cart.getTotal());
+            order.setTotal(cart.getTotal() + 30000); // Thêm phí vận chuyển 30,000 VND
             order.setStatus("Pending");
 
             // Tạo chi tiết đơn hàng
