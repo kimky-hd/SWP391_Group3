@@ -57,6 +57,12 @@
                 font-size: 20px; /* Điều chỉnh kích thước icon */
                 color: #333; /* Màu của icon */
             }
+            .sticky-navbar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background-color: var(--primary);
+            }
         </style>
     </head>
 
@@ -85,6 +91,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
@@ -132,36 +139,37 @@
 
 
         <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
+        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
             <div class="row px-xl-5">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                <div class="col-lg-9">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
-                        <a href="" class="text-decoration-none d-block d-lg-none">
+                        <a href="#" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
+
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                            <div class="navbar-nav mr-auto py-0">
+
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link">Home</a>
                                 <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="cart" class="dropdown-item">Shopping Cart</a>
-                                        <a href="checkout" class="dropdown-item">Checkout</a>
+                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
                                     </div>
                                 </div>
                                 <a href="contact.html" class="nav-item nav-link">Contact</a>
                             </div>
-                            
                         </div>
 
-                        <!-- ✅ Icon bên phải -->
                         <div class="d-none d-lg-flex align-items-center ml-auto">
                             <a href="#" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
@@ -256,49 +264,53 @@
                     </div>
 
                     <div class="row">
-                        <c:if test="${empty productList}">
-                            <p>Không có sản phẩm.</p>
-                        </c:if>
-                        <c:if test="${not empty productList}">
-                            <c:forEach items="${productList}" var="product">
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                    <div class="card product-item border-0 mb-4">
-                                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                            <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                        </div>
-                                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                            <h6 class="text-truncate mb-3">
-                                                <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
-                                                    ${product.getTitle()}
-                                                </a>
-                                            </h6>
+                        <c:forEach items="${productList}" var="product" varStatus="status">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">
+                                            <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
+                                                ${product.getTitle()}
+                                            </a>
+                                        </h6>
 
-                                            <div class="d-flex justify-content-center">
-                                                <h6>$${product.getPrice()}</h6>
-                                            </div>
-                                        </div>
                                         <div class="d-flex justify-content-center">
-                                            <c:choose>
-                                                <c:when test="${product.getQuantity() == 0}">
-                                                    <small class="text-danger">Hết Hàng</small>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between bg-light border">
-                                            <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                            </a>
-                                            <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
-                                            </a>
+                                            <h6>$${product.getPrice()}</h6>
                                         </div>
                                     </div>
+                                    <div class="d-flex justify-content-center">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <small class="text-danger">Hết Hàng</small>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <button class="btn btn-sm text-dark p-0" onclick="showOutOfStockAlert()">
+                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ hàng
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                            <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
+                                        </a>
+                                    </div>
                                 </div>
-                            </c:forEach>
-                        </c:if>
+                            </div>
+                        </c:forEach>
 
 
 
@@ -396,6 +408,7 @@
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
             <script src="lib/easing/easing.min.js"></script>
             <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
             <!-- Template Javascript -->
             <script src="js/main.js"></script>
@@ -442,36 +455,48 @@
             <div class="toast-container"></div>
 
             <script>
-                            function showToast(message, type) {
-                                const container = document.querySelector('.toast-container');
-                                const toast = document.createElement('div');
-                                toast.className = `toast ${type}`;
-                                toast.textContent = message;
+                                                    function showToast(message, type) {
+                                                        const container = document.querySelector('.toast-container');
+                                                        const toast = document.createElement('div');
+                                                        toast.className = `toast ${type}`;
+                                                        toast.textContent = message;
 
-                                container.appendChild(toast);
+                                                        container.appendChild(toast);
 
-                                // Reflow để kích hoạt animation
-                                toast.offsetHeight;
+                                                        // Reflow để kích hoạt animation
+                                                        toast.offsetHeight;
 
-                                // Show toast
-                                toast.classList.add('show');
+                                                        // Show toast
+                                                        toast.classList.add('show');
 
-                                // Tự động biến mất sau 3s
-                                setTimeout(() => {
-                                    toast.classList.remove('show');
-                                    setTimeout(() => {
-                                        container.removeChild(toast);
-                                    }, 400);
-                                }, 3000);
-                            }
+                                                        // Tự động biến mất sau 3s
+                                                        setTimeout(() => {
+                                                            toast.classList.remove('show');
+                                                            setTimeout(() => {
+                                                                container.removeChild(toast);
+                                                            }, 400);
+                                                        }, 3000);
+                                                    }
 
-                            // Lấy message từ session JSP
-                            const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
-                            const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+                                                    // Lấy message từ session JSP
+                                                    const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                                                    const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
 
-                            if (message && messageType) {
-                                showToast(message, messageType);
-                            }
+                                                    if (message && messageType) {
+                                                        showToast(message, messageType);
+                                                    }
+            </script>
+
+            <script>
+                function showOutOfStockAlert() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hết hàng!',
+                        text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
             </script>
 
             <%
