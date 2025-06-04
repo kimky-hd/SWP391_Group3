@@ -100,6 +100,19 @@ public class CartController extends HttpServlet {
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
         try {
+            // Kiểm tra đăng nhập trước khi thêm vào giỏ hàng
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+            if (account == null) {
+                // Lưu URL hiện tại để chuyển hướng lại sau khi đăng nhập
+                String referer = request.getHeader("referer");
+                session.setAttribute("redirectURL", referer);
+                
+                // Chuyển hướng đến trang đăng nhập
+                response.sendRedirect("login.jsp");
+                return;
+            }
+            
             // Kiểm tra cả id và productId
             String productIdParam = request.getParameter("productId");
             if (productIdParam == null) {
@@ -152,11 +165,7 @@ public class CartController extends HttpServlet {
             cart.addItem(product, quantity);
             
             // Lưu vào database nếu đã đăng nhập
-            HttpSession session = request.getSession();
-            Account account = (Account) session.getAttribute("account");
-            if (account != null) {
-                cartDAO.addToCart(account.getAccountID(), productId, quantity);
-            }
+            cartDAO.addToCart(account.getAccountID(), productId, quantity);
             
             // Đặt thông báo thành công vào session
             request.getSession().setAttribute("message", "Đã thêm sản phẩm vào giỏ hàng");
@@ -324,6 +333,18 @@ public class CartController extends HttpServlet {
      */
     private void displayCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Kiểm tra đăng nhập trước khi hiển thị giỏ hàng
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            // Lưu URL hiện tại để chuyển hướng lại sau khi đăng nhập
+            session.setAttribute("redirectURL", "Cart.jsp");
+            
+            // Chuyển hướng đến trang đăng nhập
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
         request.getRequestDispatcher("Cart.jsp").forward(request, response);
     }
 
@@ -336,6 +357,18 @@ public class CartController extends HttpServlet {
      */
     private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
+        // Kiểm tra đăng nhập trước khi hiển thị giỏ hàng
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            // Lưu URL hiện tại để chuyển hướng lại sau khi đăng nhập
+            session.setAttribute("redirectURL", "Cart.jsp");
+            
+            // Chuyển hướng đến trang đăng nhập
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
         request.setAttribute("cart", cart);
         request.getRequestDispatcher("Cart.jsp").forward(request, response);
     }
