@@ -26,9 +26,51 @@
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
+        
+        <style>
+            /* Styles for Toast Message Container */
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .toast {
+                padding: 15px 25px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+                color: #5f375f;
+                background-color: #fce4ec; /* pastel pink background */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.4s ease-in-out;
+                border-left: 6px solid #f48fb1; /* pastel rose accent */
+            }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .toast.success {
+                background-color: #f8bbd0; /* light pastel pink */
+                border-left-color: #40ec46;
+            }
+
+            .toast.error {
+                background-color: #fce4ec;
+                border-left-color: #d81b60;
+            }
+        </style>
     </head>
 
     <body>
+        <!-- Thêm thẻ div toast-container ngay sau thẻ body -->
+        <div class="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+        
         <!-- Include your header/navigation here -->
 
         <!-- Orders Start -->
@@ -111,18 +153,63 @@
                         data: { orderId: orderId },
                         success: function(response) {
                             if (response.success) {
-                                alert('Hủy đơn hàng thành công!');
-                                location.reload();
+                                showToast('Hủy đơn hàng thành công!', 'success');
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1500);
                             } else {
-                                alert(response.message || 'Có lỗi xảy ra khi hủy đơn hàng.');
+                                showToast(response.message || 'Có lỗi xảy ra khi hủy đơn hàng.', 'error');
                             }
                         },
                         error: function() {
-                            alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                            showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
                         }
                     });
                 }
             }
+            
+            function showToast(message, type) {
+                const container = document.querySelector('.toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                
+                container.appendChild(toast);
+                
+                // Trigger reflow to enable transition
+                toast.offsetHeight;
+                
+                // Show toast
+                toast.classList.add('show');
+                
+                // Remove toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        container.removeChild(toast);
+                    }, 400);
+                }, 3000);
+            }
+            
+            // Đảm bảo DOM đã tải xong
+            document.addEventListener('DOMContentLoaded', function() {
+                // Check for message in session
+                const message = '${sessionScope.message}';
+                const messageType = '${sessionScope.messageType}';
+                if (message && messageType) {
+                    showToast(message, messageType);
+                }
+                
+                // Kiểm tra xem toast có hoạt động không bằng cách hiển thị một thông báo test
+                // Bỏ comment dòng dưới để test
+                // showToast('Đây là thông báo test', 'success');
+            });
         </script>
+        
+        <% 
+        // Clear the message from session
+        session.removeAttribute("message");
+        session.removeAttribute("messageType");
+        %>
     </body>
 </html>

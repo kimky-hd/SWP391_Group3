@@ -108,6 +108,174 @@
                 color: #5c4b51;
             }
 
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh; /* Đảm bảo body chiếm ít nhất 100% chiều cao của viewport */
+                margin: 0 !important; /* Loại bỏ margin mặc định của body do trình duyệt hoặc Bootstrap */
+                padding: 0 !important; /* Loại bỏ padding mặc định của body */
+            }
+
+            /* Wrapper cho nội dung chính, sẽ co giãn để đẩy footer xuống */
+            .page-content-wrapper {
+                flex: 1; /* Cho phép vùng này co giãn để lấp đầy không gian còn lại */
+                display: flex; /* Dùng flex để các phần tử bên trong nó cũng có thể sắp xếp */
+                flex-direction: column; /* Sắp xếp nội dung bên trong theo cột */
+            }
+
+            /* Đảm bảo các phần tử như Topbar, Navbar không bị co lại */
+            .container-fluid.bg-secondary.py-1.px-xl-5, /* Topbar */
+            .container-fluid.bg-pink.mb-30 /* Navbar */ {
+                flex-shrink: 0;
+            }
+
+            /* Footer của bạn, đảm bảo không bị co lại và dính xuống cuối */
+            .container-fluid.bg-pink.text-secondary.mt-5.pt-5 {
+                flex-shrink: 0;
+                margin-top: auto; /* Đẩy footer xuống dưới cùng khi dùng flex-direction: column trên body */
+            }
+
+            /* Styles for Toast Message Container */
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .toast {
+                padding: 15px 25px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+                color: #5f375f;
+                background-color: #fce4ec; /* pastel pink background */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.4s ease-in-out;
+                border-left: 6px solid #f48fb1; /* pastel rose accent */
+            }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .toast.success {
+                background-color: #f8bbd0; /* light pastel pink */
+                border-left-color: #40ec46;
+            }
+
+            .toast.error {
+                background-color: #fce4ec;
+                border-left-color: #d81b60;
+            }
+
+            /* Nút tăng giảm số lượng nữ tính */
+            .quantity .btn-minus,
+            .quantity .btn-plus {
+                background-color: #fce4ec;
+                border: 1px solid #f8bbd0;
+                color: #ec407a;
+                border-radius: 50%;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .quantity .btn-minus:hover,
+            .quantity .btn-plus:hover {
+                background-color: #f8bbd0;
+                transform: scale(1.05);
+            }
+
+            .quantity .btn-minus:active,
+            .quantity .btn-plus:active {
+                transform: scale(0.95);
+            }
+
+            .quantity-input {
+                background-color: #fff9fc !important;
+                border: 1px solid #f8bbd0 !important;
+                color: #ec407a;
+                font-weight: bold;
+                border-radius: 15px !important;
+                margin: 0 5px;
+            }
+
+            /* Tùy chọn thay đổi hình nền */
+            .background-selector {
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background-color: #fff;
+                border-radius: 10px;
+                padding: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                z-index: 1000;
+                border: 1px solid #f8bbd0;
+            }
+
+            .background-selector h5 {
+                color: #ec407a;
+                margin-bottom: 10px;
+                font-size: 16px;
+            }
+
+            .background-options {
+                display: flex;
+                gap: 10px;
+            }
+
+            .bg-option {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                cursor: pointer;
+                border: 2px solid transparent;
+                transition: all 0.3s ease;
+            }
+
+            .bg-option:hover {
+                transform: scale(1.1);
+            }
+
+            .bg-option.active {
+                border-color: #ec407a;
+            }
+
+            /* Các tùy chọn màu nền */
+            .bg-default {
+                background-color: #ffffff;
+            }
+
+            .bg-pink-light {
+                background-color: #fff9fc;
+            }
+
+            .bg-lavender {
+                background-color: #f3e5f5;
+            }
+
+            .bg-mint {
+                background-color: #e0f2f1;
+            }
+
+            .bg-pattern {
+                background-image: url('img/bg-pattern.png');
+                background-size: 100px;
+            }
+
         </style>
     </head>
 
@@ -305,7 +473,7 @@
                         <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng giỏ hàng</span></h5>
                         <div class="bg-light p-30 mb-5">
 
-                            <c:set var="shippingFee"/>
+                            <c:set var="shippingFee" value="30000"/>
 
                             <div class="border-bottom pb-2">
                                 <div class="d-flex justify-content-between mb-3">
@@ -325,9 +493,7 @@
                                 <div class="d-flex justify-content-between mt-2">
                                     <h5>Tổng thanh toán</h5>
                                     <h5>
-
-                                        <fmt:formatNumber value="${sessionScope.cart.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-
+                                        <fmt:formatNumber value="${sessionScope.cart.total + shippingFee}" type="currency" currencySymbol="" pattern="#,##0"/>đ
                                     </h5>
                                 </div>
                                 <c:choose>
@@ -335,9 +501,7 @@
                                         <button class="btn btn-block btn-secondary font-weight-bold my-3 py-3" disabled>Giỏ hàng trống</button>
                                     </c:when>
                                     <c:otherwise>
-
                                         <a href="checkout" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Tiến hành thanh toán</a>
-
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -426,19 +590,10 @@
         <script>
                                                         function updateQuantity(productId, newQuantity) {
                                                             if (newQuantity < 1) {
-                                                                showToast('Số lượng phải lớn hơn 0', 'error');
                                                                 return;
                                                             }
-
-
                                                             // Lấy số lượng tồn kho từ dữ liệu hiển thị
-                                                            //const maxQuantity = parseInt(document.querySelector(`input[onchange*="updateQuantity(${productId}"]`).getAttribute('max'));
-
-                                                            // Kiểm tra số lượng trước khi gửi request
-                                                            if (newQuantity > maxQuantity) {
-                                                                showToast('Số lượng yêu cầu vượt quá số lượng có sẵn trong kho', 'error');
-                                                                return;
-                                                            }
+                                                            const maxQuantity = parseInt(document.querySelector(`input[onchange*="updateQuantity(${productId}"]`).getAttribute('max'));
 
 
                                                             $.ajax({
@@ -454,21 +609,15 @@
                                                                         location.reload();
                                                                     } else {
 
-                                                                        showToast(response.message, 'error');
-                                                                        // Không reload ngay lập tức để người dùng có thể đọc thông báo
                                                                         setTimeout(function () {
                                                                             location.reload();
-                                                                        }, 2000); // Đợi 2 giây trước khi reload
-
+                                                                        }, 0); // Đợi 0 giây trước khi reload
                                                                     }
                                                                 },
                                                                 error: function () {
-                                                                    showToast('Có lỗi xảy ra khi cập nhật giỏ hàng', 'error');
-
                                                                     setTimeout(function () {
                                                                         location.reload();
-                                                                    }, 2000);
-
+                                                                    }, 0);// Đợi 0 giây trước khi reload
                                                                 }
                                                             });
                                                         }
@@ -589,9 +738,35 @@
                 if (currentValue >= maxValue) {
                     e.preventDefault();
                     e.stopPropagation();
+                    // Chỉ hiển thị thông báo ở đây, không gọi updateQuantity
                     showToast('Số lượng yêu cầu vượt quá số lượng có sẵn trong kho', 'error');
                     return false;
                 }
+                // Nếu số lượng hợp lệ, gọi updateQuantity với số lượng mới
+                updateQuantity(input.getAttribute('data-product-id'), currentValue + 1);
+                // Ngăn chặn sự kiện mặc định để không gọi updateQuantity hai lần
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+
+        // Tương tự cho nút giảm số lượng
+        const minusButtons = document.querySelectorAll('.btn-minus');
+        minusButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                const input = this.parentElement.nextElementSibling;
+                const currentValue = parseInt(input.value);
+
+                if (currentValue <= 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showToast('Số lượng phải lớn hơn 0', 'error');
+                    return false;
+                }
+
+                updateQuantity(input.getAttribute('data-product-id'), currentValue - 1);
+                e.preventDefault();
+                e.stopPropagation();
             });
         });
     });
@@ -765,4 +940,3 @@
         background-size: 100px;
     }
 </style>
-
