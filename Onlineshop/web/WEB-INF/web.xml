@@ -1,131 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <!-- Blog -->
+<web-app version="3.1" 
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+    <!-- Servlet declarations -->
     <servlet>
         <servlet-name>BlogServlet</servlet-name>
         <servlet-class>CommonController.BlogServlet</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>Homepage</servlet-name>
         <servlet-class>CommonController.Homepage</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>SearchProductByColor</servlet-name>
         <servlet-class>CommonController.SearchProductByColor</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>SearchProductBySeason</servlet-name>
         <servlet-class>CommonController.SearchProductBySeason</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>SearchProductByTitle</servlet-name>
         <servlet-class>CommonController.SearchProductByTitle</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>SearchPrice0to50</servlet-name>
         <servlet-class>CommonController.SearchPrice0to50</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>SearchPriceAbove50</servlet-name>
         <servlet-class>CommonController.SearchPriceAbove50</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>SearchPriceMinToMax</servlet-name>
         <servlet-class>CommonController.SearchPriceMinToMax</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>ViewProductDetail</servlet-name>
         <servlet-class>CommonController.ViewProductDetail</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>ViewListProductController</servlet-name>
         <servlet-class>CommonController.ViewListProductController</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>AddRatingController</servlet-name>
         <servlet-class>CustomerController.AddRatingController</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>AddWishlistController</servlet-name>
         <servlet-class>CustomerController.AddWishlistController</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>ManageWishListController</servlet-name>
         <servlet-class>CustomerController.ManageWishListController</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>BlogServlet</servlet-name>
-        <url-pattern>/blog</url-pattern>
-    </servlet-mapping>
-    <!-- Thêm cấu hình cho CartController -->
+
     <servlet>
         <servlet-name>CartController</servlet-name>
         <servlet-class>Controller.CartController</servlet-class>
     </servlet>
+
+    <!-- Servlet mappings -->
     <servlet-mapping>
-        <servlet-name>CartController</servlet-name>
-        <url-pattern>/cart</url-pattern>
+        <servlet-name>Homepage</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SearchProductByColor</servlet-name>
+        <url-pattern>/searchproductbycolor</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SearchProductBySeason</servlet-name>
+        <url-pattern>/searchproductbyseason</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>SearchProductByTitle</servlet-name>
         <url-pattern>/SearchProductByTitle</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>SearchPrice0to50</servlet-name>
         <url-pattern>/SearchPrice0to50</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>SearchPriceAbove50</servlet-name>
         <url-pattern>/SearchPriceAbove50</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>SearchPriceMinToMax</servlet-name>
         <url-pattern>/SearchPriceMinToMax</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>ViewProductDetail</servlet-name>
         <url-pattern>/ViewProductDetail</url-pattern>
     </servlet-mapping>
 
-    <welcome-file-list>
-        <welcome-file>Homepage</welcome-file> 
-        <welcome-file>index.jsp</welcome-file> 
-    </welcome-file-list>
-
     <servlet-mapping>
         <servlet-name>ViewListProductController</servlet-name>
         <url-pattern>/ViewListProductController</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>AddRatingController</servlet-name>
         <url-pattern>/AddRatingController</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>AddWishlistController</servlet-name>
         <url-pattern>/AddWishlistController</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>ManageWishListController</servlet-name>
         <url-pattern>/ManageWishListController</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome files -->
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
         <welcome-file>Homepage.jsp</welcome-file>
     </welcome-file-list>
-   
-    <welcome-file-list>
-        <welcome-file>Homepage</welcome-file>
-        <!-- dùng URL mapping -->
-    </welcome-file-list>
 
-    <servlet-mapping>
-        <servlet-name>SearchProductByColor</servlet-name>
-        <url-pattern>/searchproductbycolor</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SearchProductBySeason</servlet-name>
-        <url-pattern>/searchproductbyseason</url-pattern>
-    </servlet-mapping>
 </web-app>
-
