@@ -3,7 +3,6 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/login.jsp</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
@@ -13,7 +12,22 @@
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
-
+        </group>
+        <group name="New Folder (2)">
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/web/login.jsp</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/LogoutServlet.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/ForgotPasswordServlet.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/Utility/EmailSender.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/ChangePasswordServlet.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/Homepage.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/web/forgotpassword.jsp</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/ViewProductDetail.java</file>
+            <file>file:/D:/swp6/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
         </group>
     </open-files>
 </project-private>
