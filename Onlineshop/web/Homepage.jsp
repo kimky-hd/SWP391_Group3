@@ -129,6 +129,7 @@
 
                                 <a href="blogs" class="nav-item nav-link">View Blogs</a>
 
+
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
@@ -149,6 +150,12 @@
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
                                     ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+                            </a>
+                            <a href="order?action=view" class="btn px-0 ml-3">
+                                <i class="fas fa-clipboard-list text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
                                 </span>
                             </a>
                         </div>

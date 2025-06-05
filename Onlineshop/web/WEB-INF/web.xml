@@ -49,16 +49,15 @@
         <servlet-name>ViewProductDetail</servlet-name>
         <servlet-class>CommonController.ViewProductDetail</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>ViewListProductController</servlet-name>
         <servlet-class>CommonController.ViewListProductController</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>AddRatingController</servlet-name>
         <servlet-class>CustomerController.AddRatingController</servlet-class>
     </servlet>
+
 
     <servlet>
         <servlet-name>AddWishlistController</servlet-name>
@@ -70,12 +69,22 @@
         <servlet-class>CustomerController.ManageWishListController</servlet-class>
     </servlet>
 
+
     <servlet>
         <servlet-name>CartController</servlet-name>
         <servlet-class>Controller.CartController</servlet-class>
     </servlet>
 
-    <!-- Servlet mappings -->
+    <servlet>
+        <servlet-name>OrderCountController</servlet-name>
+        <servlet-class>Controller.OrderCountController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderCountController</servlet-name>
+        <url-pattern>/ordercount</url-pattern>
+    </servlet-mapping>
+
+    <!-- MAPPINGS -->
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
@@ -120,11 +129,23 @@
         <servlet-name>ViewListProductController</servlet-name>
         <url-pattern>/ViewListProductController</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>AddRatingController</servlet-name>
         <url-pattern>/AddRatingController</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <!-- WELCOME FILES -->
+    <welcome-file-list>
+        <welcome-file>Homepage</welcome-file>
+        <welcome-file>Homepage.jsp</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
 
     <servlet-mapping>
         <servlet-name>AddWishlistController</servlet-name>
@@ -136,16 +157,5 @@
         <url-pattern>/ManageWishListController</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>CartController</servlet-name>
-        <url-pattern>/cart</url-pattern>
-    </servlet-mapping>
-
-    <!-- Welcome files -->
-    <welcome-file-list>
-        <welcome-file>Homepage</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-        <welcome-file>Homepage.jsp</welcome-file>
-    </welcome-file-list>
 
 </web-app>

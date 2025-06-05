@@ -38,6 +38,7 @@
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/Controller/CheckOutController.java</file>
         </group>
         <group>
+
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/blogList.jsp</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
@@ -45,6 +46,7 @@
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/BlogDAO.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/blogEdit.jsp</file>
+
         </group>
     </open-files>
 </project-private>

@@ -181,6 +181,12 @@
                                     ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
                                 </span>
                             </a>
+                            <a href="order?action=view" class="btn px-0 ml-3">
+                                <i class="fas fa-clipboard-list text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
+                                </span>
+                            </a>
                         </div>
                     </nav>
                 </div>
@@ -280,229 +286,220 @@
                                         <div class="d-flex justify-content-center">
                                             <h6>$${product.getPrice()}</h6>
                                         </div>
-                                    </div>
-                                    <div class="d-flex justify-content-center">
-                                        <c:choose>
-                                            <c:when test="${product.getQuantity() == 0}">
-                                                <small class="text-danger">Hết Hàng</small>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between bg-light border">
-                                        <c:choose>
-                                            <c:when test="${product.getQuantity() == 0}">
-                                                <button class="btn btn-sm text-dark p-0" onclick="showOutOfStockAlert()">
-                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                                </button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ hàng
+                                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                            <h6 class="text-truncate mb-3">
+                                                <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
+                                                    ${product.getTitle()}
                                                 </a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
-                                        </a>
+                                            </h6>
+
+                                            <div class="d-flex justify-content-center">
+                                                <h6>$${product.getPrice()}</h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <c:choose>
+                                                <c:when test="${product.getQuantity() == 0}">
+                                                    <small class="text-danger">Hết Hàng</small>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-between bg-light border">
+                                            <a href="cart?action=add&productId=${product.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
+                                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                            </a>
+                                            <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                                <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
+                                            </a>
+
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-
-
-
-                    </div>
-
-
-                    <c:if test="${tag != null}">
-                        <ul class="pagination">
-                            <c:if test="${tag != 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
-                                </li>
+                                </c:forEach>
                             </c:if>
-                            <c:forEach begin="1" end="${endPage}" var="i">
-                                <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="ViewListProductController?index=${i}" 
-                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                </li>
-                            </c:forEach>
-                            <c:if test="${tag != endPage}">
-                                <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </c:if>
 
 
-                </div>
-            </div>
-        </div>
 
-
-        <!-- Products End -->
-
-        <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
-            <div class="row px-xl-5 pt-5">
-                <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                    <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
-                    <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                    <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
-                </div>
-                <div class="col-lg-8 col-md-12">
-                    <div class="row">
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
-                            <div class="d-flex flex-column justify-content-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                            </div>
                         </div>
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
-                            <div class="d-flex flex-column justify-content-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-                            <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
-                            <form action="">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Your Email Address">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary">Sign Up</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
-                            <div class="d-flex">
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                                <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
+
+
+                        <c:if test="${tag != null}">
+                            <ul class="pagination">
+                                <c:if test="${tag != 1}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
+                                    </li>
+                                </c:if>
+                                <c:forEach begin="1" end="${endPage}" var="i">
+                                    <li class="page-item ${tag == i ? 'active' : ''}">
+                                        <a class="page-link" href="ViewListProductController?index=${i}" 
+                                           style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${tag != endPage}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
+                                    </li>
+                                </c:if>
+                            </ul>
+                        </c:if>
+
+
                     </div>
                 </div>
             </div>
 
 
-            <!-- JavaScript Libraries -->
-            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-            <script src="lib/easing/easing.min.js"></script>
-            <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <!-- Products End -->
 
-            <!-- Template Javascript -->
-            <script src="js/main.js"></script>
+            <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
+                <div class="row px-xl-5 pt-5">
+                    <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                        <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
+                        <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
+                        <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                        <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+                    </div>
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                            <div class="col-md-4 mb-5">
+                                <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+                                <div class="d-flex flex-column justify-content-start">
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                                    <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-5">
+                                <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
+                                <div class="d-flex flex-column justify-content-start">
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                                    <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-5">
+                                <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
+                                <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+                                <form action="">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Your Email Address">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary">Sign Up</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                                <div class="d-flex">
+                                    <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Toast Message Container -->
-            <style>
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                }
 
-                .toast {
-                    padding: 15px 25px;
-                    margin-bottom: 12px;
-                    border-radius: 12px;
-                    color: #5f375f;
-                    background-color: #fce4ec;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                    opacity: 0;
-                    transform: translateX(100%);
-                    transition: all 0.4s ease-in-out;
-                    border-left: 6px solid #f48fb1;
-                }
 
-                .toast.show {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
+                <!-- JavaScript Libraries -->
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+                <script src="lib/easing/easing.min.js"></script>
+                <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-                .toast.success {
-                    background-color: #f8bbd0;
-                    border-left-color: #40ec46;
-                }
+                <!-- Template Javascript -->
+                <script src="js/main.js"></script>
 
-                .toast.error {
-                    background-color: #fce4ec;
-                    border-left-color: #d81b60;
-                }
-            </style>
+                <!-- Toast Message Container -->
+                <style>
+                    .toast-container {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    }
 
-            <div class="toast-container"></div>
+                    .toast {
+                        padding: 15px 25px;
+                        margin-bottom: 12px;
+                        border-radius: 12px;
+                        color: #5f375f;
+                        background-color: #fce4ec;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                        opacity: 0;
+                        transform: translateX(100%);
+                        transition: all 0.4s ease-in-out;
+                        border-left: 6px solid #f48fb1;
+                    }
 
-            <script>
-                                                    function showToast(message, type) {
-                                                        const container = document.querySelector('.toast-container');
-                                                        const toast = document.createElement('div');
-                                                        toast.className = `toast ${type}`;
-                                                        toast.textContent = message;
+                    .toast.show {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
 
-                                                        container.appendChild(toast);
+                    .toast.success {
+                        background-color: #f8bbd0;
+                        border-left-color: #40ec46;
+                    }
 
-                                                        // Reflow để kích hoạt animation
-                                                        toast.offsetHeight;
+                    .toast.error {
+                        background-color: #fce4ec;
+                        border-left-color: #d81b60;
+                    }
+                </style>
 
-                                                        // Show toast
-                                                        toast.classList.add('show');
+                <div class="toast-container"></div>
 
-                                                        // Tự động biến mất sau 3s
-                                                        setTimeout(() => {
-                                                            toast.classList.remove('show');
-                                                            setTimeout(() => {
-                                                                container.removeChild(toast);
-                                                            }, 400);
-                                                        }, 3000);
-                                                    }
+                <script>
+                            function showToast(message, type) {
+                                const container = document.querySelector('.toast-container');
+                                const toast = document.createElement('div');
+                                toast.className = `toast ${type}`;
+                                toast.textContent = message;
 
-                                                    // Lấy message từ session JSP
-                                                    const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
-                                                    const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+                                container.appendChild(toast);
 
-                                                    if (message && messageType) {
-                                                        showToast(message, messageType);
-                                                    }
-            </script>
+                                // Reflow để kích hoạt animation
+                                toast.offsetHeight;
 
-            <script>
-                function showOutOfStockAlert() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hết hàng!',
-                        text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
-                        confirmButtonColor: '#d33',
-                        confirmButtonText: 'Đóng'
-                    });
-                }
-            </script>
+                                // Show toast
+                                toast.classList.add('show');
 
-            <%
-                // Xoá session sau khi hiển thị
-                session.removeAttribute("message");
-                session.removeAttribute("messageType");
-            %>
-    </body>
-</html>
+                                // Tự động biến mất sau 3s
+                                setTimeout(() => {
+                                    toast.classList.remove('show');
+                                    setTimeout(() => {
+                                        container.removeChild(toast);
+                                    }, 400);
+                                }, 3000);
+                            }
+
+                            // Lấy message từ session JSP
+                            const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                            const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+
+                            if (message && messageType) {
+                                showToast(message, messageType);
+                            }
+                </script>
+
+                <%
+                    // Xoá session sau khi hiển thị
+                    session.removeAttribute("message");
+                    session.removeAttribute("messageType");
+                %>
+                </body>
+                </html>
