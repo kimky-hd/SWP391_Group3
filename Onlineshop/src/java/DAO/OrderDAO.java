@@ -84,7 +84,9 @@ public class OrderDAO extends DBContext {
     
     public List<Order> getOrdersByAccountId(int accountId) {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT * FROM Orders WHERE account_id = ? ORDER BY order_date DESC";
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address " +
+                     "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD " +
+                     "WHERE h.accountID = ? ORDER BY h.maHD DESC";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -94,29 +96,51 @@ public class OrderDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order();
-                    order.setOrderId(rs.getInt("order_id"));
-                    order.setAccountId(rs.getInt("account_id"));
-                    order.setOrderDate(rs.getTimestamp("order_date"));
-                    order.setFullName(rs.getString("full_name"));
-                    order.setPhone(rs.getString("phone"));
+                    order.setOrderId(rs.getInt("maHD"));
+                    order.setAccountId(rs.getInt("accountID"));
+                    order.setOrderDate(rs.getTimestamp("ngayXuat"));
+                    order.setFullName(rs.getString("name"));
+                    order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
-                    order.setPaymentMethod(rs.getString("payment_method"));
-                    order.setTotal(rs.getDouble("total"));
-                    order.setStatus(rs.getString("status"));
+                    // Không có cột payment_method trong bảng HoaDon hoặc InforLine
+                    // order.setPaymentMethod(rs.getString("payment_method"));
+                    order.setTotal(rs.getDouble("tongGia"));
+                    
+                    // Chuyển đổi statusID thành chuỗi trạng thái
+                    int statusID = rs.getInt("statusID");
+                    String status;
+                    switch (statusID) {
+                        case 1:
+                            status = "Pending";
+                            break;
+                        case 2:
+                            status = "Completed";
+                            break;
+                        case 3:
+                            status = "Cancelled";
+                            break;
+                        default:
+                            status = "Unknown";
+                    }
+                    order.setStatus(status);
+                    
                     orders.add(order);
                 }
             }
             
         } catch (SQLException e) {
             System.out.println("Error getting orders: " + e.getMessage());
+            e.printStackTrace();
         }
         
         return orders;
     }
     
     public Order getOrderById(int orderId) {
-        String sql = "SELECT * FROM Orders WHERE order_id = ?";
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address " +
+                     "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD " +
+                     "WHERE h.maHD = ?";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -126,22 +150,40 @@ public class OrderDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Order order = new Order();
-                    order.setOrderId(rs.getInt("order_id"));
-                    order.setAccountId(rs.getInt("account_id"));
-                    order.setOrderDate(rs.getTimestamp("order_date"));
-                    order.setFullName(rs.getString("full_name"));
-                    order.setPhone(rs.getString("phone"));
+                    order.setOrderId(rs.getInt("maHD"));
+                    order.setAccountId(rs.getInt("accountID"));
+                    order.setOrderDate(rs.getTimestamp("ngayXuat"));
+                    order.setFullName(rs.getString("name"));
+                    order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
-                    order.setPaymentMethod(rs.getString("payment_method"));
-                    order.setTotal(rs.getDouble("total"));
-                    order.setStatus(rs.getString("status"));
+                    order.setTotal(rs.getDouble("tongGia"));
+                    
+                    // Chuyển đổi statusID thành chuỗi trạng thái
+                    int statusID = rs.getInt("statusID");
+                    String status;
+                    switch (statusID) {
+                        case 1:
+                            status = "Pending";
+                            break;
+                        case 2:
+                            status = "Completed";
+                            break;
+                        case 3:
+                            status = "Cancelled";
+                            break;
+                        default:
+                            status = "Unknown";
+                    }
+                    order.setStatus(status);
+                    
                     return order;
                 }
             }
             
         } catch (SQLException e) {
             System.out.println("Error getting order: " + e.getMessage());
+            e.printStackTrace();
         }
         
         return null;
@@ -149,7 +191,7 @@ public class OrderDAO extends DBContext {
     
     public List<OrderDetail> getOrderDetails(int orderId) {
         List<OrderDetail> details = new ArrayList<>();
-        String sql = "SELECT * FROM OrderDetails WHERE order_id = ?";
+        String sql = "SELECT * FROM OrderDetail WHERE maHD = ?";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -159,25 +201,29 @@ public class OrderDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     OrderDetail detail = new OrderDetail();
-                    detail.setOrderDetailId(rs.getInt("order_detail_id"));
-                    detail.setOrderId(rs.getInt("order_id"));
-                    detail.setProductId(rs.getInt("product_id"));
+                    // Không có cột order_detail_id trong bảng OrderDetail
+                    // detail.setOrderDetailId(rs.getInt("order_detail_id"));
+                    detail.setOrderId(rs.getInt("maHD"));
+                    detail.setProductId(rs.getInt("productID"));
                     detail.setQuantity(rs.getInt("quantity"));
                     detail.setPrice(rs.getDouble("price"));
-                    detail.setTotal(rs.getDouble("total"));
+                    // Tính tổng tiền nếu không có cột total
+                    double total = rs.getDouble("price") * rs.getInt("quantity");
+                    detail.setTotal(total);
                     details.add(detail);
                 }
             }
             
         } catch (SQLException e) {
             System.out.println("Error getting order details: " + e.getMessage());
+            e.printStackTrace();
         }
         
         return details;
     }
     
     public boolean cancelOrder(int orderId) {
-        String sql = "UPDATE Orders SET status = 'Cancelled' WHERE order_id = ? AND status = 'Pending'";
+        String sql = "UPDATE HoaDon SET statusID = 3 WHERE maHD = ? AND statusID = 1";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -189,7 +235,90 @@ public class OrderDAO extends DBContext {
             
         } catch (SQLException e) {
             System.out.println("Error cancelling order: " + e.getMessage());
+            e.printStackTrace();
             return false;
+        }
+    }
+    
+    public int countOrdersByAccountId(int accountId) {
+        String sql = "SELECT COUNT(*) FROM HoaDon WHERE accountID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, accountId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Error counting orders: " + e.getMessage());
+        }
+        
+        return 0;
+    }
+    
+    public boolean deleteOrder(int orderId) {
+        // Xóa các chi tiết đơn hàng trước
+        String deleteDetailsSQL = "DELETE FROM OrderDetail WHERE maHD = ?";
+        // Xóa thông tin khách hàng
+        String deleteInfoSQL = "DELETE FROM InforLine WHERE maHD = ?";
+        // Sau đó xóa đơn hàng
+        String deleteOrderSQL = "DELETE FROM HoaDon WHERE maHD = ?";
+        
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Bắt đầu transaction
+            
+            // Xóa chi tiết đơn hàng
+            try (PreparedStatement ps = conn.prepareStatement(deleteDetailsSQL)) {
+                ps.setInt(1, orderId);
+                ps.executeUpdate();
+            }
+            
+            // Xóa thông tin khách hàng
+            try (PreparedStatement ps = conn.prepareStatement(deleteInfoSQL)) {
+                ps.setInt(1, orderId);
+                ps.executeUpdate();
+            }
+            
+            // Xóa đơn hàng
+            try (PreparedStatement ps = conn.prepareStatement(deleteOrderSQL)) {
+                ps.setInt(1, orderId);
+                int rowsAffected = ps.executeUpdate();
+                
+                if (rowsAffected > 0) {
+                    conn.commit();
+                    return true;
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Error deleting order: " + e.getMessage());
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    System.out.println("Error rolling back transaction: " + ex.getMessage());
+                }
+            }
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Error closing connection: " + e.getMessage());
+                }
+            }
         }
     }
 }

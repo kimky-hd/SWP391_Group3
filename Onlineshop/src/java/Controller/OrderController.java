@@ -2,11 +2,15 @@ package Controller;
 
 import DAO.CartDAO;
 import DAO.OrderDAO;
+import DAO.ProductDAO;
+import DAO.VoucherDAO;
 import Model.Cart;
 import Model.CartItem;
 import Model.Order;
 import Model.OrderDetail;
 import Model.Account;
+import Model.Product;
+import Model.Voucher;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -147,7 +151,29 @@ public class OrderController extends HttpServlet {
             return;
         }
 
+        // Lấy danh sách đơn hàng
         List<Order> orders = orderDAO.getOrdersByAccountId(account.getAccountID());
+        
+        // Lấy chi tiết cho mỗi đơn hàng
+        for (Order order : orders) {
+            List<OrderDetail> details = orderDAO.getOrderDetails(order.getOrderId());
+            
+            // Lấy thông tin sản phẩm cho mỗi chi tiết đơn hàng
+            for (OrderDetail detail : details) {
+                Product product = new ProductDAO().getProductById(String.valueOf(detail.getProductId()));
+                detail.setProduct(product);
+            }
+            
+            // Lấy thông tin voucher nếu có
+            // Giả sử có một trường voucherId trong Order
+//            if (model.getVoucherId() > 0) {
+//                Voucher voucher = new VoucherDAO().getVoucherById(order.getVoucherId());
+//                request.setAttribute("voucher_" + order.getOrderId(), voucher);
+//            }
+            
+            request.setAttribute("details_" + order.getOrderId(), details);
+        }
+        
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("orders.jsp").forward(request, response);
     }
