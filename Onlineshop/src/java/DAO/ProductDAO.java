@@ -25,10 +25,15 @@ public class ProductDAO extends DBContext {
 
     PreparedStatement ps;
     ResultSet rs;
+    private final String statuscase = "CASE "
+            + " WHEN CURDATE() <= DATE_ADD(dateImport, INTERVAL 3 DAY) THEN 'Tươi mới' "
+            + " WHEN CURDATE() <= dateExpire THEN 'Lão hóa' "
+            + " ELSE 'Đã Héo' "
+            + "END AS status";
 
     public List<Product> getAllProduct() {
         List<Product> list = new ArrayList<>();
-        String sql = "Select * from Product";
+        String sql = "SELECT *, " + statuscase + "FROM Product";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -43,7 +48,9 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
+                        rs.getDate(11),
+                        rs.getString(12)
+                ));
             }
         } catch (SQLException e) {
             System.out.println("getAllProduct" + e.getMessage());
@@ -52,7 +59,7 @@ public class ProductDAO extends DBContext {
     }
 
     public Product getProductById(String id) {
-        String sql = "Select * from product where productID = ?";
+        String sql = "Select *," + statuscase  + " from product where productID = ?";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, id);
@@ -68,7 +75,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11));
+                        rs.getDate(11),
+                        rs.getString(12));
             }
         } catch (SQLException e) {
             System.out.println("getProductById" + e.getMessage());
@@ -79,7 +87,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByColor(String colorId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.* FROM Product p\n"
+        String sql = "SELECT p.*," + statuscase + " FROM Product p\n"
                 + "                JOIN PhanLoaiTheoColor c ON p.colorID = c.colorID \n"
                 + "                WHERE c.colorID = ?";
         try {
@@ -97,7 +105,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
+                        rs.getDate(11),
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductByColor" + e.getMessage());
@@ -107,7 +116,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductBySeason(String seasonId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.* FROM Product p "
+        String sql = "SELECT p.*," + statuscase + " FROM Product p "
                 + "JOIN PhanLoaiTheoSeason s ON p.seasonID = s.seasonID "
                 + "WHERE s.seasonID = ?";
         try {
@@ -125,7 +134,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
+                        rs.getDate(11),
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductBySeason" + e.getMessage());
@@ -135,7 +145,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
+        String sql = "SELECT *," + statuscase + " FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -150,7 +160,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
+                        rs.getDate(11),
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductByTitle" + e.getMessage());
@@ -283,14 +294,13 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByIndex(int indexPage) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
+        String sql = "SELECT *," + statuscase + " FROM Product ORDER BY productID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, (indexPage - 1) * 8); // tính offset
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(
-                        rs.getInt(1),
+                list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
@@ -300,7 +310,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)
+                        rs.getDate(11),
+                        rs.getString(12)
                 ));
             }
         } catch (SQLException e) {
@@ -325,7 +336,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> searchPrice0to50() {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product \n"
+        String sql = "SELECT *," + statuscase + " FROM Product \n"
                 + "WHERE price >= 0 AND price <= 50000";
         try {
             ps = connection.prepareStatement(sql);
@@ -341,7 +352,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
+                        rs.getDate(11),
+                        rs.getString(12)));
 
             }
         } catch (SQLException e) {
@@ -352,7 +364,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> searchPriceAbove50() {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product \n"
+        String sql = "SELECT *," + statuscase + " FROM Product \n"
                 + "WHERE price > 50000";
         try {
             ps = connection.prepareStatement(sql);
@@ -368,7 +380,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
+                        rs.getDate(11),
+                        rs.getString(12)));
 
             }
         } catch (SQLException e) {
@@ -379,7 +392,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> searchPriceMinToMax(String priceMin, String priceMax) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product \n"
+        String sql = "SELECT *," + statuscase + " FROM Product \n"
                 + "WHERE price >= ? AND price <= ?";
         try {
             ps = connection.prepareStatement(sql);
@@ -387,8 +400,7 @@ public class ProductDAO extends DBContext {
             ps.setString(2, priceMax);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(
-                        rs.getInt(1),
+                list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
@@ -398,7 +410,8 @@ public class ProductDAO extends DBContext {
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)
+                        rs.getDate(11),
+                        rs.getString(12)
                 ));
             }
         } catch (SQLException e) {
@@ -545,29 +558,30 @@ public class ProductDAO extends DBContext {
                 + "    p.seasonID,\n"
                 + "    p.unit,\n"
                 + "    p.dateImport,\n"
-                + "    p.dateExpire\n"
-                + "FROM Product p\n"
-                + "JOIN Wishlist wl ON p.productID = wl.productID"
-                + "WHERE wl.Account_ID = ?";
-        try{
+                + "    p.dateExpire\n" 
+                + " FROM Product p \n" 
+                + " JOIN Wishlist wl ON p.productID = wl.productID \n"
+                + " WHERE wl.AccountID = ?";
+        try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, accountID);
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
                         rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(2),
+                        rs.getDouble(5),
+                        rs.getInt(6),
+                        rs.getString(4),
                         rs.getInt(7),
                         rs.getInt(8),
                         rs.getString(9),
                         rs.getDate(10),
-                        rs.getDate(11)));
-                
+                        rs.getDate(11)
+                        ));
+
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("getListWishListProduct" + e.getMessage());
         }
         return list;
