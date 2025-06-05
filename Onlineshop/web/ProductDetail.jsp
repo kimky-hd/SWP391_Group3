@@ -54,13 +54,24 @@
                 font-size: 20px; /* Điều chỉnh kích thước icon */
                 color: #333; /* Màu của icon */
             }
+            ul {
+                list-style-type: disc;
+                color: #333;
+            }
+            .sticky-navbar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background-color: var(--primary);
+            }
+
         </style>
     </head>
 
 
 
     <body>
-
+        <div class="toast-container"></div> 
         <!-- Topbar Start -->
         <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
@@ -82,6 +93,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
@@ -129,42 +141,57 @@
 
 
         <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
+        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
             <div class="row px-xl-5">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                <div class="col-lg-9">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0">
-                        <a href="" class="text-decoration-none d-block d-lg-none">
+                        <a href="#" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
+
                         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                            <div class="navbar-nav mr-auto py-0">
+
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link">Home</a>
                                 <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
+
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="cart.html" class="dropdown-item">Shopping Cart</a>
-                                        <a href="checkout.html" class="dropdown-item">Checkout</a>
+                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
                                     </div>
                                 </div>
                                 <a href="contact.html" class="nav-item nav-link">Contact</a>
                             </div>
-                            <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                                <a href="" class="btn px-0">
-                                    <i class="fas fa-heart text-primary"></i>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                                </a>
-                                <a href="" class="btn px-0 ml-3">
-                                    <i class="fas fa-shopping-cart text-primary"></i>
-                                    <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                                </a>
-                            </div>
+                        </div>
+
+                        <div class="d-none d-lg-flex align-items-center ml-auto">
+                            <a href="#" class="btn px-0">
+                                <i class="fas fa-heart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                            </a>
+                            <a href="Cart.jsp" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+                            </a>
+
+                            <a href="order?action=view" class="btn px-0 ml-3">
+                                <i class="fas fa-clipboard-list text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
+                                </span>
+                            </a>
+
                         </div>
                     </nav>
                 </div>
@@ -174,16 +201,24 @@
 
         <!-- Product Start -->
 
-
-
-        <section id="product-detail" class="leaf-pattern-overlay">
+        <section class="product-detail-section py-5">
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <figure class="products-thumb">
+                <!-- Tên sản phẩm & Đánh giá lệch trái -->
+                <div class="mb-4">
+                    <h2 class="font-weight-bold text-left">${detail.getTitle()}</h2>
+                    <p class="text-left mb-0"><span class="text-warning font-weight-bold">${rate} ★</span></p>
+                </div>
+
+                <!-- Bố cục chính -->
+                <div class="row align-items-stretch">
+                    <!-- Trái: ảnh + mô tả (nền hồng) -->
+                    <div class="col-md-7">
+                        <div class="p-4 rounded h-100" style="background-color: #f78fb3;">
+                            <div class="row">
+                                <!-- Ảnh -->
+                                <div class="col-md-6 text-center mb-3 mb-md-0">
                                     <img src="${detail.getImage()}" 
+
                                          alt="product" class="single-image" height="700px" width="350px">
                                 </figure>
                             </div>
@@ -203,11 +238,9 @@
                                         </div>
                                         <div class="btns-wrapper d-flex justify-content-center mt-3">
                                             <div class="btn-wrap mr-3">
-                                                <form action="cart" method="get">
-                                                    <input type="hidden" name="action" value="add">
-                                                    <input type="hidden" name="id" value="${detail.getProductID()}">
-                                                    <button class="btn-accent-arrow">THÊM VÀO GIỎ <i class="icon icon-ns-arrow-right"></i></button>
-                                                </form>
+                                                <a href="cart?action=add&productId=${detail.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
+                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                                </a>
                                             </div>
                                             <div class="btn-wrap">
                                                 <a href="wishlist?action=add&id=${detail.getProductID()}" class="btn-accent-arrow wishlist-btn">
@@ -220,64 +253,107 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Phải: giá, đơn vị, số lượng, nút -->
+                    <div class="col-md-5 mt-4 mt-md-0">
+                        <!-- KHUNG GIÁ -->
+                        <div class="bg-white rounded shadow-sm p-3 mb-4 text-center">
+                            <h5 class="text-muted mb-1">Giá</h5>
+                            <h3 class="text-danger font-weight-bold mb-0">
+                                <fmt:formatNumber value="${detail.getPrice()}" type="number"/> VNĐ
+                            </h3>
+                        </div>
+
+                        <!-- Đơn vị -->
+                        <p style="font-size: 1.2rem;"><strong>Đơn vị:</strong> ${detail.getUnit()}</p>
+
+                        <!-- Số lượng -->
+                        <c:choose>
+                            <c:when test="${detail.getQuantity() == 0}">
+                                <p style="font-size: 1.2rem;"><strong>Số lượng:</strong> <span class="text-danger">Hết hàng</span></p>
+                            </c:when>
+                            <c:otherwise>
+                                <p style="font-size: 1.2rem;"><strong>Số lượng:</strong> ${detail.getQuantity()}</p>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <!-- Nút thêm vào giỏ & yêu thích -->
+                        <div class="mt-4">
+                            <form action="cart" class="d-inline-block mr-2">
+                                <input type="hidden" name="id" value="${detail.getProductID()}">
+                                <input type="hidden" name="num" value="1">
+                                <c:choose>
+                                    <c:when test="${detail.getQuantity() == 0}">
+                                        <button type="button" class="btn btn-secondary btn-lg" disabled>
+                                            <i class="fas fa-shopping-cart mr-1"></i> Hết hàng
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Thêm vào giỏ
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                            </form>
+
+                            <a href="addWishList?pid=${detail.getProductID()}" class="btn btn-outline-danger btn-lg">
+                                <i class="far fa-heart mr-1"></i> Yêu thích
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
-
-
         <!-- Product End -->
 
         <!<!-- Rate and Comment -->
 
-        <div class="comment-section">
-            <div id="comment-list">
-                <h4 class="comment-title">Tổng cộng: ${totalFeedback} bình luận</h4>
-                <ul id="comments-display" class="comment-list">
+        <section class="comment-section py-5 bg-light">
+            <div class="container">
+                <h4 class="mb-4">Bình luận (${totalFeedback})</h4>
+
+                <!-- Danh sách bình luận -->
+                <ul class="list-unstyled mb-5">
                     <c:forEach items="${listFeedback}" var="feedback">
                         <c:forEach items="${listAccountProfile}" var="profile">
                             <c:if test="${feedback.getAccount_ID() == profile.getAccount_ID()}">
-                                <li class="comment-item">
-                                    <span class="comment-author">${profile.getFullName()}</span>
-                                    <span class="comment-text">${feedback.getComment()}</span>
-                                    <span class="comment-star">${feedback.getRate()} ★</span>
+                                <li class="mb-3 p-3 border rounded bg-white shadow-sm">
+                                    <strong>${profile.getFullName()}</strong> 
+                                    <span class="text-warning">${feedback.getRate()} ★</span><br>
+                                    <span>${feedback.getComment()}</span>
                                 </li>
                             </c:if>
                         </c:forEach>
                     </c:forEach>
                 </ul>
+
+                <!-- Form gửi bình luận -->
+                <form action="AddRatingController" method="post" class="p-4 border rounded bg-white shadow-sm">
+                    <input type="hidden" name="pid" value="${detail.getProductID()}" />
+
+                    <!-- Căn chữ "Đánh giá:" và sao cùng hàng -->
+                    <div class="form-group d-flex align-items-center">
+                        <label class="mb-0 mr-3" style="min-width: 80px;">Đánh giá:</label>
+                        <div class="star-rating d-flex flex-row-reverse">
+                            <c:forEach var="i" begin="1" end="5">
+                                <input type="radio" id="star${i}" name="rating" value="${i}" style="display: none;" />
+                                <label for="star${i}" class="star" title="${i} sao">&#9733;</label>
+                            </c:forEach>
+                        </div>
+                    </div>
+
+                    <!-- Bình luận -->
+                    <div class="form-group">
+                        <label for="comment">Bình luận:</label>
+                        <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="Viết bình luận..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-3">Gửi bình luận</button>
+                </form>
+
             </div>
+        </section>
 
-            <hr class="comment-divider">
-
-            <form id="comment-form" action="AddRatingController" class="comment-form">
-                <input type="hidden" name="pid" value="${detail.getProductID()}" />
-
-                <label for="rating" class="form-label">Đánh giá:</label>
-                <div class="star-rating">
-                    <input type="radio" id="star5" name="rating" value="5" />
-                    <label for="star5" title="5 sao">&#9733;</label>
-
-                    <input type="radio" id="star4" name="rating" value="4" />
-                    <label for="star4" title="4 sao">&#9733;</label>
-
-                    <input type="radio" id="star3" name="rating" value="3" />
-                    <label for="star3" title="3 sao">&#9733;</label>
-
-                    <input type="radio" id="star2" name="rating" value="2" />
-                    <label for="star2" title="2 sao">&#9733;</label>
-
-                    <input type="radio" id="star1" name="rating" value="1" />
-                    <label for="star1" title="1 sao">&#9733;</label>
-                </div>
-
-                <label for="comment" class="form-label">Bình luận: *</label>
-                <textarea id="comment" name="comment" rows="4" class="form-control" placeholder="Nhập bình luận..." required></textarea>
-
-                <div class="text-center">
-                    <button type="submit" class="submit-button">GỬI BÌNH LUẬN <i class="fas fa-paper-plane"></i></button>
-                </div>
-            </form>
-        </div>
 
 
 
@@ -399,9 +475,9 @@
                     display: block;
                 }
 
-            
 
-        
+
+
 
                 textarea.form-control {
                     width: 100%;
@@ -428,26 +504,66 @@
                 .submit-button:hover {
                     background-color: #2980b9;
                 }
+                /* Styles cho Toast Message Container */
+                .toast-container {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+
+                .toast {
+                    padding: 15px 25px;
+                    margin-bottom: 12px;
+                    border-radius: 12px;
+                    color: #5f375f;
+                    background-color: #fce4ec; /* pastel pink background */
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.4s ease-in-out;
+                    border-left: 6px solid #f48fb1; /* pastel rose accent */
+                }
+
+                .toast.show {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                .toast.success {
+                    background-color: #f8bbd0; /* light pastel pink */
+                    border-left-color: #40ec46;
+                }
+
+                .toast.error {
+                    background-color: #fce4ec;
+                    border-left-color: #d81b60;
+                }
+
+                .bg-pink-pastel {
+                    background-color: #fddde6;
+                }
+
+                .text-dark-purple {
+                    color: #5c4b51;
+                }
             </style>
             <style>
-                .star-rating {
-                    direction: rtl; /* đảo ngược thứ tự hiển thị */
-                    unicode-bidi: bidi-override; /* fix hiển thị ngược */
-                    font-size: 24px;
-                    display: inline-flex;
-                }
-                .star-rating input[type="radio"] {
-                    display: none;
-                }
                 .star-rating label {
+                    font-size: 24px;
                     color: #ccc;
                     cursor: pointer;
+                    transition: color 0.2s;
+                    margin-right: 5px;
                 }
+
                 .star-rating input:checked ~ label,
                 .star-rating label:hover,
                 .star-rating label:hover ~ label {
                     color: #f39c12;
                 }
+
             </style>
 
             <!-- JavaScript Libraries -->
@@ -469,6 +585,37 @@
                         }, 3000); // Ẩn sau 3 giây
                     }
                 });
+
+                function showToast(message, type) {
+                    const container = document.querySelector('.toast-container');
+                    const toast = document.createElement('div');
+                    toast.className = `toast ${type}`;
+                    toast.textContent = message;
+
+                    container.appendChild(toast);
+
+                    // Reflow để kích hoạt animation
+                    toast.offsetHeight;
+
+                    // Show toast
+                    toast.classList.add('show');
+
+                    // Tự động biến mất sau 3s
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        setTimeout(() => {
+                            container.removeChild(toast);
+                        }, 400);
+                    }, 3000);
+                }
+
+                // Lấy message từ session JSP
+                const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
+
+                if (message && messageType) {
+                    showToast(message, messageType);
+                }
             </script>
     </body>
 </html>
