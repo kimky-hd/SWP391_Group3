@@ -121,23 +121,24 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
+
+
+                                <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
+                                <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-
-                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
-
-                                <a href="blogs" class="nav-item nav-link">View Blogs</a>
-
+                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
+                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
 
                                 <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
+
+                                        <a href="cart.html" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="checkout.html" class="dropdown-item">Thanh toán</a>
+
                                     </div>
                                 </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
