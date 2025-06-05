@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "VoucherController", urlPatterns = {"/VoucherController"})
@@ -83,14 +82,8 @@ public class VoucherController extends HttpServlet {
         
         try {
             int voucherId = Integer.parseInt(request.getParameter("voucherId"));
-            Voucher voucher = voucherDAO.getVoucherById(voucherId);
-            if (voucher != null && voucher.getExpiryDate().before(new Date())) {
-                response.sendRedirect("voucher?error=expired");
-                return;
-            }
-            // Lưu voucher vào session thay vì đánh dấu đã sử dụng
-            session.setAttribute("selectedVoucher", voucher);
-            response.sendRedirect("Cart.jsp");
+            voucherDAO.useVoucher(voucherId, account.getAccountID());
+            response.sendRedirect("voucher");
         } catch (NumberFormatException e) {
             response.sendRedirect("voucher");
         }

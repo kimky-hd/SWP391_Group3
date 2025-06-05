@@ -57,6 +57,12 @@
                 font-size: 20px; /* Điều chỉnh kích thước icon */
                 color: #333; /* Màu của icon */
             }
+            .sticky-navbar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background-color: var(--primary);
+            }
         </style>
     </head>
 
@@ -85,6 +91,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
@@ -132,7 +139,7 @@
 
 
         <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
+        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
             <div class="row px-xl-5">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
@@ -148,8 +155,8 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
+                                <a href="Homepage" class="nav-item nav-link">Home</a>
+                                <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <a href="VoucherController" class="nav-item nav-link">Voucher</a>
                                 <div class="nav-item dropdown">
@@ -263,15 +270,21 @@
                     </div>
 
                     <div class="row">
-                        <c:if test="${empty productList}">
-                            <p>Không có sản phẩm.</p>
-                        </c:if>
-                        <c:if test="${not empty productList}">
-                            <c:forEach items="${productList}" var="product">
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                    <div class="card product-item border-0 mb-4">
-                                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                            <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                        <c:forEach items="${productList}" var="product" varStatus="status">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">
+                                            <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
+                                                ${product.getTitle()}
+                                            </a>
+                                        </h6>
+
+                                        <div class="d-flex justify-content-center">
+                                            <h6>$${product.getPrice()}</h6>
                                         </div>
                                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                             <h6 class="text-truncate mb-3">
@@ -397,6 +410,7 @@
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- JavaScript Libraries -->
