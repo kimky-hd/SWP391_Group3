@@ -123,6 +123,7 @@
                             <div class="navbar-nav py-0">
 
 
+
                                 <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
@@ -138,7 +139,6 @@
 
                                     </div>
                                 </div>
-                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
