@@ -210,6 +210,12 @@
                                     ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
                                 </span>
                             </a>
+                            <a href="order?action=view" class="btn px-0 ml-3">
+                                <i class="fas fa-clipboard-list text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
+                                </span>
+                            </a>
                         </div>
                     </nav>
                 </div>
@@ -331,7 +337,7 @@
                                                 </button>
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="cart?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                                <a href="cart?action=add&productId=${product.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
                                                     <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ hàng
                                                 </a>
                                             </c:otherwise>

@@ -55,6 +55,7 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
+     // Phương thức đăng ký tài khoản
     public boolean register(String username, String password, String email, String phone) {
         String query = "INSERT INTO Account (username, password, role, email, phone) VALUES (?, ?, 0, ?, ?)";
         try {
