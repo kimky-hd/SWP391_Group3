@@ -124,7 +124,12 @@
                                 <a href="Homepage" class="nav-item nav-link active">Home</a>
                                 <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+
                                 <a href="VoucherController" class="nav-item nav-link">Voucher</a>
+
+                                <a href="blogs" class="nav-item nav-link">View Blogs</a>
+
+
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">

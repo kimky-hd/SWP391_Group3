@@ -8,7 +8,6 @@
         <meta charset="UTF-8">
         <title>Danh sách tin tức</title>
         <!-- ====================== Bootstrap CSS ====================== -->
-        <!-- Nếu bạn đặt Bootstrap ở Web Pages/lib/bootstrap/css/bootstrap.min.css -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/lib/bootstrap/css/bootstrap.min.css" />
 
         <!-- Font Awesome (nếu header/footer dùng icon fa-*) -->
@@ -87,48 +86,66 @@
             .search-box button:hover {
                 background-color: #e65c00;
             }
-            table {
+
+            /* ==== Thêm style cho grid/card ==== */
+            .grid-container {
+                margin-top: 20px;
+            }
+            .card-blog {
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                overflow: hidden;
+                transition: box-shadow 0.2s ease;
+                height: 100%;
+            }
+            .card-blog:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .card-blog img {
                 width: 100%;
-                border-collapse: collapse;
-            }
-            table thead {
-                background-color: #f5f5f5;
-            }
-            table th, table td {
-                padding: 12px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-            }
-            table tbody tr:hover {
-                background-color: #f9f9f9;
-            }
-            .blog-image {
-                width: 80px;
-                height: 60px;
+                height: 180px;
                 object-fit: cover;
-                border-radius: 4px;
             }
-            .action-btn {
-                padding: 6px 12px;
-                background-color: #ff6600;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
+            .card-body-center {
+                padding: 10px;
+            }
+            .card-body-center h5 {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                margin: 10px 0;
+            }
+            .card-body-center p {
                 font-size: 14px;
+                color: #777;
+                margin-bottom: 15px;
+                height: 60px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 3; /* Show only 3 lines */
+                -webkit-box-orient: vertical;
+            }
+            .btn-detail {
+                display: inline-block;
+                background-color: #3498db;
+                color: white;
+                padding: 6px 12px;
+                border-radius: 4px;
                 text-decoration: none;
-                margin-right: 5px;
+                font-size: 14px;
                 transition: background-color 0.2s ease;
             }
-            .action-btn:hover {
-                background-color: #e65c00;
+            .btn-detail:hover {
+                background-color: #2980b9;
             }
-            .delete-btn {
-                background-color: #c0392b;
+            .no-blogs {
+                text-align: center;
+                color: #777;
+                padding: 40px 0;
+                font-size: 16px;
             }
-            .delete-btn:hover {
-                background-color: #a93226;
-            }
+            /* ==== Giữ nguyên style pagination và info-count ==== */
             .pagination {
                 margin: 20px 0;
                 text-align: center;
@@ -162,7 +179,6 @@
         <div class="container">
             <h2>Danh sách tin tức</h2>
 
-
             <!-- INCLUDE HEADER TẠI ĐÂY -->
             <jsp:include page="/header.jsp" />
             <p class="sub-heading">Quản lý danh sách tin tức thuộc campus</p>
@@ -193,80 +209,70 @@
                 </div>
             </div>
 
-            <!-- Bảng hiển thị danh sách blogs -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ảnh</th>
-                        <th>Tiêu đề</th>
-                        <th>Mô tả</th>
-                        <th>Thời gian đăng</th>
-                        <th>Hành Động</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <!-- ==== Phần hiển thị danh sách blogs chuyển thành grid ==== -->
+            <div class="grid-container">
+                <div class="row">
+                    <!-- Duyệt blogList -->
                     <c:forEach var="blog" items="${blogList}">
-                        <tr>
-                            <td>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="card-blog h-100">
+                                <!-- Ảnh bài viết (nếu có) -->
                                 <c:choose>
                                     <c:when test="${not empty blog.image}">
                                         <img src="${pageContext.request.contextPath}/img/${blog.image}"
-                                             alt="Ảnh bài viết" class="blog-image"/>
+                                             alt="Ảnh bài viết" />
                                     </c:when>
                                     <c:otherwise>
                                         <img src="${pageContext.request.contextPath}/images/default.png"
-                                             alt="No Image" class="blog-image"/>
+                                             alt="No Image" />
                                     </c:otherwise>
                                 </c:choose>
-                            </td>
-                            <td>
-                                <a href="${pageContext.request.contextPath}/blogs?action=detail&bid=${blog.blogID}"
-                                   style="text-decoration: none; color: #333;">
-                                    ${blog.title}
-                                </a>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${fn:length(blog.content) > 100}">
-                                        ${fn:substring(blog.content, 0, 100)}...
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${blog.content}
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>${blog.datePosted}</td>
-                            <td>
-                                <a href="${pageContext.request.contextPath}/blogs?action=detail&bid=${blog.blogID}" 
-                                   class="action-btn" style="background-color: #3498db;">
-                                    Xem
-                                </a>
-                                <!-- Nút Sửa, Xóa: chỉ role = 1 hoặc 2 mới thấy -->
-                                <c:if test="${not empty sessionScope.account 
-                                              and (sessionScope.account.role == 1 or sessionScope.account.role == 2)}">
-                                      <a href="${pageContext.request.contextPath}/blogs?action=edit&bid=${blog.blogID}"
-                                         class="action-btn">Sửa</a>
-                                      <a href="${pageContext.request.contextPath}/blogs?action=delete&bid=${blog.blogID}"
-                                         class="action-btn delete-btn"
-                                         onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
-                                          Xóa
-                                      </a>
-                                </c:if>
-                            </td>
-                        </tr>
+                                <!-- Tiêu đề và Mô tả nằm bên dưới ảnh -->
+                                <div class="card-body-center">
+                                    <!-- Tiêu đề -->
+                                    <h5>${blog.title}</h5>
+                                    <!-- Mô tả (dài hơn 100 ký tự thì cắt) -->
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${fn:length(blog.content) > 100}">
+                                                ${fn:substring(blog.content, 0, 100)}...
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${blog.content}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    <!-- Nút Xem chi tiết nằm bên dưới -->
+                                    <a href="${pageContext.request.contextPath}/blogs?action=detail&bid=${blog.blogID}" 
+                                       class="btn-detail">
+                                        Xem chi tiết
+                                    </a>
+                                    <!-- Nút Sửa, Xóa: chỉ role = 1 hoặc 2 mới thấy -->
+                                    <c:if test="${not empty sessionScope.account 
+                                                  and (sessionScope.account.role == 1 or sessionScope.account.role == 2)}">
+                                          <a href="${pageContext.request.contextPath}/blogs?action=edit&bid=${blog.blogID}"
+                                             class="action-btn">Sửa</a>
+                                          <a href="${pageContext.request.contextPath}/blogs?action=delete&bid=${blog.blogID}"
+                                             class="action-btn delete-btn"
+                                             onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                                              Xóa
+                                          </a>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </div>
                     </c:forEach>
 
+                    <!-- Nếu không có blog nào -->
                     <c:if test="${empty blogList}">
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: #777; padding: 20px;">
-                                Chưa có bài viết nào.
-                            </td>
-                        </tr>
+                        <div class="col-12">
+                            <div class="no-blogs">Chưa có bài viết nào.</div>
+                        </div>
                     </c:if>
-                </tbody>
-            </table>
+                </div>
+            </div>
 
-            <!-- Phân trang -->
+            <!-- Phân trang (giữ nguyên) -->
             <div class="pagination">
                 <c:if test="${totalPages > 1}">
                     <c:if test="${currentPage > 1}">
@@ -288,11 +294,11 @@
                 </c:if>
             </div>
 
-            <!-- Thông tin số lượng đang hiển thị -->
+            <!-- Thông tin số lượng đang hiển thị (giữ nguyên) -->
             <div class="info-count">
                 <c:if test="${totalCount > 0}">
                     Hiển thị 
-                    <c:out value="${(currentPage - 1) * 10 + 1}"/> -
+                    <c:out value="${(currentPage - 1) * 10 + 1}"/> - 
                     <c:choose>
                         <c:when test="${(currentPage * 10) < totalCount}">
                             <c:out value="${currentPage * 10}"/>
@@ -308,6 +314,5 @@
         </div>
         <!-- INCLUDE FOOTER TẠI ĐÂY -->
         <jsp:include page="/footer.jsp" />
-
     </body>
 </html>

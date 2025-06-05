@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import Model.Account;
+
 @WebServlet(name = "AccountController", urlPatterns = {"/account"})
 public class AccountController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -16,14 +17,60 @@ public class AccountController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");       
         String action = request.getParameter("action");
-        AccountDAO dao = new AccountDAO();     
+        AccountDAO dao = new AccountDAO();    
         
+         if ("changePassword".equals(action)) {
+            // Kiểm tra người dùng đã đăng nhập chưa
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+            
+            if (account == null) {
+                // Chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                response.sendRedirect("login.jsp");
+                return;
+            }
+            
+            String currentPassword = request.getParameter("currentPassword");
+            String newPassword = request.getParameter("newPassword");
+            String confirmPassword = request.getParameter("confirmPassword");
+            
+            // Kiểm tra mật khẩu mới có hợp lệ không
+            if (newPassword == null || !isValidPassword(newPassword)) {
+                request.setAttribute("error", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số!");
+                request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+                return;
+            }
+            
+            // Kiểm tra mật khẩu xác nhận có khớp không
+            if (!newPassword.equals(confirmPassword)) {
+                request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
+                request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+                return;
+            }
+            
+            // Tiến hành đổi mật khẩu
+            boolean success = dao.changePassword(account.getAccountID(), currentPassword, newPassword);
+            
+            if (success) {
+                // Cập nhật thông tin tài khoản trong session
+                account.setPassword(newPassword);
+                session.setAttribute("account", account);
+                
+                request.setAttribute("success", "Đổi mật khẩu thành công!");
+            } else {
+                request.setAttribute("error", "Mật khẩu hiện tại không đúng!");
+            }
+            
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+            return;
+        }
+         
          if ("register".equals(action)) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String email = request.getParameter("email"); 
             String phone = request.getParameter("phone");
-            
+     
              if (password == null || !isValidPassword(password)) {
                 request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số! ");
                 request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -56,6 +103,8 @@ public class AccountController extends HttpServlet {
             }
         }  
     }
+    
+    
     private boolean isValidPassword(String password) {
         // Kiểm tra độ dài tối thiểu 8 ký tự
         if (password.length() < 8) {
@@ -88,19 +137,19 @@ public class AccountController extends HttpServlet {
     
     // Kiểm tra đầu số Việt Nam
     String[] validPrefixes = {
-        // Viettel
-        "032", "033", "034", "035", "036", "037", "038", "039",
-        // Vinaphone
-        "081", "082", "083", "084", "085", "086", "088", "089",
-        // Mobifone
-        "070", "076", "077", "078", "079",
-        // Vietnamobile
-        "056", "058", "059",
-        // Gmobile
-        "099", "059",
-        // Cố định (thêm các mã vùng nếu cần)
-        "024", "028"
-    };
+    // Viettel
+    "032", "033", "034", "035", "036", "037", "038", "039", "086", "096", "097", "098",
+    // Vinaphone
+    "081", "082", "083", "084", "085", "088", "091", "094",
+    // Mobifone
+    "070", "076", "077", "078", "079", "089", "090", "093",
+    // Vietnamobile
+    "052", "056", "058", "092",
+    // Gmobile
+    "059", "099",
+    // Cố định (có thể bổ sung thêm mã vùng)
+    "024", "028"
+};
     
     // Kiểm tra số bắt đầu bằng 0
     if (!phone.startsWith("0")) {
