@@ -221,6 +221,20 @@ if(successMsg != null && !successMsg.contains("Đăng ký thành công")) {
             setTimeout(function () {
                 window.location.href = "Homepage";
             }, 1500);
+            <%-- Thêm vào phần xử lý sau khi đăng nhập thành công --%>
+            <script>
+                // Kiểm tra nếu đăng nhập thành công
+                if (${sessionScope.account != null}) {
+                    // Gọi servlet để cập nhật số lượng đơn hàng
+                    fetch('ordercount')
+                        .then(response => {
+                            if (response.ok) {
+                                // Reload trang để cập nhật số lượng hiển thị
+                                window.location.href = 'Homepage';
+                            }
+                        });
+                }
+            </script>
             <% } %>
         </script>
     </body>
