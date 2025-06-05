@@ -4,10 +4,7 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-/**
- * Lớp tiện ích để gửi email trong ứng dụng
- * Cung cấp các phương thức tĩnh để gửi các loại email khác nhau
- */
+
 public class EmailSender {
     // Thông tin cấu hình email
     private static final String SENDER_EMAIL = "anhhoang30012004@gmail.com"; // Thay bằng email của bạn
@@ -44,29 +41,27 @@ public class EmailSender {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("Đặt lại mật khẩu - Flower Shop");
+           
+        
+        // Sử dụng MimeUtility để mã hóa tiêu đề
+        message.setSubject(MimeUtility.encodeText("Đặt lại mật khẩu - Flower Shop", "UTF-8", "B"));
             
             // Nội dung email
             String emailContent = createResetPasswordEmailContent(username, resetToken);
             message.setContent(emailContent, "text/html; charset=UTF-8");
             
             // Gửi email
-            Transport.send(message);
-            return true;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return false;
-        }
+             Transport.send(message);
+        return true;
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        return false;
+    } catch (java.io.UnsupportedEncodingException e) {
+        e.printStackTrace();
+        return false;
     }
-    
-    /**
-     * Gửi email thông báo
-     * 
-     * @param recipientEmail Email người nhận
-     * @param subject Tiêu đề email
-     * @param content Nội dung email (HTML)
-     * @return true nếu gửi thành công, false nếu thất bại
-     */
+}
+  
     public static boolean sendNotificationEmail(String recipientEmail, String subject, String content) {
         // Thiết lập thuộc tính
         Properties props = new Properties();
@@ -88,17 +83,20 @@ public class EmailSender {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject(subject);
+            message.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));
             message.setContent(content, "text/html; charset=UTF-8");
             
-            // Gửi email
-            Transport.send(message);
-            return true;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return false;
-        }
+           // Gửi email
+        Transport.send(message);
+        return true;
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        return false;
+    } catch (java.io.UnsupportedEncodingException e) {
+        e.printStackTrace();
+        return false;
     }
+}
     
     /**
      * Tạo nội dung email đặt lại mật khẩu
