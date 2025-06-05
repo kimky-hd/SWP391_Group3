@@ -124,7 +124,7 @@
                 <div class="col-lg-4 col-6 text-left">
                     <form action="SearchProductByTitle">
                         <div class="input-group">
-                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
+                            <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
                             <button type="submit" class="icon-search-button">
                                 <i class="icon icon-search"></i> 
                             </button>
@@ -173,7 +173,7 @@
                         </div>
 
                         <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
+                            <a href="ManageWishListController" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
@@ -233,6 +233,8 @@
 
                         <!-- Đơn vị -->
                         <p style="font-size: 1.2rem;"><strong>Đơn vị:</strong> ${detail.getUnit()}</p>
+                        <p style="font-size: 1.2rem;"><strong>Ngày nhập:</strong> ${detail.getDateImport()}</p>
+                        <p style="font-size: 1.2rem;"><strong>Tình trạng:</strong> ${detail.getStatus()}</p>
 
                         <!-- Số lượng -->
                         <c:choose>
@@ -263,7 +265,7 @@
                                 </c:choose>
                             </form>
 
-                            <a href="addWishList?pid=${detail.getProductID()}" class="btn btn-outline-danger btn-lg">
+                            <a href="AddWishlistController?pid=${product.getProductID()}" class="btn btn-outline-danger btn-lg">
                                 <i class="far fa-heart mr-1"></i> Yêu thích
                             </a>
                         </div>

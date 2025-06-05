@@ -64,11 +64,40 @@
                 background-color: var(--primary);
             }
         </style>
+        <style>
+            #message-popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #28a745; /* Màu xanh thông báo thành công */
+                color: white;
+                padding: 16px 32px;
+                border-radius: 8px;
+                font-size: 18px;
+                z-index: 9999;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                animation: fadeOut 0.5s ease-in-out 2.5s forwards;
+            }
+
+            /* Ẩn sau 3s bằng animation */
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+        </style>
+
     </head>
 
 
 
     <body>
+
+        <c:if test="${not empty mess}">
+            <div id="message-popup">${mess}</div>
+        </c:if>
 
         <!-- Topbar Start -->
         <div class="container-fluid">
@@ -115,14 +144,14 @@
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
                     <a href="Homepage" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
+                        <span class="h1 text-uppercase text-light bg-pink px-2">BÁN</span>
+                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">HOA</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
                     <form action="SearchProductByTitle">
                         <div class="input-group">
-                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
+                            <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
                             <button type="submit" class="icon-search-button">
                                 <i class="icon icon-search"></i> 
                             </button>
@@ -155,25 +184,25 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
+                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
+                                <a href="ViewListProductController" class="nav-item nav-link active">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
+                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
+                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                                     </div>
                                 </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                                <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
                         <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
+                            <a href="ManageWishListController" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -278,7 +307,10 @@
                                         </h6>
 
                                         <div class="d-flex justify-content-center">
-                                            <h6>$${product.getPrice()}</h6>
+                                            <h6>${product.getPrice()} VNĐ</h6>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <h8>Ngày nhập : ${product.getDateImport()} </h8>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-center">
@@ -295,7 +327,7 @@
                                         <c:choose>
                                             <c:when test="${product.getQuantity() == 0}">
                                                 <button class="btn btn-sm text-dark p-0" onclick="showOutOfStockAlert()">
-                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ hàng
                                                 </button>
                                             </c:when>
                                             <c:otherwise>
@@ -304,14 +336,13 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                        <a href="AddWishlistController?pid=${product.getProductID()}" class="btn btn-sm text-dark p-0">
                                             <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </c:forEach>
-
 
 
                     </div>
@@ -401,60 +432,61 @@
                     </div>
                 </div>
             </div>
+        </div>
 
 
-            <!-- JavaScript Libraries -->
-            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-            <script src="lib/easing/easing.min.js"></script>
-            <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            <!-- Template Javascript -->
-            <script src="js/main.js"></script>
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
 
-            <!-- Toast Message Container -->
-            <style>
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                }
+        <!-- Toast Message Container -->
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
 
-                .toast {
-                    padding: 15px 25px;
-                    margin-bottom: 12px;
-                    border-radius: 12px;
-                    color: #5f375f;
-                    background-color: #fce4ec;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                    opacity: 0;
-                    transform: translateX(100%);
-                    transition: all 0.4s ease-in-out;
-                    border-left: 6px solid #f48fb1;
-                }
+            .toast {
+                padding: 15px 25px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+                color: #5f375f;
+                background-color: #fce4ec;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.4s ease-in-out;
+                border-left: 6px solid #f48fb1;
+            }
 
-                .toast.show {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
 
-                .toast.success {
-                    background-color: #f8bbd0;
-                    border-left-color: #40ec46;
-                }
+            .toast.success {
+                background-color: #f8bbd0;
+                border-left-color: #40ec46;
+            }
 
-                .toast.error {
-                    background-color: #fce4ec;
-                    border-left-color: #d81b60;
-                }
-            </style>
+            .toast.error {
+                background-color: #fce4ec;
+                border-left-color: #d81b60;
+            }
+        </style>
 
-            <div class="toast-container"></div>
+        <div class="toast-container"></div>
 
-            <script>
+        <script>
                                                     function showToast(message, type) {
                                                         const container = document.querySelector('.toast-container');
                                                         const toast = document.createElement('div');
@@ -485,24 +517,32 @@
                                                     if (message && messageType) {
                                                         showToast(message, messageType);
                                                     }
-            </script>
-
-            <script>
-                function showOutOfStockAlert() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hết hàng!',
-                        text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
-                        confirmButtonColor: '#d33',
-                        confirmButtonText: 'Đóng'
-                    });
+        </script>
+        <script>
+            setTimeout(function () {
+                var msg = document.getElementById("message-popup");
+                if (msg) {
+                    msg.remove(); // hoặc msg.style.display = "none";
                 }
-            </script>
+            }, 3000);
+        </script>
 
-            <%
-                // Xoá session sau khi hiển thị
-                session.removeAttribute("message");
-                session.removeAttribute("messageType");
-            %>
+        <script>
+            function showOutOfStockAlert() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hết hàng!',
+                    text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Đóng'
+                });
+            }
+        </script>
+
+        <%
+            // Xoá session sau khi hiển thị
+            session.removeAttribute("message");
+            session.removeAttribute("messageType");
+        %>
     </body>
 </html>
