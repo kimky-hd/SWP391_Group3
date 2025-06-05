@@ -71,7 +71,7 @@
 
 
     <body>
-        <div class="toast-container"></div> 
+
         <!-- Topbar Start -->
         <div class="container-fluid">
             <div class="row bg-secondary py-1 px-xl-5">
@@ -124,7 +124,7 @@
                 <div class="col-lg-4 col-6 text-left">
                     <form action="SearchProductByTitle">
                         <div class="input-group">
-                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
+                            <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
                             <button type="submit" class="icon-search-button">
                                 <i class="icon icon-search"></i> 
                             </button>
@@ -157,26 +157,25 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link active">Shop</a>
-
+                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
+                                <a href="ViewListProductController" class="nav-item nav-link active">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
+                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
+                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                                     </div>
                                 </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                                <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
                         <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
+                            <a href="ManageWishListController" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -184,14 +183,12 @@
                                     ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
                                 </span>
                             </a>
-
                             <a href="order?action=view" class="btn px-0 ml-3">
                                 <i class="fas fa-clipboard-list text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
                                     ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
                                 </span>
                             </a>
-
                         </div>
                     </nav>
                 </div>
@@ -218,37 +215,13 @@
                                 <!-- Ảnh -->
                                 <div class="col-md-6 text-center mb-3 mb-md-0">
                                     <img src="${detail.getImage()}" 
-
-                                         alt="product" class="single-image" height="700px" width="350px">
-                                </figure>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="product-entry">
-                                    <h2 class="section-title divider">${detail.getTitle()}</h2>
-                                    <div class="products-content">
-                                        <div class="item-title">Mô tả: ${detail.getDescription()}</div><br>
-                                        <div class="price-wrapper">
-                                            <span class="price">Giá: <fmt:formatNumber value="${detail.getPrice()}" type="currency" currencySymbol="VNĐ" /></span>
-                                        </div>
-                                        <div class="price-wrapper">
-                                            <span class="price">Còn lại: ${detail.getQuantity()} sản phẩm</span>
-                                        </div>
-                                        <div class="price-wrapper">
-                                            <span class="price">AVG Rate: ${rate} ★</span>
-                                        </div>
-                                        <div class="btns-wrapper d-flex justify-content-center mt-3">
-                                            <div class="btn-wrap mr-3">
-                                                <a href="cart?action=add&productId=${detail.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
-                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                                </a>
-                                            </div>
-                                            <div class="btn-wrap">
-                                                <a href="wishlist?action=add&id=${detail.getProductID()}" class="btn-accent-arrow wishlist-btn">
-                                                    YÊU THÍCH <i class="icon icon-ns-arrow-right"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                         alt="${detail.getTitle()}" 
+                                         class="img-fluid bg-white rounded p-2 shadow" 
+                                         style="max-height: 300px; object-fit: contain;">
+                                </div>
+                                <!-- Mô tả -->
+                                <div class="col-md-6 text-white d-flex align-items-center">
+                                    <p class="mb-0" style="font-size: 1.1rem;">${detail.getDescription()}</p>
                                 </div>
                             </div>
                         </div>
@@ -266,6 +239,8 @@
 
                         <!-- Đơn vị -->
                         <p style="font-size: 1.2rem;"><strong>Đơn vị:</strong> ${detail.getUnit()}</p>
+                        <p style="font-size: 1.2rem;"><strong>Ngày nhập:</strong> ${detail.getDateImport()}</p>
+                        <p style="font-size: 1.2rem;"><strong>Tình trạng:</strong> ${detail.getStatus()}</p>
 
                         <!-- Số lượng -->
                         <c:choose>
@@ -296,7 +271,7 @@
                                 </c:choose>
                             </form>
 
-                            <a href="addWishList?pid=${detail.getProductID()}" class="btn btn-outline-danger btn-lg">
+                            <a href="AddWishlistController?pid=${detail.getProductID()}" class="btn btn-outline-danger btn-lg">
                                 <i class="far fa-heart mr-1"></i> Yêu thích
                             </a>
                         </div>
@@ -504,50 +479,6 @@
                 .submit-button:hover {
                     background-color: #2980b9;
                 }
-                /* Styles cho Toast Message Container */
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                }
-
-                .toast {
-                    padding: 15px 25px;
-                    margin-bottom: 12px;
-                    border-radius: 12px;
-                    color: #5f375f;
-                    background-color: #fce4ec; /* pastel pink background */
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                    opacity: 0;
-                    transform: translateX(100%);
-                    transition: all 0.4s ease-in-out;
-                    border-left: 6px solid #f48fb1; /* pastel rose accent */
-                }
-
-                .toast.show {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .toast.success {
-                    background-color: #f8bbd0; /* light pastel pink */
-                    border-left-color: #40ec46;
-                }
-
-                .toast.error {
-                    background-color: #fce4ec;
-                    border-left-color: #d81b60;
-                }
-
-                .bg-pink-pastel {
-                    background-color: #fddde6;
-                }
-
-                .text-dark-purple {
-                    color: #5c4b51;
-                }
             </style>
             <style>
                 .star-rating label {
@@ -585,37 +516,6 @@
                         }, 3000); // Ẩn sau 3 giây
                     }
                 });
-
-                function showToast(message, type) {
-                    const container = document.querySelector('.toast-container');
-                    const toast = document.createElement('div');
-                    toast.className = `toast ${type}`;
-                    toast.textContent = message;
-
-                    container.appendChild(toast);
-
-                    // Reflow để kích hoạt animation
-                    toast.offsetHeight;
-
-                    // Show toast
-                    toast.classList.add('show');
-
-                    // Tự động biến mất sau 3s
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                        setTimeout(() => {
-                            container.removeChild(toast);
-                        }, 400);
-                    }, 3000);
-                }
-
-                // Lấy message từ session JSP
-                const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
-                const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
-
-                if (message && messageType) {
-                    showToast(message, messageType);
-                }
             </script>
     </body>
 </html>

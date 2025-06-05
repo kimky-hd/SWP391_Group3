@@ -47,11 +47,11 @@ public class AddWishlistController extends HttpServlet {
             
             if(WishListExisted != null){
                 request.setAttribute("mess", "Sản phẩm đã có trong mục ưa thích");
-                request.getRequestDispatcher("ProductDetail?pid=" + id).forward(request, response);
+                request.getRequestDispatcher("ViewListProductController").forward(request, response);
             }else{
                 productDAO.insertWishList(accountID, productID);
                 request.setAttribute("mess", "Đã thêm sản phẩm vào mục ưa thích");
-                request.getRequestDispatcher("ProductDetail?pid=" + id).forward(request, response);
+                request.getRequestDispatcher("ViewListProductController").forward(request, response);
             }
         }
     } 
