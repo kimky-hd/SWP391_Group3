@@ -38,14 +38,11 @@
             <file>file:/D:/swp7/SWP391_Group3/Onlineshop/src/java/Controller/CheckOutController.java</file>
         </group>
         <group>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ForgotPasswordServlet.java</file>
             <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/WishList.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CustomerController/ManageWishListController.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/WishList.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CustomerController/AddWishlistController.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
         </group>
     </open-files>
 </project-private>
