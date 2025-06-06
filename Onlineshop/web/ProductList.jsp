@@ -57,12 +57,47 @@
                 font-size: 20px; /* Điều chỉnh kích thước icon */
                 color: #333; /* Màu của icon */
             }
+            .sticky-navbar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background-color: var(--primary);
+            }
         </style>
+        <style>
+            #message-popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #28a745; /* Màu xanh thông báo thành công */
+                color: white;
+                padding: 16px 32px;
+                border-radius: 8px;
+                font-size: 18px;
+                z-index: 9999;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                animation: fadeOut 0.5s ease-in-out 2.5s forwards;
+            }
+
+            /* Ẩn sau 3s bằng animation */
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+        </style>
+
     </head>
 
 
 
     <body>
+
+        <c:if test="${not empty mess}">
+            <div id="message-popup">${mess}</div>
+        </c:if>
 
         <!-- Topbar Start -->
         <div class="container-fluid">
@@ -85,6 +120,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
@@ -108,14 +144,14 @@
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
                     <a href="Homepage" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
+                        <span class="h1 text-uppercase text-light bg-pink px-2">BÁN</span>
+                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">HOA</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
                     <form action="SearchProductByTitle">
                         <div class="input-group">
-                            <input type="text" name="txt" class="form-control" placeholder="Search for products" value="${txt}">
+                            <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
                             <button type="submit" class="icon-search-button">
                                 <i class="icon icon-search"></i> 
                             </button>
@@ -132,7 +168,7 @@
 
 
         <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
+        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
             <div class="row px-xl-5">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
@@ -148,25 +184,25 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
+                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
+                                <a href="ViewListProductController" class="nav-item nav-link active">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
+                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
+                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                                     </div>
                                 </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                                <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
                         <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
+                            <a href="ManageWishListController" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -263,229 +299,256 @@
                     </div>
 
                     <div class="row">
-                        <c:if test="${empty productList}">
-                            <p>Không có sản phẩm.</p>
-                        </c:if>
-                        <c:if test="${not empty productList}">
-                            <c:forEach items="${productList}" var="product">
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                    <div class="card product-item border-0 mb-4">
-                                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                            <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
-                                        </div>
-                                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                            <h6 class="text-truncate mb-3">
-                                                <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
-                                                    ${product.getTitle()}
-                                                </a>
-                                            </h6>
+                        <c:forEach items="${productList}" var="product" varStatus="status">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">
+                                            <a href="ViewProductDetail?productid=${product.getProductID()}" class="text-dark">
+                                                ${product.getTitle()}
+                                            </a>
+                                        </h6>
 
-                                            <div class="d-flex justify-content-center">
-                                                <h6>$${product.getPrice()}</h6>
-                                            </div>
-
+                                        <div class="d-flex justify-content-center">
+                                            <h6>${product.getPrice()} VNĐ</h6>
                                         </div>
                                         <div class="d-flex justify-content-center">
-                                            <c:choose>
-                                                <c:when test="${product.getQuantity() == 0}">
-                                                    <small class="text-danger">Hết Hàng</small>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between bg-light border">
-                                            <a href="cart?action=add&productId=${product.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
-                                                <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                            </a>
-                                            <a href="wishlist?action=add&id=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                                <i class="far fa-heart text-primary mr-1"></i>Add To Wishlist
-                                            </a>
-
+                                            <h8>Ngày nhập : ${product.getDateImport()} </h8>
                                         </div>
                                     </div>
-                                </c:forEach>
+                                    <div class="d-flex justify-content-center">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <small class="text-danger">Hết Hàng</small>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <small class="text-muted">Số Lượng : ${product.getQuantity()}</small>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <c:choose>
+                                            <c:when test="${product.getQuantity() == 0}">
+                                                <button class="btn btn-sm text-dark p-0" onclick="showOutOfStockAlert()">
+                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ hàng
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="cart?action=add&productId=${product.getProductID()}&quantity=1" class="btn btn-sm text-dark p-0">
+                                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ hàng
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <a href="AddWishlistController?pid=${product.getProductID()}" class="btn btn-sm text-dark p-0">
+                                            <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+
+
+                    </div>
+
+
+                    <c:if test="${tag != null}">
+                        <ul class="pagination">
+                            <c:if test="${tag != 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
+                                </li>
                             </c:if>
+                            <c:forEach begin="1" end="${endPage}" var="i">
+                                <li class="page-item ${tag == i ? 'active' : ''}">
+                                    <a class="page-link" href="ViewListProductController?index=${i}" 
+                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                                </li>
+                            </c:forEach>
+                            <c:if test="${tag != endPage}">
+                                <li class="page-item">
+                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </c:if>
 
 
+                </div>
+            </div>
+        </div>
 
+
+        <!-- Products End -->
+
+        <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
+            <div class="row px-xl-5 pt-5">
+                <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                    <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
+                    <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                    <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+                </div>
+                <div class="col-lg-8 col-md-12">
+                    <div class="row">
+                        <div class="col-md-4 mb-5">
+                            <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+                            <div class="d-flex flex-column justify-content-start">
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            </div>
                         </div>
-
-
-                        <c:if test="${tag != null}">
-                            <ul class="pagination">
-                                <c:if test="${tag != 1}">
-                                    <li class="page-item">
-                                        <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
-                                    </li>
-                                </c:if>
-                                <c:forEach begin="1" end="${endPage}" var="i">
-                                    <li class="page-item ${tag == i ? 'active' : ''}">
-                                        <a class="page-link" href="ViewListProductController?index=${i}" 
-                                           style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                    </li>
-                                </c:forEach>
-                                <c:if test="${tag != endPage}">
-                                    <li class="page-item">
-                                        <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
-                                    </li>
-                                </c:if>
-                            </ul>
-                        </c:if>
-
-
+                        <div class="col-md-4 mb-5">
+                            <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
+                            <div class="d-flex flex-column justify-content-start">
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-5">
+                            <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
+                            <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+                            <form action="">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Your Email Address">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary">Sign Up</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                            <div class="d-flex">
+                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                                <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
 
-            <!-- Products End -->
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
-                <div class="row px-xl-5 pt-5">
-                    <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
-                        <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                        <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                        <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
-                    </div>
-                    <div class="col-lg-8 col-md-12">
-                        <div class="row">
-                            <div class="col-md-4 mb-5">
-                                <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
-                                <div class="d-flex flex-column justify-content-start">
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                    <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-5">
-                                <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
-                                <div class="d-flex flex-column justify-content-start">
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                    <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-5">
-                                <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-                                <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
-                                <form action="">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Your Email Address">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary">Sign Up</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
-                                <div class="d-flex">
-                                    <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                                    <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
 
+        <!-- Toast Message Container -->
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
 
-                <!-- JavaScript Libraries -->
-                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-                <script src="lib/easing/easing.min.js"></script>
-                <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+            .toast {
+                padding: 15px 25px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+                color: #5f375f;
+                background-color: #fce4ec;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.4s ease-in-out;
+                border-left: 6px solid #f48fb1;
+            }
 
-                <!-- Template Javascript -->
-                <script src="js/main.js"></script>
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
 
-                <!-- Toast Message Container -->
-                <style>
-                    .toast-container {
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        z-index: 9999;
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    }
+            .toast.success {
+                background-color: #f8bbd0;
+                border-left-color: #40ec46;
+            }
 
-                    .toast {
-                        padding: 15px 25px;
-                        margin-bottom: 12px;
-                        border-radius: 12px;
-                        color: #5f375f;
-                        background-color: #fce4ec;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                        opacity: 0;
-                        transform: translateX(100%);
-                        transition: all 0.4s ease-in-out;
-                        border-left: 6px solid #f48fb1;
-                    }
+            .toast.error {
+                background-color: #fce4ec;
+                border-left-color: #d81b60;
+            }
+        </style>
 
-                    .toast.show {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
+        <div class="toast-container"></div>
 
-                    .toast.success {
-                        background-color: #f8bbd0;
-                        border-left-color: #40ec46;
-                    }
+        <script>
+                                                    function showToast(message, type) {
+                                                        const container = document.querySelector('.toast-container');
+                                                        const toast = document.createElement('div');
+                                                        toast.className = `toast ${type}`;
+                                                        toast.textContent = message;
 
-                    .toast.error {
-                        background-color: #fce4ec;
-                        border-left-color: #d81b60;
-                    }
-                </style>
+                                                        container.appendChild(toast);
 
-                <div class="toast-container"></div>
+                                                        // Reflow để kích hoạt animation
+                                                        toast.offsetHeight;
 
-                <script>
-                            function showToast(message, type) {
-                                const container = document.querySelector('.toast-container');
-                                const toast = document.createElement('div');
-                                toast.className = `toast ${type}`;
-                                toast.textContent = message;
+                                                        // Show toast
+                                                        toast.classList.add('show');
 
-                                container.appendChild(toast);
+                                                        // Tự động biến mất sau 3s
+                                                        setTimeout(() => {
+                                                            toast.classList.remove('show');
+                                                            setTimeout(() => {
+                                                                container.removeChild(toast);
+                                                            }, 400);
+                                                        }, 3000);
+                                                    }
 
-                                // Reflow để kích hoạt animation
-                                toast.offsetHeight;
+                                                    // Lấy message từ session JSP
+                                                    const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+                                                    const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
 
-                                // Show toast
-                                toast.classList.add('show');
+                                                    if (message && messageType) {
+                                                        showToast(message, messageType);
+                                                    }
+        </script>
+        <script>
+            setTimeout(function () {
+                var msg = document.getElementById("message-popup");
+                if (msg) {
+                    msg.remove(); // hoặc msg.style.display = "none";
+                }
+            }, 3000);
+        </script>
 
-                                // Tự động biến mất sau 3s
-                                setTimeout(() => {
-                                    toast.classList.remove('show');
-                                    setTimeout(() => {
-                                        container.removeChild(toast);
-                                    }, 400);
-                                }, 3000);
-                            }
+        <script>
+            function showOutOfStockAlert() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hết hàng!',
+                    text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Đóng'
+                });
+            }
+        </script>
 
-                            // Lấy message từ session JSP
-                            const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
-                            const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
-
-                            if (message && messageType) {
-                                showToast(message, messageType);
-                            }
-                </script>
-
-                <%
-                    // Xoá session sau khi hiển thị
-                    session.removeAttribute("message");
-                    session.removeAttribute("messageType");
-                %>
-                </body>
-                </html>
+        <%
+            // Xoá session sau khi hiển thị
+            session.removeAttribute("message");
+            session.removeAttribute("messageType");
+        %>
+    </body>
+</html>

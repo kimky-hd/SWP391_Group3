@@ -1,5 +1,4 @@
 /Onlineshop/build/
 /Onlineshop/dist/
-/Onlineshop_demo/nbproject/private/
-/Onlineshop_demo/build/
-/Onlineshop_demo/dist/
+/Onlineshop/nbproject/
+/Onlineshop/lib/
