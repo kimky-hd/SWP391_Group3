@@ -5,6 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Chi tiết bài viết</title>
+           <!-- ====================== Bootstrap CSS ====================== -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Font Awesome (nếu header/footer dùng icon fa-*) -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/lib/fontawesome/css/all.min.css" />
+
+        <!-- Custom CSS (ví dụ: css/style.css) -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,6 +92,7 @@
 <body>
 <div class="container">
     <h2 class="page-heading">Chi tiết bài viết</h2>
+    <jsp:include page="/header.jsp" />
     <p class="sub-heading">Xem nội dung đầy đủ của bài viết</p>
 
     <a class="back-btn" href="${pageContext.request.contextPath}/blogs?action=list">
@@ -121,5 +130,8 @@
         <p class="no-data">Không tìm thấy bài viết.</p>
     </c:if>
 </div>
+        
+         <!-- INCLUDE FOOTER TẠI ĐÂY -->
+        <jsp:include page="/footer.jsp" />
 </body>
 </html>

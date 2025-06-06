@@ -21,11 +21,12 @@ public class Product {
     private String unit;
     private Date dateImport;
     private Date dateExpire;
+    private String status;
 
     public Product() {
     }
 
-    public Product(int productID, String title, String image, double price, int quantity, String description, int colorID, int seasonID, String unit, Date dateImport, Date dateExpire) {
+    public Product(int productID, String title, String image, double price, int quantity, String description, int colorID, int seasonID, String unit, Date dateImport, Date dateExpire, String status) {
         this.productID = productID;
         this.title = title;
         this.image = image;
@@ -37,7 +38,23 @@ public class Product {
         this.unit = unit;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
+        this.status = status;
     }
+     public Product(int productID, String title, String image, double price, int quantity, String description, int colorID, int seasonID, String unit, Date dateImport, Date dateExpire) {
+        this.productID = productID;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.colorID = colorID;
+        this.seasonID = seasonID;
+        this.unit = unit;
+        this.dateImport = dateImport;
+        this.dateExpire = dateExpire;
+       
+    }
+    
 
     public int getProductID() {
         return productID;
@@ -127,12 +144,19 @@ public class Product {
         this.dateExpire = dateExpire;
     }
 
-    
-    
-
-    
-    @Override
-    public String toString(){
-        return "Product{" + "productID=" + productID + "title=" + title + "image=" + image + "price=" + price + "quantity=" + quantity + "description=" + description + "colorID=" + colorID + "seasonID=" + seasonID + "unit=" + unit + "dateImport=" + dateImport + "dateExpire=" + dateExpire +"}";
+    public String getStatus() {
+        return status;
     }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", unit=" + unit + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+    }
+    
+    
+    
 }
