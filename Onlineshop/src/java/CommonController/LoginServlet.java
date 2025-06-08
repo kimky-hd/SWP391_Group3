@@ -37,40 +37,55 @@ public class LoginServlet extends HttpServlet {
         if(account != null) {
             HttpSession session = request.getSession(true);
             session.setAttribute("account", account);
-            session.setMaxInactiveInterval(30*60); // Session hết hạn sau 30 phút
+            session.setMaxInactiveInterval(30*60);
             
             // Xử lý Remember Me
             String rememberMe = request.getParameter("rememberMe");
-            if (rememberMe != null) {
-                Cookie userCookie = new Cookie("userInput", userInput);
-             
-                // Mã hóa mật khẩu sử dụng Base64
-                String encryptedPassword = Base64.getEncoder().encodeToString(password.getBytes());
-                Cookie passCookie = new Cookie("password", encryptedPassword);
-             
-                userCookie.setMaxAge(30 * 24 * 60 * 60); // Cookie tồn tại 30 ngày
+            if (rememberMe != null && rememberMe.equals("on")) {
+                // Tạo cookie cho username và password
+                String encodedUserInput = Base64.getEncoder().encodeToString(userInput.getBytes());
+                String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+                
+                Cookie userCookie = new Cookie("userInput", encodedUserInput);
+                Cookie passCookie = new Cookie("password", encodedPassword);
+                
+                // Set thời gian tồn tại cookie (30 ngày)
+                userCookie.setMaxAge(30 * 24 * 60 * 60);
                 passCookie.setMaxAge(30 * 24 * 60 * 60);
                 
+                // Set path để cookie hoạt động trên toàn bộ ứng dụng
+                userCookie.setPath("/");
+                passCookie.setPath("/");
+                
+                response.addCookie(userCookie);
+                response.addCookie(passCookie);
+            } else {
+                // Xóa cookie nếu không chọn Remember Me
+                Cookie userCookie = new Cookie("userInput", "");
+                Cookie passCookie = new Cookie("password", "");
+                userCookie.setMaxAge(0);
+                passCookie.setMaxAge(0);
+userCookie.setPath("/");
+                passCookie.setPath("/");
                 response.addCookie(userCookie);
                 response.addCookie(passCookie);
             }
             
-            // Chuyển hướng về trang chủ
             response.sendRedirect("Homepage");
         } else {
-            request.setAttribute("error", "Thông tin đăng nhập không chính xác!");
+            request.setAttribute("error", "Sai thông tin đăng nhập!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
