@@ -45,11 +45,11 @@ public class BlogDAO extends DBContext {
     }
 
     // Xóa blog theo ID
-     public void deleteBlog(int blogID) throws Exception {
+    public void deleteBlog(int blogID) throws Exception {
         String sql = "DELETE FROM Blog WHERE blogID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, blogID);
-            int rowsAffected = ps.executeUpdate(); 
+            int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
                 throw new SQLException("Không tìm thấy Blog với ID = " + blogID + " để xóa.");
             }
@@ -57,8 +57,8 @@ public class BlogDAO extends DBContext {
     }
 
     // Cập nhật blog
-      public boolean updateBlog(Blog blog) throws SQLException {
-        String query = "UPDATE Blog SET Title = ?, Content = ?, Image = ?, DatePosted = ? WHERE BlogID = ?"; 
+    public boolean updateBlog(Blog blog) throws SQLException {
+        String query = "UPDATE Blog SET Title = ?, Content = ?, Image = ?, DatePosted = ? WHERE BlogID = ?";
         PreparedStatement ps = null;
         boolean success = false;
 
@@ -69,7 +69,7 @@ public class BlogDAO extends DBContext {
             ps.setString(2, blog.getContent());
             ps.setString(3, blog.getImage());
             ps.setString(4, blog.getDatePosted()); // Set String directly
-            ps.setInt(5, blog.getBlogID()); 
+            ps.setInt(5, blog.getBlogID());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
@@ -242,73 +242,5 @@ public class BlogDAO extends DBContext {
 //            }
 //        }
 //    }
-    
-      // --- HÀM MAIN ĐỂ TEST CHỨC NĂNG UPDATE (Phù hợp với Blog.java sử dụng String datePosted) ---
-    public static void main(String[] args) {
-        BlogDAO blogDAO = new BlogDAO();
-
-        // 1. CHỌN MỘT BLOG ĐỂ CẬP NHẬT
-        // id update
-        int blogIDToUpdate = 1; 
-
-        try {
-            Blog existingBlog = blogDAO.getBlogByID(blogIDToUpdate);
-
-            if (existingBlog != null) {
-                System.out.println("--- Thông tin Blog trước khi cập nhật ---");
-                System.out.println("ID: " + existingBlog.getBlogID());
-                System.out.println("Tiêu đề: " + existingBlog.getTitle());
-                System.out.println("Nội dung: " + existingBlog.getContent());
-                System.out.println("Ảnh: " + existingBlog.getImage());
-                System.out.println("Ngày đăng: " + existingBlog.getDatePosted()); 
-
-                existingBlog.setTitle("Tiêu đề MỚI cập nhật từ Main");
-                
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String newDatePostedString = LocalDateTime.now().format(formatter);
-                
-                existingBlog.setContent("Nội dung blog đã được CẬP NHẬT vào lúc " + newDatePostedString + " từ hàm main.");
-                existingBlog.setImage("new_image_from_main.jpg"); 
-                existingBlog.setDatePosted(newDatePostedString); 
-
-                boolean updated = blogDAO.updateBlog(existingBlog);
-
-                if (updated) {
-                    System.out.println("\n--- Cập nhật thành công! ---");
-                    Blog updatedBlog = blogDAO.getBlogByID(blogIDToUpdate);
-                    if (updatedBlog != null) {
-                        System.out.println("--- Thông tin Blog SAU KHI cập nhật ---");
-                        System.out.println("ID: " + updatedBlog.getBlogID());
-                        System.out.println("Tiêu đề: " + updatedBlog.getTitle());
-                        System.out.println("Nội dung: " + updatedBlog.getContent());
-                        System.out.println("Ảnh: " + updatedBlog.getImage());
-                        System.out.println("Ngày đăng: " + updatedBlog.getDatePosted()); 
-                    } else {
-                        System.out.println("Không thể lấy lại blog sau khi cập nhật.");
-                    }
-                } else {
-                    System.out.println("\n--- Cập nhật thất bại. ---");
-                }
-            } else {
-                System.out.println("Không tìm thấy blog với ID: " + blogIDToUpdate + " để cập nhật.");
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Lỗi SQL khi cập nhật blog: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) { 
-            System.err.println("Một lỗi không mong muốn đã xảy ra: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                if (blogDAO.connection != null && !blogDAO.connection.isClosed()) {
-                    blogDAO.connection.close();
-                    System.out.println("Đã đóng kết nối trong hàm main.");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.err.println("Lỗi khi đóng kết nối cuối cùng trong main: " + e.getMessage());
-            }
-        }
-    }
+    // --- HÀM MAIN ĐỂ TEST CHỨC NĂNG UPDATE (Phù hợp với Blog.java sử dụng String datePosted) ---
 }
