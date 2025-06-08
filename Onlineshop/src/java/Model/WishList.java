@@ -9,46 +9,47 @@ package Model;
  * @author Admin
  */
 public class WishList {
-    private int Wishlist_ID;
-    private int Product_ID;
-    private int Account_ID;
+    private int WishListID;
+    private int accountID;
+    private int productID;
 
     public WishList() {
     }
 
-    public WishList(int Wishlist_ID, int Product_ID, int Account_ID) {
-        this.Wishlist_ID = Wishlist_ID;
-        this.Product_ID = Product_ID;
-        this.Account_ID = Account_ID;
-    }
-    
-
-    public int getWishlist_ID() {
-        return Wishlist_ID;
+    public WishList(int WishListID, int accountID, int productID) {
+        this.WishListID = WishListID;
+        this.accountID = accountID;
+        this.productID = productID;
     }
 
-    public void setWishlist_ID(int Wishlist_ID) {
-        this.Wishlist_ID = Wishlist_ID;
+    public int getWishListID() {
+        return WishListID;
     }
 
-    public int getProduct_ID() {
-        return Product_ID;
+    public void setWishListID(int WishListID) {
+        this.WishListID = WishListID;
     }
 
-    public void setProduct_ID(int Product_ID) {
-        this.Product_ID = Product_ID;
+    public int getAccountID() {
+        return accountID;
     }
 
-    public int getAccount_ID() {
-        return Account_ID;
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
     }
 
-    public void setAccount_ID(int Account_ID) {
-        this.Account_ID = Account_ID;
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
     @Override
     public String toString() {
-        return "WishList{" + "Wishlist_ID=" + Wishlist_ID + ", Product_ID=" + Product_ID + ", Account_ID=" + Account_ID + '}';
+        return "WishList{" + "WishListID=" + WishListID + ", accountID=" + accountID + ", productID=" + productID + '}';
     }
+    
+    
 }

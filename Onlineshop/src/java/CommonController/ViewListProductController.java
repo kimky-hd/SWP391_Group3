@@ -10,7 +10,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Product;
 import Model.Color;
 import Model.Season;
@@ -49,9 +51,18 @@ public class ViewListProductController extends HttpServlet {
         if (allProduct % 8 != 0) {
             endPage++;
         }
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        int count;
+        if (a == null) {
+            count = 0;
+        } else {
+            count = productDAO.countProductWishLish(a.getAccountID());
+        
+        }
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
-
+        request.setAttribute("countWL", count);
         request.setAttribute("tag", indexPage);
         request.setAttribute("count", allProduct);
         request.setAttribute("endPage", endPage);
