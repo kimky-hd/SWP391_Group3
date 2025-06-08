@@ -155,7 +155,9 @@
             </div>
     </div>
     <script>
+
         window.onload = function() {
+
             // Hàm lấy giá trị cookie
             function getCookie(name) {
                 const cookies = document.cookie.split(';');
