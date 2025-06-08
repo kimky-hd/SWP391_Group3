@@ -78,7 +78,7 @@
         <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
                 <a href="#" class="text-decoration-none d-block d-lg-none">
-                    <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
+                    <span class="h1 text-uppercase text-light bg-pink px-2">Bán</span>
                     <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -89,6 +89,7 @@
         <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
         <a href="ViewListProductController" class="nav-item nav-link">Sản Phẩm</a>
         <a href="detail.html" class="nav-item nav-link">Mã giảm giá</a>
+        <a href="blogs" class="nav-item nav-link">Bài viết</a>
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang <i class="fa fa-angle-down mt-1"></i></a>
             <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
