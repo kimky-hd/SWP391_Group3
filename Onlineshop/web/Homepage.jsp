@@ -139,7 +139,6 @@
 
                                     </div>
                                 </div>
-                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
