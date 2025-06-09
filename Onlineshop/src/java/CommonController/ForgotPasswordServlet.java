@@ -1,3 +1,4 @@
+
 package CommonController;
 
 import DAO.AccountDAO;
@@ -200,3 +201,4 @@ public class ForgotPasswordServlet extends HttpServlet {
         processRequest(request, response);
     }
 }
+
