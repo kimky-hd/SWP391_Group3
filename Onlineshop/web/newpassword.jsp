@@ -117,13 +117,15 @@
                             <input type="hidden" name="action" value="reset">
                             <input type="hidden" name="email" value="<%= session.getAttribute("resetEmail") %>"> 
                             
-                            <div class="mb-3">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Mật khẩu mới" required>
-                                    <label for="newPassword"><i class="fas fa-lock me-2"></i>Mật khẩu mới</label>
-                                </div>
-                                <small class="form-text text-muted">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số</small>
-                            </div>
+                         
+                       <div class="mb-3">
+                           <div class="form-floating">
+                               <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Mật khẩu mới" required>
+                              <label for="newPassword"><i class="fas fa-lock me-2"></i>Mật khẩu mới</label>
+                           </div>
+                              <small class="form-text text-muted">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số, và không được giống mật khẩu cũ</small>
+                       </div>
+
                             
                             <div class="mb-4">
                                 <div class="form-floating">
