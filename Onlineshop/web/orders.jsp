@@ -365,8 +365,8 @@
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
                     <a href="" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
+                        <span class="h1 text-uppercase text-light bg-pink px-2">Bán</span>
+                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
@@ -393,7 +393,7 @@
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
+                        <a href="homepage" class="text-decoration-none d-block d-lg-none">
                             <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
                             <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
                         </a>
@@ -410,6 +410,7 @@
                                 <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+       
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
 
