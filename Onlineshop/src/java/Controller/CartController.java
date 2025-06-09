@@ -228,21 +228,24 @@ public class CartController extends HttpServlet {
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        // Account account = (Account) session.getAttribute("account"); // Không cần account nếu chỉ xóa ở session
+        Account account = (Account) session.getAttribute("account");
 
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
 
-            // --- THAY ĐỔI CHÍNH Ở ĐÂY ---
-            // Luôn xóa sản phẩm khỏi giỏ hàng trong session
-            cart.removeItem(productId); // Gọi trực tiếp hàm xóa trong Cart object
+            // Xóa sản phẩm khỏi giỏ hàng trong session
+            cart.removeItem(productId);
 
-            // Cập nhật lại giỏ hàng trong session (ví dụ: để cập nhật tổng số lượng hiển thị trên header)
-            // Bạn cần một hàm updateSessionCart hoặc updateSessionCartItemCount không phụ thuộc vào Account ID và DB
-            // Giả định bạn có hàm updateSessionCartItemCount(session, cart) như đã đề xuất trước đó.
-            updateSessionCart(session, productId);
+            // Nếu người dùng đã đăng nhập, cập nhật cả trong database
+            if (account != null) {
+                // Xóa sản phẩm từ database
+                cartDAO.removeFromCart(account.getAccountID(), productId);
+                
+                // Cập nhật số lượng sản phẩm trong giỏ hàng trên session
+                session.setAttribute("cartItemCount", cart.getTotalItems());
+            }
 
-            // Luôn trả về thành công vì thao tác trên session thường không thất bại
+            // Trả về thành công
             sendJsonResponse(response, createSuccessResponse("Đã xóa sản phẩm khỏi giỏ hàng"));
 
         } catch (NumberFormatException e) {
