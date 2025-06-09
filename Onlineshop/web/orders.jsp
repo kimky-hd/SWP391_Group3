@@ -745,6 +745,13 @@
                 session.removeAttribute("message");
                 session.removeAttribute("messageType");
                 %>
+                       // Cập nhật số lượng đơn hàng khi tải trang
+    document.addEventListener('DOMContentLoaded', function() {
+        // Chỉ gọi nếu người dùng đã đăng nhập
+        <% if (session.getAttribute("account") != null) { %>
+            fetch('ordercount');
+        <% } %>
+    }); 
             </script>
         </body>
     </html>
