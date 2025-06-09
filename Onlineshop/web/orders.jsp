@@ -387,6 +387,7 @@
                 </div>
             </div>
         </div>
+        <!-- Navbar Start -->
         <div class="container-fluid bg-pink mb-30">
             <div class="row px-xl-5">
                 <div class="col-lg-12">
@@ -403,18 +404,24 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
+
+
+
+                                <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
+                                <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
+                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
+                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
+
                                 <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages <i class="fa fa-angle-down mt-1"></i></a>
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
+
+                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
+
                                     </div>
                                 </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
                             </div>
                         </div>
 
@@ -440,6 +447,7 @@
                 </div>
             </div>
         </div>
+        <!-- Navbar End -->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">

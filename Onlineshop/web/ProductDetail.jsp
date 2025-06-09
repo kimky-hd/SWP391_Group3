@@ -254,9 +254,10 @@
 
                         <!-- Nút thêm vào giỏ & yêu thích -->
                         <div class="mt-4">
-                            <form action="cart" class="d-inline-block mr-2">
-                                <input type="hidden" name="id" value="${detail.getProductID()}">
-                                <input type="hidden" name="num" value="1">
+                            <form action="cart" method="get" class="d-inline-block mr-2">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="productId" value="${detail.getProductID()}">
+                                <input type="hidden" name="quantity" value="1">
                                 <c:choose>
                                     <c:when test="${detail.getQuantity() == 0}">
                                         <button type="button" class="btn btn-secondary btn-lg" disabled>
