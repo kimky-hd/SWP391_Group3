@@ -155,10 +155,11 @@
             </div>
     </div>
     <script>
-        <script>
+
+        window.onload = function() {
+
             // Hàm lấy giá trị cookie
             function getCookie(name) {
-
                 const cookies = document.cookie.split(';');
                 for (let cookie of cookies) {
                     const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
@@ -168,74 +169,60 @@
                 }
                 return null;
             }
-
+        
             // Hàm giải mã Base64
             function decodeBase64(str) {
                 try {
-                    return atob(decodeURIComponent(str));
+                    return atob(str);
                 } catch (e) {
                     console.error('Lỗi giải mã Base64:', e);
                     return '';
                 }
             }
-
-
-            // Tự động điền thông tin đăng nhập nếu có cookie
-            window.onload = function () {
-                const savedUser = getCookie('userInput');
-                const savedPass = getCookie('password');
-
-                if (savedUser && savedPass) {
-
-                    try {
-                        document.getElementById('userInput').value = savedUser;
-                        document.getElementById('password').value = decodeBase64(savedPass);
-                        document.getElementById('rememberMe').checked = true;
-                        console.log('Đã điền thông tin đăng nhập từ cookie');
-                    } catch (e) {
-                        console.error('Lỗi khi điền thông tin đăng nhập:', e);
-                    }
-
-                }
+        
+            // Tự động điền thông tin đăng nhập
+            const userInput = getCookie('userInput');
+            const password = getCookie('password');
+            
+            if (userInput && password) {
+                document.getElementById('userInput').value = decodeBase64(userInput);
+                document.getElementById('password').value = decodeBase64(password);
+                document.getElementById('rememberMe').checked = true;
             }
+        }
 
-            function validateForm() {
-                var userInput = document.getElementById("userInput").value;
-                var password = document.getElementById("password").value;
+        function validateForm() {
+            var userInput = document.getElementById("userInput").value;
+            var password = document.getElementById("password").value;
 
-                if (userInput.trim() === "" || password.trim() === "") {
-                    alert("Vui lòng điền đầy đủ thông tin đăng nhập!");
-                    return false;
-                }
-                return true;
+            if (userInput.trim() === "" || password.trim() === "") {
+                alert("Vui lòng điền đầy đủ thông tin đăng nhập!");
+                return false;
             }
+            return true;
+        }
 
-
-
-            <% 
-String successMsg = (String)request.getAttribute("success");
-if(successMsg != null && !successMsg.contains("Đăng ký thành công")) { 
-            %>
-
+        <% 
+        String successMsg = (String)request.getAttribute("success");
+        if(successMsg != null && !successMsg.contains("Đăng ký thành công")) { 
+        %>
             setTimeout(function () {
                 window.location.href = "Homepage";
             }, 1500);
-            <%-- Thêm vào phần xử lý sau khi đăng nhập thành công --%>
-            <script>
-                // Kiểm tra nếu đăng nhập thành công
-                if (${sessionScope.account != null}) {
-                    // Gọi servlet để cập nhật số lượng đơn hàng
-                    fetch('ordercount')
-                        .then(response => {
-                            if (response.ok) {
-                                // Reload trang để cập nhật số lượng hiển thị
-                                window.location.href = 'Homepage';
-                            }
-                        });
-                }
-            </script>
-            <% } %>
-        </script>
+
+            // Kiểm tra nếu đăng nhập thành công
+            if (${sessionScope.account != null}) {
+                // Gọi servlet để cập nhật số lượng đơn hàng
+                fetch('ordercount')
+                    .then(response => {
+                        if (response.ok) {
+                            // Reload trang để cập nhật số lượng hiển thị
+                            window.location.href = 'Homepage';
+                        }
+                    });
+            }
+        <% } %>
+    </script>
     </body>
 </html>
 

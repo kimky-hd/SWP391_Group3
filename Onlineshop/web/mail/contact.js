@@ -14,7 +14,7 @@ $(function () {
             $this.prop("disabled", true);
 
             $.ajax({
-                url: "contact", // Đường dẫn đến Servlet
+                url: "ContactServlet", // Đường dẫn đến Servlet
                 type: "POST",
                 data: {
                     name: name,
