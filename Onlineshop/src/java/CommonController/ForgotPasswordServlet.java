@@ -68,6 +68,7 @@ public class ForgotPasswordServlet extends HttpServlet {
             
             // Mã xác nhận hợp lệ, chuyển đến trang đặt lại mật khẩu
             response.sendRedirect("newpassword.jsp");
+            
         } else if ("reset".equals(action)) {
             // Xử lý đặt lại mật khẩu
             String newPassword = request.getParameter("newPassword");
@@ -93,9 +94,14 @@ public class ForgotPasswordServlet extends HttpServlet {
                 request.getRequestDispatcher("newpassword.jsp").forward(request, response);
                 return;
             }
+             AccountDAO dao = new AccountDAO();
+    if (dao.isPasswordSameAsOld(email, newPassword)) {
+        request.setAttribute("error", "Mật khẩu mới không được giống mật khẩu cũ!");
+        request.getRequestDispatcher("newpassword.jsp").forward(request, response);
+        return;
+    }
             
             // Cập nhật mật khẩu mới
-            AccountDAO dao = new AccountDAO();
             boolean success = dao.updatePassword(email, newPassword);
             
             if (success) {

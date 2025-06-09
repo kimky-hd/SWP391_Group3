@@ -211,7 +211,26 @@ public class AccountDAO extends DBContext {
         }
         return false;
     }
-    
+    // ... existing code ...
+
+// Phương thức kiểm tra mật khẩu mới có giống mật khẩu cũ không
+     public boolean isPasswordSameAsOld(String email, String newPassword) {
+        String query = "SELECT * FROM Account WHERE email = ? AND password = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setString(2, newPassword);
+            rs = ps.executeQuery();
+        return rs.next(); // Trả về true nếu mật khẩu mới giống mật khẩu cũ
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+    return false;
+}
+
     // Phương thức tạo mã xác nhận ngẫu nhiên
     public String generateResetToken() {
         // Tạo mã xác nhận ngẫu nhiên 6 chữ số
