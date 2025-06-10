@@ -55,6 +55,7 @@
                                     <%= acc.getUsername() %>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
                                     <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                     <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
                                 </div>
@@ -79,8 +80,8 @@
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
                     <a href="" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Bán</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
+                        <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
+                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
@@ -123,7 +124,6 @@
                             <div class="navbar-nav py-0">
 
 
-
                                 <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
                                 
@@ -134,9 +134,9 @@
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
 
-                                        <a href="cart.html" class="dropdown-item">Giỏ hàng</a>
-                                        <a href="checkout.html" class="dropdown-item">Thanh toán</a>
 
+                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                                     </div>
                                 </div>
                                 <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
@@ -144,9 +144,9 @@
                         </div>
 
                         <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="ManageWishListController" class="btn px-0">
+                            <a href="#" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>

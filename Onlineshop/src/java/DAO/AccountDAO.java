@@ -103,7 +103,7 @@ public class AccountDAO extends DBContext {
         String query = "SELECT * FROM Account WHERE email = ?";
         try {
              conn = getConnection();
-            ps = connection.prepareStatement(query);
+            ps = conn.prepareStatement(query); // Đã sửa từ connection thành conn
             ps.setString(1, email);
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -211,7 +211,26 @@ public class AccountDAO extends DBContext {
         }
         return false;
     }
-    
+    // ... existing code ...
+
+// Phương thức kiểm tra mật khẩu mới có giống mật khẩu cũ không
+     public boolean isPasswordSameAsOld(String email, String newPassword) {
+        String query = "SELECT * FROM Account WHERE email = ? AND password = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setString(2, newPassword);
+            rs = ps.executeQuery();
+        return rs.next(); // Trả về true nếu mật khẩu mới giống mật khẩu cũ
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+    return false;
+}
+
     // Phương thức tạo mã xác nhận ngẫu nhiên
     public String generateResetToken() {
         // Tạo mã xác nhận ngẫu nhiên 6 chữ số
@@ -221,5 +240,38 @@ public class AccountDAO extends DBContext {
     public boolean changePassword(int accountID, String newPassword) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    // Phương thức cập nhật một trường cụ thể của tài khoản
+    public boolean updateField(int accountID, String fieldName, String value) {
+        String query = "UPDATE Account SET " + fieldName + " = ? WHERE accountID = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, value);
+            ps.setInt(2, accountID);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+    // Thêm phương thức này vào cuối file, trước dấu } cuối cùng
+public boolean updateProfileImage(int accountID, String imageUrl) {
+    String query = "UPDATE Account SET img = ? WHERE accountID = ?";
+    try {
+        conn = getConnection();
+        ps = conn.prepareStatement(query);
+        ps.setString(1, imageUrl);
+        ps.setInt(2, accountID);
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+    return false;
+}
 }
 
