@@ -101,6 +101,7 @@
     </style>
 </head>
 <body>
+    <jsp:include page="header.jsp" />
     <div class="container">
         <h2>Thêm Blog Mới</h2>
 
@@ -144,5 +145,6 @@
             </div>
         </form>
     </div>
+            <jsp:include page="footer.jsp" />
 </body>
 </html>
