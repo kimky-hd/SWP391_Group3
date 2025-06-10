@@ -80,8 +80,8 @@
             <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
                 <div class="col-lg-4">
                     <a href="" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Bán</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
+                        <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
+                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
                     </a>
                 </div>
                 <div class="col-lg-4 col-6 text-left">
@@ -124,10 +124,9 @@
                             <div class="navbar-nav py-0">
 
 
-
                                 <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
-                                
+                                <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
 
@@ -140,13 +139,14 @@
                                         <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                                     </div>
                                 </div>
+                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
 
                         <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="ManageWishListController" class="btn px-0">
+                            <a href="#" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
                             <a href="Cart.jsp" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
@@ -700,7 +700,9 @@
                     color: #FFB6C1 !important;
                 }
                 
-                
+                .bg-pink {
+                    background: linear-gradient(45deg, #FFB6C1, #FFA5B5) !important;
+                }
                 
             </style>
 
