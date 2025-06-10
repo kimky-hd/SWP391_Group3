@@ -142,19 +142,22 @@
                 
                 <div class="form-group">
                     <label for="username">Tên đăng nhập</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" required value="<%= request.getAttribute("username") != null ? request.getAttribute("username") : "" %>">
+                    <small class="form-text text-muted">Tên đăng nhập không được chứa khoảng trắng</small>
                 </div>
                 
+               
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
+                    <small class="form-text text-muted">Email phải có định dạng @gmail.com</small>
                 </div>
                <div class="form-group">
-    <label for="phone">Số điện thoại</label>
-    <input type="text" class="form-control" id="phone" name="phone" required>
-    <small class="form-text text-muted">Ví dụ: 0912345678, 0328888999</small>
-    <span id="phone-error" class="text-danger" style="display: none;"></span>
-</div>
+                    <label for="phone">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phone" name="phone" required value="<%= request.getAttribute("phone") != null ? request.getAttribute("phone") : "" %>">
+                    <small class="form-text text-muted">Ví dụ: 0912345678, 0328888999</small>
+                    <span id="phone-error" class="text-danger" style="display: none;"></span>
+                </div>
                 
                 <div class="form-group">
                     <label for="password">Mật khẩu</label>
@@ -188,11 +191,27 @@
         function validateForm() {
             var password = document.getElementById("password").value;
             var confirmPassword = document.getElementById("confirm-password").value;
+            var username = document.getElementById("username").value;
+            var email = document.getElementById("email").value;
             
+            // Kiểm tra khoảng trắng trong tên đăng nhập
+            if (username.indexOf(" ") !== -1) {
+                alert("Tên đăng nhập không được chứa khoảng trắng!");
+                return false;
+            }
+            
+            // Kiểm tra định dạng email phải là @gmail.com
+            if (!email.toLowerCase().endsWith("@gmail.com")) {
+                alert("Email phải có định dạng @gmail.com!");
+                return false;
+            }
+            
+            // Kiểm tra mật khẩu xác nhận phải khớp với mật khẩu
             if (password !== confirmPassword) {
                 alert("Mật khẩu xác nhận không khớp!");
                 return false;
             }
+            
             // Kiểm tra xem người dùng đã hoàn thành reCAPTCHA chưa
             var recaptchaResponse = grecaptcha.getResponse();
             if(recaptchaResponse.length === 0) {
@@ -205,14 +224,65 @@
         
     // Đợi cho trang tải xong
     document.addEventListener('DOMContentLoaded', function() {
-        // Lấy tham chiếu đến trường nhập số điện thoại
+        // Lấy tham chiếu đến các trường nhập liệu
         var phoneInput = document.getElementById('phone');
+        var usernameInput = document.getElementById('username');
+        var emailInput = document.getElementById('email');
+        var passwordInput = document.getElementById('password');
+        var confirmPasswordInput = document.getElementById('confirm-password');
         
         // Nếu trường tồn tại, thêm sự kiện kiểm tra
         if (phoneInput) {
             phoneInput.addEventListener('input', validateVietnamesePhone);
             phoneInput.addEventListener('blur', validateVietnamesePhone);
         }
+        
+        // Thêm kiểm tra khoảng trắng cho tên đăng nhập
+        if (usernameInput) {
+            usernameInput.addEventListener('input', function(e) {
+                var username = e.target.value;
+                if (username.indexOf(" ") !== -1) {
+                    e.target.setCustomValidity("Tên đăng nhập không được chứa khoảng trắng");
+                } else {
+                    e.target.setCustomValidity("");
+                }
+            });
+        }
+        
+        // Thêm kiểm tra định dạng email
+        if (emailInput) {
+            emailInput.addEventListener('input', function(e) {
+                var email = e.target.value;
+                if (!email.toLowerCase().endsWith("@gmail.com") && email.length > 0) {
+                    e.target.setCustomValidity("Email phải có định dạng @gmail.com");
+                } else {
+                    e.target.setCustomValidity("");
+                }
+            });
+        }
+        
+        // Thêm kiểm tra mật khẩu xác nhận
+        if (confirmPasswordInput && passwordInput) {
+            confirmPasswordInput.addEventListener('input', function(e) {
+                if (passwordInput.value !== e.target.value) {
+                    e.target.setCustomValidity("Mật khẩu xác nhận không khớp");
+                } else {
+                    e.target.setCustomValidity("");
+                }
+            });
+            
+            passwordInput.addEventListener('input', function() {
+                if (confirmPasswordInput.value !== "") {
+                    if (passwordInput.value !== confirmPasswordInput.value) {
+                        confirmPasswordInput.setCustomValidity("Mật khẩu xác nhận không khớp");
+                    } else {
+                        confirmPasswordInput.setCustomValidity("");
+                    }
+                }
+            });
+        }
+        
+
         
         function validateVietnamesePhone(e) {
             // Lấy giá trị và loại bỏ khoảng trắng, dấu gạch ngang
