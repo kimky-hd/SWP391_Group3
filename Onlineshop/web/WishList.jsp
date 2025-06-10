@@ -191,6 +191,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
                                 <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
@@ -256,7 +257,7 @@
                             <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
-                                
+
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
                                 <div class="nav-item dropdown">
