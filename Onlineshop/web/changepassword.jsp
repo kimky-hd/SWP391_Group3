@@ -27,7 +27,6 @@
 </head>
 <body>
     <!-- Topbar Start -->
-    <jsp:include page="ProductDetail.jsp" flush="true"/>
     <!-- Topbar End -->
 
     <div class="container-fluid py-5">
@@ -74,9 +73,6 @@
     </div>
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
-        <!-- Footer content -->
-    </div>
     <!-- Footer End -->
 
     <!-- JavaScript Libraries -->
