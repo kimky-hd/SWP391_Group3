@@ -2,7 +2,9 @@ package CommonController;
 
 import CommonController.*;
 import DAO.AccountDAO;
+import DAO.ProfileDAO;
 import Model.Account;
+import Model.Profile;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,6 +41,21 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("account", account);
             session.setMaxInactiveInterval(30*60);
             
+            // Tải thông tin profile vào session
+            ProfileDAO profileDAO = new ProfileDAO();
+            Profile profile = profileDAO.getProfileByAccountId(account.getAccountID());
+            
+            // Nếu chưa có profile, tạo đối tượng mới
+            if (profile == null) {
+                profile = new Profile();
+                profile.setAccountId(account.getAccountID());
+                profile.setEmail(account.getEmail());
+                profile.setPhoneNumber(account.getPhone());
+            }
+            
+            // Lưu profile vào session
+            session.setAttribute("profile", profile);
+            
             // Xử lý Remember Me
             String rememberMe = request.getParameter("rememberMe");
             if (rememberMe != null && rememberMe.equals("on")) {
@@ -65,7 +82,7 @@ public class LoginServlet extends HttpServlet {
                 Cookie passCookie = new Cookie("password", "");
                 userCookie.setMaxAge(0);
                 passCookie.setMaxAge(0);
-userCookie.setPath("/");
+                userCookie.setPath("/");
                 passCookie.setPath("/");
                 response.addCookie(userCookie);
                 response.addCookie(passCookie);

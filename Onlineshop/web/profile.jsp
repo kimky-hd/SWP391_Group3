@@ -995,6 +995,7 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                // Khai báo các phần tử DOM sẽ thao tác
                 const editIcons = document.querySelectorAll('.edit-icon');
                 const alertContainer = document.querySelector('.alert-container');
                 const imageInput = document.getElementById('imageInput');
@@ -1002,27 +1003,26 @@
                 const saveProfileBtn = document.getElementById('saveProfileBtn');
                 const editProfileForm = document.getElementById('editProfileForm');
                 const editProfileModal = document.getElementById('editProfileModal');
-                const modalInstance = new bootstrap.Modal(editProfileModal);
+                const modalInstance = new bootstrap.Modal(editProfileModal); // Tạo instance modal từ Bootstrap
 
-                // Xử lý upload ảnh
+                // Xử lý sự kiện thay đổi ảnh đại diện
                 imageInput.addEventListener('change', function () {
-                    const file = this.files[0];
+                    const file = this.files[0]; // Lấy file đầu tiên người dùng chọn
                     if (file) {
-                        const reader = new FileReader();
+                        const reader = new FileReader(); // Dùng FileReader để đọc file ảnh
                         reader.onload = function (e) {
-                            profileImage.src = e.target.result;
-                            // Gửi ảnh lên server
-                            uploadImage(file);
+                            profileImage.src = e.target.result; // Hiển thị ảnh mới trong giao diện
+                            uploadImage(file); // Gửi ảnh lên server
                         };
-                        reader.readAsDataURL(file);
+                        reader.readAsDataURL(file); // Đọc file dưới dạng base64
                     }
                 });
 
-                // Function để upload ảnh
+                // Hàm upload ảnh lên server
                 function uploadImage(file) {
                     const formData = new FormData();
-                    formData.append('profileImage', file);
-                    formData.append('action', 'uploadImage');
+                    formData.append('profileImage', file); // Gửi ảnh
+                    formData.append('action', 'uploadImage'); // Gửi thêm action để phía server xử lý
 
                     fetch('profile', {
                         method: 'POST',
@@ -1030,6 +1030,7 @@
                     })
                             .then(response => response.json())
                             .then(data => {
+                                // Hiển thị kết quả thông qua toast
                                 if (data.success) {
                                     showToast(data.message, 'success');
                                 } else {
@@ -1042,7 +1043,7 @@
                             });
                 }
 
-                // Function to show toast
+                // Hàm hiển thị thông báo dạng toast
                 function showToast(message, type = 'success') {
                     const container = document.querySelector('.toast-container');
                     const toast = document.createElement('div');
@@ -1051,26 +1052,26 @@
 
                     container.appendChild(toast);
 
-                    // Trigger reflow to enable transition
-                    toast.offsetHeight;
+                    toast.offsetHeight; // Kích hoạt reflow để áp dụng hiệu ứng
 
-                    // Show toast
-                    toast.classList.add('show');
+                    toast.classList.add('show'); // Thêm class để hiển thị
 
-                    // Remove toast after 3 seconds
+                    // Xóa toast sau 3 giây
                     setTimeout(() => {
                         toast.classList.remove('show');
                         setTimeout(() => {
                             container.removeChild(toast);
-                        }, 400);
+                        }, 400); // Delay để khớp với transition
                     }, 3000);
                 }
 
-                // Handle clicking the edit icon - mở modal và focus vào trường tương ứng
+                // Khi người dùng bấm vào biểu tượng chỉnh sửa (bút)
                 editIcons.forEach(icon => {
                     icon.addEventListener('click', function () {
-                        const field = this.dataset.field;
-                        modalInstance.show();
+                        const field = this.dataset.field; // Xác định trường sẽ chỉnh sửa
+                        modalInstance.show(); // Hiển thị modal
+
+                        // Tự động focus vào input tương ứng sau khi modal mở
                         setTimeout(() => {
                             const modalInput = document.getElementById(`modal${field.charAt(0).toUpperCase() + field.slice(1)}`);
                             if (modalInput) {
@@ -1081,14 +1082,14 @@
                     });
                 });
 
-                // Handle save button in modal
+                // Khi bấm nút lưu thông tin trong modal
                 saveProfileBtn.addEventListener('click', function () {
-                    // Thêm hiệu ứng khi nhấn nút
+                    // Hiệu ứng đang lưu
                     this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang lưu...';
                     this.disabled = true;
 
                     const formData = new FormData(editProfileForm);
-                    formData.append('action', 'updateProfile');
+                    formData.append('action', 'updateProfile'); // Thêm action để server xử lý
 
                     fetch('profile', {
                         method: 'POST',
@@ -1096,12 +1097,12 @@
                     })
                             .then(response => response.json())
                             .then(data => {
-                                // Khôi phục nút
+                                // Khôi phục nút lưu
                                 saveProfileBtn.innerHTML = 'Lưu thay đổi';
                                 saveProfileBtn.disabled = false;
 
                                 if (data.success) {
-                                    // Cập nhật hiển thị trên trang với hiệu ứng
+                                    // Lấy các phần tử hiển thị thông tin cá nhân
                                     const fullNameDisplay = document.getElementById('fullNameDisplay');
                                     const emailDisplay = document.getElementById('emailDisplay');
                                     const phoneDisplay = document.getElementById('phoneDisplay');
@@ -1109,7 +1110,7 @@
                                     const dobDisplay = document.getElementById('dobDisplay');
                                     const genderDisplay = document.getElementById('genderDisplay');
 
-                                    // Thêm hiệu ứng khi cập nhật
+                                    // Hiệu ứng highlight khi cập nhật thành công
                                     [fullNameDisplay, emailDisplay, phoneDisplay, addressDisplay, dobDisplay, genderDisplay].forEach(el => {
                                         if (el) {
                                             el.style.transition = 'all 0.3s ease';
@@ -1120,20 +1121,21 @@
                                         }
                                     });
 
+                                    // Cập nhật thông tin hiển thị
                                     fullNameDisplay.textContent = formData.get('fullName') || 'Chưa cập nhật';
                                     emailDisplay.textContent = formData.get('email') || 'Chưa cập nhật';
                                     phoneDisplay.textContent = formData.get('phone') || 'Chưa cập nhật';
                                     addressDisplay.textContent = formData.get('address') || 'Chưa cập nhật';
                                     dobDisplay.textContent = formData.get('dob') || 'Chưa cập nhật';
 
-                                    // Xử lý giới tính
+                                    // Cập nhật giới tính
                                     const selectedGender = document.querySelector('input[name="gender"]:checked');
                                     genderDisplay.textContent = selectedGender ? selectedGender.value : 'Chưa cập nhật';
 
-                                    showToast(data.message, 'success');
-                                    modalInstance.hide();
+                                    showToast(data.message, 'success'); // Thông báo thành công
+                                    modalInstance.hide(); // Đóng modal
                                 } else {
-                                    showToast(data.message, 'error');
+                                    showToast(data.message, 'error'); // Thông báo thất bại
                                 }
                             })
                             .catch(error => {
@@ -1144,20 +1146,20 @@
                             });
                 });
 
-                // Thêm hiệu ứng hover cho các mục thông tin
+                // Hiệu ứng hover cho từng dòng thông tin cá nhân
                 const listItems = document.querySelectorAll('.list-group-item');
                 listItems.forEach(item => {
                     item.addEventListener('mouseenter', function () {
                         const icon = this.querySelector('.edit-icon');
                         if (icon) {
-                            icon.style.opacity = '1';
+                            icon.style.opacity = '1'; // Hiện rõ icon khi di chuột
                         }
                     });
 
                     item.addEventListener('mouseleave', function () {
                         const icon = this.querySelector('.edit-icon');
                         if (icon) {
-                            icon.style.opacity = '0.7';
+                            icon.style.opacity = '0.7'; // Mờ icon khi rời chuột
                         }
                     });
                 });

@@ -74,6 +74,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
                                 <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
                             </div>
@@ -292,10 +293,10 @@
 
                             <script>
                                 function validateAndSubmit() {
-                                    // Xác thực form
+                                    // Biến kiểm tra tính hợp lệ của form
                                     let isValid = true;
 
-                                    // Lấy giá trị từ các trường input
+                                    // Lấy giá trị từ các trường input và loại bỏ khoảng trắng dư thừa
                                     const fullName = $('#fullNameInput').val().trim();
                                     const phone = $('#phoneInput').val().trim();
                                     const email = $('#emailInput').val().trim();
@@ -303,62 +304,64 @@
                                     const district = $('#districtInput').val().trim();
                                     const city = $('#cityInput').val().trim();
 
-                                    // Reset tất cả thông báo lỗi
+                                    // Ẩn tất cả các thông báo lỗi trước đó
                                     $('.error-message').hide();
 
-                                    // Kiểm tra các trường bắt buộc
+                                    // Xác thực trường Họ tên
                                     if (!fullName) {
                                         $('#fullNameError').text('Vui lòng nhập họ tên').show();
                                         isValid = false;
                                     }
 
+                                    // Xác thực trường Số điện thoại
                                     if (!phone) {
                                         $('#phoneError').text('Vui lòng nhập số điện thoại').show();
                                         isValid = false;
                                     } else if (!/^\d{10,11}$/.test(phone.replace(/[\s-+]/g, ''))) {
+                                        // Kiểm tra định dạng số điện thoại: chỉ cho phép 10-11 chữ số
                                         $('#phoneError').text('Số điện thoại không hợp lệ').show();
                                         isValid = false;
                                     }
 
+                                    // Xác thực Email (nếu người dùng có nhập)
                                     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                                         $('#emailError').text('Email không hợp lệ').show();
                                         isValid = false;
                                     }
 
+                                    // Xác thực các trường địa chỉ
                                     if (!address) {
                                         $('#addressError').text('Vui lòng nhập địa chỉ').show();
                                         isValid = false;
                                     }
-
                                     if (!district) {
                                         $('#districtError').text('Vui lòng nhập quận/huyện').show();
                                         isValid = false;
                                     }
-
                                     if (!city) {
                                         $('#cityError').text('Vui lòng nhập thành phố').show();
                                         isValid = false;
                                     }
 
-                                    // Kiểm tra phương thức thanh toán
+                                    // Kiểm tra lựa chọn phương thức thanh toán
                                     let paymentMethod = '';
                                     if ($('#paypal').is(':checked')) {
-                                        paymentMethod = 'COD';
+                                        paymentMethod = 'COD'; // Thanh toán khi nhận hàng
                                     } else if ($('#directcheck').is(':checked')) {
-                                        paymentMethod = 'Bank Transfer';
+                                        paymentMethod = 'Bank Transfer'; // Chuyển khoản
                                     } else if ($('#banktransfer').is(':checked')) {
-                                        paymentMethod = 'E-Wallet';
+                                        paymentMethod = 'E-Wallet'; // Ví điện tử
                                     } else {
                                         alert('Vui lòng chọn phương thức thanh toán');
                                         isValid = false;
                                     }
 
-                                    // Nếu có lỗi, dừng xử lý và không gửi form
+                                    // Nếu có bất kỳ lỗi nào, không gửi form
                                     if (!isValid) {
                                         return false;
                                     }
 
-                                    // Cập nhật giá trị cho form ẩn
+                                    // Nếu hợp lệ, gán lại giá trị vào các input ẩn trước khi gửi
                                     $('#fullName').val(fullName);
                                     $('#phone').val(phone);
                                     $('#email').val(email);
@@ -367,28 +370,31 @@
                                     $('#city').val(city);
                                     $('#paymentMethod').val(paymentMethod);
 
-                                    // Gửi form qua AJAX
+                                    // Gửi dữ liệu form bằng AJAX để xử lý đặt hàng
                                     $.ajax({
                                         url: 'order',
                                         type: 'POST',
-                                        data: $('#orderForm').serialize(),
+                                        data: $('#orderForm').serialize(), // Gửi toàn bộ dữ liệu form
                                         success: function (response) {
                                             if (response.success) {
+                                                // Hiển thị thông báo thành công
                                                 showToast(response.message, 'success');
-                                                // Chuyển hướng sau khi hiển thị thông báo
+                                                // Sau 1.5s thì chuyển hướng đến trang khác (xem đơn hàng)
                                                 setTimeout(function () {
                                                     window.location.href = response.redirectUrl || 'order?action=view';
                                                 }, 1500);
                                             } else {
+                                                // Hiển thị lỗi nếu xử lý thất bại
                                                 showToast(response.message, 'error');
                                             }
                                         },
                                         error: function () {
+                                            // Lỗi kết nối hoặc server
                                             showToast('Có lỗi xảy ra khi xử lý thanh toán', 'error');
                                         }
                                     });
 
-                                    return false; // Ngăn form submit thông thường
+                                    return false; // Ngăn trình duyệt gửi form theo cách mặc định
                                 }
                             </script>
                         </div>
