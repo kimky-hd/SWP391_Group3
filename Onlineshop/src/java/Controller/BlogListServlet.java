@@ -40,7 +40,7 @@ public class BlogListServlet extends HttpServlet {
             return false;
         }
         int role = acc.getRole();  // giả sử trong lớp Account có getRole() trả int
-        return role == 1 || role == 2;
+        return role == 1 || role == 3;
     }
 
     @Override
@@ -220,6 +220,7 @@ public class BlogListServlet extends HttpServlet {
         blogToUpdate.setImage(newImageName);
 
         dao.updateBlog(blogToUpdate);
+        
 
         request.getSession().setAttribute("successMessage", "Bài blog \"" + title + "\" đã được cập nhật thành công!");
         response.sendRedirect(request.getContextPath() + "/blogs?action=detail&bid=" + blogID);
