@@ -6,6 +6,7 @@
 package CommonController;
 
 import DAO.ProductDAO;
+import Model.Color;
 import Model.Product;
 import Model.Season;
 import java.io.IOException;
@@ -34,12 +35,15 @@ public class SearchProductBySeason extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
         String seasonId = request.getParameter("seasonId");
-        System.out.println(seasonId);
         
         List<Product> listproductBySeason = productDAO.getProductBySeason(seasonId);
         List<Season> listAllSeasons = productDAO.getAllSeason();
+        List<Color> listAllColors = productDAO.getAllColor();
         request.setAttribute("productList", listproductBySeason);
         request.setAttribute("listAllSeasons", listAllSeasons);
+        request.setAttribute("listAllColors", listAllColors);
+        request.setAttribute("selectedSeasonId", seasonId); // colorId là giá trị người dùng chọn
+
 
         request.getRequestDispatcher("ProductList.jsp").forward(request, response);
     
