@@ -11,7 +11,7 @@
 </servlet>
 <servlet-mapping>
     <servlet-name>ContactServlet</servlet-name>
-    <url-pattern>/contact</url-pattern>
+    <url-pattern>/ContactServlet</url-pattern>
 </servlet-mapping>
 
     <!-- Servlet declarations -->
@@ -168,5 +168,12 @@
         <url-pattern>/ManageWishListController</url-pattern>
     </servlet-mapping>
 
-
+     <filter>
+        <filter-name>AdminAuthFilter</filter-name>
+        <filter-class>Filter.AdminAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/dashboard.jsp</url-pattern>
+    </filter-mapping>
 </web-app>

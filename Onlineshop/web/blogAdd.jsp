@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,12 +42,18 @@
             color: #555;
         }
         input[type="text"],
-        textarea {
-            width: calc(100% - 22px); /* Adjusting for padding and border */
+            textarea {
+            width: calc(100% - 22px);       /* Điều chỉnh cho padding và border */
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
+
+            /* Giữ nguyên dấu xuống dòng (\n) khi người dùng nhập
+               đồng thời cho phép văn bản tự quấn (wrap) khi tới mép */
+            white-space: pre-wrap;         /* Giữ nguyên newline và space */
+            word-break: break-word;        /* Nếu 1 chuỗi quá dài không có space, vẫn sẽ wrap */
+            overflow-wrap: break-word;     /* Tương tự word-break, hỗ trợ nhiều trình duyệt */
         }
         textarea {
             resize: vertical; /* Allow vertical resizing */
@@ -112,9 +120,17 @@
                 <input type="text" id="title" name="title" required value="${param.title}">
             </div>
 
-            <div class="form-group">
+                    <div class="form-group">
                 <label for="content">Nội dung:</label>
-                <textarea id="content" name="content" required>${param.content}</textarea>
+                <!--
+                  wrap="soft" + CSS white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word
+                  giúp textarea tự động quấn dòng khi nhập và giữ nguyên dấu xuống dòng (\n)
+                  khi submit, bạn có thể xử lý trong backend hoặc hiển thị lại bằng CSS tương tự.
+                -->
+                <textarea id="content"
+                          name="content"
+                          required
+                          wrap="soft">${fn:escapeXml(param.content)}</textarea>
             </div>
 
             <div class="form-group">

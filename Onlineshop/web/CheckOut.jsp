@@ -3,8 +3,10 @@
     Created on : May 26, 2025, 10:17:32 AM
     Author     : kimky
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="Model.Account" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,135 +53,8 @@
     </head>
 
     <body>
-        <!-- Thay thẻ <toast-container></toast-container> bằng -->
-        <div class="toast-container"></div>
-        <!-- Topbar Start -->
-        <div class="container-fluid">
-            <div class="row bg-secondary py-1 px-xl-5">
-                <div class="col-lg-6 d-none d-lg-block">
-                    <div class="d-inline-flex align-items-center h-100">
-                        <a class="text-body mr-3" href="">About</a>
-                        <a class="text-body mr-3" href="">Contact</a>
-                        <a class="text-body mr-3" href="">Help</a>
-                        <a class="text-body mr-3" href="">FAQs</a>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <% if(session.getAttribute("account") != null) { 
-                            Account acc = (Account)session.getAttribute("account");
-                        %>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                <%= acc.getUsername() %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
-                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
-                            </div>
-                        </div>
-                        <% } else { %>
-                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
-                        <% } %>
-                    </div>
-                    <div class="d-inline-flex align-items-center d-block d-lg-none">
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-heart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-shopping-cart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
-                <div class="col-lg-4">
-                    <a href="" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-6 text-left">
-                    <form action="">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for products">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4 col-6 text-right">
-                    <p class="m-0">Customer Service</p>
-                    <h5 class="m-0">+012 345 6789</h5>
-                </div>
-            </div>
-        </div>
-        <!-- Topbar End -->
-
-
-        <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
-            <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
-
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
-                            <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
-                            <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                        </a>
-
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Home</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Shop</a>
-                                <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                                <a href="VoucherController" class="nav-item nav-link">Voucher</a>
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Checkout</a>
-                                    </div>
-                                </div>
-                                <a href="contact.html" class="nav-item nav-link">Contact</a>
-                            </div>
-                        </div>
-
-                        <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                            </a>
-                            <a href="Cart.jsp" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                                </span>
-                            </a>
-                            <a href="order?action=view" class="btn px-0 ml-3">
-                                <i class="fas fa-clipboard-list text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar End -->
-
-
+       <%@ include file="header.jsp" %>
+        
         <!-- Checkout Start -->
         <div class="container-fluid">
             <div class="row px-xl-5">
@@ -289,10 +164,10 @@
 
                             <script>
                                 function validateAndSubmit() {
-                                    // Xác thực form
+                                    // Biến kiểm tra tính hợp lệ của form
                                     let isValid = true;
 
-                                    // Lấy giá trị từ các trường input
+                                    // Lấy giá trị từ các trường input và loại bỏ khoảng trắng dư thừa
                                     const fullName = $('#fullNameInput').val().trim();
                                     const phone = $('#phoneInput').val().trim();
                                     const email = $('#emailInput').val().trim();
@@ -300,62 +175,64 @@
                                     const district = $('#districtInput').val().trim();
                                     const city = $('#cityInput').val().trim();
 
-                                    // Reset tất cả thông báo lỗi
+                                    // Ẩn tất cả các thông báo lỗi trước đó
                                     $('.error-message').hide();
 
-                                    // Kiểm tra các trường bắt buộc
+                                    // Xác thực trường Họ tên
                                     if (!fullName) {
                                         $('#fullNameError').text('Vui lòng nhập họ tên').show();
                                         isValid = false;
                                     }
 
+                                    // Xác thực trường Số điện thoại
                                     if (!phone) {
                                         $('#phoneError').text('Vui lòng nhập số điện thoại').show();
                                         isValid = false;
                                     } else if (!/^\d{10,11}$/.test(phone.replace(/[\s-+]/g, ''))) {
+                                        // Kiểm tra định dạng số điện thoại: chỉ cho phép 10-11 chữ số
                                         $('#phoneError').text('Số điện thoại không hợp lệ').show();
                                         isValid = false;
                                     }
 
+                                    // Xác thực Email (nếu người dùng có nhập)
                                     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                                         $('#emailError').text('Email không hợp lệ').show();
                                         isValid = false;
                                     }
 
+                                    // Xác thực các trường địa chỉ
                                     if (!address) {
                                         $('#addressError').text('Vui lòng nhập địa chỉ').show();
                                         isValid = false;
                                     }
-
                                     if (!district) {
                                         $('#districtError').text('Vui lòng nhập quận/huyện').show();
                                         isValid = false;
                                     }
-
                                     if (!city) {
                                         $('#cityError').text('Vui lòng nhập thành phố').show();
                                         isValid = false;
                                     }
 
-                                    // Kiểm tra phương thức thanh toán
+                                    // Kiểm tra lựa chọn phương thức thanh toán
                                     let paymentMethod = '';
                                     if ($('#paypal').is(':checked')) {
-                                        paymentMethod = 'COD';
+                                        paymentMethod = 'COD'; // Thanh toán khi nhận hàng
                                     } else if ($('#directcheck').is(':checked')) {
-                                        paymentMethod = 'Bank Transfer';
+                                        paymentMethod = 'Bank Transfer'; // Chuyển khoản
                                     } else if ($('#banktransfer').is(':checked')) {
-                                        paymentMethod = 'E-Wallet';
+                                        paymentMethod = 'E-Wallet'; // Ví điện tử
                                     } else {
                                         alert('Vui lòng chọn phương thức thanh toán');
                                         isValid = false;
                                     }
 
-                                    // Nếu có lỗi, dừng xử lý và không gửi form
+                                    // Nếu có bất kỳ lỗi nào, không gửi form
                                     if (!isValid) {
                                         return false;
                                     }
 
-                                    // Cập nhật giá trị cho form ẩn
+                                    // Nếu hợp lệ, gán lại giá trị vào các input ẩn trước khi gửi
                                     $('#fullName').val(fullName);
                                     $('#phone').val(phone);
                                     $('#email').val(email);
@@ -364,28 +241,31 @@
                                     $('#city').val(city);
                                     $('#paymentMethod').val(paymentMethod);
 
-                                    // Gửi form qua AJAX
+                                    // Gửi dữ liệu form bằng AJAX để xử lý đặt hàng
                                     $.ajax({
                                         url: 'order',
                                         type: 'POST',
-                                        data: $('#orderForm').serialize(),
+                                        data: $('#orderForm').serialize(), // Gửi toàn bộ dữ liệu form
                                         success: function (response) {
                                             if (response.success) {
+                                                // Hiển thị thông báo thành công
                                                 showToast(response.message, 'success');
-                                                // Chuyển hướng sau khi hiển thị thông báo
+                                                // Sau 1.5s thì chuyển hướng đến trang khác (xem đơn hàng)
                                                 setTimeout(function () {
                                                     window.location.href = response.redirectUrl || 'order?action=view';
                                                 }, 1500);
                                             } else {
+                                                // Hiển thị lỗi nếu xử lý thất bại
                                                 showToast(response.message, 'error');
                                             }
                                         },
                                         error: function () {
+                                            // Lỗi kết nối hoặc server
                                             showToast('Có lỗi xảy ra khi xử lý thanh toán', 'error');
                                         }
                                     });
 
-                                    return false; // Ngăn form submit thông thường
+                                    return false; // Ngăn trình duyệt gửi form theo cách mặc định
                                 }
                             </script>
                         </div>
