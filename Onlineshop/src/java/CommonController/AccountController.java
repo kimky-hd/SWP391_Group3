@@ -65,30 +65,75 @@ public class AccountController extends HttpServlet {
             return;
         }
          
-         if ("register".equals(action)) {
+                if ("register".equals(action)) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirm-password"); // Lấy mật khẩu xác nhận
             String email = request.getParameter("email"); 
             String phone = request.getParameter("phone");
+            
+            // Kiểm tra khoảng trắng trong tên đăng nhập
+            if (username != null && username.contains(" ")) {
+                request.setAttribute("error", "Tên đăng nhập không được chứa khoảng trắng!");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
+            
+            // Kiểm tra định dạng email phải là @gmail.com
+            if (email == null || !email.toLowerCase().endsWith("@gmail.com")) {
+                request.setAttribute("error", "Email phải có định dạng @gmail.com!");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("username", username);
+                request.setAttribute("phone", phone);
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
+            
+            // Kiểm tra mật khẩu xác nhận phải khớp với mật khẩu
+            if (!password.equals(confirmPassword)) {
+                request.setAttribute("error", "Mật khẩu xác nhận không khớp với mật khẩu!");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
      
              if (password == null || !isValidPassword(password)) {
                 request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số! ");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
                 request.getRequestDispatcher("register.jsp").forward(request, response);
                 return;
              }
              
             if (phone == null || !isValidVietnamesePhoneNumber(phone)) {
-        request.setAttribute("error", "Số điện thoại không hợp lệ! Vui lòng nhập đúng định dạng số điện thoại. ");
-        request.getRequestDispatcher("register.jsp").forward(request, response);
-        return;
-    }
+                request.setAttribute("error", "Số điện thoại không hợp lệ! Vui lòng nhập đúng định dạng số điện thoại. ");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.getRequestDispatcher("register.jsp").forward(request, response);
+                return;
+            }
             Account checkUser = dao.checkAccountExist(username);
             Account checkEmail = dao.checkEmailExist(email);            
             if (checkUser != null) {
                 request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
                 request.getRequestDispatcher("register.jsp").forward(request, response);
             } else if (checkEmail != null) {
                 request.setAttribute("error", "Email đã được sử dụng!");
+                // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                request.setAttribute("username", username);
+                request.setAttribute("phone", phone);
                 request.getRequestDispatcher("register.jsp").forward(request, response);
             } else {
                 boolean success = dao.register(username, password, email, phone);
@@ -98,6 +143,10 @@ public class AccountController extends HttpServlet {
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                 } else {
                     request.setAttribute("error", "Đăng ký thất bại! Vui lòng thử lại.");
+                    // Lưu lại các giá trị đã nhập để hiển thị lại trên form
+                    request.setAttribute("username", username);
+                    request.setAttribute("email", email);
+                    request.setAttribute("phone", phone);
                     request.getRequestDispatcher("register.jsp").forward(request, response);
                 }
             }

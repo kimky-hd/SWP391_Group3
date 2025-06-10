@@ -4,26 +4,24 @@
  */
 package CommonController;
 
+import DAO.ProductDAO;
+import Model.Category;
+import Model.Color;
+import Model.Product;
+import Model.Season;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import DAO.ProductDAO;
-import Model.Account;
-import Model.Category;
-import Model.Product;
-import Model.Color;
-import Model.Season;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class ViewListProductController extends HttpServlet {
+public class SearchProductByCategory extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,42 +36,20 @@ public class ViewListProductController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
-        String index = request.getParameter("index");
-        if (index == null || index.isEmpty()) {
-            index = "1";
-        }
-        int indexPage = Integer.parseInt(index);
+        String categoryId = request.getParameter("categoryId");
 
-        List<Product> listProductByIndex = productDAO.getProductByIndex(indexPage);
-        //List<Product> listproducts = productDAO.getAllProduct();
-
-        int allProduct = productDAO.countAllProduct();
-        int endPage = allProduct / 8;
-        if (allProduct % 8 != 0) {
-            endPage++;
-        }
-        HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
-        int count;
-        if (a == null) {
-            count = 0;
-        } else {
-            count = productDAO.countProductWishLish(a.getAccountID());
-        
-        }
+        List<Product> listproductByCategory = productDAO.getProductByCategory(categoryId);
         List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
-        request.setAttribute("countWL", count);
-        request.setAttribute("tag", indexPage);
-        request.setAttribute("count", allProduct);
-        request.setAttribute("endPage", endPage);
-        request.setAttribute("productList", listProductByIndex);
-        request.setAttribute("listAllCategory", listAllCategory);
+        request.setAttribute("productList", listproductByCategory);
         request.setAttribute("listAllColors", listAllColors);
         request.setAttribute("listAllSeasons", listAllSeasons);
-        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
+        request.setAttribute("listAllCategory", listAllCategory);
+        request.setAttribute("selectedCategoryId", categoryId); // colorId là giá trị người dùng chọn
 
+
+        request.getRequestDispatcher("ProductList.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

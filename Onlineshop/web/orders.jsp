@@ -341,6 +341,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
                                 <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
                                 <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
                             </div>
@@ -409,7 +410,8 @@
 
                                 <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
-                                
+                                <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
 
@@ -660,52 +662,57 @@
             <script src="js/main.js"></script>
 
             <script>
-                                                    // Toast notification functions
+// Hàm hiển thị thông báo dạng "toast"
                                                     function showToast(message, type) {
                                                         const container = document.querySelector('.toast-container');
-                                                        // Create container if it doesn't exist
+
+                                                        // Nếu chưa có container chứa toast, tạo mới và thêm vào DOM
                                                         if (!container) {
                                                             const newContainer = document.createElement('div');
                                                             newContainer.className = 'toast-container';
                                                             document.body.appendChild(newContainer);
                                                         }
 
+                                                        // Tạo phần tử toast mới
                                                         const toast = document.createElement('div');
-                                                        toast.className = `toast ${type}`;
-                                                        toast.textContent = message;
+                                                        toast.className = `toast ${type}`; // Gán class theo loại thông báo: success, error, warning,...
+                                                        toast.textContent = message; // Nội dung thông báo
 
+                                                        // Thêm toast vào container
                                                         document.querySelector('.toast-container').appendChild(toast);
 
-                                                        // Trigger reflow to enable transition
+                                                        // Kích hoạt reflow để áp dụng hiệu ứng transition
                                                         toast.offsetHeight;
 
-                                                        // Show toast
+                                                        // Thêm class hiển thị toast
                                                         toast.classList.add('show');
 
-                                                        // Remove toast after 3 seconds
+                                                        // Sau 3 giây, ẩn toast đi và xóa khỏi DOM
                                                         setTimeout(() => {
                                                             toast.classList.remove('show');
                                                             setTimeout(() => {
-                                                                if (toast.parentNode) { // Check before removing
-                                                                    toast.parentNode.removeChild(toast);
+                                                                if (toast.parentNode) { // Kiểm tra nếu toast vẫn còn trong DOM
+                                                                    toast.parentNode.removeChild(toast); // Xóa khỏi DOM
                                                                 }
-                                                            }, 400); // Should match CSS transition duration
+                                                            }, 400); // Thời gian khớp với transition CSS
                                                         }, 3000);
                                                     }
 
+// Hàm hủy đơn hàng theo ID
                                                     function cancelOrder(orderId) {
+                                                        // Hỏi xác nhận người dùng trước khi hủy
                                                         if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này? Việc này không thể hoàn tác.')) {
                                                             $.ajax({
-                                                                url: 'order?action=cancel', // Make sure this URL is correct for your Servlet
+                                                                url: 'order?action=cancel', // Đường dẫn xử lý hủy đơn hàng (Servlet)
                                                                 type: 'POST',
-                                                                data: {orderId: orderId},
+                                                                data: {orderId: orderId}, // Gửi dữ liệu orderId
                                                                 success: function (response) {
-                                                                    // Parse JSON response
+                                                                    // Thử chuyển đổi phản hồi thành JSON
                                                                     try {
                                                                         response = JSON.parse(response);
                                                                     } catch (e) {
-                                                                        console.error("Could not parse JSON response:", response);
-                                                                        // Vẫn reload trang vì hành động có thể đã thành công
+                                                                        console.error("Không thể parse JSON response:", response);
+                                                                        // Nếu lỗi, vẫn hiển thị toast và reload vì có thể backend đã xử lý xong
                                                                         showToast('Đơn hàng đã được hủy thành công!', 'warning');
                                                                         setTimeout(function () {
                                                                             location.reload();
@@ -713,37 +720,51 @@
                                                                         return;
                                                                     }
 
+                                                                    // Nếu phản hồi thành công -> thông báo và reload
                                                                     if (response.success) {
                                                                         showToast('Đơn hàng đã được hủy thành công!', 'success');
                                                                         setTimeout(function () {
-                                                                            location.reload(); // Reload the page to update order status
-                                                                        }, 1500); // Wait 1.5s for user to read the message
+                                                                            location.reload(); // Tải lại trang để cập nhật trạng thái đơn hàng
+                                                                        }, 1500); // Đợi 1.5 giây cho người dùng đọc
                                                                     } else {
+                                                                        // Nếu có lỗi từ backend -> hiển thị thông báo lỗi
                                                                         showToast(response.message || 'Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.', 'error');
                                                                     }
                                                                 },
                                                                 error: function (xhr, status, error) {
-                                                                    console.error("AJAX Error: ", status, error);
+                                                                    // Lỗi khi không thể kết nối server
+                                                                    console.error("Lỗi AJAX: ", status, error);
                                                                     showToast('Không thể kết nối máy chủ. Vui lòng thử lại sau.', 'error');
                                                                 }
                                                             });
                                                         }
                                                     }
 
-                                                    // Load event listener for showing session messages
+// Sự kiện khi DOM đã sẵn sàng
                                                     document.addEventListener('DOMContentLoaded', function () {
+                                                        // Lấy thông báo từ session (do server trả về)
                                                         const message = '${sessionScope.message}';
                                                         const messageType = '${sessionScope.messageType}';
+
+                                                        // Nếu có thông báo -> hiển thị bằng toast
                                                         if (message && messageType) {
                                                             showToast(message, messageType);
                                                         }
                                                     });
 
-                                                    // This scriptlet ensures the message is cleared server-side right after render
+// Xóa thông báo khỏi session sau khi render để không hiển thị lại lần sau
                 <%
-                session.removeAttribute("message");
-                session.removeAttribute("messageType");
+session.removeAttribute("message");
+session.removeAttribute("messageType");
                 %>
+
+// Khi trang được tải, gọi API để cập nhật số lượng đơn hàng
+                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                        // Chỉ gọi khi người dùng đã đăng nhập (kiểm tra session ở phía server)
+                <% if (session.getAttribute("account") != null) { %>
+                                                        fetch('ordercount'); // Gửi yêu cầu lấy số lượng đơn hàng
+                <% } %>
+                                                    });
             </script>
         </body>
     </html>
