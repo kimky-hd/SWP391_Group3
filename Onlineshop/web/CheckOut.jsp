@@ -141,7 +141,7 @@
 
                         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                             <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
+                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
                                 <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>

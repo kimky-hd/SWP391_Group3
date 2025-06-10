@@ -187,7 +187,7 @@
                             <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link active">Sản phẩm</a>
-                                
+
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
                                 <div class="nav-item dropdown">
@@ -236,9 +236,13 @@
                     <h3>Màu</h3>
                     <div class="mb-3">
                         <c:forEach items="${listAllColors}" var="color">
-                            <a href="searchproductbycolor?colorId=${color.getColorID()}" class="black-link font-weight-medium mb-2">${color.getColorName()} <br></a>
-
+                            <a href="searchproductbycolor?colorId=${color.colorID}"
+                               class="black-link font-weight-medium mb-2
+                               <c:if test='${selectedColorId == color.colorID}'> text-warning font-weight-bold</c:if>'">
+                                ${color.colorName} <br>
+                            </a>
                         </c:forEach>
+
 
                     </div>
                     <!-- MÙA -->
@@ -246,27 +250,36 @@
                     <div class="mb-4">
 
                         <c:forEach items="${listAllSeasons}" var="season">
-                            <a href="searchproductbyseason?seasonId=${season.getSeasonID()}" class="black-link font-weight-medium mb-2">${season.getSeasonName()} <br></a>
-
+                            <a href="searchproductbyseason?seasonId=${season.seasonID}"
+                               class="black-link font-weight-medium mb-2
+                               <c:if test='${selectedSeasonId == season.seasonID}'> text-warning font-weight-bold</c:if>'">
+                                ${season.seasonName} <br>
+                            </a>
                         </c:forEach>                 
                     </div>
                     <!-- GIÁ -->
                     <div class="mb-3">
                         <h3 class="font-weight-medium mb-2">Giá</h3>
                         <div class="d-flex mb-2">
-
-                            <a href="SearchPrice0to50" class="black-link font-weight-medium mb-2" >0 Đến 50.000</a>
-                        </div>
-                        <div class="d-flex mb-2">
-
-                            <a href="SearchPriceAbove50" class="black-link font-weight-medium mb-2" >Trên 50.000</a>  
-                        </div>
-                        <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
-                            <div class="form-row align-items-end">
-                                <!-- Min Price -->
-                                <div class="col">
-                                    <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
-                                    <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
+                            <a href="SearchPrice0to50"
+                               class="black-link font-weight-medium mb-2
+                               <c:if test='${selectedPriceRange == "0to50"}'> text-warning font-weight-bold</c:if>'">
+                                   0 Đến 50.000
+                               </a>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <a href="SearchPriceAbove50"
+                                   class="black-link font-weight-medium mb-2
+                                <c:if test='${selectedPriceRange == "above50"}'> text-warning font-weight-bold</c:if>'">
+                                    Trên 50.000
+                                </a> 
+                            </div>
+                            <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
+                                <div class="form-row align-items-end">
+                                    <!-- Min Price -->
+                                    <div class="col">
+                                        <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
+                                        <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
                                 </div>
 
                                 <!-- Separator -->

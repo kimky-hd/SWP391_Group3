@@ -40,6 +40,8 @@ public class SearchPriceAbove50 extends HttpServlet {
         request.setAttribute("productList", list);
         request.setAttribute("listAllColors", listAllColors);
         request.setAttribute("listAllSeasons", listAllSeasons);
+        request.setAttribute("selectedPriceRange", "above50");
+        
         request.getRequestDispatcher("ProductList.jsp").forward(request, response);
     } 
 
