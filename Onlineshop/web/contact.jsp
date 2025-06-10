@@ -434,6 +434,7 @@
                 $(this).prev().find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
             });
 
+
             // Hiệu ứng animation khi scroll
             $(window).scroll(function () {
                 $('.contact-info-card').each(function () {

@@ -1,6 +1,5 @@
 package CommonController;
 
-import CommonController.*;
 import DAO.AccountDAO;
 import DAO.ProfileDAO;
 import Model.Account;
@@ -21,17 +20,12 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        System.out.println("Raw userInput: " + request.getParameter("userInput"));
-        System.out.println("Raw password: " + request.getParameter("password"));
-        System.out.println("\n=== Login Request ===\n");
         
         String userInput = request.getParameter("userInput");
         String password = request.getParameter("password");
-        
+        String rememberMe = request.getParameter("rememberMe");
 
         System.out.println("Received login request with username/email/phone: " + userInput);
-
-
         
         AccountDAO dao = new AccountDAO();
         Account account = dao.login(userInput, password);
@@ -41,11 +35,9 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("account", account);
             session.setMaxInactiveInterval(30*60);
             
-            // Tải thông tin profile vào session
             ProfileDAO profileDAO = new ProfileDAO();
             Profile profile = profileDAO.getProfileByAccountId(account.getAccountID());
             
-            // Nếu chưa có profile, tạo đối tượng mới
             if (profile == null) {
                 profile = new Profile();
                 profile.setAccountId(account.getAccountID());
@@ -53,33 +45,27 @@ public class LoginServlet extends HttpServlet {
                 profile.setPhoneNumber(account.getPhone());
             }
             
-            // Lưu profile vào session
             session.setAttribute("profile", profile);
             
             // Xử lý Remember Me
-            String rememberMe = request.getParameter("rememberMe");
-            if (rememberMe != null && rememberMe.equals("on")) {
-                // Tạo cookie cho username và password
+            if (rememberMe != null) {
                 String encodedUserInput = Base64.getEncoder().encodeToString(userInput.getBytes());
                 String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
-                
-                Cookie userCookie = new Cookie("userInput", encodedUserInput);
-                Cookie passCookie = new Cookie("password", encodedPassword);
-                
-                // Set thời gian tồn tại cookie (30 ngày)
+
+                Cookie userCookie = new Cookie("savedUserInput", encodedUserInput);
+                Cookie passCookie = new Cookie("savedPassword", encodedPassword);
+
                 userCookie.setMaxAge(30 * 24 * 60 * 60);
                 passCookie.setMaxAge(30 * 24 * 60 * 60);
-                
-                // Set path để cookie hoạt động trên toàn bộ ứng dụng
+
                 userCookie.setPath("/");
                 passCookie.setPath("/");
-                
+
                 response.addCookie(userCookie);
                 response.addCookie(passCookie);
             } else {
-                // Xóa cookie nếu không chọn Remember Me
-                Cookie userCookie = new Cookie("userInput", "");
-                Cookie passCookie = new Cookie("password", "");
+                Cookie userCookie = new Cookie("savedUserInput", "");
+                Cookie passCookie = new Cookie("savedPassword", "");
                 userCookie.setMaxAge(0);
                 passCookie.setMaxAge(0);
                 userCookie.setPath("/");
@@ -88,7 +74,12 @@ public class LoginServlet extends HttpServlet {
                 response.addCookie(passCookie);
             }
             
-            response.sendRedirect("Homepage");
+            // Kiểm tra role và chuyển hướng
+            if(account.getRole() == 1) {
+                response.sendRedirect("dashboard.jsp");
+            } else {
+                response.sendRedirect("Homepage");
+            }
         } else {
             request.setAttribute("error", "Sai thông tin đăng nhập!");
             request.getRequestDispatcher("login.jsp").forward(request, response);

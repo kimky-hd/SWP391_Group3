@@ -167,5 +167,12 @@
         <url-pattern>/ManageWishListController</url-pattern>
     </servlet-mapping>
 
-
+     <filter>
+        <filter-name>AdminAuthFilter</filter-name>
+        <filter-class>Filter.AdminAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/dashboard.jsp</url-pattern>
+    </filter-mapping>
 </web-app>
