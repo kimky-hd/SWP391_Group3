@@ -300,6 +300,7 @@
                                 <%= acc.getUsername() %>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
+                                <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
                                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                             </div>
                         </div>
@@ -601,7 +602,9 @@
         <script src="js/main.js"></script>
 
         <script>
+// Hàm cập nhật số lượng sản phẩm trong giỏ hàng
                                                         function updateQuantity(productId, newQuantity) {
+                                                            // Nếu số lượng mới nhỏ hơn 1, reload trang sau 1 giây và kết thúc hàm
                                                             if (newQuantity < 1) {
                                                                 setTimeout(function () {
                                                                     location.reload();
@@ -609,35 +612,40 @@
                                                                 return;
                                                             }
 
-                                                            // Lấy số lượng tồn kho từ dữ liệu hiển thị
+                                                            // Lấy số lượng tồn kho tối đa từ input tương ứng với sản phẩm
                                                             const maxQuantity = parseInt(document.querySelector(`input[onchange*="updateQuantity(${productId}"]`).getAttribute('max'));
 
-                                                            // ❗ Nếu vượt quá tồn kho, hiển thị lỗi và return
+                                                            // Nếu số lượng vượt quá tồn kho, reload trang sau 1 giây và kết thúc hàm
                                                             if (newQuantity > maxQuantity) {
                                                                 setTimeout(function () {
                                                                     location.reload();
                                                                 }, 1000);
                                                                 return;
                                                             }
+
+                                                            // Gửi AJAX request để cập nhật số lượng sản phẩm trong giỏ hàng
                                                             $.ajax({
                                                                 url: 'cart',
                                                                 type: 'POST',
                                                                 data: {
-                                                                    action: 'update',
-                                                                    productId: productId,
-                                                                    quantity: newQuantity
+                                                                    action: 'update', // hành động là "update"
+                                                                    productId: productId, // ID sản phẩm cần cập nhật
+                                                                    quantity: newQuantity      // số lượng mới
                                                                 },
                                                                 success: function (response) {
+                                                                    // Nếu server trả về thành công, reload lại trang
                                                                     if (response.success) {
                                                                         location.reload();
                                                                     } else {
+                                                                        // Nếu có lỗi, hiển thị thông báo và reload trang ngay lập tức
                                                                         showToast(response.message, 'error');
                                                                         setTimeout(function () {
                                                                             location.reload();
-                                                                        }, 0); // Đợi 0 giây trước khi reload
+                                                                        }, 0);
                                                                     }
                                                                 },
                                                                 error: function () {
+                                                                    // Nếu lỗi khi gửi request, hiển thị thông báo và reload trang ngay
                                                                     showToast("Đã xảy ra lỗi khi cập nhật giỏ hàng!", 'error');
                                                                     setTimeout(function () {
                                                                         location.reload();
@@ -646,41 +654,52 @@
                                                             });
                                                         }
 
+// Hàm xóa một sản phẩm khỏi giỏ hàng
                                                         function removeFromCart(productId) {
+                                                            // Hiển thị hộp thoại xác nhận trước khi xóa
                                                             if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                                                                // Gửi AJAX request để xóa sản phẩm
                                                                 $.ajax({
                                                                     url: 'cart',
                                                                     type: 'POST',
                                                                     data: {
-                                                                        action: 'remove',
-                                                                        productId: productId
+                                                                        action: 'remove', // hành động là "remove"
+                                                                        productId: productId     // ID sản phẩm cần xóa
                                                                     },
                                                                     success: function (response) {
+                                                                        // Nếu xóa thành công, reload lại trang
                                                                         if (response.success) {
                                                                             location.reload();
                                                                         } else {
+                                                                            // Nếu có lỗi, hiển thị thông báo lỗi
                                                                             showToast(response.message, 'error');
                                                                         }
                                                                     },
                                                                     error: function () {
+                                                                        // Nếu lỗi khi gửi request, hiển thị thông báo lỗi
                                                                         showToast('Có lỗi xảy ra khi xóa sản phẩm', 'error');
                                                                     }
                                                                 });
                                                             }
                                                         }
 
+// Hàm xóa toàn bộ sản phẩm trong giỏ hàng
                                                         function clearCart() {
+                                                            // Hiển thị hộp thoại xác nhận trước khi xóa tất cả
                                                             if (confirm('Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?')) {
+                                                                // Gửi AJAX request để xóa toàn bộ giỏ hàng
                                                                 $.ajax({
                                                                     url: 'cart',
                                                                     type: 'POST',
                                                                     data: {
-                                                                        action: 'clear'
+                                                                        action: 'clear' // hành động là "clear"
                                                                     },
                                                                     success: function (response) {
+                                                                        // Reload lại trang sau khi xóa thành công
                                                                         location.reload();
                                                                     },
                                                                     error: function () {
+                                                                        // Nếu có lỗi, hiển thị thông báo lỗi
                                                                         showToast('Có lỗi xảy ra khi xóa giỏ hàng', 'error');
                                                                     }
                                                                 });
@@ -689,40 +708,49 @@
         </script>
 
         <script>
+// Hàm hiển thị thông báo dạng toast
             function showToast(message, type) {
+                // Lấy phần tử container để chứa toast (ví dụ: <div class="toast-container"></div>)
                 const container = document.querySelector('.toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.textContent = message;
 
+                // Tạo một div mới để hiển thị thông báo
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;  // Gán class tùy theo kiểu (success, error, info,...)
+                toast.textContent = message;        // Gán nội dung thông báo
+
+                // Thêm toast vào container
                 container.appendChild(toast);
 
-                // Trigger reflow to enable transition
+                // Kích hoạt reflow để đảm bảo transition được áp dụng
                 toast.offsetHeight;
 
-                // Show toast
+                // Thêm class 'show' để hiển thị toast với hiệu ứng CSS
                 toast.classList.add('show');
 
-                // Remove toast after 3 seconds
+                // Tự động ẩn toast sau 3 giây
                 setTimeout(() => {
-                    toast.classList.remove('show');
+                    toast.classList.remove('show'); // Bắt đầu ẩn toast
                     setTimeout(() => {
-                        container.removeChild(toast);
-                    }, 400);
-                }, 3000);
+                        container.removeChild(toast); // Xóa khỏi DOM sau khi ẩn hoàn tất
+                    }, 400); // Đợi 400ms cho hiệu ứng ẩn hoàn tất
+                }, 3000); // Thời gian hiển thị 3 giây
             }
 
-            // Check for message in session
+// Kiểm tra xem có thông báo từ session gửi xuống không
             const message = '${sessionScope.message}';
             const messageType = '${sessionScope.messageType}';
+
             if (message && messageType) {
+                // Nếu có, hiển thị thông báo toast
                 showToast(message, messageType);
-                // Clear the message from session
+
+                // Xóa thông báo khỏi session sau khi hiển thị để không hiện lại sau khi reload
             <% 
-            session.removeAttribute("message");
-            session.removeAttribute("messageType");
+    session.removeAttribute("message");
+    session.removeAttribute("messageType");
             %>
             }
+
         </script>
 
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -749,38 +777,45 @@
 </html>
 </body>
 <script>
-    // Thêm xử lý cho nút tăng số lượng
+// Thêm xử lý cho các nút tăng/giảm số lượng sau khi trang được tải xong
     document.addEventListener('DOMContentLoaded', function () {
+        // Lấy tất cả các nút "tăng số lượng"
         const plusButtons = document.querySelectorAll('.btn-plus');
 
         plusButtons.forEach(button => {
             button.addEventListener('click', function (e) {
+                // Lấy input chứa số lượng (nằm trước nút hiện tại trong HTML)
                 const input = this.parentElement.previousElementSibling;
-                const currentValue = parseInt(input.value);
-                const maxValue = parseInt(input.getAttribute('max'));
+                const currentValue = parseInt(input.value);           // Giá trị hiện tại
+                const maxValue = parseInt(input.getAttribute('max')); // Số lượng tối đa trong kho
 
+                // Nếu người dùng muốn vượt quá số lượng tồn kho
                 if (currentValue >= maxValue) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // Chỉ hiển thị thông báo ở đây, không gọi updateQuantity
+                    e.preventDefault();      // Ngăn hành vi mặc định của button
+                    e.stopPropagation();     // Ngăn sự kiện lan ra phần tử cha
                     showToast('Số lượng yêu cầu vượt quá số lượng có sẵn trong kho', 'error');
-                    return false;
+                    return false;            // Dừng tiếp tục thực hiện
                 }
-                // Nếu số lượng hợp lệ, gọi updateQuantity với số lượng mới
+
+                // Nếu hợp lệ, gọi hàm cập nhật số lượng (tăng thêm 1)
                 updateQuantity(input.getAttribute('data-product-id'), currentValue + 1);
-                // Ngăn chặn sự kiện mặc định để không gọi updateQuantity hai lần
+
+                // Ngăn sự kiện mặc định để tránh việc sự kiện bị gọi nhiều lần
                 e.preventDefault();
                 e.stopPropagation();
             });
         });
 
-        // Tương tự cho nút giảm số lượng
+        // Tương tự: xử lý cho các nút "giảm số lượng"
         const minusButtons = document.querySelectorAll('.btn-minus');
+
         minusButtons.forEach(button => {
             button.addEventListener('click', function (e) {
+                // Lấy input chứa số lượng (nằm sau nút hiện tại trong HTML)
                 const input = this.parentElement.nextElementSibling;
-                const currentValue = parseInt(input.value);
+                const currentValue = parseInt(input.value); // Giá trị hiện tại
 
+                // Nếu số lượng nhỏ hơn hoặc bằng 1 thì không được giảm nữa
                 if (currentValue <= 1) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -788,12 +823,16 @@
                     return false;
                 }
 
+                // Nếu hợp lệ, cập nhật số lượng (giảm đi 1)
                 updateQuantity(input.getAttribute('data-product-id'), currentValue - 1);
+
+                // Ngăn sự kiện mặc định và lan truyền
                 e.preventDefault();
                 e.stopPropagation();
             });
         });
     });
+
 </script>
 <style>
     html {
