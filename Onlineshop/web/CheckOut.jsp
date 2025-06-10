@@ -142,7 +142,6 @@
                             <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
-                                
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
                                 <div class="nav-item dropdown">

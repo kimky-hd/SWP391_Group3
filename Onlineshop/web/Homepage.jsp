@@ -266,7 +266,7 @@
         <!-- Featured End -->
 
 
-        <!-- Categories Start -->
+<!--         Categories Start 
         <div class="container-fluid pt-5">
             <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
             <div class="row px-xl-5 pb-3">
@@ -324,10 +324,10 @@
                 </div>
             </div>
         </div>
-        <!-- Categories End -->
+         Categories End -->
 
 
-        <!-- Products Start -->
+<!--         Products Start 
         <div class="container-fluid pt-5 pb-3">
             <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured Products</span></h2>
             <div class="row px-xl-5">
@@ -549,7 +549,7 @@
                 </div>
             </div>
         </div>
-        <!-- Products End -->
+         Products End -->
 
 
 
@@ -700,9 +700,6 @@
                     color: #FFB6C1 !important;
                 }
                 
-                .bg-pink {
-                    background: linear-gradient(45deg, #FFB6C1, #FFA5B5) !important;
-                }
                 
             </style>
 
