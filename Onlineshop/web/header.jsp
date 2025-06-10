@@ -26,6 +26,7 @@
                         <%= acc.getUsername() %>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
                         <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
                     </div>
                 </div>
