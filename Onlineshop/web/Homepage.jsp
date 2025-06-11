@@ -7,6 +7,7 @@
 <%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page="subiz-chat.jsp" />
 <!DOCTYPE html>
 <html lang="en">
 
@@ -105,6 +106,8 @@
             </div>
         </div>
         <!-- Carousel End -->
+
+
 
 
 
@@ -505,16 +508,6 @@
             });
         </script>
 
-
-        <!<!-- Subiz Chat -->
-        <script>
-              window._sbzaccid = 'acsirodfsqyjgvlqvoad'
-              window.subiz = function () {
-                    window.subiz.q.push(arguments)
-              }
-              window.subiz.q = []
-              window.subiz('setAccount', window._sbzaccid)
-        </script>
         <script src="https://widget.subiz.net/sbz/app.js?account_id=acpzooihzhalzeskamky"></script>
 
         <!-- JavaScript Libraries -->
