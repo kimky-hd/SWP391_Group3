@@ -3,8 +3,10 @@
     Created on : May 24, 2025, 11:28:41 PM
     Author     : Duccon
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="Model.Account" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,8 +36,10 @@
     </head>
 
     <body>
+
         <jsp:include page="header.jsp" />
         
+
         <!-- Carousel Start -->
         <div class="container-fluid mb-3">
             <div class="row px-xl-5">
@@ -394,6 +398,7 @@
 
 
 
+
         <!-- Footer Start -->
 
         <jsp:include page="footer.jsp" />
@@ -434,6 +439,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Thêm style cho modal -->
             <style>

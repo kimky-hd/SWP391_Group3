@@ -320,6 +320,8 @@
             </div>
         </div>
         <!-- INCLUDE FOOTER TẠI ĐÂY -->
+
         <jsp:include page="footer.jsp" />
+
     </body>
 </html>
