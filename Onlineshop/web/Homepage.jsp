@@ -7,6 +7,7 @@
 <%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page="subiz-chat.jsp" />
 <!DOCTYPE html>
 <html lang="en">
 
@@ -140,8 +141,6 @@
         </div>
         <!-- Featured End -->
 
-
-<!--         Categories Start 
         <div class="container-fluid pt-5">
             <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
             <div class="row px-xl-5 pb-3">
@@ -538,16 +537,6 @@
             });
         </script>
 
-
-        <!<!-- Subiz Chat -->
-        <script>
-              window._sbzaccid = 'acsirodfsqyjgvlqvoad'
-              window.subiz = function () {
-                    window.subiz.q.push(arguments)
-              }
-              window.subiz.q = []
-              window.subiz('setAccount', window._sbzaccid)
-        </script>
         <script src="https://widget.subiz.net/sbz/app.js?account_id=acpzooihzhalzeskamky"></script>
 
         <!-- JavaScript Libraries -->
