@@ -7,8 +7,8 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 # Copy file WAR của bạn và đổi tên thành ROOT.war để chạy tại /
 COPY ./dist/Onlineshop.war /usr/local/tomcat/webapps/ROOT.war
 
-# Mở cổng 8080
-EXPOSE 8080
+# Mở cổng 9999
+EXPOSE 9999
 
 # Khởi động Tomcat
 CMD ["catalina.sh", "run"]
