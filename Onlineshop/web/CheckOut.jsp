@@ -7,6 +7,7 @@
 <%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page="subiz-chat.jsp" />
 <!DOCTYPE html>
 <html lang="en">
 
