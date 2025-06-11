@@ -3,8 +3,11 @@
     Created on : May 26, 2025, 10:17:32 AM
     Author     : kimky
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="Model.Account" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page="subiz-chat.jsp" />
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,10 +54,12 @@
     </head>
 
     <body>
+
         <!-- Thay thẻ <toast-container></toast-container> bằng -->
         <div class="toast-container"></div>
         <!-- Topbar Start -->
         <jsp:include page="header.jsp" />
+
 
 
         <!-- Checkout Start -->
