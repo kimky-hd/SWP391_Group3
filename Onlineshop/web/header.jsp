@@ -3,45 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<style>
-    .product-img {
-        height: 250px; /* Hoặc chiều cao mong muốn */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .product-img img {
-        height: 100%;
-        width: auto;
-        object-fit: contain;
-    }
-    .sidebar-pink {
-        background-color: #fce4ec;
-        border-radius: 8px;
-        padding: 20px;
-    }
-    .black-link {
-        color: black;
-        text-decoration: none; /* nếu không muốn gạch chân */
-    }
-    .icon-search-button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-    }
-    .icon-search-button .icon {
-        font-size: 20px; /* Điều chỉnh kích thước icon */
-        color: #333; /* Màu của icon */
-    }
-    .sticky-navbar {
-        position: sticky;
-        top: 0;
-        z-index: 1020;
-        background-color: var(--primary);
-    }
-</style>
-
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row bg-secondary py-1 px-xl-5">
@@ -72,12 +33,12 @@
                     </div>
                 </div>
                 <% } else { %>
-                <a href="login.jsp" class="btn btn-sm btn-light mr-2 auth-btn">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
-                </a>
-                <a href="register.jsp" class="btn btn-sm btn-light auth-btn">
-                    <i class="fas fa-user-plus mr-2"></i>Đăng ký
-                </a>
+                    <a href="login.jsp" class="btn btn-sm btn-light mr-2 auth-btn">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+                    </a>
+                    <a href="register.jsp" class="btn btn-sm btn-light auth-btn">
+                        <i class="fas fa-user-plus mr-2"></i>Đăng ký
+                    </a>
                 <% } %>
             </div>
             <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -120,61 +81,57 @@
 <!-- Topbar End -->
 
 <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
-            <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
-
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
-                            <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
-                            <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                        </a>
-
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
-
-                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
-                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang <i class="fa fa-angle-down mt-1"></i></a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
-                                    </div>
-                                </div>
-                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+<div class="container-fluid bg-pink mb-30">
+    <div class="row px-xl-5">
+        <div class="col-lg-12">
+            <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
+                <a href="Homepage.jsp" class="text-decoration-none d-block d-lg-none mobile-logo">
+                    <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
+                    <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                    <div class="navbar-nav py-0">
+                        <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
+                        <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
+                        <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
+                        <a href="blogs" class="nav-item nav-link">Bài viết</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
+                            <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
+                                <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-
-                        <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="ManageWishListController" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
-                            </a>
-                            <a href="Cart.jsp" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                                </span>
-                            </a>
-                            <a href="order?action=view" class="btn px-0 ml-3">
-                                <i class="fas fa-clipboard-list text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
+                        <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+                    </div>
                 </div>
-            </div>
+                <div class="d-none d-lg-flex align-items-center ml-auto">
+                    <a href="#" class="btn px-0 ml-3 icon-btn">
+                        <i class="fas fa-heart text-primary"></i>
+                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                    </a>
+                    <a href="Cart.jsp" class="btn px-0 ml-3 icon-btn">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                            ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                        </span>
+                    </a>
+                    <a href="order?action=view" class="btn px-0 ml-3 icon-btn">
+                        <i class="fas fa-clipboard-list text-primary"></i>
+                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                            ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
+                        </span>
+                    </a>
+                </div>
+            </nav>
         </div>
-        <!-- Navbar End -->
+    </div>
+</div>
+<!-- Navbar End -->
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -366,15 +323,9 @@
 
     /* Animations */
     @keyframes heartBeat {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.2);
-        }
-        100% {
-            transform: scale(1);
-        }
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
     }
 
     /* Modal Styles */
@@ -415,21 +366,20 @@
         .mobile-logo {
             margin: 10px 0;
         }
-
     }
 </style>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Xử lý sự kiện khi nhấn vào nút đăng xuất
-        $('.dropdown-item[data-toggle="modal"]').on('click', function (e) {
+        $('.dropdown-item[data-toggle="modal"]').on('click', function(e) {
             e.preventDefault();
             $('#logoutModal').modal('show');
         });
 
         // Active nav-link based on current page
         const currentLocation = window.location.href;
-        $('.navbar-nav .nav-link').each(function () {
+        $('.navbar-nav .nav-link').each(function() {
             if (currentLocation.includes($(this).attr('href'))) {
                 $(this).addClass('active');
             }
