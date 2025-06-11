@@ -36,7 +36,9 @@
     </head>
 
     <body>
-      <%@ include file="header.jsp" %>
+
+        <jsp:include page="header.jsp" />
+        
 
         <!-- Carousel Start -->
         <div class="container-fluid mb-3">
@@ -103,38 +105,8 @@
             </div>
         </div>
         <!-- Carousel End -->
+        
 
-
-        <!-- Featured Start -->
-        <div class="container-fluid pt-5">
-            <div class="row px-xl-5 pb-3">
-                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                    <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
-                        <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
-                        <h5 class="font-weight-semi-bold m-0">Quality Flower</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                    <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
-                        <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
-                        <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                    <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
-                        <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
-                        <h5 class="font-weight-semi-bold m-0">1-Day Return</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                    <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
-                        <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
-                        <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Featured End -->
 
 
         <!-- Categories Start -->
@@ -426,7 +398,48 @@
 
 
 
-      <%@ include file="footer.jsp" %>
+
+        <!-- Footer Start -->
+
+        <jsp:include page="footer.jsp" />
+            <!-- Footer End -->
+
+
+            <!-- Back to Top -->
+            <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-pink text-white">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Xác nhận đăng xuất
+                            </h5>
+                            <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-question-circle text-pink" style="font-size: 3rem;"></i>
+                            </div>
+                            <p class="text-center mb-0" style="font-size: 1.1rem; color: #000000; font-weight: 600;">
+                                Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?
+                            </p>
+                        </div>
+                        <div class="modal-footer justify-content-center border-0 pt-0">
+                            <button class="btn btn-secondary px-4" type="button" data-dismiss="modal">
+                                <i class="fas fa-times mr-2"></i>Hủy
+                            </button>
+                            <a class="btn btn-pink px-4" href="LogoutServlet">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Thêm style cho modal -->
             <style>
@@ -477,9 +490,7 @@
                     color: #FFB6C1 !important;
                 }
                 
-                .bg-pink {
-                    background: linear-gradient(45deg, #FFB6C1, #FFA5B5) !important;
-                }
+                
                 
             </style>
 
