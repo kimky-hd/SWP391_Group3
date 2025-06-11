@@ -36,8 +36,9 @@
     </head>
 
     <body>
-        
-      <%@ include file="header.jsp" %>
+
+        <jsp:include page="header.jsp" />
+
 
 
         <!-- Carousel Start -->
@@ -105,6 +106,7 @@
             </div>
         </div>
         <!-- Carousel End -->
+
 
 
         <!-- Featured Start -->
@@ -428,82 +430,137 @@
 
 
 
-      <%@ include file="footer.jsp" %>
 
-            <!-- Thêm style cho modal -->
-            <style>
-                .modal-content {
-                    border: none;
-                    border-radius: 15px;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                }
-                
-                .modal-header {
-                    border-top-left-radius: 15px;
-                    border-top-right-radius: 15px;
-                    border-bottom: none;
-                }
-                
-                .btn-pink {
-                    background: linear-gradient(45deg, #FFB6C1, #FFA5B5);
-                    border: none;
-                    color: white;
-                    transition: all 0.3s ease;
-                }
-                
-                .btn-pink:hover {
-                    background: linear-gradient(45deg, #FFA5B5, #FFB6C1);
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
-                }
-                
-                .btn-secondary {
-                    background: #f8f9fa;
-                    color: #6c757d;
-                    border: none;
-                    transition: all 0.3s ease;
-                }
-                
-                .btn-secondary:hover {
-                    background: #e9ecef;
-                    transform: translateY(-2px);
-                }
-                
-                .modal-dialog-centered {
-                    display: flex;
-                    align-items: center;
-                    min-height: calc(100% - 1rem);
-                }
-                
-                .text-pink {
-                    color: #FFB6C1 !important;
-                }
-                
-                
-            </style>
 
-            <!-- Custom Javascript -->
-            <script>
-                $(document).ready(function() {
-                    // Xử lý sự kiện khi nhấn vào nút đăng xuất
-                    $('.dropdown-item[data-toggle="modal"]').on('click', function(e) {
-                        e.preventDefault();
-                        $('#logoutModal').modal('show');
-                    });
+        <!-- Footer Start -->
+
+        <jsp:include page="footer.jsp" />
+        <!-- Footer End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-pink text-white">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Xác nhận đăng xuất
+                        </h5>
+                        <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body py-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-question-circle text-pink" style="font-size: 3rem;"></i>
+                        </div>
+                        <p class="text-center mb-0" style="font-size: 1.1rem; color: #000000; font-weight: 600;">
+                            Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?
+                        </p>
+                    </div>
+                    <div class="modal-footer justify-content-center border-0 pt-0">
+                        <button class="btn btn-secondary px-4" type="button" data-dismiss="modal">
+                            <i class="fas fa-times mr-2"></i>Hủy
+                        </button>
+                        <a class="btn btn-pink px-4" href="LogoutServlet">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Thêm style cho modal -->
+        <style>
+            .modal-content {
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+            .modal-header {
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+                border-bottom: none;
+            }
+
+            .btn-pink {
+                background: linear-gradient(45deg, #FFB6C1, #FFA5B5);
+                border: none;
+                color: white;
+                transition: all 0.3s ease;
+            }
+
+            .btn-pink:hover {
+                background: linear-gradient(45deg, #FFA5B5, #FFB6C1);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
+            }
+
+            .btn-secondary {
+                background: #f8f9fa;
+                color: #6c757d;
+                border: none;
+                transition: all 0.3s ease;
+            }
+
+            .btn-secondary:hover {
+                background: #e9ecef;
+                transform: translateY(-2px);
+            }
+
+            .modal-dialog-centered {
+                display: flex;
+                align-items: center;
+                min-height: calc(100% - 1rem);
+            }
+
+            .text-pink {
+                color: #FFB6C1 !important;
+            }
+
+
+
+        </style>
+
+        <!-- Custom Javascript -->
+        <script>
+            $(document).ready(function () {
+                // Xử lý sự kiện khi nhấn vào nút đăng xuất
+                $('.dropdown-item[data-toggle="modal"]').on('click', function (e) {
+                    e.preventDefault();
+                    $('#logoutModal').modal('show');
                 });
-            </script>
+            });
+        </script>
 
-            <!-- JavaScript Libraries -->
-            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-            <script src="lib/easing/easing.min.js"></script>
-            <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-            <!-- Contact Javascript File -->
-            <script src="mail/jqBootstrapValidation.min.js"></script>
-            <script src="mail/contact.js"></script>
+        <!<!-- Subiz Chat -->
+        <script>
+              window._sbzaccid = 'acsirodfsqyjgvlqvoad'
+              window.subiz = function () {
+                    window.subiz.q.push(arguments)
+              }
+              window.subiz.q = []
+              window.subiz('setAccount', window._sbzaccid)
+        </script>
+        <script src="https://widget.subiz.net/sbz/app.js?account_id=acpzooihzhalzeskamky"></script>
 
-            <!-- Template Javascript -->
-            <script src="js/main.js"></script>
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+        <!-- Contact Javascript File -->
+        <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script>
+
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
     </body>
 </html>
