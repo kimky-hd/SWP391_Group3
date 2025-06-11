@@ -1,0 +1,7 @@
+**/nbproject
+**/src
+**/build
+**/build.xml
+**/*.iml
+*.zip
+*.log

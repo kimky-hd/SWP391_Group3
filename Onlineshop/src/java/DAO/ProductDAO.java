@@ -87,8 +87,8 @@ public class ProductDAO extends DBContext {
         return null;
 
     }
-    
-    public List<Product> getProductByCategory(String categoryId){
+
+    public List<Product> getProductByCategory(String categoryId) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.*," + statuscase + " FROM Product p\n"
                 + "                JOIN Category c ON p.categoryID = c.categoryID \n"
@@ -299,18 +299,18 @@ public class ProductDAO extends DBContext {
             System.out.println("updateAddQuantity" + e.getMessage());
         }
     }
-    
-    public List<Category> getAllCategory(){
+
+    public List<Category> getAllCategory() {
         List<Category> list = new ArrayList<>();
         String sql = "Select * from Category";
-        try{
+        try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 list.add(new Category(rs.getInt(1),
                         rs.getString(2)));
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("getAllCategory" + e.getMessage());
         }
         return list;
@@ -594,6 +594,18 @@ public class ProductDAO extends DBContext {
         }
     }
 
+    public void removeWishList(int accountID, int productID) {
+        String sql = "DELETE FROM WishList WHERE accountID = ? AND productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountID);
+            ps.setInt(2, productID);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("removeWishList" + e.getMessage());
+        }
+    }
+
     public void deleteWishList(int wishlistID) {
         String sql = "DELETE FROM WishList WHERE wishlistID = ?";
         try {
@@ -607,20 +619,19 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getListWishListProduct(int accountID) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT\n"
+        String sql = "SELECT    \n"
                 + "    p.productID,\n"
                 + "    p.title,\n"
                 + "    p.image,\n"
                 + "    p.price,\n"
                 + "    p.quantity,\n"
                 + "    p.description,\n"
-                +"     p.categoryID,\n"
+                + "     p.categoryID,\n"
                 + "    p.colorID,\n"
                 + "    p.seasonID,\n"
                 + "    p.thanhphan,\n"
                 + "    p.dateImport,\n"
                 + "    p.dateExpire\n"
-                + statuscase 
                 + " FROM Product p \n"
                 + " JOIN Wishlist wl ON p.productID = wl.productID \n"
                 + " WHERE wl.AccountID = ?";
@@ -640,8 +651,7 @@ public class ProductDAO extends DBContext {
                         rs.getInt(9),
                         rs.getString(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13))
+                        rs.getDate(12))
                 );
 
             }
@@ -686,4 +696,5 @@ public class ProductDAO extends DBContext {
         }
         return 0;
     }
+
 }

@@ -194,7 +194,7 @@
                         <c:forEach items="${listWL}" var="listWL">
                             <tr>
                                 <td>
-                                    <img src="${listWL.getImage()}" 
+                                    <img src="${pageContext.request.contextPath}/img/${listWL.getImage()}" 
                                          style="width: 50px; height: auto;" />
                                 </td>
                                 <td><a href=ViewProductDetail?productid=${listWL.getProductID()}>${listWL.getTitle()}</a></td>

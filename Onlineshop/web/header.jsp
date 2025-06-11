@@ -3,43 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<style>
-    .product-img {
-        height: 250px; /* Hoặc chiều cao mong muốn */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 
-    .product-img img {
-        height: 100%;
-        width: auto;
-        object-fit: contain;
-    }
-    .sidebar-pink {
-        background-color: #fce4ec;
-        border-radius: 8px;
-        padding: 20px;
-    }
-    .black-link {
-        color: black;
-        text-decoration: none; /* nếu không muốn gạch chân */
-    }
-    .icon-search-button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-    }
-    .icon-search-button .icon {
-        font-size: 20px; /* Điều chỉnh kích thước icon */
-        color: #333; /* Màu của icon */
-    }
+<style>
     .sticky-navbar {
-        position: sticky;
-        top: 0;
-        z-index: 1020;
-        background-color: var(--primary);
-    }
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background-color: var(--primary);
+            }
 </style>
 
 <!-- Topbar Start -->
@@ -72,12 +43,12 @@
                     </div>
                 </div>
                 <% } else { %>
-                <a href="login.jsp" class="btn btn-sm btn-light mr-2 auth-btn">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
-                </a>
-                <a href="register.jsp" class="btn btn-sm btn-light auth-btn">
-                    <i class="fas fa-user-plus mr-2"></i>Đăng ký
-                </a>
+                    <a href="login.jsp" class="btn btn-sm btn-light mr-2 auth-btn">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+                    </a>
+                    <a href="register.jsp" class="btn btn-sm btn-light auth-btn">
+                        <i class="fas fa-user-plus mr-2"></i>Đăng ký
+                    </a>
                 <% } %>
             </div>
             <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -100,9 +71,9 @@
             </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-            <form action="" class="search-form">
+            <form action="SearchProductByTitle" class="search-form">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                    <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
                     <div class="input-group-append">
                         <button class="btn btn-pink">
                             <i class="fa fa-search"></i>
@@ -138,7 +109,7 @@
                             <div class="navbar-nav py-0">
                                 <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
                                 <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
-
+                                
                                 <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
                                 <a href="blogs" class="nav-item nav-link">Bài viết</a>
                                 <div class="nav-item dropdown">
@@ -366,15 +337,9 @@
 
     /* Animations */
     @keyframes heartBeat {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.2);
-        }
-        100% {
-            transform: scale(1);
-        }
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
     }
 
     /* Modal Styles */
@@ -415,21 +380,20 @@
         .mobile-logo {
             margin: 10px 0;
         }
-
     }
 </style>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Xử lý sự kiện khi nhấn vào nút đăng xuất
-        $('.dropdown-item[data-toggle="modal"]').on('click', function (e) {
+        $('.dropdown-item[data-toggle="modal"]').on('click', function(e) {
             e.preventDefault();
             $('#logoutModal').modal('show');
         });
 
         // Active nav-link based on current page
         const currentLocation = window.location.href;
-        $('.navbar-nav .nav-link').each(function () {
+        $('.navbar-nav .nav-link').each(function() {
             if (currentLocation.includes($(this).attr('href'))) {
                 $(this).addClass('active');
             }

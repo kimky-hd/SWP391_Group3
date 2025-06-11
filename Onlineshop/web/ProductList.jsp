@@ -12,7 +12,7 @@
         <meta charset="utf-8">
         <title>Flower Shop - Product List</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
-       
+
 
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -103,7 +103,7 @@
         <jsp:include page="header.jsp" />
 
 
-        
+
         <!-- Products Start -->
 
         <div class="container-fluid pt-5">
@@ -111,7 +111,7 @@
                 <!-- SIDEBAR BÊN TRÁI -->
                 <div class="col-lg-3 mb-5 sidebar-pink">
                     <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
-                    
+
                     <!<!-- Category -->
                     <h3>Danh mục</h3>
                     <div class="mb-3">
@@ -152,37 +152,34 @@
                         </c:forEach>                 
                     </div>
                     <!-- GIÁ -->
-                    <div class="mb-3">
-                        <h3 class="font-weight-medium mb-2">Giá</h3>
-
-                            <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
-                                <div class="form-row align-items-end">
-                                    <!-- Min Price -->
-                                    <div class="col">
-                                        <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
-                                        <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
-                                </div>
-
-                                <!-- Separator -->
-                                <div class="col-auto d-flex align-items-center justify-content-center">
-                                    <span class="text-muted px-2">–</span>
-                                </div>
-
-                                <!-- Max Price -->
-                                <div class="col">
-                                    <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
-                                    <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
-                                </div>
-
-                                <!-- Search Button -->
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary mt-3">Lọc</button>
-                                </div>
+                    <form action="SearchPriceMinToMax" onsubmit="return validatePriceRange()" class="mt-4">
+                        <div class="form-row align-items-end">
+                            <!-- Min Price -->
+                            <div class="col">
+                                <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
+                                <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
                             </div>
-                        </form>
 
+                            <!-- Separator -->
+                            <div class="col-auto d-flex align-items-center justify-content-center">
+                                <span class="text-muted px-2">–</span>
+                            </div>
 
-                    </div>
+                            <!-- Max Price -->
+                            <div class="col">
+                                <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
+                                <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
+                            </div>
+
+                            <!-- Search Button -->
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary mt-3">Lọc</button>
+                            </div>
+                        </div>
+
+                        <!-- ✅ Đưa thông báo lỗi ra ngoài hàng input để không làm co giao diện -->
+                        <div id="priceError" class="text-danger small mt-2" style="display: none;"></div>
+                    </form>
 
 
 
@@ -238,9 +235,28 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="AddWishlistController?pid=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
-                                        </a>
+                                        <c:set var="wishlist" value="${requestScope.wishlistProductIDs}" />
+                                        <c:set var="isLiked" value="false" />
+
+                                        <c:forEach var="item" items="${wishlist}">
+                                            <c:if test="${item.productID == product.productID}">
+                                                <c:set var="isLiked" value="true" />
+                                            </c:if>
+                                        </c:forEach>
+
+                                        <c:choose>
+                                            <c:when test="${isLiked}">
+                                                <a href="AddWishlistController?pid=${product.productID}" class="btn btn-sm text-danger p-0 font-weight-bold">
+                                                    <i class="fas fa-heart mr-1"></i>Đã yêu thích
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="AddWishlistController?pid=${product.productID}" class="btn btn-sm text-dark p-0">
+                                                    <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </div>
                                 </div>
                             </div>
@@ -279,7 +295,7 @@
 
         <!-- Products End -->
 
-       <jsp:include page="footer.jsp" />
+        <jsp:include page="footer.jsp" />
 
 
         <!-- JavaScript Libraries -->
@@ -295,39 +311,39 @@
         <!-- Toast Message Container -->
         <style>
             .toast-container {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 9999;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
 
             .toast {
-                padding: 15px 25px;
-                margin-bottom: 12px;
-                border-radius: 12px;
-                color: #5f375f;
-                background-color: #fce4ec;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                opacity: 0;
-                transform: translateX(100%);
-                transition: all 0.4s ease-in-out;
-                border-left: 6px solid #f48fb1;
+            padding: 15px 25px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            color: #5f375f;
+            background-color: #fce4ec;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease-in-out;
+            border-left: 6px solid #f48fb1;
             }
 
             .toast.show {
-                opacity: 1;
-                transform: translateX(0);
+            opacity: 1;
+            transform: translateX(0);
             }
 
             .toast.success {
-                background-color: #f8bbd0;
-                border-left-color: #40ec46;
+            background-color: #f8bbd0;
+            border-left-color: #40ec46;
             }
 
             .toast.error {
-                background-color: #fce4ec;
-                border-left-color: #d81b60;
+            background-color: #fce4ec;
+            border-left-color: #d81b60;
             }
         </style>
 
@@ -385,8 +401,49 @@
                 });
             }
         </script>
-        
-       
+
+        <!-- JavaScript validation -->
+        <script>
+            function validatePriceRange() {
+                const minInput = document.getElementById('priceMin');
+                const maxInput = document.getElementById('priceMax');
+                const errorBox = document.getElementById('priceError');
+
+                const min = parseFloat(minInput.value);
+                const max = parseFloat(maxInput.value);
+
+                // Xóa thông báo cũ
+                errorBox.textContent = "";
+                errorBox.style.display = "none";
+
+                // Kiểm tra giá âm
+                if (!isNaN(min) && min < 0) {
+                    errorBox.textContent = "⚠️ Giá thấp nhất không thể là số âm.";
+                    errorBox.style.display = "block";
+                    minInput.focus();
+                    return false;
+                }
+
+                if (!isNaN(max) && max < 0) {
+                    errorBox.textContent = "⚠️ Giá cao nhất không thể là số âm.";
+                    errorBox.style.display = "block";
+                    maxInput.focus();
+                    return false;
+                }
+
+                // Kiểm tra max < min
+                if (!isNaN(min) && !isNaN(max) && max < min) {
+                    errorBox.textContent = "⚠️ Giá cao nhất không thể nhỏ hơn giá thấp nhất.";
+                    errorBox.style.display = "block";
+                    maxInput.focus();
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+
+
 
         <%
             // Xoá session sau khi hiển thị
