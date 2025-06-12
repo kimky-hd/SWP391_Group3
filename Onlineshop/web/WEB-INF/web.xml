@@ -148,4 +148,21 @@
         <filter-name>AdminAuthFilter</filter-name>
         <url-pattern>/dashboard.jsp</url-pattern>
     </filter-mapping>
+    <servlet>
+        <servlet-name>VNPayController</servlet-name>
+        <servlet-class>Controller.VNPayController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VNPayController</servlet-name>
+        <url-pattern>/vnpay</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>VNPayReturnController</servlet-name>
+        <servlet-class>Controller.VNPayReturnController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VNPayReturnController</servlet-name>
+        <url-pattern>/vnpay-return</url-pattern>
+    </servlet-mapping>
 </web-app>
