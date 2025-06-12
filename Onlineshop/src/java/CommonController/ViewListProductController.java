@@ -17,6 +17,7 @@ import Model.Category;
 import Model.Product;
 import Model.Color;
 import Model.Season;
+import Model.WishList;
 import java.util.List;
 
 /**
@@ -59,11 +60,15 @@ public class ViewListProductController extends HttpServlet {
             count = 0;
         } else {
             count = productDAO.countProductWishLish(a.getAccountID());
-        
+            List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
+            request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
         }
+        
+        
         List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
+        
         request.setAttribute("countWL", count);
         request.setAttribute("tag", indexPage);
         request.setAttribute("count", allProduct);
