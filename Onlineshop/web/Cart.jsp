@@ -115,11 +115,13 @@
             }
 
             body {
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh; /* Đảm bảo body chiếm ít nhất 100% chiều cao của viewport */
-                margin: 0 !important; /* Loại bỏ margin mặc định của body do trình duyệt hoặc Bootstrap */
-                padding: 0 !important; /* Loại bỏ padding mặc định của body */
+                background-color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                color: #555;
+                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
             }
 
             /* Wrapper cho nội dung chính, sẽ co giãn để đẩy footer xuống */
