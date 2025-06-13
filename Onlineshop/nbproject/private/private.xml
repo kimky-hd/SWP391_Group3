@@ -9,6 +9,8 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/VoucherController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByTitle.java</file>
+            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
+            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Cart.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CheckOut.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/NewServlet.java</file>
@@ -51,6 +53,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchPriceMinToMax.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/contact.jsp</file>
+            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/LoginController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
         </group>
     </open-files>
