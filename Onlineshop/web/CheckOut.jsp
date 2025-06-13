@@ -1,0 +1,382 @@
+<%-- 
+    Document   : CheckOut
+    Created on : May 26, 2025, 10:17:32 AM
+    Author     : kimky
+--%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="Model.Account" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page="subiz-chat.jsp" />
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Thanh Toán - Flower Shop</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="Free HTML Templates" name="keywords">
+        <meta content="Free HTML Templates" name="description">
+
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
+
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link href="lib/animate/animate.min.css" rel="stylesheet">
+        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="css/style.css" rel="stylesheet">
+
+        <style>
+            .error-message {
+                color: red;
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
+
+            .form-group.error .form-control {
+                border-color: red;
+            }
+
+            .form-group.error .error-message {
+                display: block;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- Thay thẻ <toast-container></toast-container> bằng -->
+        <div class="toast-container"></div>
+        <!-- Topbar Start -->
+        <jsp:include page="header.jsp" />
+
+
+
+        <!-- Checkout Start -->
+        <div class="container-fluid">
+            <div class="row px-xl-5">
+                <div class="col-lg-8">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Thông tin giao hàng</span></h5>
+                    <div class="bg-light p-30 mb-5">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>Họ và tên <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="Nguyễn Văn A" id="fullNameInput">
+                                <div class="error-message" id="fullNameError"></div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Email</label>
+                                <input class="form-control" type="text" placeholder="example@email.com" id="emailInput">
+                                <div class="error-message" id="emailError"></div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Số điện thoại <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="+84 123 456 789" id="phoneInput">
+                                <div class="error-message" id="phoneError"></div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Địa chỉ <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="123 Đường ABC" id="addressInput">
+                                <div class="error-message" id="addressError"></div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Quận/Huyện <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="Quận 1" id="districtInput">
+                                <div class="error-message" id="districtError"></div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>Thành phố <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="TP.HCM" id="cityInput">
+                                <div class="error-message" id="cityError"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng đơn hàng</span></h5>
+                    <div class="bg-light p-30 mb-5">
+                        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+                        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+                        <!-- Trong phần hiển thị sản phẩm -->
+                        <div class="border-bottom">
+                            <h6 class="mb-3">Sản phẩm</h6>
+                            <c:forEach items="${cart.items}" var="item">
+                                <div class="d-flex justify-content-between">
+                                    <p>${item.product.title} x ${item.quantity}</p>
+                                    <p><fmt:formatNumber value="${item.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ</p>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <div class="border-bottom pt-3 pb-2">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h6>Tổng tiền hàng</h6>
+                                <h6><fmt:formatNumber value="${cart.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ</h6>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                                <h6 class="font-weight-medium">30.000đ</h6>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <div class="d-flex justify-content-between mt-2">
+                                <h5>Tổng thanh toán</h5>
+                                <h5><fmt:formatNumber value="${cart.total + 30000}" type="currency" currencySymbol="" pattern="#,##0"/>đ</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Phương thức thanh toán</span></h5>
+                        <div class="bg-light p-30">
+                            <div class="form-group">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" name="payment" id="paypal">
+                                    <label class="custom-control-label" for="paypal">Thanh toán khi nhận hàng</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" name="payment" id="directcheck">
+                                    <label class="custom-control-label" for="directcheck">Chuyển khoản ngân hàng</label>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
+                                    <label class="custom-control-label" for="banktransfer">Ví điện tử</label>
+                                </div>
+                            </div>
+                            <!-- Thay thế nút đặt hàng bằng form submit -->
+                            <form action="order" method="post" id="orderForm">
+                                <input type="hidden" name="action" value="place">
+                                <input type="hidden" name="fullName" id="fullName">
+                                <input type="hidden" name="phone" id="phone">
+                                <input type="hidden" name="email" id="email">
+                                <input type="hidden" name="address" id="address">
+                                <input type="hidden" name="district" id="district">
+                                <input type="hidden" name="city" id="city">
+                                <input type="hidden" name="paymentMethod" id="paymentMethod">
+                                <button type="button" onclick="validateAndSubmit()" class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
+                            </form>
+
+                            <script>
+                                function validateAndSubmit() {
+                                    // Biến kiểm tra tính hợp lệ của form
+                                    let isValid = true;
+
+                                    // Lấy giá trị từ các trường input và loại bỏ khoảng trắng dư thừa
+                                    const fullName = $('#fullNameInput').val().trim();
+                                    const phone = $('#phoneInput').val().trim();
+                                    const email = $('#emailInput').val().trim();
+                                    const address = $('#addressInput').val().trim();
+                                    const district = $('#districtInput').val().trim();
+                                    const city = $('#cityInput').val().trim();
+
+                                    // Ẩn tất cả các thông báo lỗi trước đó
+                                    $('.error-message').hide();
+
+                                    // Xác thực trường Họ tên
+                                    if (!fullName) {
+                                        $('#fullNameError').text('Vui lòng nhập họ tên').show();
+                                        isValid = false;
+                                    }
+
+                                    // Xác thực trường Số điện thoại
+                                    if (!phone) {
+                                        $('#phoneError').text('Vui lòng nhập số điện thoại').show();
+                                        isValid = false;
+                                    } else if (!/^\d{10,11}$/.test(phone.replace(/[\s-+]/g, ''))) {
+                                        // Kiểm tra định dạng số điện thoại: chỉ cho phép 10-11 chữ số
+                                        $('#phoneError').text('Số điện thoại không hợp lệ').show();
+                                        isValid = false;
+                                    }
+
+                                    // Xác thực Email (nếu người dùng có nhập)
+                                    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                                        $('#emailError').text('Email không hợp lệ').show();
+                                        isValid = false;
+                                    }
+
+                                    // Xác thực các trường địa chỉ
+                                    if (!address) {
+                                        $('#addressError').text('Vui lòng nhập địa chỉ').show();
+                                        isValid = false;
+                                    }
+                                    if (!district) {
+                                        $('#districtError').text('Vui lòng nhập quận/huyện').show();
+                                        isValid = false;
+                                    }
+                                    if (!city) {
+                                        $('#cityError').text('Vui lòng nhập thành phố').show();
+                                        isValid = false;
+                                    }
+
+                                    // Kiểm tra lựa chọn phương thức thanh toán
+                                    let paymentMethod = '';
+                                    if ($('#paypal').is(':checked')) {
+                                        paymentMethod = 'COD'; // Thanh toán khi nhận hàng
+                                    } else if ($('#directcheck').is(':checked')) {
+                                        paymentMethod = 'Bank Transfer'; // Chuyển khoản
+                                    } else if ($('#banktransfer').is(':checked')) {
+                                        paymentMethod = 'E-Wallet'; // Ví điện tử
+                                    } else {
+                                        alert('Vui lòng chọn phương thức thanh toán');
+                                        isValid = false;
+                                    }
+
+                                    // Nếu có bất kỳ lỗi nào, không gửi form
+                                    if (!isValid) {
+                                        return false;
+                                    }
+
+                                    // Nếu hợp lệ, gán lại giá trị vào các input ẩn trước khi gửi
+                                    $('#fullName').val(fullName);
+                                    $('#phone').val(phone);
+                                    $('#email').val(email);
+                                    $('#address').val(address);
+                                    $('#district').val(district);
+                                    $('#city').val(city);
+                                    $('#paymentMethod').val(paymentMethod);
+
+                                    // Gửi dữ liệu form bằng AJAX để xử lý đặt hàng
+                                    $.ajax({
+                                        url: 'order',
+                                        type: 'POST',
+                                        data: $('#orderForm').serialize(), // Gửi toàn bộ dữ liệu form
+                                        success: function (response) {
+                                            if (response.success) {
+                                                // Hiển thị thông báo thành công
+                                                showToast(response.message, 'success');
+                                                // Sau 1.5s thì chuyển hướng đến trang khác (xem đơn hàng)
+                                                setTimeout(function () {
+                                                    window.location.href = response.redirectUrl || 'order?action=view';
+                                                }, 1500);
+                                            } else {
+                                                // Hiển thị lỗi nếu xử lý thất bại
+                                                showToast(response.message, 'error');
+                                            }
+                                        },
+                                        error: function () {
+                                            // Lỗi kết nối hoặc server
+                                            showToast('Có lỗi xảy ra khi xử lý thanh toán', 'error');
+                                        }
+                                    });
+
+                                    return false; // Ngăn trình duyệt gửi form theo cách mặc định
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Checkout End -->
+
+        <!-- Footer Start -->
+        <jsp:include page="footer.jsp" />
+        <!-- Footer End -->
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+        <!-- Contact Javascript File -->
+        <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script>
+
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
+
+        <script>
+                                function showToast(message, type) {
+                                    const container = document.querySelector('.toast-container');
+                                    const toast = document.createElement('div');
+                                    toast.className = `toast ${type}`;
+                                    toast.textContent = message;
+
+                                    container.appendChild(toast);
+
+                                    // Trigger reflow to enable transition
+                                    toast.offsetHeight;
+
+                                    // Show toast
+                                    toast.classList.add('show');
+
+                                    // Remove toast after 3 seconds
+                                    setTimeout(() => {
+                                        toast.classList.remove('show');
+                                        setTimeout(() => {
+                                            container.removeChild(toast);
+                                        }, 400);
+                                    }, 3000);
+                                }
+
+                                // Check for message in session
+                                const message = '${sessionScope.message}';
+                                const messageType = '${sessionScope.messageType}';
+                                if (message && messageType) {
+                                    showToast(message, messageType);
+                                    // Clear the message from session
+            <% 
+                session.removeAttribute("message");
+                session.removeAttribute("messageType");
+            %>
+                                }
+        </script>
+    </body>
+
+</html>
+
+<style>
+    /* Styles for Toast Message Container */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .toast {
+        padding: 15px 25px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        color: #5f375f;
+        background-color: #fce4ec; /* pastel pink background */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.4s ease-in-out;
+        border-left: 6px solid #f48fb1; /* pastel rose accent */
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .toast.success {
+        background-color: #f8bbd0; /* light pastel pink */
+        border-left-color: #40ec46;
+    }
+
+    .toast.error {
+        background-color: #fce4ec;
+        border-left-color: #d81b60;
+    }
+</style>
