@@ -3,6 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<style>
+    .sticky-navbar {
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                background-color: var(--primary);
+            }
+</style>
+
 <!-- Topbar Start -->
 <div class="container-fluid">
     <div class="row bg-secondary py-1 px-xl-5">
@@ -61,9 +70,9 @@
             </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-            <form action="" class="search-form">
+            <form action="SearchProductByTitle" class="search-form">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                    <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
                     <div class="input-group-append">
                         <button class="btn btn-pink">
                             <i class="fa fa-search"></i>
@@ -81,57 +90,61 @@
 <!-- Topbar End -->
 
 <!-- Navbar Start -->
-<div class="container-fluid bg-pink mb-30">
-    <div class="row px-xl-5">
-        <div class="col-lg-12">
-            <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
-                <a href="Homepage.jsp" class="text-decoration-none d-block d-lg-none mobile-logo">
-                    <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
-                    <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
-                </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                    <div class="navbar-nav py-0">
-                        <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
-                        <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
-                        <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                        <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
-                        <a href="blogs" class="nav-item nav-link">Bài viết</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
-                            <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
+        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
+            <div class="row px-xl-5">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
+
+                        <a href="#" class="text-decoration-none d-block d-lg-none">
+                            <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
+                            <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
+                        </a>
+
+                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                            <div class="navbar-nav py-0">
+                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
+                                <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
+                                
+                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
+                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang <i class="fa fa-angle-down mt-1"></i></a>
+                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
+                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
+                                    </div>
+                                </div>
+                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
                             </div>
                         </div>
-                        <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
-                    </div>
+
+                        <div class="d-none d-lg-flex align-items-center ml-auto">
+                            <a href="ManageWishListController" class="btn px-0">
+                                <i class="fas fa-heart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
+                            </a>
+                            <a href="Cart.jsp" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                                </span>
+                            </a>
+                            <a href="order?action=view" class="btn px-0 ml-3">
+                                <i class="fas fa-clipboard-list text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
+                                </span>
+                            </a>
+                        </div>
+                    </nav>
                 </div>
-                <div class="d-none d-lg-flex align-items-center ml-auto">
-                    <a href="#" class="btn px-0 ml-3 icon-btn">
-                        <i class="fas fa-heart text-primary"></i>
-                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                    </a>
-                    <a href="Cart.jsp" class="btn px-0 ml-3 icon-btn">
-                        <i class="fas fa-shopping-cart text-primary"></i>
-                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                            ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                        </span>
-                    </a>
-                    <a href="order?action=view" class="btn px-0 ml-3 icon-btn">
-                        <i class="fas fa-clipboard-list text-primary"></i>
-                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                            ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
-                        </span>
-                    </a>
-                </div>
-            </nav>
+            </div>
         </div>
-    </div>
-</div>
-<!-- Navbar End -->
+        <!-- Navbar End -->
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

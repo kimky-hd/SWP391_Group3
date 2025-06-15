@@ -26,6 +26,21 @@ public class Product {
 
     public Product() {
     }
+    
+    public Product(int productID, String title, String image, double price, int quantity, String description, int categoryID, int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire) {
+        this.productID = productID;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.categoryID = categoryID;
+        this.colorID = colorID;
+        this.seasonID = seasonID;
+        this.thanhphan = thanhphan;
+        this.dateImport = dateImport;
+        this.dateExpire = dateExpire;
+    }
 
     public Product(int productID, String title, String image, double price, int quantity, String description, int categoryID, int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire, String status) {
         this.productID = productID;

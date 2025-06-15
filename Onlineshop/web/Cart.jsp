@@ -3,14 +3,11 @@
     Created on : May 26, 2025, 10:25:03 AM
     Author     : kimky
 --%>
-
-
 <%@ page import="Model.Account" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="Model.Account" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:include page="subiz-chat.jsp" />
 <!DOCTYPE html>
 <html lang="en">
 
@@ -284,9 +281,7 @@
     </head>
 
     <body>
-
         <jsp:include page="header.jsp" />
-
         <div class="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row px-xl-5">
@@ -404,41 +399,8 @@
             </div>
             <div class="toast-container"></div>
         </div>
-
         <jsp:include page="footer.jsp" />
-
         <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-        <!-- Logout Modal-->
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-pink text-white">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Xác nhận đăng xuất
-                            </h5>
-                            <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body py-4">
-                            <div class="text-center mb-3">
-                                <i class="fas fa-question-circle text-pink" style="font-size: 3rem;"></i>
-                            </div>
-                            <p class="text-center mb-0" style="font-size: 1.1rem; color: #000000; font-weight: 600;">
-                                Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?
-                            </p>
-                        </div>
-                        <div class="modal-footer justify-content-center border-0 pt-0">
-                            <button class="btn btn-secondary px-4" type="button" data-dismiss="modal">
-                                <i class="fas fa-times mr-2"></i>Hủy
-                            </button>
-                            <a class="btn btn-pink px-4" href="LogoutServlet">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
