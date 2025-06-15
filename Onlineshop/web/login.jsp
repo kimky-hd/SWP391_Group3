@@ -10,8 +10,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <style>
-            
-
             :root {
                 --primary: #FFB6C1;
                 --primary-hover: #FFA5B5;
@@ -200,6 +198,14 @@
                                 </div>
                                 <% } %>
                                 
+                                <!-- Nút đăng nhập Google với thiết kế mới -->
+                                <a href="LoginWithGoogle" class="btn btn-google w-100 py-3 mb-3">
+                                    <i class="fab fa-google me-2"></i> Đăng nhập bằng Google
+                                </a>
+                                
+                                <div class="or-divider">
+                                    <span>HOẶC</span>
+                                </div>
                                 
                                 <form action="LoginServlet" method="post" onsubmit="return validateForm()">
                                     <div class="mb-4">
@@ -300,7 +306,6 @@
                 return true;
             }
 
-            
             <% 
             String successMsg = (String)request.getAttribute("success");
             if(successMsg != null && !successMsg.contains("Đăng ký thành công")) { 
