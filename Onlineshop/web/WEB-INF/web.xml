@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-
-=======
->>>>>>> 440381a71609261940837b9b2c916a8f99305f50
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
         <servlet-name>ContactServlet</servlet-name>
@@ -16,10 +12,6 @@
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
     </servlet-mapping>
-<<<<<<< HEAD
-
-=======
->>>>>>> 440381a71609261940837b9b2c916a8f99305f50
     <!-- Servlet declarations -->
     <servlet>
         <servlet-name>BlogServlet</servlet-name>
@@ -148,12 +140,7 @@
         <servlet-name>ManageWishListController</servlet-name>
         <url-pattern>/ManageWishListController</url-pattern>
     </servlet-mapping>
-<<<<<<< HEAD
-
-     <filter>
-=======
     <filter>
->>>>>>> 440381a71609261940837b9b2c916a8f99305f50
         <filter-name>AdminAuthFilter</filter-name>
         <filter-class>Filter.AdminAuthFilter</filter-class>
     </filter>
@@ -161,8 +148,4 @@
         <filter-name>AdminAuthFilter</filter-name>
         <url-pattern>/dashboard.jsp</url-pattern>
     </filter-mapping>
-<<<<<<< HEAD
-
-=======
->>>>>>> 440381a71609261940837b9b2c916a8f99305f50
 </web-app>
