@@ -594,7 +594,6 @@ public class ProductDAO extends DBContext {
         }
     }
 
-
     public void removeWishList(int accountID, int productID) {
         String sql = "DELETE FROM WishList WHERE accountID = ? AND productID = ?";
         try {
@@ -652,8 +651,7 @@ public class ProductDAO extends DBContext {
                         rs.getInt(9),
                         rs.getString(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13))
+                        rs.getDate(12))
                 );
 
             }
@@ -698,4 +696,5 @@ public class ProductDAO extends DBContext {
         }
         return 0;
     }
+
 }

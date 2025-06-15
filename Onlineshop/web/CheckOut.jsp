@@ -50,6 +50,15 @@
             .form-group.error .error-message {
                 display: block;
             }
+            body {
+                background-color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                color: #555;
+                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }
         </style>
     </head>
 
@@ -147,13 +156,7 @@
                             <div class="form-group">
                                 <div class="custom-control custom-radio">
                                     <input type="radio" class="custom-control-input" name="payment" id="directcheck">
-                                    <label class="custom-control-label" for="directcheck">Chuyển khoản ngân hàng</label>
-                                </div>
-                            </div>
-                            <div class="form-group mb-4">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
-                                    <label class="custom-control-label" for="banktransfer">Ví điện tử</label>
+                                    <label class="custom-control-label" for="directcheck">Chuyển khoản qua VN Pay</label>
                                 </div>
                             </div>
                             <!-- Thay thế nút đặt hàng bằng form submit -->
@@ -169,6 +172,7 @@
                                 <button type="button" onclick="validateAndSubmit()" class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
                             </form>
 
+                            <!-- Thay thế script validateAndSubmit() -->                                
                             <script>
                                 function validateAndSubmit() {
                                     // Biến kiểm tra tính hợp lệ của form
@@ -226,7 +230,7 @@
                                     if ($('#paypal').is(':checked')) {
                                         paymentMethod = 'COD'; // Thanh toán khi nhận hàng
                                     } else if ($('#directcheck').is(':checked')) {
-                                        paymentMethod = 'Bank Transfer'; // Chuyển khoản
+                                        paymentMethod = 'VN Pay'; // Chuyển khoản qua VN Pay
                                     } else if ($('#banktransfer').is(':checked')) {
                                         paymentMethod = 'E-Wallet'; // Ví điện tử
                                     } else {
@@ -248,7 +252,36 @@
                                     $('#city').val(city);
                                     $('#paymentMethod').val(paymentMethod);
 
-                                    // Gửi dữ liệu form bằng AJAX để xử lý đặt hàng
+                                    // Nếu phương thức thanh toán là VN Pay, chuyển hướng đến VNPayController
+                                    if (paymentMethod === 'VN Pay') {
+                                        // Tạo form mới để gửi đến VNPayController
+                                        const vnpayForm = document.createElement('form');
+                                        vnpayForm.method = 'POST';
+                                        vnpayForm.action = 'vnpay';
+
+                                        // Thêm các trường dữ liệu
+                                        const addField = (name, value) => {
+                                            const input = document.createElement('input');
+                                            input.type = 'hidden';
+                                            input.name = name;
+                                            input.value = value;
+                                            vnpayForm.appendChild(input);
+                                        };
+
+                                        addField('fullName', fullName);
+                                        addField('phone', phone);
+                                        addField('email', email);
+                                        addField('address', address);
+                                        addField('district', district);
+                                        addField('city', city);
+
+                                        // Thêm form vào body và submit
+                                        document.body.appendChild(vnpayForm);
+                                        vnpayForm.submit();
+                                        return false;
+                                    }
+
+                                    // Gửi dữ liệu form bằng AJAX để xử lý đặt hàng cho các phương thức khác
                                     $.ajax({
                                         url: 'order',
                                         type: 'POST',
@@ -308,15 +341,11 @@
                                     const toast = document.createElement('div');
                                     toast.className = `toast ${type}`;
                                     toast.textContent = message;
-
                                     container.appendChild(toast);
-
                                     // Trigger reflow to enable transition
                                     toast.offsetHeight;
-
                                     // Show toast
                                     toast.classList.add('show');
-
                                     // Remove toast after 3 seconds
                                     setTimeout(() => {
                                         toast.classList.remove('show');
@@ -333,8 +362,8 @@
                                     showToast(message, messageType);
                                     // Clear the message from session
             <% 
-                session.removeAttribute("message");
-                session.removeAttribute("messageType");
+                                                    session.removeAttribute("message");
+                                                    session.removeAttribute("messageType");
             %>
                                 }
         </script>

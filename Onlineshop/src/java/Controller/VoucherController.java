@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package Controller;
 
 import DAO.VoucherDAO;
