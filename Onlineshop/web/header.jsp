@@ -5,7 +5,6 @@
 
 
 <style>
-
     .search-input {
     border-radius: 20px 0 0 20px;
     border: 2px solid var(--primary-pink);
@@ -15,15 +14,12 @@
     font-size: 1rem;
     background-color: #fffafc; /* ví dụ màu nhẹ khác biệt */
 }
-    
-   
     .sticky-navbar {
         position: sticky;
         top: 0;
         z-index: 1020;
         background-color: var(--primary);
     }
-
 </style>
 
 <!-- Topbar Start -->
@@ -86,10 +82,7 @@
         <div class="col-lg-4 col-6 text-left">
             <form action="SearchProductByTitle" class="search-form">
                 <div class="input-group">
-
-                    <input type="text" name="txt" class="form-control search-input" placeholder="Tìm kiếm sản phẩm" value="${txt}">
-
-                    <div class="input-group-append">
+                    <input type="text" name="txt" class="form-control search-input" placeholder="Tìm kiếm sản phẩm" value="${txt}">                    <div class="input-group-append">
                         <button class="btn btn-pink">
                             <i class="fa fa-search"></i>
                         </button>
@@ -106,7 +99,6 @@
 <!-- Topbar End -->
 
 <!-- Navbar Start -->
-
 <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
     <div class="row px-xl-5">
         <div class="col-lg-12">
@@ -156,11 +148,12 @@
                             ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
                         </span>
                     </a>
-
                 </div>
-            </div>
+            </nav>
         </div>
-        <!-- Navbar End -->
+    </div>
+</div>
+<!-- Navbar End -->
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
