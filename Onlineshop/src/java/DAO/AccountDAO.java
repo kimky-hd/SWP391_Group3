@@ -39,7 +39,7 @@ public class AccountDAO extends DBContext {
 
             conn = getConnection();
             // Sửa câu query để thêm điều kiện phone và isActive
-            String query = "SELECT * FROM Account WHERE (email = ? OR username = ? OR phone = ?) AND password = ? AND isActive = TRUE";
+            String query = "SELECT * FROM Account WHERE (BINARY email = ? OR BINARY username = ? OR BINARY phone = ?) AND password = ? AND isActive = TRUE";
             ps = conn.prepareStatement(query);
             ps.setString(1, userInput.trim());
             ps.setString(2, userInput.trim());

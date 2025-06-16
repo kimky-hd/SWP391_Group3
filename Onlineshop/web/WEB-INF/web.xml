@@ -142,7 +142,7 @@
     </servlet-mapping>
     <filter>
         <filter-name>AdminAuthFilter</filter-name>
-        <filter-class>Filter.AdminAuthFilter</filter-class>
+        <filter-class>CommonController.AdminAuthFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AdminAuthFilter</filter-name>
