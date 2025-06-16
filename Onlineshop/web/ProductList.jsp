@@ -13,6 +13,7 @@
         <title>Flower Shop - Product List</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
@@ -255,6 +256,7 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
+
                                     </div>
                                 </div>
                             </div>
@@ -289,6 +291,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Products End -->
 

@@ -2,12 +2,12 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <filter>
         <filter-name>AdminAuthFilter</filter-name>
-        <filter-class>Filter.AdminAuthFilter</filter-class>
-    </filter>
+        <filter-class>CommonController.AdminAuthFilter</filter-class> </filter>
     <filter-mapping>
         <filter-name>AdminAuthFilter</filter-name>
         <url-pattern>/dashboard.jsp</url-pattern>
     </filter-mapping>
+
     <servlet>
         <servlet-name>ContactServlet</servlet-name>
         <servlet-class>Controller.ContactServlet</servlet-class>
@@ -92,6 +92,16 @@
         <servlet-name>ViewCategoryListController</servlet-name>
         <servlet-class>ManagerController.ViewCategoryListController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>VNPayController</servlet-name>
+        <servlet-class>Controller.VNPayController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VNPayReturnController</servlet-name>
+        <servlet-class>Controller.VNPayReturnController</servlet-class>
+    </servlet>
+
+
     <servlet-mapping>
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
@@ -172,6 +182,15 @@
         <servlet-name>ViewCategoryListController</servlet-name>
         <url-pattern>/viewcategorylist</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VNPayController</servlet-name>
+        <url-pattern>/vnpay</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VNPayReturnController</servlet-name>
+        <url-pattern>/vnpay-return</url-pattern>
+    </servlet-mapping>
+    
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
         <welcome-file>Homepage.jsp</welcome-file>

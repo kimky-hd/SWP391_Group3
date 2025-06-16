@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
@@ -140,10 +141,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-cog"></i></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="${pageContext.request.contextPath}/img/user.jpg" alt="user" class="rounded-circle" width="32">
+                    <li class="nav-item dropdown">
+                        <% if(session.getAttribute("account") != null) { 
+                            Account acc = (Account)session.getAttribute("account");
+                        %>
+                        <a class="nav-link dropdown-toggle user-dropdown" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="${pageContext.request.contextPath}/img/user.jpg" alt="user" class="rounded-circle me-2" width="32">
+                            <%= acc.getUsername() %>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end admin-dropdown" aria-labelledby="userDropdown">
+
+                            <li>
+                                <button type="button" class="dropdown-item logout-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                                </button>
+                            </li>
+                        </ul>
+                        <% } else { %>
+                        <a class="nav-link" href="login.jsp">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </a>
+                        <% } %>
                     </li>
                 </ul>
             </div>
@@ -302,6 +320,35 @@
                     <h3>Đây là footer</h3>
                 </div>
         </footer>
+        <!-- Logout Modal -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content admin-modal">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="logoutModalLabel">
+                            <i class="fas fa-sign-out-alt me-2"></i>Xác nhận đăng xuất
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-4 text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-question-circle text-warning" style="font-size: 3rem;"></i>
+                        </div>
+                        <p class="mb-0" style="font-size: 1.1rem; color: #000000; font-weight: 600;">
+                            Bạn có chắc chắn muốn đăng xuất khỏi tài khoản admin?
+                        </p>
+                    </div>
+                    <div class="modal-footer justify-content-center border-0 pt-0">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </button>
+                        <a class="btn btn-danger px-4" href="LogoutServlet">
+                            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

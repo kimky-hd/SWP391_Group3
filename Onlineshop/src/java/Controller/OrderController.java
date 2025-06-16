@@ -176,6 +176,9 @@ public class OrderController extends HttpServlet {
                     cartDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());
                 }
 
+                // --- Bước mới: Xóa giỏ hàng từ database ---
+                cartDAO.clearCart(account.getAccountID());
+
                 // --- Bước 9: Xóa giỏ hàng khỏi session sau khi đặt hàng thành công ---
                 session.removeAttribute("cart");
                 // Cập nhật lại số lượng item trên header về 0

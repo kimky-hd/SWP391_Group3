@@ -1,4 +1,4 @@
-package Filter;
+package CommonController;
 
 import Model.Account;
 import jakarta.servlet.Filter;
