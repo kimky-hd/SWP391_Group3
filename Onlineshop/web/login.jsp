@@ -93,6 +93,7 @@
     </style>
 </head>
 <body>
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-5">
@@ -155,7 +156,6 @@
         </div>
     </div>
 
-
     <script>
         window.onload = function() {
             // Lấy cookie theo tên
@@ -168,15 +168,12 @@
                     
                     if(cookieName === name) {
                         return decodeURIComponent(cookiePair[1]);
-
                     }
                 }
                 return null;
             }
 
-        
-            // Hàm giải mã Base64
-
+            // Giải mã Base64
             function decodeBase64(str) {
                 try {
                     return atob(str);
@@ -185,7 +182,6 @@
                     return '';
                 }
             }
-
 
             // Tự động điền form từ cookie
             let savedUserInput = getCookie("savedUserInput");
@@ -220,21 +216,15 @@
                 window.location.href = "Homepage";
             }, 1500);
 
-            // Kiểm tra nếu đăng nhập thành công
             if (${sessionScope.account != null}) {
-                // Gọi servlet để cập nhật số lượng đơn hàng
                 fetch('ordercount')
                     .then(response => {
                         if (response.ok) {
-                            // Reload trang để cập nhật số lượng hiển thị
-
                             window.location.href = 'Homepage';
                         }
                     });
             }
         <% } %>
     </script>
-
 </body>
-
 </html>

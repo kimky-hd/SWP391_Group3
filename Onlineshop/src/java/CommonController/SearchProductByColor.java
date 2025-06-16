@@ -4,7 +4,9 @@
  */
 package CommonController;
 
+import DAO.CategoryDAO;
 import DAO.ProductDAO;
+import Model.Category;
 import Model.Color;
 import Model.Product;
 import Model.Season;
@@ -38,9 +40,11 @@ public class SearchProductByColor extends HttpServlet {
         String colorId = request.getParameter("colorId");
 
         List<Product> listproductByColor = productDAO.getProductByColor(colorId);
+        List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
         request.setAttribute("productList", listproductByColor);
+        request.setAttribute("listAllCategory", listAllCategory);
         request.setAttribute("listAllColors", listAllColors);
         request.setAttribute("listAllSeasons", listAllSeasons);
         request.setAttribute("selectedColorId", colorId); // colorId là giá trị người dùng chọn

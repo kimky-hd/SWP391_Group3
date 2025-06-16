@@ -18,15 +18,15 @@ public class Product {
     private String description;
     private int colorID;
     private int seasonID;
-    private String unit;
+    private String thanhphan;
     private Date dateImport;
     private Date dateExpire;
     private String status;
 
     public Product() {
     }
-
-    public Product(int productID, String title, String image, double price, int quantity, String description, int colorID, int seasonID, String unit, Date dateImport, Date dateExpire, String status) {
+    
+    public Product(int productID, String title, String image, double price, int quantity, String description,  int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire) {
         this.productID = productID;
         this.title = title;
         this.image = image;
@@ -35,26 +35,25 @@ public class Product {
         this.description = description;
         this.colorID = colorID;
         this.seasonID = seasonID;
-        this.unit = unit;
+        this.thanhphan = thanhphan;
+        this.dateImport = dateImport;
+        this.dateExpire = dateExpire;
+    }
+
+    public Product(int productID, String title, String image, double price, int quantity, String description,  int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire, String status) {
+        this.productID = productID;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.colorID = colorID;
+        this.seasonID = seasonID;
+        this.thanhphan = thanhphan;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
         this.status = status;
     }
-     public Product(int productID, String title, String image, double price, int quantity, String description, int colorID, int seasonID, String unit, Date dateImport, Date dateExpire) {
-        this.productID = productID;
-        this.title = title;
-        this.image = image;
-        this.price = price;
-        this.quantity = quantity;
-        this.description = description;
-        this.colorID = colorID;
-        this.seasonID = seasonID;
-        this.unit = unit;
-        this.dateImport = dateImport;
-        this.dateExpire = dateExpire;
-       
-    }
-    
 
     public int getProductID() {
         return productID;
@@ -120,12 +119,12 @@ public class Product {
         this.seasonID = seasonID;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getThanhphan() {
+        return thanhphan;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setThanhphan(String thanhphan) {
+        this.thanhphan = thanhphan;
     }
 
     public Date getDateImport() {
@@ -154,8 +153,12 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", unit=" + unit + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", thanhphan=" + thanhphan + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
     }
+    
+    
+
+    
     
     
     

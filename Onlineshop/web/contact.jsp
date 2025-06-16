@@ -371,23 +371,8 @@
                     $(this).addClass('animated fadeInUp');
                 }
             });
-
-
-
-            // Hiệu ứng animation khi scroll
-            $(window).scroll(function () {
-                $('.contact-info-card').each(function () {
-                    var position = $(this).offset().top;
-                    var scroll = $(window).scrollTop();
-                    var windowHeight = $(window).height();
-
-                    if (scroll > position - windowHeight + 100) {
-                        $(this).addClass('animated fadeInUp');
-                    }
-                });
-            });
-        </script>
-    </body>
-
+        });
+    </script>
+</body>
 
 </html>

@@ -3,11 +3,10 @@
     Created on : May 22, 2025, 4:26:19 AM
     Author     : Admin
 --%>
-
 <%@ page import="Model.Account" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -96,11 +95,14 @@
 
     <body>
 
-
         <c:if test="${not empty mess}">
             <div id="message-popup">${mess}</div>
         </c:if>
-       <%@ include file="header.jsp" %>
+
+        <jsp:include page="header.jsp" />
+
+
+
         <!-- Products Start -->
 
         <div class="container-fluid pt-5">
@@ -108,6 +110,20 @@
                 <!-- SIDEBAR BÊN TRÁI -->
                 <div class="col-lg-3 mb-5 sidebar-pink">
                     <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
+
+                    <!<!-- Category -->
+                    <h3>Danh mục</h3>
+                    <div class="mb-3">
+                        <c:forEach items="${listAllCategory}" var="category">
+                            <a href="searchproductbycategory?cid=${category.categoryID}"
+                               class="black-link font-weight-medium mb-2
+                               <c:if test='${selectedCategoryId == category.categoryID}'> text-warning font-weight-bold</c:if>'">
+                                ${category.categoryName} <br>
+                            </a>
+                        </c:forEach>
+
+
+                    </div>
 
                     <!-- MÀU -->
                     <h3>Màu</h3>
@@ -135,50 +151,34 @@
                         </c:forEach>                 
                     </div>
                     <!-- GIÁ -->
-                    <div class="mb-3">
-                        <h3 class="font-weight-medium mb-2">Giá</h3>
-                        <div class="d-flex mb-2">
-                            <a href="SearchPrice0to50"
-                               class="black-link font-weight-medium mb-2
-                               <c:if test='${selectedPriceRange == "0to50"}'> text-warning font-weight-bold</c:if>'">
-                                   0 Đến 50.000
-                               </a>
+                    <form action="SearchPriceMinToMax" onsubmit="return validatePriceRange()" class="mt-4">
+                        <div class="form-row align-items-end">
+                            <!-- Min Price -->
+                            <div class="col">
+                                <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
+                                <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
                             </div>
-                            <div class="d-flex mb-2">
-                                <a href="SearchPriceAbove50"
-                                   class="black-link font-weight-medium mb-2
-                                <c:if test='${selectedPriceRange == "above50"}'> text-warning font-weight-bold</c:if>'">
-                                    Trên 50.000
-                                </a> 
+
+                            <!-- Separator -->
+                            <div class="col-auto d-flex align-items-center justify-content-center">
+                                <span class="text-muted px-2">–</span>
                             </div>
-                            <form action="SearchPriceMinToMax" onsubmit="return validatePriceRang()" class="mt-4">
-                                <div class="form-row align-items-end">
-                                    <!-- Min Price -->
-                                    <div class="col">
-                                        <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
-                                        <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
-                                </div>
 
-                                <!-- Separator -->
-                                <div class="col-auto d-flex align-items-center justify-content-center">
-                                    <span class="text-muted px-2">–</span>
-                                </div>
-
-                                <!-- Max Price -->
-                                <div class="col">
-                                    <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
-                                    <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
-                                </div>
-
-                                <!-- Search Button -->
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary mt-3">Lọc</button>
-                                </div>
+                            <!-- Max Price -->
+                            <div class="col">
+                                <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
+                                <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
                             </div>
-                        </form>
 
+                            <!-- Search Button -->
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary mt-3">Lọc</button>
+                            </div>
+                        </div>
 
-                    </div>
+                        <!-- ✅ Đưa thông báo lỗi ra ngoài hàng input để không làm co giao diện -->
+                        <div id="priceError" class="text-danger small mt-2" style="display: none;"></div>
+                    </form>
 
 
 
@@ -195,7 +195,7 @@
                             <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
                                 <div class="card product-item border-0 mb-4">
                                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <img class="img-fluid h-100" src="${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
+                                        <img class="img-fluid h-100" src="${pageContext.request.contextPath}/img/${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
                                     </div>
                                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                         <h6 class="text-truncate mb-3">
@@ -234,9 +234,27 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="AddWishlistController?pid=${product.getProductID()}" class="btn btn-sm text-dark p-0">
-                                            <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
-                                        </a>
+                                        <c:set var="wishlist" value="${requestScope.wishlistProductIDs}" />
+                                        <c:set var="isLiked" value="false" />
+
+                                        <c:forEach var="item" items="${wishlist}">
+                                            <c:if test="${item.productID == product.productID}">
+                                                <c:set var="isLiked" value="true" />
+                                            </c:if>
+                                        </c:forEach>
+
+                                        <c:choose>
+                                            <c:when test="${isLiked}">
+                                                <a href="AddWishlistController?pid=${product.productID}" class="btn btn-sm text-danger p-0 font-weight-bold">
+                                                    <i class="fas fa-heart mr-1"></i>Đã yêu thích
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="AddWishlistController?pid=${product.productID}" class="btn btn-sm text-dark p-0">
+                                                    <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </div>
@@ -272,65 +290,9 @@
             </div>
         </div>
 
-                                
         <!-- Products End -->
 
-        <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
-            <div class="row px-xl-5 pt-5">
-                <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                    <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
-                    <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                    <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
-                </div>
-                <div class="col-lg-8 col-md-12">
-                    <div class="row">
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
-                            <div class="d-flex flex-column justify-content-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
-                            <div class="d-flex flex-column justify-content-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-                            <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
-                            <form action="">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Your Email Address">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary">Sign Up</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
-                            <div class="d-flex">
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                                <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <jsp:include page="footer.jsp" />
 
 
         <!-- JavaScript Libraries -->
@@ -346,39 +308,39 @@
         <!-- Toast Message Container -->
         <style>
             .toast-container {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 9999;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
 
             .toast {
-                padding: 15px 25px;
-                margin-bottom: 12px;
-                border-radius: 12px;
-                color: #5f375f;
-                background-color: #fce4ec;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                opacity: 0;
-                transform: translateX(100%);
-                transition: all 0.4s ease-in-out;
-                border-left: 6px solid #f48fb1;
+            padding: 15px 25px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            color: #5f375f;
+            background-color: #fce4ec;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease-in-out;
+            border-left: 6px solid #f48fb1;
             }
 
             .toast.show {
-                opacity: 1;
-                transform: translateX(0);
+            opacity: 1;
+            transform: translateX(0);
             }
 
             .toast.success {
-                background-color: #f8bbd0;
-                border-left-color: #40ec46;
+            background-color: #f8bbd0;
+            border-left-color: #40ec46;
             }
 
             .toast.error {
-                background-color: #fce4ec;
-                border-left-color: #d81b60;
+            background-color: #fce4ec;
+            border-left-color: #d81b60;
             }
         </style>
 
@@ -436,6 +398,49 @@
                 });
             }
         </script>
+
+        <!-- JavaScript validation -->
+        <script>
+            function validatePriceRange() {
+                const minInput = document.getElementById('priceMin');
+                const maxInput = document.getElementById('priceMax');
+                const errorBox = document.getElementById('priceError');
+
+                const min = parseFloat(minInput.value);
+                const max = parseFloat(maxInput.value);
+
+                // Xóa thông báo cũ
+                errorBox.textContent = "";
+                errorBox.style.display = "none";
+
+                // Kiểm tra giá âm
+                if (!isNaN(min) && min < 0) {
+                    errorBox.textContent = "⚠️ Giá thấp nhất không thể là số âm.";
+                    errorBox.style.display = "block";
+                    minInput.focus();
+                    return false;
+                }
+
+                if (!isNaN(max) && max < 0) {
+                    errorBox.textContent = "⚠️ Giá cao nhất không thể là số âm.";
+                    errorBox.style.display = "block";
+                    maxInput.focus();
+                    return false;
+                }
+
+                // Kiểm tra max < min
+                if (!isNaN(min) && !isNaN(max) && max < min) {
+                    errorBox.textContent = "⚠️ Giá cao nhất không thể nhỏ hơn giá thấp nhất.";
+                    errorBox.style.display = "block";
+                    maxInput.focus();
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+
+
 
         <%
             // Xoá session sau khi hiển thị
