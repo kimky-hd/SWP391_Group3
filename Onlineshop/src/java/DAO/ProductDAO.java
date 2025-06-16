@@ -6,6 +6,7 @@ package DAO;
 
 import Model.AccountProfile;
 import Model.Category;
+import Model.CategoryProduct;
 import Model.Color;
 import Model.Feedback;
 import Model.Product;
@@ -47,11 +48,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)
+                        rs.getString(12)
                 ));
             }
         } catch (SQLException e) {
@@ -75,11 +75,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13));
+                        rs.getString(12));
             }
         } catch (SQLException e) {
             System.out.println("getProductById" + e.getMessage());
@@ -91,7 +90,8 @@ public class ProductDAO extends DBContext {
     public List<Product> getProductByCategory(String categoryId) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.*," + statuscase + " FROM Product p\n"
-                + "                JOIN Category c ON p.categoryID = c.categoryID \n"
+                + "                JOIN CategoryProduct cb ON p.productID = cb.productID \n"
+                + "                JOIN Category c ON c.categoryID = cb.categoryID \n"
                 + "                WHERE c.categoryID = ?";
         try {
             ps = connection.prepareStatement(sql);
@@ -106,11 +106,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductByColor" + e.getMessage());
@@ -136,11 +135,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductByColor" + e.getMessage());
@@ -166,11 +164,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductBySeason" + e.getMessage());
@@ -193,16 +190,44 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        rs.getString(12)));
             }
         } catch (SQLException e) {
             System.out.println("getProductByTitle" + e.getMessage());
         }
         return list;
+    }
+    
+    public void addCategoryProduct(int insertedProductID, int categoryID){
+        String sql = "INSERT INTO CategoryProduct \n"
+                + "(productID, categoryID) \n"
+                + "VALUES \n"
+                + "(?, ?)";
+        try{
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, insertedProductID);
+            ps.setInt(2, categoryID);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println("addCategoryPRoduct" + e.getMessage());
+        }
+    }
+    
+    public void updateCategoryProduct(int updatedProductID, int selectedCategoryID){
+        String sql = "UPDATE CategoryProduct \n"
+                + "SET categoryID = ? \n"
+                + "WHERE productID = ?";
+        try{
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, updatedProductID);
+            ps.setInt(2, selectedCategoryID);
+            ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("updateCategoryProduct" + e.getMessage());
+        }
     }
 
     public void addProduct(Product newproduct) {
@@ -212,7 +237,6 @@ public class ProductDAO extends DBContext {
                 + "            price,\n"
                 + "            quantity,\n"
                 + "            description,\n"
-                + "             categoryID,\n"
                 + "            colorID,\n"
                 + "            seasonID,\n"
                 + "            thanhphan,\n"
@@ -230,12 +254,11 @@ public class ProductDAO extends DBContext {
             ps.setDouble(3, newproduct.getPrice());
             ps.setInt(4, newproduct.getQuantity());
             ps.setString(5, newproduct.getDescription());
-            ps.setInt(6, newproduct.getCategoryID());
-            ps.setInt(7, newproduct.getColorID());
-            ps.setInt(8, newproduct.getSeasonID());
-            ps.setString(9, newproduct.getThanhphan());
-            ps.setDate(10, new java.sql.Date(newproduct.getDateImport().getTime()));
-            ps.setDate(11, new java.sql.Date(newproduct.getDateExpire().getTime()));
+            ps.setInt(6, newproduct.getColorID());
+            ps.setInt(7, newproduct.getSeasonID());
+            ps.setString(8, newproduct.getThanhphan());
+            ps.setDate(9, new java.sql.Date(newproduct.getDateImport().getTime()));
+            ps.setDate(10, new java.sql.Date(newproduct.getDateExpire().getTime()));
         } catch (SQLException e) {
             System.out.println("addProduct" + e.getMessage());
         }
@@ -260,7 +283,6 @@ public class ProductDAO extends DBContext {
                 + "            price = ?,\n"
                 + "            quantity = ?,\n"
                 + "            description = ?,\n"
-                + "             categoryID = ?,\n"
                 + "            colorID = ?,\n"
                 + "            seasonID = ?,\n"
                 + "            thanhphan = ?,\n"
@@ -274,13 +296,12 @@ public class ProductDAO extends DBContext {
             ps.setDouble(3, updateproduct.getPrice());
             ps.setInt(4, updateproduct.getQuantity());
             ps.setString(5, updateproduct.getDescription());
-            ps.setInt(6, updateproduct.getCategoryID());
-            ps.setInt(7, updateproduct.getColorID());
-            ps.setInt(8, updateproduct.getSeasonID());
-            ps.setString(9, updateproduct.getThanhphan());
-            ps.setDate(10, new java.sql.Date(updateproduct.getDateImport().getTime()));
-            ps.setDate(11, new java.sql.Date(updateproduct.getDateExpire().getTime()));
-            ps.setInt(12, updateproduct.getProductID());
+            ps.setInt(6, updateproduct.getColorID());
+            ps.setInt(7, updateproduct.getSeasonID());
+            ps.setString(8, updateproduct.getThanhphan());
+            ps.setDate(9, new java.sql.Date(updateproduct.getDateImport().getTime()));
+            ps.setDate(10, new java.sql.Date(updateproduct.getDateExpire().getTime()));
+            ps.setInt(11, updateproduct.getProductID());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -312,6 +333,22 @@ public class ProductDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("getAllCategory" + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List<CategoryProduct> getCategoryProduct(){
+        List<CategoryProduct> list = new ArrayList<>();
+        String sql = "SELECT * FROM CategoryProduct";
+        try{
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(new CategoryProduct(rs.getInt(1), rs.getInt(2)
+                ));
+            }
+        }catch(SQLException e){
+            System.out.println("getCategoryProduct" + e.getMessage());
         }
         return list;
     }
@@ -364,11 +401,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)
+                        rs.getString(12)
                 ));
             }
         } catch (SQLException e) {
@@ -407,11 +443,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        rs.getString(12)));
 
             }
         } catch (SQLException e) {
@@ -436,11 +471,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        rs.getString(12)));
 
             }
         } catch (SQLException e) {
@@ -467,11 +501,10 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)
+                        rs.getString(12)
                 ));
             }
         } catch (SQLException e) {
@@ -626,7 +659,6 @@ public class ProductDAO extends DBContext {
                 + "    p.price,\n"
                 + "    p.quantity,\n"
                 + "    p.description,\n"
-                + "     p.categoryID,\n"
                 + "    p.colorID,\n"
                 + "    p.seasonID,\n"
                 + "    p.thanhphan,\n"
@@ -648,10 +680,11 @@ public class ProductDAO extends DBContext {
                         rs.getString(6),
                         rs.getInt(7),
                         rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
+                        rs.getString(9),
+                        rs.getDate(10),
                         rs.getDate(11),
-                        rs.getDate(12))
+                        rs.getString(12))
+
                 );
 
             }

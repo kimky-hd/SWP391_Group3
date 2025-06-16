@@ -116,7 +116,7 @@
                     <h3>Danh mục</h3>
                     <div class="mb-3">
                         <c:forEach items="${listAllCategory}" var="category">
-                            <a href="searchproductbycategory?categoryId=${category.categoryID}"
+                            <a href="searchproductbycategory?cid=${category.categoryID}"
                                class="black-link font-weight-medium mb-2
                                <c:if test='${selectedCategoryId == category.categoryID}'> text-warning font-weight-bold</c:if>'">
                                 ${category.categoryName} <br>

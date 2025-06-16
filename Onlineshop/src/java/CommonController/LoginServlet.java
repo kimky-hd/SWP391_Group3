@@ -86,7 +86,9 @@ public class LoginServlet extends HttpServlet {
             // Kiểm tra role và chuyển hướng
             if(account.getRole() == 1) {
                 response.sendRedirect("admin.jsp");
-            } else {
+            }if(account.getRole() == 2) {
+                response.sendRedirect("viewcategorylist");
+            }else {
                 response.sendRedirect("Homepage");
             }
         } else {
