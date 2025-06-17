@@ -10,6 +10,15 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <style>
+            .search-input {
+    border-radius: 20px 0 0 20px;
+    border: 2px solid var(--primary-pink);
+    border-right: none;
+    padding: 0.375rem 1rem;
+    height: 36px; /* hoặc chiều cao bạn muốn */
+    font-size: 1rem;
+    background-color: #fffafc; /* ví dụ màu nhẹ khác biệt */
+            }
             :root {
                 --primary: #FFB6C1;
                 --primary-hover: #FFA5B5;
@@ -173,8 +182,45 @@
     </head>
     <body>
         <!-- Include header -->
-        <jsp:include page="header.jsp" />
+        
+        <div class="container-fluid">
+            <div class="d-inline-flex align-items-center d-block d-lg-none">
+                <a href="" class="btn px-0 ml-2">
+                    <i class="fas fa-heart text-dark"></i>
+                    <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                </a>
+                <a href="" class="btn px-0 ml-2">
+                    <i class="fas fa-shopping-cart text-dark"></i>
+                    <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+        <div class="col-lg-4">
+            <a href="Homepage.jsp" class="text-decoration-none logo-container">
+                <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
+                <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
+            </a>
+        </div>
+        <div class="col-lg-4 col-6 text-left">
+            <form action="SearchProductByTitle" class="search-form">
+                <div class="input-group">
+                    <input type="text" name="txt" class="form-control search-input" placeholder="Tìm kiếm sản phẩm" value="${txt}">                    <div class="input-group-append">
+                        <button class="btn btn-pink">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-4 col-6 text-end ms-auto">
+            <p class="m-0">Hỗ trợ khách hàng</p>
+            <h5 class="m-0 text-pink">+012 345 6789</h5>
+        </div>
 
+    </div>
+</div>
         <!-- Login container -->
         <div class="login-container">
             <div class="container">
