@@ -119,6 +119,9 @@ public class VNPayReturnController extends HttpServlet {
                             cartDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());
                         }
                         
+                        // Xóa giỏ hàng từ database
+                        cartDAO.clearCart(account.getAccountID());
+                        
                         // Xóa giỏ hàng khỏi session
                         session.removeAttribute("cart");
                         session.setAttribute("cartItemCount", 0);

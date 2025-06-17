@@ -16,7 +16,6 @@ public class Product {
     private double price;
     private int quantity;
     private String description;
-    private int categoryID;
     private int colorID;
     private int seasonID;
     private String thanhphan;
@@ -27,14 +26,13 @@ public class Product {
     public Product() {
     }
     
-    public Product(int productID, String title, String image, double price, int quantity, String description, int categoryID, int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire) {
+    public Product(int productID, String title, String image, double price, int quantity, String description,  int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire) {
         this.productID = productID;
         this.title = title;
         this.image = image;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
-        this.categoryID = categoryID;
         this.colorID = colorID;
         this.seasonID = seasonID;
         this.thanhphan = thanhphan;
@@ -42,14 +40,13 @@ public class Product {
         this.dateExpire = dateExpire;
     }
 
-    public Product(int productID, String title, String image, double price, int quantity, String description, int categoryID, int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire, String status) {
+    public Product(int productID, String title, String image, double price, int quantity, String description,  int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire, String status) {
         this.productID = productID;
         this.title = title;
         this.image = image;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
-        this.categoryID = categoryID;
         this.colorID = colorID;
         this.seasonID = seasonID;
         this.thanhphan = thanhphan;
@@ -106,14 +103,6 @@ public class Product {
         this.description = description;
     }
 
-    public int getCategoryID() {
-        return categoryID;
-    }
-
-    public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
-    }
-
     public int getColorID() {
         return colorID;
     }
@@ -164,7 +153,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", categoryID=" + categoryID + ", colorID=" + colorID + ", seasonID=" + seasonID + ", thanhphan=" + thanhphan + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", thanhphan=" + thanhphan + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
     }
     
     

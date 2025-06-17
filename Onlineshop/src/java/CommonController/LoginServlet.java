@@ -84,10 +84,15 @@ public class LoginServlet extends HttpServlet {
             }
             
             // Kiểm tra role và chuyển hướng
-            if(account.getRole() == 1) {
+            if (account.getRole() == 1) {
                 response.sendRedirect("admin.jsp");
+                return;
+            } else if (account.getRole() == 2) {
+                response.sendRedirect("viewcategorylist");
+                return;
             } else {
                 response.sendRedirect("Homepage");
+                return;
             }
         } else {
             request.setAttribute("error", "Sai thông tin đăng nhập!");

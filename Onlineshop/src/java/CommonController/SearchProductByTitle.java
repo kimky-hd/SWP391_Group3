@@ -5,6 +5,7 @@
 
 package CommonController;
 
+import DAO.CategoryDAO;
 import DAO.ProductDAO;
 import Model.Category;
 import Model.Color;

@@ -155,7 +155,7 @@ public class CartController extends HttpServlet {
             cart.addItem(product, quantity);
 
             // Lưu vào database nếu đã đăng nhập
-            cartDAO.addToCart(account.getAccountID(), productId, quantity);
+            cartDAO.addToCart(account.getAccountID(), productId, quantity, false);
 
             // Đặt thông báo thành công vào session
             request.getSession().setAttribute("message", "Đã thêm sản phẩm vào giỏ hàng");
@@ -178,10 +178,20 @@ public class CartController extends HttpServlet {
      * trong giỏ 4. Kiểm tra số lượng tồn kho 5. Cập nhật số lượng và trả về kết
      * quả
      */
-    private void updateCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws IOException {
+    private void updateCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
+            throws ServletException, IOException {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+            // Lấy thông tin người dùng từ session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+
+            // Nếu người dùng đã đăng nhập, cập nhật số lượng trong database
+            if (account != null) {
+                cartDAO.addToCart(account.getAccountID(), productId, quantity, true);
+            }
 
             // Nếu số lượng <= 0 thì xoá sản phẩm khỏi giỏ
             //            if (quantity <= 0) {
@@ -204,16 +214,9 @@ public class CartController extends HttpServlet {
                 return;
             }
 
+            // Cập nhật số lượng
             // Cập nhật số lượng trong session
             cart.updateItem(productId, quantity);
-
-            // Thêm đoạn code này để cập nhật vào database nếu người dùng đã đăng nhập
-            Account account = (Account) request.getSession().getAttribute("account");
-            if (account != null) {
-                // Sử dụng biến thành viên cartDAO thay vì tạo mới
-                cartDAO.updateProductQuantity(productId, quantity);
-            }
-
             request.getSession().setAttribute("message", "Cập nhật giỏ hàng thành công");
             request.getSession().setAttribute("messageType", "success");
             response.sendRedirect(request.getHeader("referer"));
@@ -321,7 +324,8 @@ public class CartController extends HttpServlet {
     /**
      * Hiển thị trang giỏ hàng Chuyển hướng người dùng đến trang Cart.jsp
      */
-    private void displayCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void displayCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // Kiểm tra đăng nhập trước khi hiển thị giỏ hàng
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
@@ -343,19 +347,18 @@ public class CartController extends HttpServlet {
      * Quy trình: 1. Đặt giỏ hàng vào request attribute 2. Chuyển hướng đến
      * trang giỏ hàng
      */
-    private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
+    private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
+            throws ServletException, IOException {
+        // Kiểm tra đăng nhập trước khi hiển thị giỏ hàng
         HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            // Lưu URL hiện tại để chuyển hướng lại sau khi đăng nhập
+            session.setAttribute("redirectURL", "Cart.jsp");
 
-        // Thêm đoạn code này để tải giỏ hàng từ database nếu session trống và người dùng đã đăng nhập
-        if (cart == null || cart.getItems().isEmpty()) {
-            Account account = (Account) session.getAttribute("account");
-            if (account != null) {
-                CartDAO cartDAO = new CartDAO();
-                cart = cartDAO.getCartByAccount_Id(account.getAccountID());
-                if (cart != null) {
-                    session.setAttribute("cart", cart);
-                }
-            }
+            // Chuyển hướng đến trang đăng nhập
+            response.sendRedirect("login.jsp");
+            return;
         }
 
         request.setAttribute("cart", cart);
