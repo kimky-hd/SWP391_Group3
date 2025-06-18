@@ -59,6 +59,51 @@
                 background-attachment: fixed;
                 background-position: center;
             }
+            
+            /* CSS cho dropdown box */
+            select.form-control {
+                border: 2px solid #f8bbd0;
+                border-radius: 8px;
+                padding: 8px 12px;
+                background-color: #fffafc;
+                color: #5f375f;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-image: url('data:image/svg+xml;utf8,<svg fill="%23f48fb1" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+                background-repeat: no-repeat;
+                background-position: right 10px center;
+            }
+            
+            select.form-control:focus {
+                border-color: #e91e63;
+                box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+                outline: none;
+            }
+            
+            select.form-control option {
+                background-color: #fff;
+                color: #5f375f;
+                padding: 10px;
+            }
+            
+            select.form-control option:hover,
+            select.form-control option:focus {
+                background-color: #fce4ec;
+            }
+            
+            /* Thêm hiệu ứng hover cho select */
+            select.form-control:hover {
+                border-color: #e91e63;
+            }
+            
+            /* Tùy chỉnh màu sắc khi chọn option */
+            select.form-control option:checked {
+                background-color: #fce4ec;
+                color: #e91e63;
+            }
         </style>
     </head>
 
@@ -77,6 +122,10 @@
                 <div class="col-lg-8">
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Thông tin giao hàng</span></h5>
                     <div class="bg-light p-30 mb-5">
+                        <!-- Thêm thông báo lưu ý về khu vực giao hàng -->
+                        <div class="alert alert-info mb-4">
+                            <strong>Lưu ý:</strong> Sản phẩm chỉ được bán trong nội thành Hà Nội với giá vận chuyển cố định: 30.000 đ
+                        </div>
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>Họ và tên <span class="text-danger">*</span></label>
@@ -95,12 +144,26 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Thành phố <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" placeholder="TP.HCM" id="cityInput">
+                                <input class="form-control" type="text" value="Hà Nội" id="cityInput" readonly>
                                 <div class="error-message" id="cityError"></div>
                             </div>          
                             <div class="col-md-6 form-group">
                                 <label>Quận/Huyện <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" placeholder="Quận 1" id="districtInput">
+                                <select class="form-control" id="districtInput">
+                                    <option value="">Chọn quận/huyện</option>
+                                    <option value="Ba Đình">Ba Đình</option>
+                                    <option value="Hoàn Kiếm">Hoàn Kiếm</option>
+                                    <option value="Hai Bà Trưng">Hai Bà Trưng</option>
+                                    <option value="Đống Đa">Đống Đa</option>
+                                    <option value="Tây Hồ">Tây Hồ</option>
+                                    <option value="Cầu Giấy">Cầu Giấy</option>
+                                    <option value="Thanh Xuân">Thanh Xuân</option>
+                                    <option value="Hoàng Mai">Hoàng Mai</option>
+                                    <option value="Long Biên">Long Biên</option>
+                                    <option value="Nam Từ Liêm">Nam Từ Liêm</option>
+                                    <option value="Bắc Từ Liêm">Bắc Từ Liêm</option>
+                                    <option value="Hà Đông">Hà Đông</option>
+                                </select>
                                 <div class="error-message" id="districtError"></div>
                             </div>          
                             <div class="col-md-6 form-group">
