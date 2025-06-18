@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -55,7 +56,7 @@ public class UpdateCategoryController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
        String categoryID = request.getParameter("categoryID");
-       request.setAttribute("categoryId",categoryID);
+       request.setAttribute("categoryID",categoryID);
        request.getRequestDispatcher("Manager_UpdateCategory.jsp").forward(request, response);
     } 
 
@@ -73,15 +74,16 @@ public class UpdateCategoryController extends HttpServlet {
         String categoryName =request.getParameter("categoryName");
         CategoryDAO catedao =new CategoryDAO();
         boolean checkduplicate = catedao.CheckDuplicateCategory(categoryName);
-        // neu the loai da ton tai
+        
         if(checkduplicate){
             request.setAttribute("msg", "Thể loại này đã tồn tại!");
             request.getRequestDispatcher("Manager_UpdateCategory.jsp").forward(request, response);
         }else{
+            HttpSession session = request.getSession();
             boolean updatecheck = catedao.update(categoryID,categoryName);
             if(updatecheck){
-            request.setAttribute("msg", "Update thành công!");
-            response.sendRedirect("category");
+            session.setAttribute("success", "Sửa thành công!");
+            response.sendRedirect("viewcategorylist");
             }
         }
     }
