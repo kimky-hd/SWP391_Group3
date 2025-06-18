@@ -209,4 +209,16 @@
         <welcome-file>Homepage.jsp</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
+    <!-- Thêm vào phần <servlet> -->
+    <servlet>
+        <servlet-name>AddressController</servlet-name>
+        <servlet-class>Controller.AddressController</servlet-class>
+    </servlet>
+    
+    <!-- Thêm vào phần <servlet-mapping> -->
+    <servlet-mapping>
+        <servlet-name>AddressController</servlet-name>
+        <url-pattern>/address</url-pattern>
+    </servlet-mapping>
 </web-app>
