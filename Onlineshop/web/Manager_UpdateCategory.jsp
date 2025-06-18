@@ -1,8 +1,14 @@
+<%-- 
+    Document   : Manager_UpdateCategory
+    Created on : Jun 17, 2025, 4:35:42 AM
+    Author     : Admin
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,29 +20,29 @@
         <!-- Custom CSS -->
         <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
-        
     </head>
-
     <body>
+
         <jsp:include page="manager_topbarsidebar.jsp" />
+
 
         <!-- Main Content -->
         <main class="main-content">
             <div class="container-fluid">
-                <h2>Thêm thể loại sách</h2>
+                <h2>Sửa danh mục sản phẩm</h2>
 
-                <form action="addcategory" method="post" onsubmit="return validateForm();" >
+                <form action="updatecategory" method="post" >
                     <div class="form-group">
-                        <label>Tên thể loại</label>
-                        <input name="categoryName" required class="form-control" />                          
+                        <label>Tên danh mục</label>
+                        <input name="categoryName" required class="form-control" />   
+                        <input type="hidden" name="categoryID" value="${categoryID}" />
                     </div>
-                    <button type="submit" class="btn btn-primary">Thêm thể loại</button>
+                    <button type="submit" class="btn btn-primary">Sửa danh mục</button>
                     <p class="text-danger" style="color:#140C40">${msg}</p>
-                    <p style="color:green">${Success}</p>
+
                 </form>
             </div>
-            <!-- /.container-fluid -->
-        </main> 
+        </main>
 
         <!-- Footer -->
         <footer class="footer">
@@ -45,10 +51,5 @@
                     <h3>Đây là footer</h3>
                 </div>
         </footer>
-
-        <!-- Bootstrap Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
-
     </body>
 </html>

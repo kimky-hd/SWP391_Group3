@@ -100,4 +100,20 @@ public class CategoryDAO extends DBContext {
         }
         return false;
     }
+    
+    public List<Category> getCategoryByName(String txt) {
+        List<Category> list = new ArrayList<>();
+        String sql = "Select * from Category WHERE categoryName LIKE CONCAT('%" + txt + "%') ";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Category(rs.getInt(1),
+                        rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            System.out.println("getCategoryByName" + e.getMessage());
+        }
+        return list;
+    }
 }
