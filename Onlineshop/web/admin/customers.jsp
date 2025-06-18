@@ -212,7 +212,7 @@
             <li>
                 <a href="${pageContext.request.contextPath}/customers" class="nav-link active">
                     <i class="fas fa-users"></i>
-                    <span>Quản lý Khách hàng</span>
+                    <span>Quản lý Người Dùng</span>
                 </a>
             </li>
             <li>
@@ -253,11 +253,11 @@
         <div class="container-fluid px-4">
             <div class="row mb-4">
                 <div class="col">
-                    <h2 class="mt-4">Quản lý Khách hàng</h2>
+                    <h2 class="mt-4">Quản Lý Người Dùng</h2>
                 </div>
                 <div class="col-auto mt-4">
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
-                        <i class="fas fa-plus"></i> Thêm Khách hàng
+                        <i class="fas fa-plus"></i> Thêm Người Dùng
                     </button>
                 </div>
             </div>
@@ -280,7 +280,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    Danh sách Khách hàng
+                    Danh sách Người Dùng
                 </div>
                 <div class="card-body">
                     <table class="table table-striped table-bordered">
@@ -368,7 +368,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addCustomerModalLabel">Thêm Khách hàng mới</h5>
+                    <h5 class="modal-title" id="addCustomerModalLabel">Thêm người dùng mới</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="customers" method="post">
@@ -410,7 +410,7 @@
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
                 <h5 class="modal-title" id="viewCustomerModalLabel">
-                    <i class="fas fa-user-circle me-2"></i>Chi tiết Khách hàng
+                    <i class="fas fa-user-circle me-2"></i>Chi Tiết Người Dùng
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -465,7 +465,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editCustomerModalLabel">Chỉnh sửa Khách hàng</h5>
+                    <h5 class="modal-title" id="editCustomerModalLabel">Chỉnh Sửa Người Dùng</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="customers" method="post">
