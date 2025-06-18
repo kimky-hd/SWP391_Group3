@@ -94,19 +94,19 @@
                                 <div class="error-message" id="phoneError"></div>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label>Địa chỉ <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" placeholder="123 Đường ABC" id="addressInput">
-                                <div class="error-message" id="addressError"></div>
-                            </div>
+                                <label>Thành phố <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="TP.HCM" id="cityInput">
+                                <div class="error-message" id="cityError"></div>
+                            </div>          
                             <div class="col-md-6 form-group">
                                 <label>Quận/Huyện <span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" placeholder="Quận 1" id="districtInput">
                                 <div class="error-message" id="districtError"></div>
-                            </div>
+                            </div>          
                             <div class="col-md-6 form-group">
-                                <label>Thành phố <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" placeholder="TP.HCM" id="cityInput">
-                                <div class="error-message" id="cityError"></div>
+                                <label>Địa chỉ <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" placeholder="123 Đường ABC" id="addressInput">
+                                <div class="error-message" id="addressError"></div>
                             </div>
                         </div>
                     </div>
