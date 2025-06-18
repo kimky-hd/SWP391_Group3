@@ -64,6 +64,44 @@
                 z-index: 1020;
                 background-color: var(--primary);
             }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropdown-button {
+                background-color: #f8f9fa;
+                border: 1px solid #ccc;
+                padding: 8px 16px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                background-color: white;
+                min-width: 180px;
+                box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+                z-index: 1;
+                border: 1px solid #ddd;
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 10px 14px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
         </style>
         <style>
             #message-popup {
@@ -112,11 +150,13 @@
                 <div class="col-lg-3 mb-5 sidebar-pink">
                     <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
 
+                    <!-- SẮP XẾP THEO GIÁ -->
+
                     <!<!-- Category -->
                     <h3>Danh mục</h3>
                     <div class="mb-3">
                         <c:forEach items="${listAllCategory}" var="category">
-                            <a href="searchproductbycategory?categoryId=${category.categoryID}"
+                            <a href="searchproductbycategory?cid=${category.categoryID}"
                                class="black-link font-weight-medium mb-2
                                <c:if test='${selectedCategoryId == category.categoryID}'> text-warning font-weight-bold</c:if>'">
                                 ${category.categoryName} <br>
@@ -187,9 +227,20 @@
 
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
                 <div class="col-lg-9">
-                    <div class="text-center mb-4">
-                        <h2 class="section-title px-5"><span class="px-2">Danh sách sản phẩm</span></h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h2 style="margin: 0;">Danh sách sản phẩm</h2>
+
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                            <div class="dropdown">
+                                <div class="dropdown-button">Lọc theo giá ⏷</div>
+                                <div class="dropdown-content">
+                                    <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
+                                    <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
 
                     <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
@@ -284,6 +335,7 @@
                                     <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
                                 </li>
                             </c:if>
+
                         </ul>
                     </c:if>
 

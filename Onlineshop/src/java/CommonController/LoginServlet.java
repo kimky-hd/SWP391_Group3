@@ -1,8 +1,10 @@
 package CommonController;
 
 import DAO.AccountDAO;
+import DAO.CartDAO;
 import DAO.ProfileDAO;
 import Model.Account;
+import Model.Cart;
 import Model.Profile;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -47,6 +49,13 @@ public class LoginServlet extends HttpServlet {
             
             session.setAttribute("profile", profile);
             
+            // Thêm đoạn code này để tải giỏ hàng từ database vào session
+            CartDAO cartDAO = new CartDAO();
+            Cart cart = cartDAO.getCartByAccount_Id(account.getAccountID());
+            if (cart != null) {
+                session.setAttribute("cart", cart);
+            }
+            
             // Xử lý Remember Me
             if (rememberMe != null) {
                 String encodedUserInput = Base64.getEncoder().encodeToString(userInput.getBytes());
@@ -75,10 +84,15 @@ public class LoginServlet extends HttpServlet {
             }
             
             // Kiểm tra role và chuyển hướng
-            if(account.getRole() == 1) {
-                response.sendRedirect("dashboard.jsp");
+            if (account.getRole() == 1) {
+                response.sendRedirect("admin.jsp");
+                return;
+            } else if (account.getRole() == 2) {
+                response.sendRedirect("viewcategorylist");
+                return;
             } else {
                 response.sendRedirect("Homepage");
+                return;
             }
         } else {
             request.setAttribute("error", "Sai thông tin đăng nhập!");
