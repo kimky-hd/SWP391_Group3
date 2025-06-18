@@ -4,11 +4,12 @@ import Model.Voucher;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VoucherDAO extends DBContext {
-    
+
     // Lấy voucher theo ID
     public Voucher getVoucherById(int voucherId) {
         String sql = "SELECT * FROM Voucher WHERE voucherId = ?";
@@ -16,7 +17,7 @@ public class VoucherDAO extends DBContext {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, voucherId);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 return mapVoucher(rs);
             }
@@ -38,12 +39,12 @@ public class VoucherDAO extends DBContext {
                     AND v.isActive = true 
                     AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate
                     """;
-        
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, accountId);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 vouchers.add(mapVoucher(rs));
             }
@@ -92,7 +93,7 @@ public class VoucherDAO extends DBContext {
                     AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate 
                     AND v.usedCount < v.usageLimit
                     """;
-        
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, voucherId);
@@ -120,4 +121,112 @@ public class VoucherDAO extends DBContext {
         voucher.setDescription(rs.getString("description"));
         return voucher;
     }
+
+    // Lấy tất cả voucher có phân trang
+    public List<Voucher> getAllVouchersWithPaging(int page, int pageSize) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = "SELECT * FROM Voucher ORDER BY voucherId ASC LIMIT ? OFFSET ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                vouchers.add(mapVoucher(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllVouchersWithPaging: " + e.getMessage());
+        }
+        return vouchers;
+    }
+
+    // Lấy tổng số voucher
+    public int getTotalVouchers() {
+        String sql = "SELECT COUNT(*) FROM Voucher";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("getTotalVouchers: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Kiểm tra mã voucher đã tồn tại chưa
+    public boolean checkVoucherCodeExist(String code) {
+        String sql = "SELECT 1 FROM Voucher WHERE code = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println("checkVoucherCodeExist: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Thêm voucher mới
+    public boolean addVoucher(Voucher voucher) {
+        String sql = "INSERT INTO Voucher (code, discountAmount, minOrderValue, startDate, endDate, isActive, usageLimit, usedCount, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, voucher.getCode());
+            ps.setDouble(2, voucher.getDiscountAmount());
+            ps.setDouble(3, voucher.getMinOrderValue());
+            ps.setTimestamp(4, (Timestamp) voucher.getStartDate());
+            ps.setTimestamp(5, (Timestamp) voucher.getEndDate());
+            ps.setBoolean(6, voucher.isActive());
+            ps.setInt(7, voucher.getUsageLimit());
+            ps.setInt(8, voucher.getUsedCount());
+            ps.setString(9, voucher.getDescription());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Cập nhật voucher
+    public boolean updateVoucher(Voucher voucher) {
+        String sql = "UPDATE Voucher SET code = ?, discountAmount = ?, minOrderValue = ?, startDate = ?, endDate = ?, usageLimit = ?, description = ? WHERE voucherId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, voucher.getCode());
+            ps.setDouble(2, voucher.getDiscountAmount());
+            ps.setDouble(3, voucher.getMinOrderValue());
+            ps.setTimestamp(4, (Timestamp) voucher.getStartDate());
+            ps.setTimestamp(5, (Timestamp) voucher.getEndDate());
+            ps.setInt(6, voucher.getUsageLimit());
+            ps.setString(7, voucher.getDescription());
+            ps.setInt(8, voucher.getVoucherId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("updateVoucher: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Thay đổi trạng thái voucher
+    public boolean toggleVoucherStatus(int voucherId, boolean status) {
+        String sql = "UPDATE Voucher SET isActive = ? WHERE voucherId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, status);
+            ps.setInt(2, voucherId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("toggleVoucherStatus: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
