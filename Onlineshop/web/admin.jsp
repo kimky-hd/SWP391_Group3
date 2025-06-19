@@ -107,7 +107,7 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/promotions" class="nav-link">
+                <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
                     <i class="fas fa-percent"></i>
                     <span>Khuyến mãi</span>
                 </a>
@@ -138,14 +138,7 @@
         <!-- Your content here -->
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <h3>Đây là footer</h3>
-            </div>
-        </div>
-    </footer>
+   
 
     <!-- Logout Modal -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
