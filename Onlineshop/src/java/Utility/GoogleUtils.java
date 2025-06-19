@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class GoogleUtils {
     private static final String GOOGLE_CLIENT_ID = "";
-    private static final String GOOGLE_CLIENT_SECRET ="";
+    private static final String GOOGLE_CLIENT_SECRET = "";
     private static final String GOOGLE_REDIRECT_URI = "";
     private static final String GOOGLE_LINK_GET_TOKEN = "https://accounts.google.com/o/oauth2/token";
     private static final String GOOGLE_LINK_GET_USER_INFO = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
