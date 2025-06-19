@@ -132,7 +132,6 @@
                                     </c:if>
                                 </c:forEach>
                         </ul>
-                        <p style="font-size: 1.2rem;"><strong>Ngày nhập:</strong> ${detail.getDateImport()}</p>
                         <p style="font-size: 1.2rem;"><strong>Tình trạng:</strong> ${detail.getStatus()}</p>
 
                         <!-- Số lượng -->

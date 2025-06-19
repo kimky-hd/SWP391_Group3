@@ -133,6 +133,12 @@
 
 
     <body>
+        <%
+            String baseUrl = (String) request.getAttribute("baseUrl");
+            String extraParams = (String) request.getAttribute("extraParams");
+            if (baseUrl == null) baseUrl = "ViewListProductController";
+            if (extraParams == null) extraParams = "";
+        %>
 
         <c:if test="${not empty mess}">
             <div id="message-popup">${mess}</div>
@@ -226,13 +232,23 @@
                 </div>
 
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
+                <c:set var="sortOrder" value="${sortOrder != null ? sortOrder : 'asc'}" />
+                <c:choose>
+                    <c:when test="${sortOrder == 'desc'}">
+                        <c:set var="sortLabel" value="Giá: Cao đến thấp" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="sortLabel" value="Giá: Thấp đến cao" />
+                    </c:otherwise>
+                </c:choose>
+
                 <div class="col-lg-9">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <h2 style="margin: 0;">Danh sách sản phẩm</h2>
 
                         <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
                             <div class="dropdown">
-                                <div class="dropdown-button">Lọc theo giá ⏷</div>
+                                <div class="dropdown-button">${sortLabel} ⏷</div>
                                 <div class="dropdown-content">
                                     <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
                                     <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
@@ -240,8 +256,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
                             <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
@@ -258,9 +272,6 @@
 
                                         <div class="d-flex justify-content-center">
                                             <h6>${product.getPrice()} VNĐ</h6>
-                                        </div>
-                                        <div class="d-flex justify-content-center">
-                                            <h8>Ngày nhập : ${product.getDateImport()} </h8>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-center">
@@ -312,37 +323,31 @@
                                 </div>
                             </div>
                         </c:forEach>
-
-
-                    </div>
-
-
+                     </div>
                     <c:if test="${tag != null}">
                         <ul class="pagination">
                             <c:if test="${tag != 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
+                                    <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
                                 </li>
                             </c:if>
                             <c:forEach begin="1" end="${endPage}" var="i">
                                 <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="ViewListProductController?index=${i}" 
+                                    <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
                                        style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
                                 </li>
                             </c:forEach>
                             <c:if test="${tag != endPage}">
                                 <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
+                                    <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
                                 </li>
                             </c:if>
-
                         </ul>
                     </c:if>
-
-
                 </div>
             </div>
         </div>
+
 
 
         <!-- Products End -->
