@@ -183,7 +183,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/products" class="nav-link">
+                    <a href="manageproductlist" class="nav-link">
                         <i class="fas fa-flower"></i>
                         <span>Quản lý Sản phẩm</span>
                     </a>

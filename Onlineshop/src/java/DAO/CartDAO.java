@@ -94,7 +94,7 @@ public class CartDAO extends DBContext {
                     product.setPrice(rs.getDouble("price"));
                     product.setDescription(rs.getString("description"));
                     product.setImage(rs.getString("image"));
-                    product.setQuantity(rs.getInt("quantity")); // Số lượng tồn kho của sản phẩm
+  //                  product.setQuantity(rs.getInt("quantity")); // Số lượng tồn kho của sản phẩm
                     return product; // Trả về đối tượng Product
                 }
             }
@@ -323,7 +323,7 @@ public class CartDAO extends DBContext {
                     product.setPrice(rs.getDouble("Price"));
                     product.setDescription(rs.getString("Description"));
                     product.setImage(rs.getString("Image"));
-                    product.setQuantity(rs.getInt("StockQuantity")); // Lấy số lượng tồn kho của sản phẩm
+//                    product.setQuantity(rs.getInt("StockQuantity")); // Lấy số lượng tồn kho của sản phẩm
                     // Dòng này đã được xóa vì trường setCategoryID không tồn tại hoặc không cần thiết trong mô hình hiện tại
                     // product.setCategoryID(rs.getInt("categoryID"));
 
