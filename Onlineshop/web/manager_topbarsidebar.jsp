@@ -183,7 +183,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="manageproductlist" class="nav-link">
+                    <a href="managerproductlist" class="nav-link">
                         <i class="fas fa-flower"></i>
                         <span>Quản lý Sản phẩm</span>
                     </a>
@@ -192,6 +192,12 @@
                     <a href="viewcategorylist" class="nav-link">
                         <i class="fas fa-list"></i>
                         <span>Danh mục Sản phẩm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="managermateriallist" class="nav-link">
+                        <i class="fas fa-list"></i>
+                        <span>Quản lý nguyên liệu</span>
                     </a>
                 </li>
                 <li>

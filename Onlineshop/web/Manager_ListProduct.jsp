@@ -21,110 +21,113 @@
     <body>
         <jsp:include page="manager_topbarsidebar.jsp" />
 
-        <!-- Main Content -->
         <main class="main-content">
-            <c:if test="${not empty success}">
-                <div id="successMessage" class="alert-box">
-                    ${success}
-                </div>
-            </c:if>
-            <c:if test="${not empty msg}">
-                <div id="errorMessage" class="alert-box" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">
-                    ${msg}
-                </div>
-            </c:if>
             <div class="container-fluid">
+                <h1 class="h3 mb-2 text-gray-800">Danh sách sản phẩm</h1>
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Danh mục sản phẩm</h1>
-
-                <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
-
-                        <!-- Ô tìm kiếm bên trái -->
-                        <form action="searchcategorybyname" method="get" class="d-flex" style="max-width: 300px;">
-                            <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm danh mục..." />
+                        <form action="searchproduct" method="get" class="d-flex" style="max-width: 300px;">
+                            <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm sản phẩm..." />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
                         </form>
 
-                        <!-- Nút thêm danh mục bên phải -->
-                        <a href="Manager_CreateCategory.jsp" class="btn btn-success btn-icon-split">
+                        <a href="Manager_CreateProduct.jsp" class="btn btn-success btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-plus"></i>
                             </span>
-                            <span class="text">Thêm danh mục sản phẩm</span>
+                            <span class="text">Thêm sản phẩm mới</span>
                         </a>
-
                     </div>
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>ID danh mục</th>
-                                        <th>Tên danh mục sản phẩm</th>
+                                        <th>ID</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Ảnh</th>
+                                        <th>Giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
-
-                                    <c:forEach items="${requestScope.catelist}" var="list">
+                                    <c:forEach items="${requestScope.productList}" var="p">
                                         <tr>
-                                            <td>${list.categoryID}</td>
-                                            <!--Name-->
-                                            <td>${list.categoryName}</td>
+                                            <td>${p.productID}</td>
+                                            <td>${p.title}</td>
+                                            <td><img src="${pageContext.request.contextPath}/img/${p.image}" width="60"></td>
+                                            <td><fmt:formatNumber value="${p.price}" pattern="#,##0" /> VND</td>
 
                                             <td>
+                                                <c:choose>
+                                                    <c:when test="${p.quantity == 0}">
+                                                        <small class="text-danger">Hết Hàng</small>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <small class="text-muted">${p.quantity}</small>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
 
-                                                <form action="updatecategory" method="get" style="display:inline;">
-                                                    <input type="hidden" name="categoryID" value="${list.categoryID}" />
-                                                    <button type="submit" class="btn btn-primary btn-icon-split" >
-                                                        <span class="icon text-white-50">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                        </span>
+                                            <td>${p.status}</td>
+                                            <td>
+                                                <a href="updateproduct?productID=${p.productID}" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="updatematerial?materialID=${p.productID}" class="btn btn-info btn-sm rounded-circle" title="Bổ sung số lượng" style="width: 30px; height: 30px; padding: 4px 0; text-align: center;">
+                                                    <i class="fas fa-plus"></i>
+                                                </a>
+                                                <form action="deleteproduct" method="post" style="display:inline;">
+                                                    <input type="hidden" name="productID" value="${p.productID}" />
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
-                                                </form>    
-
-                                                <form action="deletecategory" method="post" style="display:inline;">
-                                                    <input type="hidden" name="categoryID" value="${list.categoryID}" />
-                                                    <button type="submit" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                                                        <span class="icon text-white-50">
-                                                            <i class="fas fa-trash"></i>
-                                                        </span>
-                                                    </button>
-                                                </form>                            
-                                                </div>
+                                                </form>
                                             </td>
                                         </tr>
-
-
                                     </c:forEach>
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
+                <c:if test="${tag != null}">
+                    <ul class="pagination">
+                        <c:if test="${tag != 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="managerproductlist?index=${tag - 1}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${endPage}" var="i">
+                            <li class="page-item ${tag == i ? 'active' : ''}">
+                                <a class="page-link" href="managerproductlist?index=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${tag != endPage}">
+                            <li class="page-item">
+                                <a class="page-link" href="managerproductlist?index=${tag + 1}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </c:if>
             </div>
-            <!-- /.container-fluid -->
-        </main> 
+        </main>
 
-        <!-- Footer -->
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
                     <h3>Đây là footer</h3>
                 </div>
+            </div>
         </footer>
-        <!-- Logout Modal -->
 
-
-        <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
