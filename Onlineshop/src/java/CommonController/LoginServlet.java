@@ -88,7 +88,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("admin.jsp");
                 return;
             } else if (account.getRole() == 2) {
-                response.sendRedirect("viewcategorylist");
+                response.sendRedirect("managerproductlist");
                 return;
             } else {
                 response.sendRedirect("Homepage");

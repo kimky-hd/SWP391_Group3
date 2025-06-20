@@ -10,43 +10,42 @@ import java.util.Date;
  *
  * @author Duccon
  */
-public class ProductBatch {
-
-    private int productBatchID;
-    private int productID;
+public class MaterialBatch {
+    private int materialBatchID;
+    private int materialID;
     private int quantity;
     private double importPrice;
     private Date dateImport;
     private Date dateExpire;
     private String status;
 
-    public ProductBatch() {
+    public MaterialBatch() {
     }
 
-    public ProductBatch(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire, String status) {
-        this.productBatchID = productBatchID;
-        this.productID = productID;
+    public MaterialBatch(int materialBatchID, int materialID, int quantity, double importPrice, Date dateImport, Date dateExpire, String status) {
+        this.materialBatchID = materialBatchID;
+        this.materialID = materialID;
         this.quantity = quantity;
-        this.importPrice = price;
+        this.importPrice = importPrice;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
         this.status = status;
     }
 
-    public int getProductBatchID() {
-        return productBatchID;
+    public int getMaterialBatchID() {
+        return materialBatchID;
     }
 
-    public void setProductBatchID(int productBatchID) {
-        this.productBatchID = productBatchID;
+    public void setMaterialBatchID(int materialBatchID) {
+        this.materialBatchID = materialBatchID;
     }
 
-    public int getProductID() {
-        return productID;
+    public int getMaterialID() {
+        return materialID;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public void setMaterialID(int materialID) {
+        this.materialID = materialID;
     }
 
     public int getQuantity() {
@@ -91,9 +90,8 @@ public class ProductBatch {
 
     @Override
     public String toString() {
-        return "ProductBatch{" + "productBatchID=" + productBatchID + ", productID=" + productID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+        return "MaterialBatch{" + "materialBatchID=" + materialBatchID + ", materialID=" + materialID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
     }
-
     
-
+    
 }
