@@ -40,6 +40,10 @@ public class ViewListProductController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
+        
+         //Gọi cập nhật trạng thái các lô sản phẩm
+        productDAO.updateBatchStatus();
+        
         String index = request.getParameter("index");
         if (index == null || index.isEmpty()) {
             index = "1";
@@ -47,7 +51,9 @@ public class ViewListProductController extends HttpServlet {
         int indexPage = Integer.parseInt(index);
 
         List<Product> listProductByIndex = productDAO.getProductByIndex(indexPage);
-        //List<Product> listproducts = productDAO.getAllProduct();
+        for (Product p : listProductByIndex) {
+            p.setBatches(productDAO.getBatchesByProductID(p.getProductID()));
+        }
 
         int allProduct = productDAO.countAllProduct();
         int endPage = allProduct / 8;
@@ -69,6 +75,9 @@ public class ViewListProductController extends HttpServlet {
         List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
+        
+        System.out.println(listProductByIndex);
+
         
         request.setAttribute("countWL", count);
         request.setAttribute("tag", indexPage);
