@@ -6,9 +6,13 @@ package DAO;
 
 import Model.AccountProfile;
 import Model.Category;
+import Model.CategoryProduct;
 import Model.Color;
 import Model.Feedback;
+import Model.Material;
 import Model.Product;
+import Model.ProductBatch;
+import Model.ProductComponent;
 import Model.Season;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +21,7 @@ import java.util.List;
 import java.sql.SQLException;
 import Model.WishList;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -26,33 +31,72 @@ public class ProductDAO extends DBContext {
 
     PreparedStatement ps;
     ResultSet rs;
-    private final String statuscase = "CASE "
-            + " WHEN CURDATE() <= DATE_ADD(dateImport, INTERVAL 3 DAY) THEN 'Tươi mới' "
-            + " WHEN CURDATE() <= dateExpire THEN 'Lão hóa' "
-            + " ELSE 'Đã Héo' "
-            + "END AS status";
 
-    public List<Product> getAllProduct() {
+    public List<ProductBatch> getBatchesByProductID(int productID) {
+        List<ProductBatch> list = new ArrayList<>();
+        String sql = "SELECT * FROM ProductBatch WHERE productID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, productID);
+            ResultSet result = stm.executeQuery();
+            while (result.next()) {
+                list.add(new ProductBatch(result.getInt(1),
+                        result.getInt(2),
+                        result.getInt(3),
+                        result.getDouble(4),
+                        result.getDate(5),
+                        result.getDate(6),
+                        result.getString(7)
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("getBatchesByProductID : " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> getProductByIndex(int indexPage) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT *, " + statuscase + "FROM Product";
+        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
+            ps.setInt(1, (indexPage - 1) * 8); // tính offset
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)
-                ));
+                        batches));
+
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductByIndex: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> getAllProduct() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        batches)
+                );
             }
         } catch (SQLException e) {
             System.out.println("getAllProduct" + e.getMessage());
@@ -61,56 +105,51 @@ public class ProductDAO extends DBContext {
     }
 
     public Product getProductById(String id) {
-        String sql = "Select *," + statuscase + " from product where productID = ?";
+        String sql = "SELECT * FROM Product WHERE productID = ?";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-                return new Product(rs.getInt(1),
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
+
+                return new Product(
+                        rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13));
+                        batches
+                );
             }
         } catch (SQLException e) {
-            System.out.println("getProductById" + e.getMessage());
+            System.out.println("getProductById: " + e.getMessage());
         }
         return null;
-
     }
 
     public List<Product> getProductByCategory(String categoryId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.*," + statuscase + " FROM Product p\n"
-                + "                JOIN Category c ON p.categoryID = c.categoryID \n"
+        String sql = "SELECT p.* FROM Product p\n"
+                + "                JOIN CategoryProduct cb ON p.productID = cb.productID \n"
+                + "                JOIN Category c ON c.categoryID = cb.categoryID \n"
                 + "                WHERE c.categoryID = ?";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, categoryId);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        batches));
             }
         } catch (SQLException e) {
             System.out.println("getProductByColor" + e.getMessage());
@@ -120,7 +159,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByColor(String colorId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.*," + statuscase + " FROM Product p\n"
+        String sql = "SELECT p.* FROM Product p\n"
                 + "                JOIN PhanLoaiTheoColor c ON p.colorID = c.colorID \n"
                 + "                WHERE c.colorID = ?";
         try {
@@ -128,19 +167,15 @@ public class ProductDAO extends DBContext {
             ps.setString(1, colorId);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        batches));
             }
         } catch (SQLException e) {
             System.out.println("getProductByColor" + e.getMessage());
@@ -150,7 +185,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductBySeason(String seasonId) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.*," + statuscase + " FROM Product p "
+        String sql = "SELECT p.* FROM Product p "
                 + "JOIN PhanLoaiTheoSeason s ON p.seasonID = s.seasonID "
                 + "WHERE s.seasonID = ?";
         try {
@@ -158,19 +193,15 @@ public class ProductDAO extends DBContext {
             ps.setString(1, seasonId);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        batches));
             }
         } catch (SQLException e) {
             System.out.println("getProductBySeason" + e.getMessage());
@@ -180,24 +211,20 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByTitle(String txt) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT *," + statuscase + " FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
+        String sql = "SELECT * FROM Product WHERE Title LIKE CONCAT('%" + txt + "%')";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        batches));
             }
         } catch (SQLException e) {
             System.out.println("getProductByTitle" + e.getMessage());
@@ -205,21 +232,46 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public void addProduct(Product newproduct) {
+    public void addCategoryProduct(int insertedProductID, int categoryID) {
+        String sql = "INSERT INTO CategoryProduct \n"
+                + "(productID, categoryID) \n"
+                + "VALUES \n"
+                + "(?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, insertedProductID);
+            ps.setInt(2, categoryID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("addCategoryPRoduct" + e.getMessage());
+        }
+    }
+
+    public void updateCategoryProduct(int updatedProductID, int selectedCategoryID) {
+        String sql = "UPDATE CategoryProduct \n"
+                + "SET categoryID = ? \n"
+                + "WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, updatedProductID);
+            ps.setInt(2, selectedCategoryID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateCategoryProduct" + e.getMessage());
+        }
+    }
+
+    public int addProduct(Product newproduct) {
         String sql = "INSERT INTO Product (\n"
                 + "            title,\n"
                 + "            image,\n"
                 + "            price,\n"
                 + "            quantity,\n"
                 + "            description,\n"
-                + "             categoryID,\n"
                 + "            colorID,\n"
                 + "            seasonID,\n"
-                + "            thanhphan,\n"
-                + "            dateImport,\n"
-                + "            dateExpire\n"
                 + "        ) VALUES (\n"
-                + "            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?\n"
+                + "            ?, ?, ?, ?, ?, ?, ?\n"
                 + "        )";
         try {
             ps = connection.prepareStatement(sql);
@@ -230,16 +282,34 @@ public class ProductDAO extends DBContext {
             ps.setDouble(3, newproduct.getPrice());
             ps.setInt(4, newproduct.getQuantity());
             ps.setString(5, newproduct.getDescription());
-            ps.setInt(6, newproduct.getCategoryID());
-            ps.setInt(7, newproduct.getColorID());
-            ps.setInt(8, newproduct.getSeasonID());
-            ps.setString(9, newproduct.getThanhphan());
-            ps.setDate(10, new java.sql.Date(newproduct.getDateImport().getTime()));
-            ps.setDate(11, new java.sql.Date(newproduct.getDateExpire().getTime()));
+            ps.setInt(6, newproduct.getColorID());
+            ps.setInt(7, newproduct.getSeasonID());
         } catch (SQLException e) {
             System.out.println("addProduct" + e.getMessage());
         }
+        return 0;
+    }
 
+    public void addProductBatch(int productID, ProductBatch batch) {
+        String sql = "INSERT INTO ProductBatch (\n"
+                + "         productID,\n"
+                + "         quantity,\n"
+                + "          importPrice,\n"
+                + "         dateImport,\n"
+                + "         dateExpire\n"
+                + "         ) VALUES (\n"
+                + "         ?, ?, ?, CURRENT_DATE(), ?\n"
+                + "         )";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setInt(2, batch.getQuantity());
+            ps.setDouble(3, batch.getImportPrice());
+            ps.setDate(4, new java.sql.Date(batch.getDateExpire().getTime()));
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("addProductBatch" + e.getMessage());
+        }
     }
 
     public void deleteProduct(int productID) {
@@ -260,12 +330,9 @@ public class ProductDAO extends DBContext {
                 + "            price = ?,\n"
                 + "            quantity = ?,\n"
                 + "            description = ?,\n"
-                + "             categoryID = ?,\n"
                 + "            colorID = ?,\n"
                 + "            seasonID = ?,\n"
                 + "            thanhphan = ?,\n"
-                + "            dateImport = ?,\n"
-                + "            dateExpire = ?\n"
                 + "        WHERE productID = ?";
         try {
             ps = connection.prepareStatement(sql);
@@ -274,13 +341,9 @@ public class ProductDAO extends DBContext {
             ps.setDouble(3, updateproduct.getPrice());
             ps.setInt(4, updateproduct.getQuantity());
             ps.setString(5, updateproduct.getDescription());
-            ps.setInt(6, updateproduct.getCategoryID());
-            ps.setInt(7, updateproduct.getColorID());
-            ps.setInt(8, updateproduct.getSeasonID());
-            ps.setString(9, updateproduct.getThanhphan());
-            ps.setDate(10, new java.sql.Date(updateproduct.getDateImport().getTime()));
-            ps.setDate(11, new java.sql.Date(updateproduct.getDateExpire().getTime()));
-            ps.setInt(12, updateproduct.getProductID());
+            ps.setInt(6, updateproduct.getColorID());
+            ps.setInt(7, updateproduct.getSeasonID());
+            ps.setInt(8, updateproduct.getProductID());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -288,15 +351,33 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public void updateAddQuantity(int quantityAdd, int productID) {
-        String sql = "Update product set quantity = quantity + ? where productID = ?";
+    public void addNewBatchToProduct(int productID, int quantityAdd, double importPrice, Date dateImpport, Date dateExpire) {
+        String sql = "INSERT INTO ProductBatch (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, quantityAdd);
-            ps.setInt(2, productID);
+            ps.setInt(1, productID);
+            ps.setInt(2, quantityAdd);
+            ps.setDouble(3, importPrice);
+            ps.setDate(4, new java.sql.Date(dateImpport.getTime()));
+            ps.setDate(5, new java.sql.Date(dateExpire.getTime()));
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("updateAddQuantity" + e.getMessage());
+            System.out.println("addNewBatchToProduct" + e.getMessage());
+        }
+    }
+
+    public void updateProductBatchStatus() {
+        String sql = "UPDATE ProductBatch SET status = "
+                + "CASE "
+                + "   WHEN CURDATE() <= DATE_ADD(dateImport, INTERVAL 3 DAY) THEN 'Tươi mới' "
+                + "   WHEN CURDATE() <= dateExpire THEN 'Lão hóa' "
+                + "   ELSE 'Đã Héo' "
+                + "END";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateProductBatchStatus: " + e.getMessage());
         }
     }
 
@@ -312,6 +393,22 @@ public class ProductDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("getAllCategory" + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<CategoryProduct> getCategoryProduct() {
+        List<CategoryProduct> list = new ArrayList<>();
+        String sql = "SELECT * FROM CategoryProduct";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new CategoryProduct(rs.getInt(1), rs.getInt(2)
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("getCategoryProduct" + e.getMessage());
         }
         return list;
     }
@@ -348,35 +445,6 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Product> getProductByIndex(int indexPage) {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT *," + statuscase + " FROM Product ORDER BY productID LIMIT ?, 8";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, (indexPage - 1) * 8); // tính offset
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
-                        rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("getProductByIndex: " + e.getMessage());
-        }
-        return list;
-    }
-
     public int countAllProduct() {
         String sql = "select count(*) from Product";
         try {
@@ -393,25 +461,21 @@ public class ProductDAO extends DBContext {
 
     public List<Product> searchPrice0to50() {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT *," + statuscase + " FROM Product \n"
+        String sql = "SELECT * FROM Product \n"
                 + "WHERE price >= 0 AND price <= 50000";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        batches));
 
             }
         } catch (SQLException e) {
@@ -422,25 +486,21 @@ public class ProductDAO extends DBContext {
 
     public List<Product> searchPriceAbove50() {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT *," + statuscase + " FROM Product \n"
+        String sql = "SELECT * FROM Product \n"
                 + "WHERE price > 50000";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)));
+                        batches));
 
             }
         } catch (SQLException e) {
@@ -451,7 +511,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> searchPriceMinToMax(String priceMin, String priceMax) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT *," + statuscase + " FROM Product \n"
+        String sql = "SELECT * FROM Product \n"
                 + "WHERE price >= ? AND price <= ?";
         try {
             ps = connection.prepareStatement(sql);
@@ -459,20 +519,15 @@ public class ProductDAO extends DBContext {
             ps.setString(2, priceMax);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12),
-                        rs.getString(13)
-                ));
+                        batches));
             }
         } catch (SQLException e) {
             System.out.println("searchPriceAbove50" + e.getMessage());
@@ -480,12 +535,12 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Feedback> getAllReviewByProductID(String id) {
+    public List<Feedback> getAllReviewByProductID(int id) {
         List<Feedback> list = new ArrayList<>();
         String sql = "Select * from Feedback where productID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Feedback(rs.getInt(1),
@@ -502,11 +557,11 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public float getRateByProductID(String id) {
+    public float getRateByProductID(int id) {
         String sql = "SELECT ROUND(AVG(Rate), 1) AS rate FROM Feedback WHERE productID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
                 return rs.getFloat(1);
@@ -601,7 +656,7 @@ public class ProductDAO extends DBContext {
             ps.setInt(1, accountID);
             ps.setInt(2, productID);
             ps.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("removeWishList" + e.getMessage());
         }
     }
@@ -624,14 +679,10 @@ public class ProductDAO extends DBContext {
                 + "    p.title,\n"
                 + "    p.image,\n"
                 + "    p.price,\n"
-                + "    p.quantity,\n"
                 + "    p.description,\n"
-                + "     p.categoryID,\n"
                 + "    p.colorID,\n"
                 + "    p.seasonID,\n"
                 + "    p.thanhphan,\n"
-                + "    p.dateImport,\n"
-                + "    p.dateExpire\n"
                 + " FROM Product p \n"
                 + " JOIN Wishlist wl ON p.productID = wl.productID \n"
                 + " WHERE wl.AccountID = ?";
@@ -640,19 +691,15 @@ public class ProductDAO extends DBContext {
             ps.setInt(1, accountID);
             rs = ps.executeQuery();
             while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getInt(5),
-                        rs.getString(6),
+                        rs.getString(5),
+                        rs.getInt(6),
                         rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getString(10),
-                        rs.getDate(11),
-                        rs.getDate(12))
-                );
+                        batches));
 
             }
         } catch (SQLException e) {
@@ -697,4 +744,98 @@ public class ProductDAO extends DBContext {
         return 0;
     }
 
+    public List<Product> getSortProduct(String sortOrder, int pageIndex) {
+        List<Product> list = new ArrayList<>();
+        String order = "ASC";
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            order = "DESC";
+        }
+        String sql = "SELECT * FROM Product ORDER BY price " + order + " LIMIT ?, 8";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (pageIndex - 1) * 8);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        batches));
+            }
+        } catch (SQLException e) {
+            System.out.println("getSortProduct: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public boolean isTitleDuplicated(String title) {
+        ProductDAO product = new ProductDAO();
+        List<Product> listproduct = product.getAllProduct();
+        for (Product p : listproduct) {
+            if (p.getTitle().equalsIgnoreCase(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Product getProductById(int productID) {
+        String sql = "Select * from product where productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
+
+                return new Product(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        batches
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductById" + e.getMessage());
+        }
+        return null;
+    }
+
+    public List<ProductComponent> getProductComponentsByProductID(int productID) {
+        List<ProductComponent> list = new ArrayList<>();
+        String sql = "SELECT pc.productComponentID, pc.materialID, pc.materialQuantity, m.name, m.unit "
+                + "          FROM ProductComponent pc "
+                + "          JOIN Material m ON pc.materialID = m.materialID "
+                + "          WHERE pc.productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Material material = new Material();
+                material.setMaterialID(rs.getInt("materialID"));
+                material.setName(rs.getString("name"));
+                material.setUnit(rs.getString("unit"));
+
+                ProductComponent pc = new ProductComponent();
+                pc.setProductComponentID(rs.getInt("productComponentID"));
+                pc.setMaterialID(rs.getInt("materialID"));
+                pc.setMaterialQuantity(rs.getInt("materialQuantity"));
+                pc.setMaterial(material);
+
+                list.add(pc);
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductComponentsByProductID" + e.getMessage());
+        }
+        return list;
+    }
 }

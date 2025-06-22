@@ -64,6 +64,44 @@
                 z-index: 1020;
                 background-color: var(--primary);
             }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropdown-button {
+                background-color: #f8f9fa;
+                border: 1px solid #ccc;
+                padding: 8px 16px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                background-color: white;
+                min-width: 180px;
+                box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+                z-index: 1;
+                border: 1px solid #ddd;
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 10px 14px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
         </style>
         <style>
             #message-popup {
@@ -95,6 +133,12 @@
 
 
     <body>
+        <%
+            String baseUrl = (String) request.getAttribute("baseUrl");
+            String extraParams = (String) request.getAttribute("extraParams");
+            if (baseUrl == null) baseUrl = "ViewListProductController";
+            if (extraParams == null) extraParams = "";
+        %>
 
         <c:if test="${not empty mess}">
             <div id="message-popup">${mess}</div>
@@ -112,11 +156,13 @@
                 <div class="col-lg-3 mb-5 sidebar-pink">
                     <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
 
+                    <!-- SẮP XẾP THEO GIÁ -->
+
                     <!<!-- Category -->
                     <h3>Danh mục</h3>
                     <div class="mb-3">
                         <c:forEach items="${listAllCategory}" var="category">
-                            <a href="searchproductbycategory?categoryId=${category.categoryID}"
+                            <a href="searchproductbycategory?cid=${category.categoryID}"
                                class="black-link font-weight-medium mb-2
                                <c:if test='${selectedCategoryId == category.categoryID}'> text-warning font-weight-bold</c:if>'">
                                 ${category.categoryName} <br>
@@ -186,11 +232,30 @@
                 </div>
 
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
-                <div class="col-lg-9">
-                    <div class="text-center mb-4">
-                        <h2 class="section-title px-5"><span class="px-2">Danh sách sản phẩm</span></h2>
-                    </div>
+                <c:set var="sortOrder" value="${sortOrder != null ? sortOrder : 'asc'}" />
+                <c:choose>
+                    <c:when test="${sortOrder == 'desc'}">
+                        <c:set var="sortLabel" value="Giá: Cao đến thấp" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="sortLabel" value="Giá: Thấp đến cao" />
+                    </c:otherwise>
+                </c:choose>
 
+                <div class="col-lg-9">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h2 style="margin: 0;">Danh sách sản phẩm</h2>
+
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                            <div class="dropdown">
+                                <div class="dropdown-button">${sortLabel} ⏷</div>
+                                <div class="dropdown-content">
+                                    <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
+                                    <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
                             <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
@@ -206,10 +271,7 @@
                                         </h6>
 
                                         <div class="d-flex justify-content-center">
-                                            <h6>${product.getPrice()} VNĐ</h6>
-                                        </div>
-                                        <div class="d-flex justify-content-center">
-                                            <h8>Ngày nhập : ${product.getDateImport()} </h8>
+                                            <h6><fmt:formatNumber value="${product.getPrice()}" pattern="#,##0" /> VNĐ</h6>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-center">
@@ -261,36 +323,31 @@
                                 </div>
                             </div>
                         </c:forEach>
-
-
-                    </div>
-
-
+                     </div>
                     <c:if test="${tag != null}">
                         <ul class="pagination">
                             <c:if test="${tag != 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag - 1}">Previous</a>
+                                    <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
                                 </li>
                             </c:if>
                             <c:forEach begin="1" end="${endPage}" var="i">
                                 <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="ViewListProductController?index=${i}" 
+                                    <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
                                        style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
                                 </li>
                             </c:forEach>
                             <c:if test="${tag != endPage}">
                                 <li class="page-item">
-                                    <a class="page-link" href="ViewListProductController?index=${tag + 1}">Next</a>
+                                    <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
                                 </li>
                             </c:if>
                         </ul>
                     </c:if>
-
-
                 </div>
             </div>
         </div>
+
 
 
         <!-- Products End -->

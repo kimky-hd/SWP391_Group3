@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <filter>
+        <filter-name>AdminAuthFilter</filter-name>
+        <filter-class>CommonController.AdminAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/dashboard.jsp</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>ContactServlet</servlet-name>
         <servlet-class>Controller.ContactServlet</servlet-class>
@@ -8,11 +16,6 @@
         <servlet-name>SearchProductByCategory</servlet-name>
         <servlet-class>CommonController.SearchProductByCategory</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>ContactServlet</servlet-name>
-        <url-pattern>/ContactServlet</url-pattern>
-    </servlet-mapping>
-    <!-- Servlet declarations -->
     <servlet>
         <servlet-name>BlogServlet</servlet-name>
         <servlet-class>CommonController.BlogServlet</servlet-class>
@@ -73,11 +76,62 @@
         <servlet-name>OrderCountController</servlet-name>
         <servlet-class>Controller.OrderCountController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddCategoryController</servlet-name>
+        <servlet-class>ManagerController.AddCategoryController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCategoryController</servlet-name>
+        <servlet-class>ManagerController.DeleteCategoryController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCategoryController</servlet-name>
+        <servlet-class>ManagerController.UpdateCategoryController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VNPayController</servlet-name>
+        <servlet-class>Controller.VNPayController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VNPayReturnController</servlet-name>
+        <servlet-class>Controller.VNPayReturnController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewCategoryListController</servlet-name>
+        <servlet-class>ManagerController.ViewCategoryListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCategoryByName</servlet-name>
+        <servlet-class>ManagerController.SearchCategoryByName</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchSortProduct</servlet-name>
+        <servlet-class>CommonController.SearchSortProduct</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManagerProductList</servlet-name>
+        <servlet-class>ManagerController.ManagerProductList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManagerMaterialList</servlet-name>
+        <servlet-class>ManagerController.ManagerMaterialList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InActiveMaterial</servlet-name>
+        <servlet-class>ManagerController.InActiveMaterial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ActiveMaterial</servlet-name>
+        <servlet-class>ManagerController.ActiveMaterial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchMaterialByName</servlet-name>
+        <servlet-class>ManagerController.SearchMaterialByName</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>OrderCountController</servlet-name>
-        <url-pattern>/ordercount</url-pattern>
+        <servlet-name>ContactServlet</servlet-name>
+        <url-pattern>/ContactServlet</url-pattern>
     </servlet-mapping>
-    <!-- MAPPINGS -->
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/Homepage</url-pattern>
@@ -122,16 +176,14 @@
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
-    <!-- WELCOME FILES -->
+    <servlet-mapping>
+        <servlet-name>OrderCountController</servlet-name>
+        <url-pattern>/ordercount</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SearchProductByCategory</servlet-name>
         <url-pattern>/searchproductbycategory</url-pattern>
     </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>Homepage</welcome-file>
-        <welcome-file>Homepage.jsp</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
     <servlet-mapping>
         <servlet-name>AddWishlistController</servlet-name>
         <url-pattern>/AddWishlistController</url-pattern>
@@ -140,29 +192,71 @@
         <servlet-name>ManageWishListController</servlet-name>
         <url-pattern>/ManageWishListController</url-pattern>
     </servlet-mapping>
-    <filter>
-        <filter-name>AdminAuthFilter</filter-name>
-        <filter-class>Filter.AdminAuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AdminAuthFilter</filter-name>
-        <url-pattern>/dashboard.jsp</url-pattern>
-    </filter-mapping>
-    <servlet>
-        <servlet-name>VNPayController</servlet-name>
-        <servlet-class>Controller.VNPayController</servlet-class>
-    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddCategoryController</servlet-name>
+        <url-pattern>/addcategory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCategoryController</servlet-name>
+        <url-pattern>/deletecategory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCategoryController</servlet-name>
+        <url-pattern>/updatecategory</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VNPayController</servlet-name>
         <url-pattern>/vnpay</url-pattern>
     </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>VNPayReturnController</servlet-name>
-        <servlet-class>Controller.VNPayReturnController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>VNPayReturnController</servlet-name>
         <url-pattern>/vnpay-return</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewCategoryListController</servlet-name>
+        <url-pattern>/viewcategorylist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCategoryByName</servlet-name>
+        <url-pattern>/searchcategorybyname</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchSortProduct</servlet-name>
+        <url-pattern>/SearchSortProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerProductList</servlet-name>
+        <url-pattern>/managerproductlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerMaterialList</servlet-name>
+        <url-pattern>/managermateriallist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InActiveMaterial</servlet-name>
+        <url-pattern>/inactive</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActiveMaterial</servlet-name>
+        <url-pattern>/active</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchMaterialByName</servlet-name>
+        <url-pattern>/searchmaterialname</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>Homepage</welcome-file>
+        <welcome-file>Homepage.jsp</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <!-- Thêm vào phần <servlet> -->
+    <servlet>
+        <servlet-name>AddressController</servlet-name>
+        <servlet-class>Controller.AddressController</servlet-class>
+    </servlet>
+    <!-- Thêm vào phần <servlet-mapping> -->
+    <servlet-mapping>
+        <servlet-name>AddressController</servlet-name>
+        <url-pattern>/address</url-pattern>
     </servlet-mapping>
 </web-app>
