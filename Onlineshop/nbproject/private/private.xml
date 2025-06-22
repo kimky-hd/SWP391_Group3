@@ -3,14 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/CategoryDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListProduct.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListCategory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerMaterialList.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/Controller/RevenueChartServlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/RevenueDAO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/revenueChart.jsp</file>
         </group>
     </open-files>
 </project-private>
