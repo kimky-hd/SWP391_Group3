@@ -128,6 +128,14 @@
         <servlet-name>SearchMaterialByName</servlet-name>
         <servlet-class>ManagerController.SearchMaterialByName</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddMaterialBatchController</servlet-name>
+        <servlet-class>ManagerController.AddMaterialBatchController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateMaterialController</servlet-name>
+        <servlet-class>ManagerController.CreateMaterialController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
@@ -243,6 +251,14 @@
     <servlet-mapping>
         <servlet-name>SearchMaterialByName</servlet-name>
         <url-pattern>/searchmaterialname</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddMaterialBatchController</servlet-name>
+        <url-pattern>/addmaterialbatchcontroller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateMaterialController</servlet-name>
+        <url-pattern>/creatematerial</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

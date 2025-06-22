@@ -184,7 +184,7 @@
                 </li>
                 <li>
                     <a href="managerproductlist" class="nav-link">
-                        <i class="fas fa-flower"></i>
+                        <i class="fas fa-list"></i>
                         <span>Quản lý Sản phẩm</span>
                     </a>
                 </li>

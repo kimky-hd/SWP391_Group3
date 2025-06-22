@@ -67,7 +67,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${requestScope.materialList}" var="m">
+                                    <c:forEach items="${materialList}" var="m">
                                         <tr>
                                             <td>${m.materialID}</td>
                                             <td>${m.name}</td>
@@ -115,9 +115,12 @@
                                                         </form>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <a href="updatematerial?materialID=${m.materialID}" class="btn btn-info btn-sm rounded-circle" title="Bổ sung số lượng" style="width: 30px; height: 30px; padding: 4px 0; text-align: center;">
+                                                <button type="button" class="btn btn-info btn-sm rounded-circle" 
+                                                        title="Bổ sung số lượng" 
+                                                        style="width: 30px; height: 30px; padding: 4px 0; text-align: center;"
+                                                        onclick="openAddQuantityModal(${m.materialID})">
                                                     <i class="fas fa-plus"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -174,27 +177,161 @@
             }
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    </body>
-    <!-- Modal xác nhận -->
-    <div class="modal fade" id="confirmHideModal" tabindex="-1" aria-labelledby="confirmHideLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form method="post" action="inactive">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmHideLabel">Xác nhận ẩn nguyên liệu</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Bạn có chắc chắn muốn ẩn nguyên liệu <strong id="materialName"></strong>?
-                        <input type="hidden" name="materialID" id="materialIDHidden" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-warning">Xác nhận</button>
-                    </div>
-                </form>
+        <!-- Modal xác nhận -->
+        <div class="modal fade" id="confirmHideModal" tabindex="-1" aria-labelledby="confirmHideLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post" action="inactive">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmHideLabel">Xác nhận ẩn nguyên liệu</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Bạn có chắc chắn muốn ẩn nguyên liệu <strong id="materialName"></strong>?
+                            <input type="hidden" name="materialID" id="materialIDHidden" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-warning">Xác nhận</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+        <!-- Modal bổ sung số lượng nguyên liệu -->
+        <div class="modal fade" id="addQuantityModal" tabindex="-1" aria-labelledby="addQuantityModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post" action="addmaterialbatchcontroller" onsubmit="return validateForm();">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addQuantityModalLabel">Bổ sung số lượng nguyên liệu</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="materialID" id="batchMaterialID" />
+
+                            <div class="form-group mb-2">
+                                <label>Giá nhập (VNĐ):</label>
+                                <input type="text" name="importPrice" value="${importPrice}" class="form-control" />
+                                <c:if test="${not empty errorPrice}">
+                                    <small class="text-danger">${errorPrice}</small>
+                                </c:if>
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label>Số lượng:</label>
+                                <input type="text" name="quantity" value="${quantity}" class="form-control" />
+                                <c:if test="${not empty errorQuantity}">
+                                    <small class="text-danger">${errorQuantity}</small>
+                                </c:if>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>Ngày nhập:</label>
+                                <input type="date" name="dateImport"
+                                       value="${dateImport != null ? dateImport : ''}"
+                                       class="form-control" id="dateImportInput" />
+                                <c:if test="${not empty errorDateImport}">
+                                    <small class="text-danger">${errorDateImport}</small>
+                                </c:if>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>Ngày hết hạn:</label>
+                                <input type="date" name="dateExpire"
+                                       value="${dateExpire != null ? dateExpire : ''}"
+                                       class="form-control" id="dateExpireInput" />
+                                <c:if test="${not empty errorDateExpire}">
+                                    <small class="text-danger">${errorDateExpire}</small>
+                                </c:if>
+                            </div>
+
+                            <p id="batchErrorMsg" class="text-danger"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary">Xác nhận</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            function openAddQuantityModal(materialID) {
+                // Set hidden field
+                document.getElementById("batchMaterialID").value = materialID;
+
+                // Set dateImport to current date
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById("dateImportInput").value = today;
+                document.getElementById("dateExpireInput").min = today;
+
+                // Show modal
+                var myModal = new bootstrap.Modal(document.getElementById('addQuantityModal'), {
+                    keyboard: false
+                });
+                myModal.show();
+            }
+
+            function validateBatchForm() {
+                const importDate = document.getElementById("dateImportInput").value;
+                const expireDate = document.getElementById("dateExpireInput").value;
+
+                if (expireDate < importDate) {
+                    document.getElementById("batchErrorMsg").innerText = "Ngày hết hạn không được trước ngày nhập.";
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+
+        <script>
+            function validateForm() {
+                let isValid = true;
+
+                // Xóa các lỗi cũ
+                document.getElementById("error-importPrice").innerText = "";
+                document.getElementById("error-quantity").innerText = "";
+
+                // Lấy giá trị người dùng nhập
+                const importPrice = document.getElementById("importPrice").value.trim();
+                const quantity = document.getElementById("quantity").value.trim();
+
+                // Validate giá nhập
+                if (importPrice === "") {
+                    document.getElementById("error-importPrice").innerText = "Vui lòng nhập giá nhập.";
+                    isValid = false;
+                } else if (isNaN(importPrice) || Number(importPrice) <= 0) {
+                    document.getElementById("error-importPrice").innerText = "Giá nhập phải là số dương.";
+                    isValid = false;
+                }
+
+                // Validate số lượng
+                if (quantity === "") {
+                    document.getElementById("error-quantity").innerText = "Vui lòng nhập số lượng.";
+                    isValid = false;
+                } else if (!Number.isInteger(Number(quantity)) || Number(quantity) <= 0) {
+                    document.getElementById("error-quantity").innerText = "Số lượng phải là số nguyên dương.";
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+        </script>
+
+        <c:if test="${showModal == true}">
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var myModal = new bootstrap.Modal(document.getElementById('addQuantityModal'));
+                    myModal.show();
+                });
+            </script>
+        </c:if>
+
+
+
+    </body>
+
 </html>
