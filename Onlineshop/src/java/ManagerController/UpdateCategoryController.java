@@ -72,6 +72,7 @@ public class UpdateCategoryController extends HttpServlet {
     throws ServletException, IOException {
         int categoryID = Integer.parseInt(request.getParameter("categoryID"));
         String categoryName =request.getParameter("categoryName");
+        request.setAttribute("oldValue", categoryName);
         CategoryDAO catedao =new CategoryDAO();
         boolean checkduplicate = catedao.CheckDuplicateCategory(categoryName);
         

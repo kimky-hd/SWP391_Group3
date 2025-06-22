@@ -57,7 +57,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${requestScope.productList}" var="p">
+                                    <c:forEach items="${productList}" var="p">
                                         <tr>
                                             <td>${p.productID}</td>
                                             <td>${p.title}</td>

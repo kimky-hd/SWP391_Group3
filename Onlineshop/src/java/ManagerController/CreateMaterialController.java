@@ -4,20 +4,20 @@
  */
 package ManagerController;
 
-import DAO.CategoryDAO;
+import DAO.MaterialDAO;
+import Model.Material;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 /**
  *
  * @author Duccon
  */
-public class AddCategoryController extends HttpServlet {
+public class CreateMaterialController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +36,10 @@ public class AddCategoryController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddCategoryController</title>");
+            out.println("<title>Servlet CreateMaterialController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddCategoryController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateMaterialController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -71,28 +71,54 @@ public class AddCategoryController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String categoryName = request.getParameter("categoryName");
-        request.setAttribute("oldValue", categoryName);
-        if (categoryName == null || categoryName.trim().isEmpty()) {
-            request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng");
-            request.getRequestDispatcher("Manager_CreateCategory.jsp").forward(request, response);
+
+        String name = request.getParameter("name");
+        String priceRaw = request.getParameter("price");
+
+        boolean hasError = false;
+
+        MaterialDAO mateDAO = new MaterialDAO();
+        
+        if (name == null || name.trim().isEmpty()) {
+            request.setAttribute("errorName", "Vui lòng nhập tên nguyên liệu.");
+
+            hasError = true;
+        }
+        boolean checkduplicate = mateDAO.CheckDuplicateMaterial(name);
+        if (checkduplicate) {
+            request.setAttribute("errorName", "Tên nguyên liệu đã tồn tại.");
+            hasError = true;
+        }
+
+        
+        Double price = null;
+        if (priceRaw == null || priceRaw.trim().isEmpty()) {
+            request.setAttribute("errorPrice", "Vui lòng nhập giá.");
+            hasError = true;
+        } else {
+            try {
+                price = Double.valueOf(priceRaw);
+                if (price <= 0) {
+                    request.setAttribute("errorPrice", "Giá phải lớn hơn 0.");
+                    hasError = true;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorPrice", "Giá phải là số.");
+                hasError = true;
+            }
+        }
+
+        
+        if (hasError) {
+            request.setAttribute("name", name);
+            request.setAttribute("price", priceRaw);
+            request.getRequestDispatcher("Manager_CreateMaterial.jsp").forward(request, response);
             return;
         }
-        CategoryDAO cateDAO = new CategoryDAO();
-        boolean checkduplicate = cateDAO.CheckDuplicateCategory(categoryName);
-        if (checkduplicate) {
-            request.setAttribute("msg", "Thể loại này đã tồn tại");
-            request.getRequestDispatcher("Manager_CreateCategory.jsp").forward(request, response);
-        } else {
-            boolean addcate = cateDAO.createCategory(categoryName);
-            HttpSession session = request.getSession();
-            if (addcate) {
-                session.setAttribute("success", "Đã thêm danh mục thành công");
-            } else {
-                session.setAttribute("msg", "Thêm thất bại");
-            }
-            response.sendRedirect("viewcategorylist");
-        }
+        mateDAO.CreateMaterial(name, price);
+        
+        request.getSession().setAttribute("isactive", "Thêm nguyên liệu thành công!");
+        response.sendRedirect("managermateriallist");
     }
 
     /**

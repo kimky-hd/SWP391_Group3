@@ -165,7 +165,7 @@ public class MaterialDAO extends DBContext {
     }
 
     public void addNewBatchToMaterial(int materialID, int quantity, double importPrice, Date dateImpport, Date dateExpire) {
-        String sql = "INSERT INTO MaterialBatch (materialID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO MaterialBatch (materialID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, materialID);
@@ -179,19 +179,17 @@ public class MaterialDAO extends DBContext {
         }
     }
 
-    public int CreateMaterial(Material newmaterial) {
+    public int CreateMaterial(String name, double pricePerUnit) {
         String sql = "INSERT INTO Material (\n"
                 + "     name,\n"
                 + "     unit,\n "
                 + "     pricePerUnit) \n"
-                + "     VALUES (?, ?, ?)";
+                + "     VALUES (?,'cành', ?)";
         try {
             ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-
-            ps.setString(1, newmaterial.getName());
-            ps.setString(2, newmaterial.getUnit());
-            ps.setDouble(3, newmaterial.getPricePerUnit());
+            ps.setString(1, name);
+            ps.setDouble(2, pricePerUnit);
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("CreateMaterial : " + e.getMessage());
         }
@@ -203,7 +201,7 @@ public class MaterialDAO extends DBContext {
         List<Material> listmate = mateDAO.getAllMaterial();
         for (Material m : listmate) {
             if (m.getName().equalsIgnoreCase(name)) {
-                return false;
+                return true;
             }
         }
         return false;
