@@ -19,6 +19,13 @@
     </head>
 
     <body>
+        <%
+            String baseUrl = (String) request.getAttribute("baseUrl");
+            String extraParams = (String) request.getAttribute("extraParams");
+            if (baseUrl == null) baseUrl = "viewcategorylist";
+            if (extraParams == null) extraParams = "";
+        %>
+        
         <jsp:include page="manager_topbarsidebar.jsp" />
 
         <!-- Main Content -->
@@ -109,6 +116,26 @@
                         </div>
                     </div>
                 </div>
+            <c:if test="${tag != null}">
+                        <ul class="pagination">
+                            <c:if test="${tag != 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
+                                </li>
+                            </c:if>
+                            <c:forEach begin="1" end="${endPage}" var="i">
+                                <li class="page-item ${tag == i ? 'active' : ''}">
+                                    <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
+                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                                </li>
+                            </c:forEach>
+                            <c:if test="${tag != endPage}">
+                                <li class="page-item">
+                                    <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </c:if>
 
             </div>
             <!-- /.container-fluid -->

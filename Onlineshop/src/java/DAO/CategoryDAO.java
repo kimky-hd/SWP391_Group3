@@ -35,6 +35,23 @@ public class CategoryDAO extends DBContext {
         }
         return list;
     }
+    
+    public List<Category> getCategoryByIndex(int indexPage) {
+        List<Category> list = new ArrayList<>();
+        String sql = "Select * from Category ORDER BY categoryID LIMIT ?, 5";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (indexPage - 1) * 5);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Category(rs.getInt(1),
+                        rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllCategory" + e.getMessage());
+        }
+        return list;
+    }
 
     public boolean createCategory(String categoryName) {
         String sql = "INSERT INTO Category (categoryName)\n"
@@ -115,5 +132,34 @@ public class CategoryDAO extends DBContext {
             System.out.println("getCategoryByName" + e.getMessage());
         }
         return list;
+    }
+
+    public int getCategoryByProductID(int productID) {
+        String sql = "SELECT categoryID from CategoryProduct WHERE productID = ?";
+        try{
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+        }catch(SQLException e){
+            
+        }
+        return -1;
+    }
+    
+    public int countAllCategory() {
+        String sql = "select count(*) from Category";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("countAllCategory" + e.getMessage());
+        }
+        return 0;
     }
 }

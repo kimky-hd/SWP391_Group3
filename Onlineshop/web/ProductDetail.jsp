@@ -21,7 +21,7 @@
         <!-- Libraries Stylesheet -->
         <link href="lib/animate/animate.min.css" rel="stylesheet">
         <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-        
+
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
@@ -80,7 +80,7 @@
         <!-- Topbar End -->
 
 
-        
+
 
         <!-- Product Start -->
 
@@ -126,13 +126,10 @@
                         <!-- Thành phần -->
                         <p style="font-size: 1.2rem;"><strong>Thành phần:</strong></p>
                         <ul>
-                            <c:forEach var="item" items="${fn:split(detail.thanhphan, '\\\\.')}">
-                                <c:if test="${not empty item}">
-                                    <li>${item}.</li>
-                                    </c:if>
+                            <c:forEach items="${componentList}" var="comp" >
+                                <li>${comp.material.name} : ${comp.quantity} ${comp.material.unit}</li>
                                 </c:forEach>
                         </ul>
-                        <p style="font-size: 1.2rem;"><strong>Ngày nhập:</strong> ${detail.getDateImport()}</p>
                         <p style="font-size: 1.2rem;"><strong>Tình trạng:</strong> ${detail.getStatus()}</p>
 
                         <!-- Số lượng -->
