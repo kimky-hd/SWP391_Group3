@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import DAO.DBContext;
 import Model.Cart;
 import Model.CartItem;
-import Model.Product;
+import Model.ProductBatch;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Lớp CartDAO (Data Access Object) chịu trách nhiệm tương tác với cơ sở dữ liệu
@@ -75,16 +77,16 @@ public class CartDAO extends DBContext {
      */
     public Product getProductById(int productId) {
         String sql = "SELECT * FROM Product WHERE productID = ?"; // Câu lệnh SQL để chọn sản phẩm theo ID
-
+    
         Connection conn = getConnection(); // Lấy kết nối từ DBContext
         if (conn == null) {
             System.out.println("Không thể kết nối đến cơ sở dữ liệu");
             return null; // Trả về null nếu không thể kết nối
         }
-
+    
         try (PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
             ps.setInt(1, productId); // Thiết lập tham số productId
-
+    
             try (ResultSet rs = ps.executeQuery()) { // Thực thi truy vấn và lấy kết quả
                 if (rs.next()) { // Nếu tìm thấy một hàng kết quả
                     Product product = new Product(); // Tạo đối tượng Product mới
@@ -94,7 +96,33 @@ public class CartDAO extends DBContext {
                     product.setPrice(rs.getDouble("price"));
                     product.setDescription(rs.getString("description"));
                     product.setImage(rs.getString("image"));
-  //                  product.setQuantity(rs.getInt("quantity")); // Số lượng tồn kho của sản phẩm
+                    product.setColorID(rs.getInt("colorID"));
+                    product.setSeasonID(rs.getInt("seasonID"));
+                    
+                    // Lấy danh sách các lô sản phẩm
+                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' ORDER BY dateExpire ASC";
+                    try (PreparedStatement batchPs = conn.prepareStatement(batchSql)) {
+                        batchPs.setInt(1, product.getProductID());
+                        try (ResultSet batchRs = batchPs.executeQuery()) {
+                            List<ProductBatch> batches = new ArrayList<>();
+                            
+                            while (batchRs.next()) {
+                                ProductBatch batch = new ProductBatch();
+                                batch.setProductBatchID(batchRs.getInt("productBatchID"));
+                                batch.setProductID(batchRs.getInt("productID"));
+                                batch.setQuantity(batchRs.getInt("quantity"));
+                                batch.setImportPrice(batchRs.getDouble("importPrice"));
+                                batch.setDateImport(batchRs.getDate("dateImport"));
+                                batch.setDateExpire(batchRs.getDate("dateExpire"));
+                                batch.setStatus(batchRs.getString("status"));
+                                
+                                batches.add(batch);
+                            }
+                            
+                            product.setBatches(batches); // Thiết lập danh sách batches cho sản phẩm
+                        }
+                    }
+                    
                     return product; // Trả về đối tượng Product
                 }
             }
@@ -125,20 +153,53 @@ public class CartDAO extends DBContext {
      * cầu, ngược lại là false.
      */
     public boolean checkProductAvailability(int productId, int requestedQuantity) {
-        String sql = "SELECT quantity FROM Product WHERE productID = ?"; // Lấy số lượng tồn kho của sản phẩm
-
-        try (Connection conn = getConnection(); // Lấy kết nối
-                 PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
-
-            ps.setInt(1, productId); // Thiết lập tham số productId
-
-            try (ResultSet rs = ps.executeQuery()) { // Thực thi truy vấn
-                if (rs.next()) { // Nếu tìm thấy sản phẩm
-                    int availableQuantity = rs.getInt("quantity"); // Lấy số lượng tồn kho
-                    return availableQuantity >= requestedQuantity; // So sánh số lượng tồn kho với số lượng yêu cầu
+        String sql = "SELECT p.* FROM Product p WHERE p.productID = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, productId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Lấy thông tin sản phẩm
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("productID"));
+                    product.setTitle(rs.getString("title"));
+                    product.setPrice(rs.getDouble("price"));
+                    product.setDescription(rs.getString("description"));
+                    product.setImage(rs.getString("image"));
+                    product.setColorID(rs.getInt("colorID"));
+                    product.setSeasonID(rs.getInt("seasonID"));
+                    
+                    // Lấy danh sách các lô sản phẩm
+                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' ORDER BY dateExpire ASC";
+                    try (PreparedStatement batchPs = conn.prepareStatement(batchSql)) {
+                        batchPs.setInt(1, product.getProductID());
+                        try (ResultSet batchRs = batchPs.executeQuery()) {
+                            List<ProductBatch> batches = new ArrayList<>();
+                            int totalAvailableQuantity = 0;
+                            
+                            while (batchRs.next()) {
+                                ProductBatch batch = new ProductBatch();
+                                batch.setProductBatchID(batchRs.getInt("productBatchID"));
+                                batch.setProductID(batchRs.getInt("productID"));
+                                batch.setQuantity(batchRs.getInt("quantity"));
+                                batch.setImportPrice(batchRs.getDouble("importPrice"));
+                                batch.setDateImport(batchRs.getDate("dateImport"));
+                                batch.setDateExpire(batchRs.getDate("dateExpire"));
+                                batch.setStatus(batchRs.getString("status"));
+                                
+                                batches.add(batch);
+                                totalAvailableQuantity += batch.getQuantity();
+                            }
+                            
+                            product.setBatches(batches);
+                            return totalAvailableQuantity >= requestedQuantity;
+                        }
+                    }
                 }
             }
-
         } catch (SQLException e) {
             // Xử lý lỗi nếu có ngoại lệ SQL
             System.out.println("Error checking product availability: " + e.getMessage());
@@ -149,7 +210,7 @@ public class CartDAO extends DBContext {
     }
 
     /**
-     * Cập nhật số lượng tồn kho của một sản phẩm. Hàm này có thể được sử dụng
+     * Cập nhật số lượng tồn kho của một sản phẩm trong các lô. Hàm này có thể được sử dụng
      * để tăng hoặc giảm số lượng sản phẩm trong kho.
      *
      * @param productId ID của sản phẩm cần cập nhật.
@@ -158,24 +219,86 @@ public class CartDAO extends DBContext {
      * @return true nếu cập nhật số lượng thành công, ngược lại là false.
      */
     public boolean updateProductQuantity(int productId, int quantityChange) {
-        // Câu lệnh SQL để cập nhật số lượng tồn kho: quantity = quantity + quantityChange
-        String sql = "UPDATE Product SET quantity = quantity + ? WHERE productID = ?";
-
-        try (Connection conn = getConnection(); // Lấy kết nối
-                 PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
-
-            ps.setInt(1, quantityChange); // Thiết lập giá trị thay đổi số lượng
-            ps.setInt(2, productId); // Thiết lập tham số productId
-
-            int rowsAffected = ps.executeUpdate(); // Thực thi cập nhật
-            return rowsAffected > 0; // Trả về true nếu có ít nhất một hàng bị ảnh hưởng
+        try (Connection conn = getConnection()) {
+            // Nếu tăng số lượng (trả lại hàng), cập nhật vào lô mới nhất
+            if (quantityChange > 0) {
+                String sql = "UPDATE ProductBatch SET quantity = quantity + ? " +
+                             "WHERE productID = ? AND dateExpire > CURRENT_DATE() " +
+                             "ORDER BY dateExpire DESC LIMIT 1";
+                
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setInt(1, quantityChange);
+                    ps.setInt(2, productId);
+                    
+                    int rowsAffected = ps.executeUpdate();
+                    return rowsAffected > 0;
+                }
+            } 
+            // Nếu giảm số lượng (đặt hàng), ưu tiên lấy từ các lô có ngày hết hạn sớm nhất
+            else if (quantityChange < 0) {
+                int remainingQuantity = -quantityChange; // Chuyển thành số dương
+                
+                // Lấy danh sách các lô còn hạn, sắp xếp theo ngày hết hạn tăng dần
+                String selectBatchesSql = "SELECT productBatchID, quantity FROM ProductBatch " +
+                                         "WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' " +
+                                         "ORDER BY dateExpire ASC";
+                
+                List<Integer> batchIds = new ArrayList<>();
+                List<Integer> quantitiesToDecrease = new ArrayList<>();
+                
+                try (PreparedStatement selectPs = conn.prepareStatement(selectBatchesSql)) {
+                    selectPs.setInt(1, productId);
+                    
+                    try (ResultSet rs = selectPs.executeQuery()) {
+                        while (rs.next() && remainingQuantity > 0) {
+                            int batchId = rs.getInt("productBatchID");
+                            int batchQuantity = rs.getInt("quantity");
+                            
+                            int decreaseAmount = Math.min(batchQuantity, remainingQuantity);
+                            
+                            batchIds.add(batchId);
+                            quantitiesToDecrease.add(decreaseAmount);
+                            
+                            remainingQuantity -= decreaseAmount;
+                        }
+                    }
+                }
+                
+                // Nếu không đủ số lượng trong các lô
+                if (remainingQuantity > 0) {
+                    return false;
+                }
+                
+                // Cập nhật số lượng trong từng lô
+                String updateBatchSql = "UPDATE ProductBatch SET quantity = quantity - ? WHERE productBatchID = ?";
+                
+                conn.setAutoCommit(false); // Bắt đầu transaction
+                
+                try {
+                    try (PreparedStatement updatePs = conn.prepareStatement(updateBatchSql)) {
+                        for (int i = 0; i < batchIds.size(); i++) {
+                            updatePs.setInt(1, quantitiesToDecrease.get(i));
+                            updatePs.setInt(2, batchIds.get(i));
+                            updatePs.executeUpdate();
+                        }
+                    }
+                    
+                    conn.commit();
+                    return true;
+                } catch (SQLException e) {
+                    conn.rollback();
+                    throw e;
+                } finally {
+                    conn.setAutoCommit(true);
+                }
+            }
+            
+            return false; // Không có thay đổi số lượng
         } catch (SQLException e) {
-            // Xử lý lỗi nếu có ngoại lệ SQL
-            System.out.println("Error updating product quantity: " + e.getMessage());
+            System.out.println("Error updating product batch quantity: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
-
-        return false; // Trả về false nếu có lỗi
     }
 
     /**
@@ -306,9 +429,9 @@ public class CartDAO extends DBContext {
     public Cart getCartByAccount_Id(int accountId) {
         Cart cart = new Cart(); // Khởi tạo một đối tượng Cart mới
         // Câu lệnh SQL JOIN giữa Cart và Product để lấy tất cả thông tin cần thiết cho CartItem
-        String sql = "SELECT c.ProductID, c.Quantity, p.title as Name, p.Price, p.Description, p.Image, p.Quantity AS StockQuantity "
-                + "FROM Cart c JOIN Product p ON c.ProductID = p.ProductID "
-                + "WHERE c.AccountID = ?";
+        String sql = "SELECT c.ProductID, c.Quantity, p.title as Name, p.price as Price, p.description as Description, p.image as Image " +
+                "FROM Cart c JOIN Product p ON c.ProductID = p.productID " +
+                "WHERE c.AccountID = ?";
 
         try (Connection conn = getConnection(); // Lấy kết nối
                  PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
@@ -323,9 +446,30 @@ public class CartDAO extends DBContext {
                     product.setPrice(rs.getDouble("Price"));
                     product.setDescription(rs.getString("Description"));
                     product.setImage(rs.getString("Image"));
-//                    product.setQuantity(rs.getInt("StockQuantity")); // Lấy số lượng tồn kho của sản phẩm
-                    // Dòng này đã được xóa vì trường setCategoryID không tồn tại hoặc không cần thiết trong mô hình hiện tại
-                    // product.setCategoryID(rs.getInt("categoryID"));
+                    
+                    // Lấy danh sách các lô sản phẩm
+                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' ORDER BY dateExpire ASC";
+                    try (PreparedStatement batchPs = conn.prepareStatement(batchSql)) {
+                        batchPs.setInt(1, product.getProductID()); // Sửa: Sử dụng product.getProductID() thay vì productId
+                        try (ResultSet batchRs = batchPs.executeQuery()) {
+                            List<ProductBatch> batches = new ArrayList<>();
+                            
+                            while (batchRs.next()) {
+                                ProductBatch batch = new ProductBatch();
+                                batch.setProductBatchID(batchRs.getInt("productBatchID"));
+                                batch.setProductID(batchRs.getInt("productID"));
+                                batch.setQuantity(batchRs.getInt("quantity"));
+                                batch.setImportPrice(batchRs.getDouble("importPrice"));
+                                batch.setDateImport(batchRs.getDate("dateImport"));
+                                batch.setDateExpire(batchRs.getDate("dateExpire"));
+                                batch.setStatus(batchRs.getString("status"));
+                                
+                                batches.add(batch);
+                            }
+                            
+                            product.setBatches(batches); // Thiết lập danh sách batches cho sản phẩm
+                        }
+                    }
 
                     int quantity = rs.getInt("Quantity"); // Lấy số lượng sản phẩm trong giỏ hàng
 
