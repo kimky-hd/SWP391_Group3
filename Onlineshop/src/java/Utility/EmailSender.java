@@ -8,7 +8,7 @@ public class EmailSender {
 
     // Khai báo thông tin email người gửi
     private static final String SENDER_EMAIL = "anhhoang30012004@gmail.com"; // Email người gửi
-    private static final String SENDER_PASSWORD = "mjsp obnk obye jorx";      // Mật khẩu ứng dụng (App Password)
+    private static final String SENDER_PASSWORD = "eizk toxu knjm uqkz";      // Mật khẩu ứng dụng (App Password)
     private static final String SMTP_HOST = "smtp.gmail.com"; // Máy chủ SMTP của Gmail
     private static final String SMTP_PORT = "587"; // Cổng SMTP sử dụng TLS (không phải SSL)
 
@@ -26,6 +26,13 @@ public class EmailSender {
         props.put("mail.smtp.starttls.enable", "true"); // Sử dụng TLS bảo mật
         props.put("mail.smtp.host", SMTP_HOST); // Máy chủ gửi email
         props.put("mail.smtp.port", SMTP_PORT); // Cổng giao tiếp
+        
+        // Thêm các cấu hình bảo mật và timeout
+        props.put("mail.smtp.ssl.trust", SMTP_HOST);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.connectiontimeout", "10000"); // 10 giây timeout kết nối
+        props.put("mail.smtp.timeout", "10000"); // 10 giây timeout đọc
+        props.put("mail.debug", "true"); // Bật debug để xem lỗi chi tiết
 
         // Tạo session có xác thực với Gmail
         Session session = Session.getInstance(props, new Authenticator() {
@@ -50,12 +57,17 @@ public class EmailSender {
 
             // Gửi email
             Transport.send(message);
+            System.out.println("Email đã được gửi thành công đến " + recipientEmail);
             return true; // Thành công
         } catch (MessagingException | java.io.UnsupportedEncodingException e) {
+            System.err.println("Lỗi gửi email: " + e.getMessage());
             e.printStackTrace();
             return false; // Thất bại
         }
     }
+    
+    // ... các phương thức khác giữ nguyên ...
+
 
     /**
      * Gửi email thông báo chung (đơn hàng, khuyến mãi, v.v.)

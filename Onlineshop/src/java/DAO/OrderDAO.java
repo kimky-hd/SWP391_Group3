@@ -239,6 +239,87 @@ public class OrderDAO extends DBContext {
      * @return Một List các đối tượng OrderDetail của đơn hàng. Trả về danh sách
      * rỗng nếu không tìm thấy chi tiết nào hoặc có lỗi.
      */
+    /**
+ * Lấy tất cả đơn hàng từ cơ sở dữ liệu.
+ * @return Danh sách tất cả đơn hàng.
+ */
+public List<Order> getAllOrders() {
+    List<Order> orders = new ArrayList<>();
+    String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address " +
+                 "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD " +
+                 "ORDER BY h.ngayXuat DESC";
+
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            Order order = new Order();
+            order.setOrderId(rs.getInt("maHD"));
+            order.setAccountId(rs.getInt("accountID"));
+            order.setOrderDate(rs.getDate("ngayXuat"));
+            order.setTotal(rs.getDouble("tongGia"));
+            
+            // Chuyển đổi statusID thành chuỗi trạng thái
+            int statusID = rs.getInt("statusID");
+            String status;
+            switch (statusID) {
+                case 1:
+                    status = "Pending";
+                    break;
+                case 2:
+                    status = "Completed";
+                    break;
+                case 3:
+                    status = "Cancelled";
+                    break;
+                default:
+                    status = "Unknown";
+                    break;
+            }
+            order.setStatus(status);
+            
+            // Thiết lập thông tin người nhận
+            order.setFullName(rs.getString("name"));
+            order.setPhone(rs.getString("phoneNumber"));
+            order.setEmail(rs.getString("email"));
+            order.setAddress(rs.getString("address"));
+            
+            orders.add(order);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error getting all orders: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return orders;
+}
+
+/**
+ * Cập nhật trạng thái đơn hàng.
+ * @param orderId ID của đơn hàng cần cập nhật.
+ * @param statusId ID trạng thái mới.
+ * @return true nếu cập nhật thành công, ngược lại là false.
+ */
+public boolean updateOrderStatus(int orderId, int statusId) {
+    String sql = "UPDATE HoaDon SET statusID = ? WHERE maHD = ?";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setInt(1, statusId);
+        ps.setInt(2, orderId);
+        
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+        
+    } catch (SQLException e) {
+        System.out.println("Error updating order status: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+    
     public List<OrderDetail> getOrderDetails(int orderId) {
         List<OrderDetail> details = new ArrayList<>(); // Khởi tạo danh sách chi tiết đơn hàng
         String sql = "SELECT * FROM OrderDetail WHERE maHD = ?"; // Câu lệnh SQL để lấy tất cả chi tiết của một đơn hàng

@@ -143,7 +143,7 @@ public class ForgotPasswordServlet extends HttpServlet {
     private boolean sendResetEmail(String email, String resetToken, String username) {
         // Cấu hình thông tin email
         final String senderEmail = "anhhoang30012004@gmail.com"; // Thay bằng email của bạn
-        final String senderPassword = "mjsp obnk obye jorx"; // Thay bằng mật khẩu ứng dụng
+        final String senderPassword = "eizk toxu knjm uqkz"; // Thay bằng mật khẩu ứng dụng
         
         // Thiết lập thuộc tính
         Properties props = new Properties();
