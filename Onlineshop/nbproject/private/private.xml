@@ -3,6 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddProductController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_CreateProduct.jsp</file>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/orders.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/Homepage.java</file>
@@ -80,6 +86,7 @@
             <file>file:/D:/swp13/SWP391_Group3/Onlineshop/web/resetpassword.jsp</file>
             <file>file:/D:/swp13/SWP391_Group3/Onlineshop/web/admin.jsp</file>
             <file>file:/D:/swp13/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
+
         </group>
     </open-files>
 </project-private>
