@@ -155,4 +155,8 @@ public class Product {
         return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", batches=" + batches + '}';
     }
 
+    public String getName() {
+    return this.title; // Trả về title thay vì throw exception
+}
+
 }

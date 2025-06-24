@@ -124,7 +124,7 @@
                             <input type="hidden" name="action" value="request">
                             <div class="mb-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="emailOrPhone" name="email" placeholder="Email" required>
+                                    <input type="text" class="form-control" id="emailOrPhone" name="email" placeholder="Email" required value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
                                     <label for="emailOrPhone"><i class="fas fa-envelope me-2"></i>Email</label>
                                 </div>
                                 <small class="form-text text-muted">Nhập email đã đăng ký để nhận mã xác nhận</small>
