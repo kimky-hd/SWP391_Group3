@@ -108,6 +108,38 @@
         <servlet-name>SearchSortProduct</servlet-name>
         <servlet-class>CommonController.SearchSortProduct</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManagerProductList</servlet-name>
+        <servlet-class>ManagerController.ManagerProductList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManagerMaterialList</servlet-name>
+        <servlet-class>ManagerController.ManagerMaterialList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InActiveMaterial</servlet-name>
+        <servlet-class>ManagerController.InActiveMaterial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ActiveMaterial</servlet-name>
+        <servlet-class>ManagerController.ActiveMaterial</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchMaterialByName</servlet-name>
+        <servlet-class>ManagerController.SearchMaterialByName</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddMaterialBatchController</servlet-name>
+        <servlet-class>ManagerController.AddMaterialBatchController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateMaterialController</servlet-name>
+        <servlet-class>ManagerController.CreateMaterialController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddProductController</servlet-name>
+        <servlet-class>ManagerController.AddProductController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
@@ -204,18 +236,48 @@
         <servlet-name>SearchSortProduct</servlet-name>
         <url-pattern>/SearchSortProduct</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerProductList</servlet-name>
+        <url-pattern>/managerproductlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerMaterialList</servlet-name>
+        <url-pattern>/managermateriallist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InActiveMaterial</servlet-name>
+        <url-pattern>/inactive</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActiveMaterial</servlet-name>
+        <url-pattern>/active</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchMaterialByName</servlet-name>
+        <url-pattern>/searchmaterialname</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddMaterialBatchController</servlet-name>
+        <url-pattern>/addmaterialbatchcontroller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateMaterialController</servlet-name>
+        <url-pattern>/creatematerial</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProductController</servlet-name>
+        <url-pattern>/addproduct</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
         <welcome-file>Homepage.jsp</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
     <!-- Thêm vào phần <servlet> -->
     <servlet>
         <servlet-name>AddressController</servlet-name>
         <servlet-class>Controller.AddressController</servlet-class>
     </servlet>
-    
     <!-- Thêm vào phần <servlet-mapping> -->
     <servlet-mapping>
         <servlet-name>AddressController</servlet-name>

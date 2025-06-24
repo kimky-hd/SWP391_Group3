@@ -40,12 +40,21 @@ public class SearchSortProduct extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String sortOrder = request.getParameter("sortOrder");
+        if (sortOrder == null) sortOrder = "asc";
+        int index = 1;
+        String indexParam = request.getParameter("index");
+        if (indexParam != null) {
+            index = Integer.parseInt(indexParam);
+        }
         ProductDAO productDAO = new ProductDAO();
-        
 
-        List<Product> listProductAfterSort = productDAO.getSortProduct(sortOrder);
+        List<Product> listProductAfterSort = productDAO.getSortProduct(sortOrder, index);
         //List<Product> listproducts = productDAO.getAllProduct();
-
+        int allProduct = productDAO.countAllProduct();
+        int endPage = allProduct / 8;
+        if (allProduct % 8 != 0) {
+            endPage++;
+        }
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
         int count;
@@ -56,12 +65,16 @@ public class SearchSortProduct extends HttpServlet {
             List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
             request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
         }
-        
-        
+
         List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
-        
+
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("tag", index);
+        request.setAttribute("baseUrl", "SearchSortProduct");
+        request.setAttribute("extraParams", "&sortOrder=" + sortOrder);
+
         request.setAttribute("countWL", count);
         request.setAttribute("productList", listProductAfterSort);
         request.setAttribute("sortOrder", sortOrder);
