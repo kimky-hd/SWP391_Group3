@@ -232,9 +232,13 @@
             </div>
         </div>
     </div>
+
     
     <!-- Include footer -->
     <jsp:include page="footer.jsp" />
+
+                           
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

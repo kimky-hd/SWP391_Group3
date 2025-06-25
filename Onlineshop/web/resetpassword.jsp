@@ -139,6 +139,7 @@
     </style>
 </head>
 <body>
+
     <!-- Header giống như trong login.jsp -->
     <div class="container-fluid">
         <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -167,6 +168,9 @@
                         <button class="btn btn-pink">
                             <i class="fa fa-search"></i>
                         </button>
+
+    
+   
                     </div>
                 </div>
             </form>
@@ -223,9 +227,11 @@
             </div>
         </div>
     </div>
+
     
     <!-- Include footer -->
     <jsp:include page="footer.jsp" />
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

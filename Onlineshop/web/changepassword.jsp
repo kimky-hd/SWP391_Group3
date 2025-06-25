@@ -28,8 +28,10 @@
         <link href="lib/animate/animate.min.css" rel="stylesheet">
         <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
+
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
+
 
         <style>
             /* CSS cho giao diện đổi mật khẩu phù hợp với shop hoa */
@@ -317,6 +319,10 @@
             </div>
         </div>
         <!-- Topbar End -->
+
+
+    <!-- Footer Start -->
+    <!-- Footer End -->
 
 
         <!-- Navbar Start -->

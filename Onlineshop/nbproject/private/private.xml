@@ -66,6 +66,24 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/contact.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/login.jsp</file>
+<<<<<<< HEAD
+=======
+        </group>
+        <group name="New Folder (2)">
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Controller/OrderController.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/OrderDetail.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Utility/EmailSender.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/ProductBatch.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/admin/order-detail.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/login.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/register.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/Order.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/CommonController/AccountVerification.java</file>
+>>>>>>> 9c9f25193552038be127967d080f7c9fd04afbd6
         </group>
         <group name="New Folder (2)"/>
     </open-files>
