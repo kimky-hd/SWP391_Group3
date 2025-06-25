@@ -5,12 +5,21 @@
 
 
 <style>
+    .search-input {
+    border-radius: 20px 0 0 20px;
+    border: 2px solid var(--primary-pink);
+    border-right: none;
+    padding: 0.375rem 1rem;
+    height: 36px; /* hoặc chiều cao bạn muốn */
+    font-size: 1rem;
+    background-color: #fffafc; /* ví dụ màu nhẹ khác biệt */
+}
     .sticky-navbar {
-                position: sticky;
-                top: 0;
-                z-index: 1020;
-                background-color: var(--primary);
-            }
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+        background-color: var(--primary);
+    }
 </style>
 
 <!-- Topbar Start -->
@@ -43,12 +52,12 @@
                     </div>
                 </div>
                 <% } else { %>
-                    <a href="login.jsp" class="btn btn-sm btn-light mr-2 auth-btn">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
-                    </a>
-                    <a href="register.jsp" class="btn btn-sm btn-light auth-btn">
-                        <i class="fas fa-user-plus mr-2"></i>Đăng ký
-                    </a>
+                <a href="login.jsp" class="btn btn-sm btn-light mr-2 auth-btn">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+                </a>
+                <a href="register.jsp" class="btn btn-sm btn-light auth-btn">
+                    <i class="fas fa-user-plus mr-2"></i>Đăng ký
+                </a>
                 <% } %>
             </div>
             <div class="d-inline-flex align-items-center d-block d-lg-none">
@@ -73,8 +82,7 @@
         <div class="col-lg-4 col-6 text-left">
             <form action="SearchProductByTitle" class="search-form">
                 <div class="input-group">
-                    <input type="text" name="txt" class="form-control" placeholder="Tìm kiếm sản phẩm" value="${txt}">
-                    <div class="input-group-append">
+                    <input type="text" name="txt" class="form-control search-input" placeholder="Tìm kiếm sản phẩm" value="${txt}">                    <div class="input-group-append">
                         <button class="btn btn-pink">
                             <i class="fa fa-search"></i>
                         </button>
@@ -91,61 +99,61 @@
 <!-- Topbar End -->
 
 <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
-            <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
+<div class="container-fluid bg-pink mb-0 p-0 sticky-navbar">
+    <div class="row px-xl-5">
+        <div class="col-lg-12">
+            <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
 
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
-                            <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
-                            <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                        </a>
+                <a href="#" class="text-decoration-none d-block d-lg-none">
+                    <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
+                    <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
+                </a>
 
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
-                                <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
-                                
-                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
-                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang <i class="fa fa-angle-down mt-1"></i></a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
-                                    </div>
-                                </div>
-                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                    <div class="navbar-nav py-0">
+                        <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
+                        <a href="ViewListProductController" class="nav-item nav-link">Sản phẩm</a>
+
+                        <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
+                        <a href="blogs" class="nav-item nav-link">Bài viết</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang <i class="fa fa-angle-down mt-1"></i></a>
+                            <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
+                                <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
+                                <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-
-                        <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="ManageWishListController" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
-                            </a>
-                            <a href="Cart.jsp" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                                </span>
-                            </a>
-                            <a href="order?action=view" class="btn px-0 ml-3">
-                                <i class="fas fa-clipboard-list text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
+                        <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
+                    </div>
                 </div>
-            </div>
+
+                <div class="d-none d-lg-flex align-items-center ml-auto">
+                    <a href="ManageWishListController" class="btn px-0">
+                        <i class="fas fa-heart text-primary"></i>
+                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">${countWL}</span>
+                    </a>
+                    <a href="Cart.jsp" class="btn px-0 ml-3">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                            ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
+                        </span>
+                    </a>
+                    <a href="order?action=view" class="btn px-0 ml-3">
+                        <i class="fas fa-clipboard-list text-primary"></i>
+                        <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
+                            ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
+                        </span>
+                    </a>
+                </div>
+            </nav>
         </div>
-        <!-- Navbar End -->
+    </div>
+</div>
+<!-- Navbar End -->
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -198,7 +206,37 @@
     .logo-container:hover {
         transform: translateY(-2px);
     }
-
+    .dropdown-menu {
+        z-index: 1030; /* Cao hơn z-index của navbar (1020) */
+        transform: translate3d(0px, -5px, 0px) !important; /* Dịch chuyển dropdown lên trên */
+        margin-top: -10px !important; /* Khoảng cách âm để đẩy dropdown lên trên */
+    }
+    
+    /* Đảm bảo dropdown không bị cắt bởi container */
+    .dropdown {
+        position: static;
+    }
+    
+    /* Điều chỉnh vị trí của dropdown menu */
+    .user-dropdown + .dropdown-menu {
+        right: 0 !important;
+        left: auto !important;
+    }
+    
+    /* Đảm bảo dropdown menu hiển thị đầy đủ */
+    .dropdown-menu.show {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        overflow: visible;
+    }
+    
+    /* Đảm bảo sticky navbar không che phủ dropdown */
+    .sticky-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1020; /* Giữ nguyên z-index này */
+    }
     .logo-container::after {
         content: '';
         position: absolute;
@@ -337,9 +375,15 @@
 
     /* Animations */
     @keyframes heartBeat {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.2); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
     }
 
     /* Modal Styles */
@@ -366,6 +410,42 @@
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
     }
+     .user-dropdown + .dropdown-menu {
+        right: 0 !important;
+        left: auto !important;
+        top: 100% !important; /* Đặt vị trí bắt đầu từ phía dưới nút */
+        margin-top: 10px !important; /* Khoảng cách từ nút đến dropdown */
+        z-index: 1030; /* Cao hơn z-index của navbar (1020) */
+    }
+    
+    /* Đảm bảo dropdown menu hiển thị đầy đủ */
+    .dropdown-menu.show {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        overflow: visible;
+    }
+    
+    /* Thêm mũi tên nhỏ phía trên dropdown */
+    .user-dropdown + .dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid white;
+    }
+    
+    /* Đảm bảo dropdown menu không bị che khuất */
+    .dropdown {
+        position: relative;
+    }
+    
+    /* Tăng padding cho dropdown items để dễ nhìn hơn */
+    .dropdown-item {
+        padding: 10px 20px;
+    }
 
     /* Responsive Styles */
     @media (max-width: 991.98px) {
@@ -384,19 +464,36 @@
 </style>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Xử lý sự kiện khi nhấn vào nút đăng xuất
-        $('.dropdown-item[data-toggle="modal"]').on('click', function(e) {
+        $('.dropdown-item[data-toggle="modal"]').on('click', function (e) {
             e.preventDefault();
             $('#logoutModal').modal('show');
         });
 
         // Active nav-link based on current page
         const currentLocation = window.location.href;
-        $('.navbar-nav .nav-link').each(function() {
+        $('.navbar-nav .nav-link').each(function () {
             if (currentLocation.includes($(this).attr('href'))) {
                 $(this).addClass('active');
             }
+        });
+        
+        // Thêm xử lý cho dropdown menu
+        $('.user-dropdown').on('click', function() {
+            // Đảm bảo dropdown menu hiển thị đúng vị trí
+            setTimeout(function() {
+                $('.user-dropdown').next('.dropdown-menu').css({
+                    'z-index': '1030',
+                    'position': 'absolute',
+                    'will-change': 'transform',
+                    'top': '0px',
+                    'left': 'auto',
+                    'right': '0px',
+                    'transform': 'translate3d(0px, -5px, 0px)',
+                    'margin-top': '-35px'
+                });
+            }, 0);
         });
     });
 </script>

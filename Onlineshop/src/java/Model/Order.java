@@ -117,4 +117,12 @@ public class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public int getStatusId() {
+    return this.statusID;
+}
+
+public void setStatusId(int statusID) {
+    this.statusID = statusID;
+}
 }

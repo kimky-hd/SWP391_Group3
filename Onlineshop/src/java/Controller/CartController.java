@@ -155,7 +155,7 @@ public class CartController extends HttpServlet {
             cart.addItem(product, quantity);
 
             // Lưu vào database nếu đã đăng nhập
-            cartDAO.addToCart(account.getAccountID(), productId, quantity);
+            cartDAO.addToCart(account.getAccountID(), productId, quantity, false);
 
             // Đặt thông báo thành công vào session
             request.getSession().setAttribute("message", "Đã thêm sản phẩm vào giỏ hàng");
@@ -184,11 +184,20 @@ public class CartController extends HttpServlet {
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+            // Lấy thông tin người dùng từ session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+
+            // Nếu người dùng đã đăng nhập, cập nhật số lượng trong database
+            if (account != null) {
+                cartDAO.addToCart(account.getAccountID(), productId, quantity, true);
+            }
+
             // Nếu số lượng <= 0 thì xoá sản phẩm khỏi giỏ
-//            if (quantity <= 0) {
-//                removeFromCart(request, response, cart);
-//                return;
-//            }
+            //            if (quantity <= 0) {
+            //                removeFromCart(request, response, cart);
+            //                return;
+            //            }
             CartItem item = cart.getItem(productId);
             if (item == null) {
                 request.getSession().setAttribute("message", "Sản phẩm không tồn tại trong giỏ hàng");
@@ -206,6 +215,7 @@ public class CartController extends HttpServlet {
             }
 
             // Cập nhật số lượng
+            // Cập nhật số lượng trong session
             cart.updateItem(productId, quantity);
             request.getSession().setAttribute("message", "Cập nhật giỏ hàng thành công");
             request.getSession().setAttribute("messageType", "success");
@@ -240,7 +250,7 @@ public class CartController extends HttpServlet {
             if (account != null) {
                 // Xóa sản phẩm từ database
                 cartDAO.removeFromCart(account.getAccountID(), productId);
-                
+
                 // Cập nhật số lượng sản phẩm trong giỏ hàng trên session
                 session.setAttribute("cartItemCount", cart.getTotalItems());
             }
@@ -294,18 +304,38 @@ public class CartController extends HttpServlet {
      */
     private void updateSessionCart(HttpSession session, int accountId) {
         try {
+            // Lấy giỏ hàng từ database
             Cart cart = cartDAO.getCartByAccount_Id(accountId);
             if (cart == null) {
                 cart = new Cart();
             }
+            
+            // Cập nhật thông tin sản phẩm trong giỏ hàng với dữ liệu mới nhất
+            for (CartItem item : cart.getItems()) {
+                // Lấy thông tin sản phẩm mới nhất từ database
+                Product updatedProduct = cartDAO.getProductById(item.getProduct().getProductID());
+                if (updatedProduct != null) {
+                    // Cập nhật thông tin sản phẩm trong item
+                    item.setProduct(updatedProduct);
+                    
+                    // Kiểm tra nếu số lượng trong giỏ hàng vượt quá số lượng tồn kho
+                    if (item.getQuantity() > updatedProduct.getQuantity()) {
+                        // Điều chỉnh số lượng trong giỏ hàng xuống bằng số lượng tồn kho
+                        item.setQuantity(updatedProduct.getQuantity() > 0 ? updatedProduct.getQuantity() : 0);
+                        // Cập nhật lại trong database
+                        cartDAO.addToCart(accountId, updatedProduct.getProductID(), item.getQuantity(), true);
+                    }
+                }
+            }
+            
             session.setAttribute("cart", cart);
-
-            // Also update cart item count for header display
+            
+            // Cập nhật số lượng sản phẩm trong giỏ hàng cho header
             int itemCount = cartDAO.getCartItemCount(accountId);
             session.setAttribute("cartItemCount", itemCount);
         } catch (Exception e) {
             e.printStackTrace();
-            // If error, create empty cart
+            // Nếu có lỗi, tạo giỏ hàng trống
             session.setAttribute("cart", new Cart());
             session.setAttribute("cartItemCount", 0);
         }
@@ -327,7 +357,10 @@ public class CartController extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
-
+        
+        // Refresh giỏ hàng từ database để cập nhật thông tin mới nhất
+        updateSessionCart(session, account.getAccountID());
+        
         request.getRequestDispatcher("Cart.jsp").forward(request, response);
     }
 

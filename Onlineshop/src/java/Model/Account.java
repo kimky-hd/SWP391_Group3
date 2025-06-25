@@ -7,21 +7,20 @@ public class Account {
     private int role;
     private String email;
     private String phone;
-
+    private boolean isActive;
+    
     public Account() {
     }
-
-    // Constructor đầy đủ
-    public Account(int accountID, String username, String password, int role, String email, String phone) {
+    
+    public Account(int accountID, String username, String password, int role, String email, String phone, boolean isActive) {
         this.accountID = accountID;
         this.username = username;
         this.password = password;
         this.role = role;
         this.email = email;
         this.phone = phone;
+        this.isActive = isActive;
     }
-
- 
 
     public int getAccountID() {
         return accountID;
@@ -70,16 +69,12 @@ public class Account {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    
+    public boolean isIsActive() {
+        return isActive;
+    }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "accountID=" + accountID +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
