@@ -262,31 +262,30 @@ public class ProductDAO extends DBContext {
     }
 
     public int addProduct(String title, String image, double price, String description, int colorID, int seasonID) {
-    String sql = "INSERT INTO Product (title, image, price, description, colorID, seasonID) VALUES (?, ?, ?, ?, ?, ?)";
-    int generatedId = 0;
+        String sql = "INSERT INTO Product (title, image, price, description, colorID, seasonID) VALUES (?, ?, ?, ?, ?, ?)";
+        int generatedId = 0;
 
-    try {
-        ps = connection.prepareStatement(sql);
-        ps.setString(1, title);
-        ps.setString(2, image);
-        ps.setDouble(3, price);
-        ps.setString(4, description);
-        ps.setInt(5, colorID);
-        ps.setInt(6, seasonID);
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, title);
+            ps.setString(2, image);
+            ps.setDouble(3, price);
+            ps.setString(4, description);
+            ps.setInt(5, colorID);
+            ps.setInt(6, seasonID);
 
-        int affectedRows = ps.executeUpdate();
-        if (affectedRows > 0) {
-            rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                generatedId = rs.getInt(1);  // Lấy ID vừa được insert
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);  // Lấy ID vừa được insert
+                }
             }
+        } catch (SQLException e) {
+            System.out.println("addProduct ERROR: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("addProduct ERROR: " + e.getMessage());
+        return generatedId;
     }
-    return generatedId;
-}
-
 
     public void addProductBatch(int productID, ProductBatch batch) {
         String sql = "INSERT INTO ProductBatch (\n"
@@ -832,20 +831,52 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    public void insertProductComponent(int productID, int materialID, int materialQuantity){
+
+    public void insertProductComponent(int productID, int materialID, int materialQuantity) {
         String sql = "INSERT INTO ProductComponent("
                 + "     productID,\n"
                 + "     materialID,\n"
                 + "     materialQuantity\n"
                 + "     ) VALUES (?, ?, ?)";
-        try{
+        try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, productID);
             ps.setInt(2, materialID);
             ps.setInt(3, materialQuantity);
             ps.executeUpdate();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("insertProductComponent" + e.getMessage());
         }
     }
+
+    public String getColorNameByID(int colorID) {
+        String sql = "SELECT colorName FROM Color WHERE colorID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, colorID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("colorName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getColorNameByID: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String getSeasonNameByID(int seasonID) {
+        String sql = "SELECT seasonName FROM Season WHERE seasonID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, seasonID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("seasonName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getSeasonNameByID: " + e.getMessage());
+        }
+        return null;
+    }
+
 }
