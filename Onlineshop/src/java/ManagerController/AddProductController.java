@@ -195,23 +195,22 @@ public class AddProductController extends HttpServlet {
         }
 
         // Lưu nguyên liệu
-        MaterialDAO mateDAO = new MaterialDAO();
-        List<Material> allMaterials = mateDAO.getAllMaterial();
-        for (Material m : allMaterials) {
-            String param = "material_" + m.getMaterialID();
-            String mquantityStr = request.getParameter(param);
-            if (mquantityStr != null && !mquantityStr.trim().isEmpty()) {
-                try {
-                    int materialQuantity = Integer.parseInt(mquantityStr.trim());
-                    if (materialQuantity > 0) {
-                        productDAO.insertProductComponent(productID, m.getMaterialID(), materialQuantity);
-                    }
-                } catch (NumberFormatException ignored) {
+        String[] selectedMaterials = request.getParameterValues("materials");
+if (selectedMaterials != null) {
+    for (String mIDStr : selectedMaterials) {
+        try {
+            int materialID = Integer.parseInt(mIDStr);
+            String qtyParam = request.getParameter("materialQty_" + materialID);
+            if (qtyParam != null && !qtyParam.trim().isEmpty()) {
+                int materialQuantity = Integer.parseInt(qtyParam.trim());
+                if (materialQuantity > 0) {
+                    productDAO.insertProductComponent(productID, materialID, materialQuantity);
                 }
             }
+        } catch (NumberFormatException ignored) {
         }
-        
-        
+    }
+}
 
         request.getSession().setAttribute("isactive", "Thêm sản phẩm thành công!");
         response.sendRedirect("managerproductlist");
