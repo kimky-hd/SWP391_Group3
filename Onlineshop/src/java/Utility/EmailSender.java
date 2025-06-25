@@ -8,7 +8,9 @@ public class EmailSender {
 
     // Khai báo thông tin email người gửi
     private static final String SENDER_EMAIL = "anhhoang30012004@gmail.com"; // Email người gửi
+
     private static final String SENDER_PASSWORD = "eizk toxu knjm uqkz";      // Mật khẩu ứng dụng (App Password)
+
     private static final String SMTP_HOST = "smtp.gmail.com"; // Máy chủ SMTP của Gmail
     private static final String SMTP_PORT = "587"; // Cổng SMTP sử dụng TLS (không phải SSL)
 
@@ -26,6 +28,7 @@ public class EmailSender {
         props.put("mail.smtp.starttls.enable", "true"); // Sử dụng TLS bảo mật
         props.put("mail.smtp.host", SMTP_HOST); // Máy chủ gửi email
         props.put("mail.smtp.port", SMTP_PORT); // Cổng giao tiếp
+
         
         // Thêm các cấu hình bảo mật và timeout
         props.put("mail.smtp.ssl.trust", SMTP_HOST);
@@ -33,6 +36,7 @@ public class EmailSender {
         props.put("mail.smtp.connectiontimeout", "10000"); // 10 giây timeout kết nối
         props.put("mail.smtp.timeout", "10000"); // 10 giây timeout đọc
         props.put("mail.debug", "true"); // Bật debug để xem lỗi chi tiết
+
 
         // Tạo session có xác thực với Gmail
         Session session = Session.getInstance(props, new Authenticator() {
@@ -57,7 +61,9 @@ public class EmailSender {
 
             // Gửi email
             Transport.send(message);
+
             System.out.println("Email đã được gửi thành công đến " + recipientEmail);
+
             return true; // Thành công
         } catch (MessagingException | java.io.UnsupportedEncodingException e) {
             System.err.println("Lỗi gửi email: " + e.getMessage());
@@ -163,11 +169,13 @@ private static String createRegistrationVerificationEmailContent(String username
         });
 
         try {
+
     Message message = new MimeMessage(session);
     message.setFrom(new InternetAddress(SENDER_EMAIL));
     message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
     message.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B")); // Tiêu đề
     message.setContent(content, "text/html; charset=UTF-8"); // Nội dung HTML
+
 
     Transport.send(message);
     System.out.println("Email đã được gửi thành công đến " + recipientEmail);
@@ -230,6 +238,7 @@ public static boolean testEmailConnection() {
     /**
      * Gửi email xác nhận đơn hàng
      */
+
    public static boolean sendOrderConfirmationEmail(String recipientEmail, String orderDetails, String customerName, String orderId) {
     try {
         // Validate input
@@ -249,6 +258,7 @@ public static boolean testEmailConnection() {
         System.out.println("Chuẩn bị gửi email đến: " + recipientEmail);
         System.out.println("Tiêu đề: " + subject);
         
+
         // Gửi bằng phương thức chung
         return sendNotificationEmail(recipientEmail, subject, content);
         
