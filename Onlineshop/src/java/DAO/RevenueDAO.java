@@ -103,33 +103,118 @@ public class RevenueDAO extends DBContext {
         }
         return list;
     }
-    
-public List<RevenueByCustomer> getRevenueByCustomer() {
-    List<RevenueByCustomer> list = new ArrayList<>();
-    String sql = "SELECT a.username, il.name AS fullName, SUM(hd.tongGia) AS totalSpent "
-               + "FROM HoaDon hd "
-               + "JOIN InforLine il ON hd.maHD = il.maHD "
-               + "JOIN Account a ON hd.accountID = a.accountID "
-               + "WHERE hd.statusID = 2 "
-               + "GROUP BY a.username, il.name "
-               + "ORDER BY totalSpent DESC";
-    try (Connection conn = getConnection(); 
-         PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
 
-        while (rs.next()) {
-            String username = rs.getString("username");
-            String fullName = rs.getString("fullName");
-            double total = rs.getDouble("totalSpent");
-            list.add(new RevenueByCustomer(username, fullName, total));
+    public List<RevenueByCustomer> getRevenueByCustomer() {
+        List<RevenueByCustomer> list = new ArrayList<>();
+        String sql = "SELECT a.username, il.name AS fullName, SUM(hd.tongGia) AS totalSpent "
+                + "FROM HoaDon hd "
+                + "JOIN InforLine il ON hd.maHD = il.maHD "
+                + "JOIN Account a ON hd.accountID = a.accountID "
+                + "WHERE hd.statusID = 2 "
+                + "GROUP BY a.username, il.name "
+                + "ORDER BY totalSpent DESC";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String fullName = rs.getString("fullName");
+                double total = rs.getDouble("totalSpent");
+                list.add(new RevenueByCustomer(username, fullName, total));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
 
+    // Lấy doanh thu theo tháng (theo tháng được chọn trong dropdown)
+    public List<RevenueByMonth> getRevenuePerMonthBySelectedMonth(int selectedMonth) {
+        List<RevenueByMonth> list = new ArrayList<>();
+        String sql = "SELECT MONTH(ngayXuat) AS thang, SUM(tongGia) AS doanhThu "
+                + "FROM HoaDon WHERE statusID = 2 AND MONTH(ngayXuat) = ? "
+                + "GROUP BY MONTH(ngayXuat)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, selectedMonth); // Thêm tháng vào query
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int month = rs.getInt("thang");
+                double revenue = rs.getDouble("doanhThu");
+                list.add(new RevenueByMonth(month, revenue));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
-    
-    
+// Doanh thu theo sản phẩm tìm kiếm theo tên sản phẩm
+    public List<RevenueByProduct> getRevenueByProductSearch(String productSearch) {
+        List<RevenueByProduct> list = new ArrayList<>();
+        String sql = "SELECT p.title, SUM(od.quantity) AS totalSold, "
+                + "SUM(od.price * od.quantity) AS totalRevenue "
+                + "FROM OrderDetail od "
+                + "JOIN Product p ON od.productID = p.productID "
+                + "JOIN HoaDon hd ON od.maHD = hd.maHD "
+                + "WHERE hd.statusID = 2 AND p.title LIKE ? "
+                + "GROUP BY p.title ORDER BY totalSold DESC";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + productSearch + "%");  // Tìm kiếm theo tên sản phẩm
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String title = rs.getString("title");
+                    int totalSold = rs.getInt("totalSold");
+                    double totalRevenue = rs.getDouble("totalRevenue");
+                    list.add(new RevenueByProduct(title, totalSold, totalRevenue));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<RevenueByCustomer> getRevenueByCustomerSearch(String userSearch) {
+        List<RevenueByCustomer> list = new ArrayList<>();
+        String sql = "SELECT a.username, il.name AS fullName, SUM(hd.tongGia) AS totalSpent "
+                + "FROM HoaDon hd "
+                + "JOIN InforLine il ON hd.maHD = il.maHD "
+                + "JOIN Account a ON hd.accountID = a.accountID "
+                + "WHERE hd.statusID = 2 AND (a.username LIKE ? OR il.name LIKE ?) "
+                + "GROUP BY a.username, il.name "
+                + "ORDER BY totalSpent DESC";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + userSearch + "%");  // Tìm kiếm theo tên người dùng
+            ps.setString(2, "%" + userSearch + "%");  // Tìm kiếm theo họ tên người dùng
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String username = rs.getString("username");
+                    String fullName = rs.getString("fullName");
+                    double totalSpent = rs.getDouble("totalSpent");
+                    list.add(new RevenueByCustomer(username, fullName, totalSpent));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Map<String, Integer> getOrderStatusSummaryByStatus(String statusSearch) {
+        Map<String, Integer> summary = new LinkedHashMap<>();
+        String sql = "SELECT s.name, COUNT(*) AS total FROM HoaDon hd "
+                + "JOIN Status s ON hd.statusID = s.statusID "
+                + "WHERE s.name LIKE ? GROUP BY s.name";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + statusSearch + "%");  // Tìm kiếm theo tên trạng thái
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    summary.put(rs.getString("name"), rs.getInt("total"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return summary;
+    }
+
 }
