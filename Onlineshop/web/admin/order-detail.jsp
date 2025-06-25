@@ -50,6 +50,30 @@
         .action-buttons {
             margin-top: 20px;
         }
+.product-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.text-muted {
+    color: #6c757d !important;
+    font-style: italic;
+}
+
+.table-warning {
+    background-color: #fff3cd;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
     </style>
 </head>
 <body>
@@ -147,6 +171,12 @@
             </nav>
 
             <!-- Main Content -->
+            <!-- Thêm vào đầu main content -->
+<c:if test="${errorMessage != null}">
+    <div class="alert alert-danger error-message" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> ${errorMessage}
+    </div>
+</c:if>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Chi tiết Đơn hàng #${order.orderId}</h1>
@@ -157,13 +187,25 @@
 
                 <!-- Thông tin đơn hàng -->
                 <div class="row">
+                    
+<c:if test="${order.processedBy != null}">
+    <p><strong>Người xử lý:</strong> ${order.processedBy}</p>
+</c:if>
                     <!-- Thông tin chung -->
                     <div class="col-md-6">
                         <div class="card order-info-card">
                             <div class="card-header">Thông tin đơn hàng</div>
                             <div class="card-body">
                                 <p><strong>Mã đơn hàng:</strong> #${order.orderId}</p>
-                                <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+                                <!-- Trong phần thông tin đơn hàng, sau dòng ngày đặt -->
+<p><strong>Ngày đặt:</strong> <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+<!-- Thêm các dòng này -->
+<c:if test="${order.updatedDate != null}">
+    <p><strong>Ngày cập nhật:</strong> <fmt:formatDate value="${order.updatedDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+</c:if>
+<c:if test="${order.deliveryDate != null}">
+    <p><strong>Ngày giao hàng:</strong> <fmt:formatDate value="${order.deliveryDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+</c:if>
                                 <p>
                                     <strong>Trạng thái:</strong> 
                                     <c:choose>
@@ -182,12 +224,46 @@
                                     </c:choose>
                                 </p>
                                 <p><strong>Phương thức thanh toán:</strong> ${order.paymentMethod}</p>
+                                
+<c:if test="${order.notes != null && !empty order.notes}">
+    <p><strong>Ghi chú:</strong> ${order.notes}</p>
+</c:if>
                                 <p><strong>Tổng tiền:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Thông tin khách hàng -->
+                    <!-- Thêm một card mới sau phần thông tin khách hàng -->
+<div class="col-md-12 mt-3">
+    <div class="card order-info-card">
+        <div class="card-header">Lịch sử đơn hàng</div>
+        <div class="card-body">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                        <h6 class="timeline-title">Đơn hàng được tạo</h6>
+                        <p class="timeline-description">
+                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" />
+                        </p>
+                    </div>
+                </div>
+                <c:if test="${order.status eq 'Completed'}">
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">Đơn hàng hoàn thành</h6>
+                            <p class="timeline-description">
+                                <fmt:formatDate value="${order.completedDate}" pattern="dd/MM/yyyy HH:mm" />
+                            </p>
+                        </div>
+                    </div>
+                </c:if>
+            </div>
+        </div>
+    </div>
+</div>
                     <div class="col-md-6">
                         <div class="card order-info-card">
                             <div class="card-header">Thông tin khách hàng</div>
@@ -195,7 +271,12 @@
                                 <p><strong>Họ tên:</strong> ${order.fullName}</p>
                                 <p><strong>Email:</strong> ${order.email}</p>
                                 <p><strong>Số điện thoại:</strong> ${order.phone}</p>
-                                <p><strong>Địa chỉ giao hàng:</strong> ${order.address}</p>
+                                <p><strong>Địa chỉ giao hàng:</strong></p>
+<div class="ms-3">
+    <p class="mb-1">${order.fullName}</p>
+    <p class="mb-1">${order.phone}</p>
+    <p class="mb-0">${order.address}</p>
+</div>
                             </div>
                         </div>
                     </div>
@@ -217,32 +298,65 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${orderDetails}" var="detail">
-                                        <tr>
-                                            <td>
-                                                <img src="${detail.product.image}" alt="${detail.product.title}" class="product-img">
-                                            </td>
-                                            <td>${detail.product.title}</td>
-                                            <td><fmt:formatNumber value="${detail.price}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
-                                            <td>${detail.quantity}</td>
-                                            <td><fmt:formatNumber value="${detail.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
-                                        </tr>
-                                    </c:forEach>
+                                    <!-- Trong phần hiển thị sản phẩm -->
+<c:forEach items="${orderDetails}" var="detail">
+    <tr>
+        <td>
+            <c:choose>
+                <c:when test="${detail.product.image != null && !empty detail.product.image}">
+                    <img src="${pageContext.request.contextPath}${detail.product.image}" 
+                         alt="${detail.product.title}" 
+                         class="product-img"
+                         onerror="this.src='${pageContext.request.contextPath}/img/no-image.jpg'">
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/img/no-image.jpg" 
+                         alt="Không có hình ảnh" 
+                         class="product-img">
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>
+            <c:choose>
+                <c:when test="${detail.product.title != null && !empty detail.product.title}">
+                    ${detail.product.title}
+                </c:when>
+                <c:otherwise>
+                    <span class="text-muted">Sản phẩm không xác định (ID: ${detail.productId})</span>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td><fmt:formatNumber value="${detail.price}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
+        <td>${detail.quantity}</td>
+        <td><fmt:formatNumber value="${detail.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
+    </tr>
+</c:forEach>
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>Tổng tiền sản phẩm:</strong></td>
-                                        <td><fmt:formatNumber value="${order.total - 30000}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>Phí vận chuyển:</strong></td>
-                                        <td><fmt:formatNumber value="30000" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>Tổng thanh toán:</strong></td>
-                                        <td><strong><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></strong></td>
-                                    </tr>
-                                </tfoot>
+    <tr>
+        <td colspan="4" class="text-end"><strong>Tổng tiền sản phẩm:</strong></td>
+        <td>
+            <c:choose>
+                <c:when test="${subtotal != null}">
+                    <fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                </c:when>
+                <c:otherwise>
+                    <fmt:formatNumber value="${order.total - (shippingFee != null ? shippingFee : 30000)}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                </c:otherwise>
+            </c:choose>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="text-end"><strong>Phí vận chuyển:</strong></td>
+        <td>
+            <fmt:formatNumber value="${shippingFee != null ? shippingFee : 30000}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+        </td>
+    </tr>
+    <tr class="table-warning">
+        <td colspan="4" class="text-end"><strong>Tổng thanh toán:</strong></td>
+        <td><strong><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></strong></td>
+    </tr>
+</tfoot>
                             </table>
                         </div>
                     </div>

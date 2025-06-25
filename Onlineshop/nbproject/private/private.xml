@@ -2,9 +2,27 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="New Folder (2)">
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Controller/OrderController.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/OrderDetail.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Utility/EmailSender.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/ProductBatch.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/admin/order-detail.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/login.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/web/register.jsp</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Model/Order.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
+            <file>file:/D:/swp15/SWP391_Group3/Onlineshop/src/java/CommonController/AccountVerification.java</file>
+        </group>
+        <group name="New Folder (2)"/>
         <group>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddProductController.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_CreateProduct.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
         </group>
     </open-files>
 </project-private>
