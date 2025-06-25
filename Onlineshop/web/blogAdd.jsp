@@ -3,23 +3,46 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Thêm Blog Mới</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- External Styles -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
     <style>
-        /* CSS của bạn */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        body, html {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: url('https://img.lovepik.com/photo/50091/3710.jpg_wh860.jpg') no-repeat top left,
+                        url('https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg') no-repeat top right,
+                        #f4f4f4;
+            background-size: auto 100vh, auto 100vh;
+            background-attachment: fixed;
+        }
+
+        main {
+            flex: 1;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+            align-items: center;
+            padding: 40px 15px;
         }
-        .container {
+
+        .blog-form-container {
             background-color: #fff;
             padding: 30px;
             border-radius: 8px;
@@ -27,57 +50,64 @@
             width: 100%;
             max-width: 700px;
         }
-        h2 {
+
+        .blog-form-container h2 {
             text-align: center;
             color: #333;
             margin-bottom: 25px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #555;
         }
+
         input[type="text"],
-            textarea {
-            width: calc(100% - 22px);       /* Điều chỉnh cho padding và border */
+        textarea {
+            width: calc(100% - 22px);
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-
-            /* Giữ nguyên dấu xuống dòng (\n) khi người dùng nhập
-               đồng thời cho phép văn bản tự quấn (wrap) khi tới mép */
-            white-space: pre-wrap;         /* Giữ nguyên newline và space */
-            word-break: break-word;        /* Nếu 1 chuỗi quá dài không có space, vẫn sẽ wrap */
-            overflow-wrap: break-word;     /* Tương tự word-break, hỗ trợ nhiều trình duyệt */
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
+
         textarea {
-            resize: vertical; /* Allow vertical resizing */
+            resize: vertical;
             min-height: 150px;
         }
+
         input[type="file"] {
             padding: 8px 0;
         }
+
         .error-message {
             color: #e74c3c;
             margin-top: 10px;
             text-align: center;
             font-weight: bold;
         }
+
         .success-message {
             color: #27ae60;
             margin-top: 10px;
             text-align: center;
             font-weight: bold;
         }
+
         .button-group {
             text-align: center;
             margin-top: 25px;
         }
+
         .action-btn {
             padding: 10px 20px;
             background-color: #ff6600;
@@ -89,60 +119,73 @@
             margin: 0 5px;
             transition: background-color 0.3s ease;
         }
+
         .action-btn:hover {
             background-color: #e65c00;
         }
+
         .back-btn {
             background-color: #7f8c8d;
         }
+
         .back-btn:hover {
             background-color: #616e70;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Thêm Blog Mới</h2>
+    <!-- Header -->
+    <jsp:include page="header.jsp" />
 
-        <c:if test="${not empty requestScope.error}">
-            <p class="error-message">${requestScope.error}</p>
-        </c:if>
+    <!-- Main Content -->
+    <main>
+        <div class="blog-form-container">
+            <h2>Thêm Blog Mới</h2>
 
-        <c:if test="${not empty requestScope.success}">
-            <p class="success-message">${requestScope.success}</p>
-        </c:if>
+            <c:if test="${not empty requestScope.error}">
+                <p class="error-message">${requestScope.error}</p>
+            </c:if>
 
-        <form action="${pageContext.request.contextPath}/blogs" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="create"/>
+            <c:if test="${not empty requestScope.success}">
+                <p class="success-message">${requestScope.success}</p>
+            </c:if>
 
-            <div class="form-group">
-                <label for="title">Tiêu đề:</label>
-                <input type="text" id="title" name="title" required value="${param.title}">
-            </div>
+            <form action="${pageContext.request.contextPath}/blogs" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="create"/>
 
-                    <div class="form-group">
-                <label for="content">Nội dung:</label>
-                <!--
-                  wrap="soft" + CSS white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word
-                  giúp textarea tự động quấn dòng khi nhập và giữ nguyên dấu xuống dòng (\n)
-                  khi submit, bạn có thể xử lý trong backend hoặc hiển thị lại bằng CSS tương tự.
-                -->
-                <textarea id="content"
-                          name="content"
-                          required
-                          wrap="soft">${fn:escapeXml(param.content)}</textarea>
-            </div>
+                <div class="form-group">
+                    <label for="title">Tiêu đề:</label>
+                    <input type="text" id="title" name="title" required value="${param.title}">
+                </div>
 
-            <div class="form-group">
-                <label for="image">Ảnh minh họa:</label>
-                <input type="file" id="image" name="image" accept="image/*">
-            </div>
+                <div class="form-group">
+                    <label for="content">Nội dung:</label>
+                    <textarea id="content"
+                              name="content"
+                              required
+                              wrap="soft">${fn:escapeXml(param.content)}</textarea>
+                </div>
 
-            <div class="button-group">
-                <button type="submit" class="action-btn">Thêm Blog</button>
-                <button type="button" class="action-btn back-btn" onclick="window.location.href='${pageContext.request.contextPath}/blogs?action=list'">Quay lại</button>
-            </div>
-        </form>
-    </div>
+                <div class="form-group">
+                    <label for="image">Ảnh minh họa:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="action-btn">Thêm Blog</button>
+                    <button type="button" class="action-btn back-btn"
+                            onclick="window.location.href = '${pageContext.request.contextPath}/blogs?action=list'">Quay lại</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <jsp:include page="footer.jsp" />
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/lib/easing/easing.min.js"></script>
+    <script src="${pageContext.request.contextPath}/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
 </html>
