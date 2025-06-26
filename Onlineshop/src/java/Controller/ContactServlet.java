@@ -109,7 +109,11 @@ public class ContactServlet extends HttpServlet {
             String host = "smtp.gmail.com";
             String port = "587";
             final String username = "anhhoang30012004@gmail.com"; 
-            final String password = "mjsp obnk obye jorx"; 
+
+
+            final String password = "eizk toxu knjm uqkz"; 
+
+
             
             // Thiết lập thuộc tính
             Properties props = new Properties();

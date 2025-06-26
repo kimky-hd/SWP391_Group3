@@ -34,7 +34,8 @@
                 <form action="updatecategory" method="post" >
                     <div class="form-group">
                         <label>Tên danh mục</label>
-                        <input name="categoryName" required class="form-control" />   
+                        <input name="categoryName" required class="form-control"
+                               value="${oldValue != null ? oldValue : ''}" />   
                         <input type="hidden" name="categoryID" value="${categoryID}" />
                     </div>
                     <button type="submit" class="btn btn-primary">Sửa danh mục</button>

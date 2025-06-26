@@ -87,4 +87,12 @@ public class OrderDetail {
     private void calculateTotal() {
         this.total = this.quantity * this.price;
     }
+
+   public StringBuilder getProductName() {
+    if (this.product != null) {
+        return new StringBuilder(this.product.getTitle());
+    } else {
+        return new StringBuilder("Sản phẩm không xác định");
+    }
+}
 }

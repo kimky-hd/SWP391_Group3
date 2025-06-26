@@ -4,55 +4,39 @@
  */
 package Model;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author Admin
  */
 public class Product {
+
     private int productID;
     private String title;
     private String image;
     private double price;
-    private int quantity;
     private String description;
     private int colorID;
     private int seasonID;
-    private String thanhphan;
-    private Date dateImport;
-    private Date dateExpire;
-    private String status;
+    private List<ProductBatch> batches;
 
     public Product() {
-    }
-    
-    public Product(int productID, String title, String image, double price, int quantity, String description,  int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire) {
-        this.productID = productID;
-        this.title = title;
-        this.image = image;
-        this.price = price;
-        this.quantity = quantity;
-        this.description = description;
-        this.colorID = colorID;
-        this.seasonID = seasonID;
-        this.thanhphan = thanhphan;
-        this.dateImport = dateImport;
-        this.dateExpire = dateExpire;
+        this.batches = new ArrayList<>();
     }
 
-    public Product(int productID, String title, String image, double price, int quantity, String description,  int colorID, int seasonID, String thanhphan, Date dateImport, Date dateExpire, String status) {
+    public Product(int productID, String title, String image, double price, String description, int colorID, int seasonID, List<ProductBatch> batches) {
         this.productID = productID;
         this.title = title;
         this.image = image;
         this.price = price;
-        this.quantity = quantity;
         this.description = description;
         this.colorID = colorID;
         this.seasonID = seasonID;
-        this.thanhphan = thanhphan;
-        this.dateImport = dateImport;
-        this.dateExpire = dateExpire;
-        this.status = status;
+        this.batches = batches;
     }
 
     public int getProductID() {
@@ -87,14 +71,6 @@ public class Product {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -119,47 +95,68 @@ public class Product {
         this.seasonID = seasonID;
     }
 
-    public String getThanhphan() {
-        return thanhphan;
+    public List<ProductBatch> getBatches() {
+        return batches;
     }
 
-    public void setThanhphan(String thanhphan) {
-        this.thanhphan = thanhphan;
+    public void setBatches(List<ProductBatch> batches) {
+        this.batches = batches;
     }
 
-    public Date getDateImport() {
-        return dateImport;
-    }
+    public int getQuantity() {
+        if (batches == null || batches.isEmpty()) {
+            return 0;
+        }
 
-    public void setDateImport(Date dateImport) {
-        this.dateImport = dateImport;
-    }
+        Date now = new Date(); // Ngày hiện tại
 
-    public Date getDateExpire() {
-        return dateExpire;
-    }
-
-    public void setDateExpire(Date dateExpire) {
-        this.dateExpire = dateExpire;
+        return batches.stream()
+                .filter(batch -> batch.getDateExpire().after(now)) // Chỉ lấy các lô chưa hết hạn
+                .mapToInt(ProductBatch::getQuantity)
+                .sum();
     }
 
     public String getStatus() {
-        return status;
-    }
+        if (batches == null || batches.isEmpty()) {
+            return "Không có lô";
+        }
 
-    public void setStatus(String status) {
-        this.status = status;
+        // Lọc ra các lô chưa hết hạn
+        List<ProductBatch> validBatches = batches.stream()
+                .filter(batch -> batch.getDateExpire().after(new Date()))
+                .toList();
+
+        if (validBatches.isEmpty()) {
+            return "Đã Héo";
+        }
+
+        // Tìm lô nhập hàng lâu nhất (sớm nhất) trong số các lô chưa hết hạn
+        ProductBatch oldestValidBatch = validBatches.stream()
+                .min(Comparator.comparing(ProductBatch::getDateImport))
+                .orElse(null);
+
+        if (oldestValidBatch == null) {
+            return "Không xác định";
+        }
+
+        Date today = new Date();
+        long day = 24 * 60 * 60 * 1000;
+        Date datePlus3 = new Date(oldestValidBatch.getDateImport().getTime() + 3 * day);
+
+        if (today.compareTo(datePlus3) <= 0) {
+            return "Tươi mới";
+        } else {
+            return "Lão hóa";
+        }
     }
 
     @Override
     public String toString() {
-        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", thanhphan=" + thanhphan + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", batches=" + batches + '}';
     }
-    
-    
 
-    
-    
-    
-    
+    public String getName() {
+    return this.title; // Trả về title thay vì throw exception
+}
+
 }

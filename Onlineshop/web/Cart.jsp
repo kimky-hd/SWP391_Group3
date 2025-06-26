@@ -581,6 +581,12 @@
             <div class="container-fluid">
                 <div class="row px-xl-5">
                     <div class="col-lg-8 table-responsive mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="font-weight-semi-bold mb-0">Giỏ hàng của tôi</h2>
+                            <button class="btn btn-sm btn-outline-primary" onclick="refreshCart()">
+                                <i class="fas fa-sync-alt"></i> Cập nhật giỏ hàng
+                            </button>
+                        </div>
                         <table class="table table-light table-borderless table-hover text-center mb-0">
 
                             <thead class="bg-pink-pastel text-dark-purple">
@@ -615,7 +621,6 @@
                                                     <fmt:formatNumber value="${item.product.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
                                                 </td>
                                                 <td class="align-middle">
-
                                                     <div class="input-group quantity mx-auto" style="width: 150px;">
                                                         <div class="input-group-btn">
                                                             <button class="btn btn-sm btn-minus" onclick="updateQuantity(${item.product.productID}, ${item.quantity - 1})">
@@ -623,19 +628,23 @@
                                                             </button>
                                                         </div>
                                                         <input type="text" class="form-control form-control-sm border-0 text-center quantity-input" 
-
                                                                value="${item.quantity}" 
                                                                onchange="updateQuantity(${item.product.productID}, this.value)"
                                                                min="1" max="${item.product.quantity}">
                                                         <div class="input-group-btn">
-
                                                             <button class="btn btn-sm btn-plus" onclick="updateQuantity(${item.product.productID}, ${item.quantity + 1})">
-
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </div>
                                                     </div>
-                                                    <small class="text-muted">Còn lại: ${item.product.quantity}</small>
+                                                    <c:choose>
+                                                        <c:when test="${item.product.quantity == 0}">
+                                                            <small class="text-danger font-weight-bold">Hết Hàng</small>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <small class="text-success font-weight-bold">Còn lại: ${item.product.quantity}</small>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </td>
                                                 <td class="align-middle">
                                                     <fmt:formatNumber value="${item.total}" type="currency" currencySymbol="" pattern="#,##0"/>đ
@@ -771,6 +780,11 @@
         <script src="js/main.js"></script>
 
         <script>
+                                                        function refreshCart() {
+                                                            // Gửi request đến server để cập nhật giỏ hàng
+                                                            window.location.href = 'cart?action=view&t=' + new Date().getTime();
+                                                        }
+
 // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
                                                         function updateQuantity(productId, newQuantity) {
                                                             // Nếu số lượng mới nhỏ hơn 1, reload trang sau 1 giây và kết thúc hàm

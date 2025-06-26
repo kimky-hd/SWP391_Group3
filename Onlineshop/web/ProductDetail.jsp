@@ -21,7 +21,7 @@
         <!-- Libraries Stylesheet -->
         <link href="lib/animate/animate.min.css" rel="stylesheet">
         <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-        
+
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
@@ -69,6 +69,90 @@
             }
 
         </style>
+
+        <style>
+            .detail-box {
+                background-color: #fff0f5;
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid #f8bbd0;
+                margin-top: 20px;
+            }
+
+            .detail-box h5 {
+                font-weight: bold;
+                color: #d63384;
+                margin-bottom: 15px;
+            }
+
+            .detail-box ul {
+                padding-left: 20px;
+                color: #333;
+            }
+
+            .detail-box li {
+                margin-bottom: 6px;
+                font-size: 1rem;
+                line-height: 1.4;
+            }
+
+            .label-title {
+                font-weight: bold;
+                color: #444;
+                display: inline-block;
+                width: 100px;
+            }
+
+            .text-danger {
+                font-weight: bold;
+                color: #dc3545;
+            }
+
+            .badge {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+                border-radius: 20px;
+                display: inline-block;
+                margin: 4px 4px 0 0;
+                text-decoration: none;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .bg-info {
+                background-color: #cce5ff;
+            }
+
+            .badge.bg-info:hover {
+                background-color: #339af0;
+                color: #fff !important;
+            }
+
+            .text-dark {
+                color: #333 !important;
+            }
+
+            .me-1 {
+                margin-right: 0.5rem !important;
+            }
+
+            .category-label {
+                display: block;
+                font-weight: bold;
+                margin-top: 15px;
+                color: #444;
+            }
+            .badge.bg-warning:hover {
+                background-color: #ffca2c;
+                color: #000 !important;
+            }
+
+            .badge.bg-success:hover {
+                background-color: #198754;
+                color: #fff !important;
+            }
+
+        </style>
+
     </head>
 
 
@@ -80,7 +164,7 @@
         <!-- Topbar End -->
 
 
-        
+
 
         <!-- Product Start -->
 
@@ -123,27 +207,45 @@
                             </h3>
                         </div>
 
-                        <!-- Thành phần -->
-                        <p style="font-size: 1.2rem;"><strong>Thành phần:</strong></p>
-                        <ul>
-                            <c:forEach var="item" items="${fn:split(detail.thanhphan, '\\\\.')}">
-                                <c:if test="${not empty item}">
-                                    <li>${item}.</li>
-                                    </c:if>
-                                </c:forEach>
-                        </ul>
-                        <p style="font-size: 1.2rem;"><strong>Ngày nhập:</strong> ${detail.getDateImport()}</p>
-                        <p style="font-size: 1.2rem;"><strong>Tình trạng:</strong> ${detail.getStatus()}</p>
 
-                        <!-- Số lượng -->
-                        <c:choose>
-                            <c:when test="${detail.getQuantity() == 0}">
-                                <p style="font-size: 1.2rem;"><strong>Số lượng:</strong> <span class="text-danger">Hết hàng</span></p>
-                            </c:when>
-                            <c:otherwise>
-                                <p style="font-size: 1.2rem;"><strong>Số lượng:</strong> ${detail.getQuantity()}</p>
-                            </c:otherwise>
-                        </c:choose>
+
+                        <!-- Thành phần nguyên liệu -->
+                        <div class="detail-box mt-4">
+                            <h5>Thành phần sản phẩm:</h5>
+                            <ul>
+                                <c:forEach var="comp" items="${componentList}">
+                                    <li>${comp.material.name}: ${comp.materialQuantity} ${comp.material.unit}</li>
+                                    </c:forEach>
+                            </ul>
+
+                            <!-- Số lượng -->
+                            <p><span class="label-title">Số lượng:</span>
+                                <c:choose>
+                                    <c:when test="${detail.getQuantity() == 0}">
+                                        <span class="text-danger">Hết hàng</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${detail.getQuantity()}
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+
+                            <!-- Status -->
+                            <p><span class="label-title">Tình trạng:</span> ${detail.status}</p>
+
+                            <!-- Danh mục -->
+                            <p class="category-label">Danh mục:</p>
+                            <c:if test="${not empty categoryList}">
+                                <c:forEach var="cat" items="${categoryList}">
+                                    <a href="productlist?categoryID=${cat.categoryID}" class="badge bg-info text-dark me-1">${cat.categoryName}</a>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${empty categoryList}">
+                                <span><em>Không có</em></span>
+                            </c:if>
+                        </div>
+
+
 
                         <!-- Nút thêm vào giỏ & yêu thích -->
                         <div class="mt-4">

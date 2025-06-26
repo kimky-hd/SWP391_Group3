@@ -32,19 +32,32 @@ public class ViewCategoryListController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ViewCategoryListController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ViewCategoryListController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        HttpSession session = request.getSession();
+        String success = (String) session.getAttribute("success");
+        if (success != null) {
+            request.setAttribute("success", success);
+            session.removeAttribute("success"); // Xóa ngay sau khi hiển thị 1 lần
         }
+        CategoryDAO cateDAO = new CategoryDAO();
+        String index = request.getParameter("index");
+        if (index == null || index.isEmpty()) {
+            index = "1";
+        }
+        int indexPage = Integer.parseInt(index);
+        List<Category> category = cateDAO.getCategoryByIndex(indexPage);
+        
+        int allCategory = cateDAO.countAllCategory();
+        int endPage = allCategory / 5;
+        if (allCategory % 5 != 0) {
+            endPage++;
+        }
+        request.setAttribute("tag", indexPage);
+        request.setAttribute("count", allCategory);
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("catelist", category);
+        request.getRequestDispatcher("Manager_ListCategory.jsp").forward(request, response);
+
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -59,17 +72,8 @@ public class ViewCategoryListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String success = (String) session.getAttribute("success");
-        if (success != null) {
-            request.setAttribute("success", success);
-            session.removeAttribute("success"); // Xóa ngay sau khi hiển thị 1 lần
-        }
-        CategoryDAO cateDAO = new CategoryDAO();
-        List<Category> category = cateDAO.getAllCategory();
-        request.setAttribute("catelist", category);
-        request.getRequestDispatcher("Manager_ListCategory.jsp").forward(request, response);
-
+        processRequest(request, response);
+        
     }
 
     /**
