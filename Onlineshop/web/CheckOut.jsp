@@ -17,7 +17,7 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="Free HTML Templates" name="keywords">
         <meta content="Free HTML Templates" name="description">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Favicon -->
         <link href="img/favicon.ico" rel="icon">
 
@@ -200,12 +200,74 @@
                                 <h6 class="font-weight-medium">30.000đ</h6>
                             </div>
                         </div>
-                        <div class="pt-2">
+                        <div class="border-bottom pt-3 pb-3">
+    <div class="d-flex justify-content-between mb-3">
+        <h6>Voucher</h6>
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#voucherModal">
+    Chọn mã giảm
+</button>
+        <!-- Bootstrap Modal -->
+<div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="voucherModalLabel">Chọn mã giảm giá</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+
+      <div class="modal-body">
+        <c:choose>
+          <c:when test="${not empty vouchers}">
+            <ul class="list-group">
+              <c:forEach items="${vouchers}" var="v">
+                <li class="list-group-item voucher-item" data-id="${v.voucherId}" data-discount="${v.discountAmount}" style="cursor: pointer;">
+                  <strong>${v.code}</strong><br/>
+                  <small>
+                    <fmt:formatDate value="${v.startDate}" pattern="dd/MM/yyyy" /> -
+                    <fmt:formatDate value="${v.endDate}" pattern="dd/MM/yyyy" />
+                  </small><br/>
+                  <span>${v.description}</span>
+                </li>
+              </c:forEach>
+            </ul>
+          </c:when>
+          <c:otherwise>
+            <p>Không có mã giảm giá nào khả dụng.</p>
+          </c:otherwise>
+        </c:choose>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+<!--                        <div class="pt-2">
                             <div class="d-flex justify-content-between mt-2">
                                 <h5>Tổng thanh toán</h5>
                                 <h5><fmt:formatNumber value="${cart.total + 30000}" type="currency" currencySymbol="" pattern="#,##0"/>đ</h5>
                             </div>
-                        </div>
+                        </div>-->
+
+ <!-- Số tiền giảm -->
+    <div class="d-flex justify-content-between mt-2" id="discountRow" style="display: none;">
+        <h6>Được giảm</h6>
+        <h6 id="discountAmount">-0đ</h6>
+    </div>
+<!-- Hiển thị tổng thanh toán -->
+<div class="pt-2">
+    <div class="d-flex justify-content-between mt-2">
+        <h5>Tổng thanh toán</h5>
+        <h5 id="totalDisplay">
+            <fmt:formatNumber value="${cart.total + 30000}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+        </h5>
+    </div>
+</div>
+
+
                     </div>
                     <div class="mb-5">
                         <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Phương thức thanh toán</span></h5>
@@ -232,6 +294,11 @@
                                 <input type="hidden" name="district" id="district">
                                 <input type="hidden" name="city" id="city">
                                 <input type="hidden" name="paymentMethod" id="paymentMethod">
+                                <!-- Hidden input to store selected voucher -->
+                                <input type="hidden" name="selectedVoucherId" id="selectedVoucherId" />
+                                <!-- Hidden để giữ total gốc -->
+                                <input type="hidden" name="originalTotal" id="originalTotal" value="${cart.total + 30000}" />
+                                <input type="hidden" name="totalAfterDiscount" id="totalAfterDiscount" value="${cart.total + 30000}" />
                                 <button type="button" onclick="validateAndSubmit()" class="btn btn-block btn-primary font-weight-bold py-3">Đặt hàng</button>
                             </form>
 
@@ -248,6 +315,9 @@
                                     const address = $('#addressInput').val().trim();
                                     const district = $('#districtInput').val().trim();
                                     const city = $('#cityInput').val().trim();
+                                    
+                                    const selectedVoucherId = $('#selectedVoucherId').val().trim();
+                                    const totalAfterDiscount = $('#totalAfterDiscount').val().trim();
 
                                     // Ẩn tất cả các thông báo lỗi trước đó
                                     $('.error-message').hide();
@@ -314,6 +384,9 @@
                                     $('#district').val(district);
                                     $('#city').val(city);
                                     $('#paymentMethod').val(paymentMethod);
+                                    
+                                    $('#selectedVoucherId').val(selectedVoucherId);
+                                    $('#totalAfterDiscount').val(totalAfterDiscount);
 
                                     // Nếu phương thức thanh toán là VN Pay, chuyển hướng đến VNPayController
                                     if (paymentMethod === 'VN Pay') {
@@ -337,6 +410,9 @@
                                         addField('address', address);
                                         addField('district', district);
                                         addField('city', city);
+                                        
+                                        addField('selectedVoucherId', selectedVoucherId);
+                                        addField('totalAfterDiscount', totalAfterDiscount);
 
                                         // Thêm form vào body và submit
                                         document.body.appendChild(vnpayForm);
@@ -430,6 +506,44 @@
             %>
                                 }
         </script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.voucher-item').forEach(item => {
+    item.addEventListener('click', function () {
+      const voucherId = this.dataset.id;
+      const code = this.querySelector('strong')?.innerText || "Đã chọn";
+
+      // Set giá trị vào input
+      document.getElementById('selectedVoucherId').value = voucherId;
+
+      // Cập nhật lại nút nếu muốn
+      document.querySelector('button[data-bs-target="#voucherModal"]').textContent = code;
+      
+      const discount = parseInt(this.dataset.discount || '0');
+      const originalTotal = parseInt(document.getElementById('originalTotal').value);
+      // Tính tổng sau giảm
+      const newTotal = Math.max(originalTotal - discount, 0);
+            // Format tiền VND (có thể chỉnh theo nhu cầu)
+      const formatted = newTotal.toLocaleString('vi-VN') + 'đ';
+            // Hiển thị số tiền được giảm
+            // Format tiền kiểu VND
+      const formatVND = (value) => value.toLocaleString('vi-VN') + 'đ';
+      document.getElementById('discountAmount').textContent = '-' + formatVND(discount);
+      document.getElementById('discountRow').style.display = 'flex';
+
+       // Gán lại tổng mới vào HTML
+      document.getElementById('totalDisplay').textContent = formatted;
+      document.getElementById('totalAfterDiscount').value = newTotal;
+
+      // Đóng modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('voucherModal'));
+      modal.hide();
+    });
+  });
+</script>
+
+
     </body>
 
 </html>
