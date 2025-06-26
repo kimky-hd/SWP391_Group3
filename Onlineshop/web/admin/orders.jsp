@@ -104,6 +104,7 @@
                                     <th>Khách hàng</th>
                                     <th>Ngày đặt</th>
                                     <th>Tổng tiền</th>
+                                    <th>Phương thức</th>
                                     <th>Trạng thái</th>
                                     <th>Thao tác</th>
                                 </tr>
@@ -115,6 +116,7 @@
                                         <td>${order.fullName}</td>
                                         <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" /></td>
                                         <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
+                                        <td>${order.paymentMethod}</td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${order.status eq 'Pending'}">

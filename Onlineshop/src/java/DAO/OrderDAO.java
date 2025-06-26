@@ -28,8 +28,8 @@ public class OrderDAO extends DBContext {
      */
     public boolean createOrder(Order order, List<OrderDetail> orderDetails) {
         // Câu lệnh SQL để chèn dữ liệu vào bảng HoaDon (Đơn hàng chính)
-        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID) "
-                + "VALUES (?, ?, ?, ?)";
+        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID, payment_method) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         // Câu lệnh SQL để chèn dữ liệu vào bảng InforLine (Thông tin người nhận/khách hàng)
         String infoSql = "INSERT INTO InforLine (maHD, name, email, address, phoneNumber) "
@@ -49,6 +49,7 @@ public class OrderDAO extends DBContext {
                 ps.setDouble(2, order.getTotal());
                 ps.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
                 ps.setInt(4, 1); // Đặt trạng thái mặc định là "Pending" (Đang chuẩn bị) (statusID = 1)
+                ps.setString(5, order.getPaymentMethod()); // Thêm phương thức thanh toán
 
                 int affectedRows = ps.executeUpdate(); // Thực thi câu lệnh chèn
 
@@ -114,7 +115,7 @@ public class OrderDAO extends DBContext {
     public List<Order> getOrdersByAccountId(int accountId) {
         List<Order> orders = new ArrayList<>(); // Khởi tạo danh sách để lưu trữ các đơn hàng
         // Câu lệnh SQL JOIN giữa HoaDon và InforLine để lấy thông tin đơn hàng và thông tin người nhận
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.accountID = ? ORDER BY h.maHD DESC"; // Sắp xếp theo maHD giảm dần
 
@@ -134,8 +135,8 @@ public class OrderDAO extends DBContext {
                     order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
-                    // Lưu ý: Cột payment_method không có trong SQL hiện tại, nên dòng này bị comment
-                    // order.setPaymentMethod(rs.getString("payment_method"));
+                    // Bỏ comment dòng này để lấy phương thức thanh toán
+                    order.setPaymentMethod(rs.getString("payment_method"));
                     order.setTotal(rs.getDouble("tongGia"));
 
                     // Chuyển đổi statusID dạng số thành chuỗi trạng thái dễ đọc
@@ -178,7 +179,7 @@ public class OrderDAO extends DBContext {
      */
     public Order getOrderById(int orderId) {
         // Câu lệnh SQL JOIN giữa HoaDon và InforLine để lấy thông tin đơn hàng và thông tin người nhận
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.maHD = ?"; // Lọc theo maHD
 
@@ -198,6 +199,8 @@ public class OrderDAO extends DBContext {
                     order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
+                    // Bỏ comment dòng này để lấy phương thức thanh toán
+                    order.setPaymentMethod(rs.getString("payment_method"));
                     order.setTotal(rs.getDouble("tongGia"));
 
                     // Chuyển đổi statusID dạng số thành chuỗi trạng thái
@@ -245,7 +248,7 @@ public class OrderDAO extends DBContext {
  */
 public List<Order> getAllOrders() {
     List<Order> orders = new ArrayList<>();
-    String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address " +
+    String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address " +
                  "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD " +
                  "ORDER BY h.ngayXuat DESC";
 
