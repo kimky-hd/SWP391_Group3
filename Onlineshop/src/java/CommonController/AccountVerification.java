@@ -32,29 +32,76 @@ public class AccountVerification extends HttpServlet {
         
         try {
             if ("send".equals(action)) {
-                // Xử lý gửi mã xác nhận
-                String email = request.getParameter("email");
-                String username = request.getParameter("username");
-                String password = request.getParameter("password");
-                String phone = request.getParameter("phone");
+    // Xử lý gửi mã xác nhận
+    String email = request.getParameter("email");
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    String phone = request.getParameter("phone");
+    
+    // Kiểm tra khoảng trắng trong tên đăng nhập
+    if (username != null && username.contains(" ")) {
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Tên đăng nhập không được chứa khoảng trắng!");
+        out.print(gson.toJson(jsonResponse));
+        return;
+    }
+    
+   // Kiểm tra khoảng trắng trong email
+    if (email != null && email.contains(" ")) {
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Email không được chứa khoảng trắng!");
+        out.print(gson.toJson(jsonResponse));
+        return;
+    }
+    
+    if (phone != null && phone.contains(" ")) {
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Số điện thoại không được chứa khoảng trắng!");
+        out.print(gson.toJson(jsonResponse));
+        return;
+    }
+    
+    if (password != null && password.contains(" ")) {
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Mật khẩu không được chứa khoảng trắng!");
+        out.print(gson.toJson(jsonResponse));
+        return;
+    }
+    
                 
-                // Kiểm tra email đã tồn tại chưa
-                Account checkEmail = dao.checkEmailExist(email);
-                if (checkEmail != null) {
-                    jsonResponse.put("success", false);
-                    jsonResponse.put("message", "Email đã được sử dụng!");
-                    out.print(gson.toJson(jsonResponse));
-                    return;
-                }
-                
-                // Kiểm tra username đã tồn tại chưa
-                Account checkUser = dao.checkAccountExist(username);
-                if (checkUser != null) {
-                    jsonResponse.put("success", false);
-                    jsonResponse.put("message", "Tên đăng nhập đã tồn tại!");
-                    out.print(gson.toJson(jsonResponse));
-                    return;
-                }
+                // Trong phương thức processRequest, phần xử lý action "send"
+
+// Kiểm tra email đã tồn tại chưa
+Account checkEmail = dao.checkEmailExist(email);
+if (checkEmail != null) {
+    jsonResponse.put("success", false);
+    jsonResponse.put("message", "Email đã được sử dụng!");
+    out.print(gson.toJson(jsonResponse));
+    return;
+}
+
+// Kiểm tra username đã tồn tại chưa
+Account checkUser = dao.checkAccountExist(username);
+if (checkUser != null) {
+    jsonResponse.put("success", false);
+    jsonResponse.put("message", "Tên đăng nhập đã tồn tại!");
+    out.print(gson.toJson(jsonResponse));
+    return;
+}
+
+// Kiểm tra định dạng số điện thoại
+if (phone != null && !phone.isEmpty()) {
+    // Loại bỏ khoảng trắng và dấu gạch ngang
+    String cleanPhone = phone.replaceAll("\\s|-", "");
+    
+    // Kiểm tra chỉ chứa số
+    if (!cleanPhone.matches("^\\d+$")) {
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Số điện thoại chỉ được chứa chữ số!");
+        out.print(gson.toJson(jsonResponse));
+        return;
+    }
+}
                 
                 // Tạo mã xác nhận
                 String verificationCode = dao.generateResetToken(); // Sử dụng lại phương thức tạo token
@@ -69,7 +116,7 @@ public class AccountVerification extends HttpServlet {
                 session.setMaxInactiveInterval(10 * 60); // 10 phút
                 
                 // Gửi email chứa mã xác nhận
-                boolean emailSent = EmailSender.sendResetPasswordEmail(email, verificationCode, username);
+                boolean emailSent = EmailSender.sendRegistrationVerificationEmail(email, verificationCode, username);
                 
                 if (emailSent) {
                     jsonResponse.put("success", true);
@@ -109,6 +156,8 @@ public class AccountVerification extends HttpServlet {
                     session.removeAttribute("registerPassword");
                     session.removeAttribute("registerEmail");
                     session.removeAttribute("registerPhone");
+                    session.setAttribute("autoFillUsername", username);
+    session.setAttribute("autoFillEmail", email);
                     
                     // Chuyển hướng đến trang đăng nhập với thông báo thành công
                     session.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
@@ -138,7 +187,7 @@ public class AccountVerification extends HttpServlet {
                 session.setMaxInactiveInterval(10 * 60); // 10 phút
                 
                 // Gửi email chứa mã xác nhận
-                boolean emailSent = EmailSender.sendResetPasswordEmail(email, verificationCode, username);
+               boolean emailSent = EmailSender.sendRegistrationVerificationEmail(email, verificationCode, username);
                 
                 if (emailSent) {
                     jsonResponse.put("success", true);

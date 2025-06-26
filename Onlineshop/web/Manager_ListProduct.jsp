@@ -34,7 +34,7 @@
                             </button>
                         </form>
 
-                        <a href="Manager_CreateProduct.jsp" class="btn btn-success btn-icon-split">
+                        <a href="addproduct" class="btn btn-success btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-plus"></i>
                             </span>

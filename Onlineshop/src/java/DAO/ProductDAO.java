@@ -232,14 +232,14 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public void addCategoryProduct(int insertedProductID, int categoryID) {
+    public void addCategoryProduct(int ProductID, int categoryID) {
         String sql = "INSERT INTO CategoryProduct \n"
                 + "(productID, categoryID) \n"
                 + "VALUES \n"
                 + "(?, ?)";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, insertedProductID);
+            ps.setInt(1, ProductID);
             ps.setInt(2, categoryID);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -261,33 +261,30 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public int addProduct(Product newproduct) {
-        String sql = "INSERT INTO Product (\n"
-                + "            title,\n"
-                + "            image,\n"
-                + "            price,\n"
-                + "            quantity,\n"
-                + "            description,\n"
-                + "            colorID,\n"
-                + "            seasonID,\n"
-                + "        ) VALUES (\n"
-                + "            ?, ?, ?, ?, ?, ?, ?\n"
-                + "        )";
+    public int addProduct(String title, String image, double price, String description, int colorID, int seasonID) {
+        String sql = "INSERT INTO Product (title, image, price, description, colorID, seasonID) VALUES (?, ?, ?, ?, ?, ?)";
+        int generatedId = 0;
+
         try {
             ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
+            ps.setString(1, title);
+            ps.setString(2, image);
+            ps.setDouble(3, price);
+            ps.setString(4, description);
+            ps.setInt(5, colorID);
+            ps.setInt(6, seasonID);
 
-            ps.setString(1, newproduct.getTitle());
-            ps.setString(2, newproduct.getImage());
-            ps.setDouble(3, newproduct.getPrice());
-            ps.setInt(4, newproduct.getQuantity());
-            ps.setString(5, newproduct.getDescription());
-            ps.setInt(6, newproduct.getColorID());
-            ps.setInt(7, newproduct.getSeasonID());
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);  // Lấy ID vừa được insert
+                }
+            }
         } catch (SQLException e) {
-            System.out.println("addProduct" + e.getMessage());
+            System.out.println("addProduct ERROR: " + e.getMessage());
         }
-        return 0;
+        return generatedId;
     }
 
     public void addProductBatch(int productID, ProductBatch batch) {
@@ -328,22 +325,19 @@ public class ProductDAO extends DBContext {
                 + "            title = ?,\n"
                 + "            image = ?,\n"
                 + "            price = ?,\n"
-                + "            quantity = ?,\n"
                 + "            description = ?,\n"
                 + "            colorID = ?,\n"
                 + "            seasonID = ?,\n"
-                + "            thanhphan = ?,\n"
                 + "        WHERE productID = ?";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, updateproduct.getTitle());
             ps.setString(2, updateproduct.getImage());
             ps.setDouble(3, updateproduct.getPrice());
-            ps.setInt(4, updateproduct.getQuantity());
-            ps.setString(5, updateproduct.getDescription());
-            ps.setInt(6, updateproduct.getColorID());
-            ps.setInt(7, updateproduct.getSeasonID());
-            ps.setInt(8, updateproduct.getProductID());
+            ps.setString(4, updateproduct.getDescription());
+            ps.setInt(5, updateproduct.getColorID());
+            ps.setInt(6, updateproduct.getSeasonID());
+            ps.setInt(7, updateproduct.getProductID());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -682,7 +676,6 @@ public class ProductDAO extends DBContext {
                 + "    p.description,\n"
                 + "    p.colorID,\n"
                 + "    p.seasonID,\n"
-                + "    p.thanhphan,\n"
                 + " FROM Product p \n"
                 + " JOIN Wishlist wl ON p.productID = wl.productID \n"
                 + " WHERE wl.AccountID = ?";
@@ -838,4 +831,52 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
+
+    public void insertProductComponent(int productID, int materialID, int materialQuantity) {
+        String sql = "INSERT INTO ProductComponent("
+                + "     productID,\n"
+                + "     materialID,\n"
+                + "     materialQuantity\n"
+                + "     ) VALUES (?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setInt(2, materialID);
+            ps.setInt(3, materialQuantity);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertProductComponent" + e.getMessage());
+        }
+    }
+
+    public String getColorNameByID(int colorID) {
+        String sql = "SELECT colorName FROM Color WHERE colorID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, colorID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("colorName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getColorNameByID: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String getSeasonNameByID(int seasonID) {
+        String sql = "SELECT seasonName FROM Season WHERE seasonID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, seasonID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("seasonName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getSeasonNameByID: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

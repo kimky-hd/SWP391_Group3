@@ -1,312 +1,665 @@
 <%@ page import="java.util.*, Model.RevenueByMonth, Model.RevenueByProduct, Model.RevenueByCustomer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Báo cáo doanh thu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #f8f9fa; /* Light background for Bootstrap feel */
             margin: 0;
-            padding: 40px 20px;
-            color: #333;
+            padding: 20px 0;
+            color: #343a40;
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 1200px;
+        .container-fluid {
+            max-width: 1300px; /* Slightly wider container */
             margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px 40px;
+            padding: 30px 20px;
+        }
+
+        .card {
+            border: none;
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background-color: #007bff; /* Primary Bootstrap blue */
+            color: white;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 30px;
         }
 
         h1 {
             text-align: center;
-            color: #2c3e50;
+            color: #007bff; /* Primary blue for main title */
             margin-bottom: 40px;
             font-size: 2.8em;
             letter-spacing: 1px;
             text-transform: uppercase;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 20px;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            height: 3px;
+            width: 80px;
+            background-color: #28a745; /* Green accent */
+            border-radius: 5px;
         }
 
         h2 {
-            color: #34495e;
+            color: #343a40;
             margin-top: 35px;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            padding-left: 10px;
-            border-left: 5px solid #2ecc71;
+            margin-bottom: 25px;
+            font-size: 2em;
+            padding-left: 15px;
+            border-left: 5px solid #17a2b8; /* Info blue accent */
+            font-weight: 600;
         }
 
         /* Total Revenue Section */
         .total-revenue-card {
-            background-color: #e0f7fa; /* Light blue */
-            color: #00796b; /* Darker teal for text */
-            padding: 25px;
-            border-radius: 10px;
+            background: linear-gradient(45deg, #28a745, #218838); /* Green gradient */
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
             margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .total-revenue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .total-revenue-card p {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
         }
 
         .total-revenue-card strong {
-            font-size: 3em;
+            font-size: 3.5em;
             font-weight: 700;
             display: block;
             margin-top: 10px;
-            color: #004d40; /* Even darker teal */
+            letter-spacing: 1px;
         }
 
-        /* Table styles */
-        table {
-            width: 100%;
-            border-collapse: separate; /* For rounded corners */
-            border-spacing: 0;
+        /* Form styling */
+        .form-control-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        .form-control-container label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            flex-grow: 1; /* Allow inputs to grow */
+            max-width: 300px; /* Limit max width for inputs */
+        }
+
+        .btn-primary, .btn-info {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #138496;
+            transform: translateY(-2px);
+        }
+
+        /* Table styling */
+        .table-responsive {
             margin-bottom: 30px;
+        }
+
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
             background-color: #ffffff;
             border-radius: 10px;
-            overflow: hidden; /* Ensures rounded corners are visible */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
-        th, td {
+        .table th, .table td {
             padding: 15px 20px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e9ecef; /* Lighter border */
         }
 
-        th {
-            background-color: #4a69bd; /* Dark blue header */
+        .table thead th {
+            background-color: #343a40; /* Darker header */
             color: white;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.95em;
+            font-size: 0.9em;
             letter-spacing: 0.5px;
         }
 
-        /* Rounded corners for table headers */
-        th:first-child {
-            border-top-left-radius: 10px;
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa; /* Lighter stripe */
         }
 
-        th:last-child {
-            border-top-right-radius: 10px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f8f8f8;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
+        .table tbody tr:hover {
+            background-color: #e2f2ff; /* Light blue on hover */
             transition: background-color 0.2s ease;
         }
 
-        /* Specific styling for financial data columns */
-        td:nth-child(even), td:last-child {
-            text-align: right; /* Align numbers to the right */
+        .table .text-right {
+            text-align: right;
             font-weight: 500;
-            color: #0056b3; /* A nice blue for numbers */
+            color: #0056b3;
+        }
+        
+        /* No data message */
+        .no-data-message {
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+            font-style: italic;
         }
 
-        /* Media Queries for Responsiveness */
+        /* Chart styling */
+        .chart-container {
+            position: relative;
+            /* Thay đổi chiều cao để phù hợp với 3 biểu đồ trên 1 hàng */
+            height: 300px; /* Chiều cao cố định cho mỗi biểu đồ nhỏ */
+            width: 100%; /* Đảm bảo canvas lấp đầy cột Bootstrap */
+        }
+        /* Đảm bảo canvas responsive bên trong chart-container */
+        .chart-container canvas {
+            display: block; /* Loại bỏ khoảng trắng dưới canvas */
+            max-width: 100%;
+            height: 100%;
+        }
+
+        /* Responsive adjustments for tables */
         @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-            .container {
-                padding: 20px;
+            .container-fluid {
+                padding: 15px;
             }
             h1 {
-                font-size: 2em;
-                margin-bottom: 30px;
+                font-size: 2.2em;
             }
             h2 {
-                font-size: 1.5em;
+                font-size: 1.7em;
             }
             .total-revenue-card strong {
-                font-size: 2.5em;
+                font-size: 3em;
             }
-            table, thead, tbody, th, td, tr {
+            .form-control-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .form-control-container .form-control,
+            .form-control-container .btn {
+                width: 100%;
+                max-width: none;
+            }
+
+            .table thead {
+                display: none; /* Hide table headers on small screens */
+            }
+
+            .table, .table tbody, .table tr, .table td {
                 display: block;
+                width: 100%;
             }
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-            tr {
-                border: 1px solid #ccc;
-                border-radius: 8px;
+
+            .table tr {
                 margin-bottom: 15px;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             }
-            td {
-                border: none;
-                position: relative;
-                padding-left: 50%;
+
+            .table td {
                 text-align: right;
+                padding-left: 50%; /* Space for the data-label */
+                position: relative;
+                border: none;
+                border-bottom: 1px solid #e9ecef;
             }
-            td::before {
+
+            .table td:last-child {
+                border-bottom: none;
+            }
+
+            .table td::before {
                 content: attr(data-label);
                 position: absolute;
-                left: 10px;
-                width: calc(50% - 20px);
-                padding-right: 10px;
-                white-space: nowrap;
+                left: 15px;
+                width: calc(50% - 30px);
                 text-align: left;
-                font-weight: bold;
-                color: #555;
-            }
-            td:first-of-type {
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
-            }
-            td:last-of-type {
-                border-bottom-left-radius: 8px;
-                border-bottom-right-radius: 8px;
-                border-bottom: none;
+                font-weight: 700;
+                color: #495057;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <h1>BÁO CÁO DOANH THU</h1>
 
-        <h2>Tổng doanh thu</h2>
-        <div class="total-revenue-card">
-            <p>Tổng doanh thu từ tất cả các hoạt động:</p>
-            <%
-                Double totalRevenue = (Double) request.getAttribute("totalRevenue");
-            %>
-            <strong><%= String.format("%,.0f", totalRevenue) %> VNĐ</strong>
+        <div class="card bg-success text-white total-revenue-card">
+            <div class="card-body">
+                <p class="card-title">Tổng doanh thu từ tất cả các hoạt động:</p>
+                <%
+                    Double totalRevenue = (Double) request.getAttribute("totalRevenue");
+                    if (totalRevenue == null) totalRevenue = 0.0;
+                %>
+                <strong><%= String.format("%,.0f", totalRevenue) %> VNĐ</strong>
+            </div>
         </div>
 
-        <h2>Doanh thu theo tháng</h2>
-        <%
-            List<RevenueByMonth> monthList = (List<RevenueByMonth>) request.getAttribute("revenueList");
-        %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tháng</th>
-                    <th>Doanh thu (VNĐ)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (monthList != null && !monthList.isEmpty()) { %>
-                    <% for (RevenueByMonth r : monthList) { %>
-                    <tr>
-                        <td data-label="Tháng">Tháng <%= r.getMonth() %></td>
-                        <td data-label="Doanh thu (VNĐ)"><%= String.format("%,.0f", r.getRevenue()) %></td>
-                    </tr>
-                    <% } %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="2" style="text-align: center; color: #777;">Không có dữ liệu doanh thu theo tháng.</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+        <%-- Sử dụng hàng (row) và cột (col) của Bootstrap để đặt 3 biểu đồ trên một hàng --%>
+        <div class="row mb-4"> <%-- Thêm mb-4 để tạo khoảng cách dưới hàng biểu đồ --%>
+            <div class="col-md-4"> <%-- col-md-4 sẽ chiếm 1/3 chiều rộng trên màn hình trung bình trở lên --%>
+                <div class="card h-100"> <%-- h-100 để các card có chiều cao bằng nhau --%>
+                    <div class="card-header text-center">Doanh thu theo tháng</div>
+                    <div class="card-body d-flex justify-content-center align-items-center"> <%-- Căn giữa nội dung --%>
+                        <div class="chart-container">
+                            <canvas id="revenueByMonthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <h2>Doanh thu theo sản phẩm</h2>
-        <%
-            List<RevenueByProduct> productList = (List<RevenueByProduct>) request.getAttribute("productRevenueList");
-        %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng đã bán</th>
-                    <th>Doanh thu (VNĐ)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (productList != null && !productList.isEmpty()) { %>
-                    <% for (RevenueByProduct p : productList) { %>
-                    <tr>
-                        <td data-label="Tên sản phẩm"><%= p.getTitle() %></td>
-                        <td data-label="Số lượng đã bán"><%= p.getTotalSold() %></td>
-                        <td data-label="Doanh thu (VNĐ)"><%= String.format("%,.0f", p.getTotalRevenue()) %></td>
-                    </tr>
-                    <% } %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: #777;">Không có dữ liệu doanh thu theo sản phẩm.</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header text-center">Doanh thu theo sản phẩm</div>
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <div class="chart-container">
+                            <canvas id="revenueByProductChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <h2>Doanh thu theo khách hàng</h2>
-        <%
-            List<RevenueByCustomer> customerList = (List<RevenueByCustomer>) request.getAttribute("customerRevenueList");
-        %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tên đăng nhập</th>
-                    <th>Họ tên</th>
-                    <th>Tổng chi tiêu (VNĐ)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (customerList != null && !customerList.isEmpty()) { %>
-                    <% for (RevenueByCustomer c : customerList) { %>
-                    <tr>
-                        <td data-label="Tên đăng nhập"><%= c.getUsername() %></td>
-                        <td data-label="Họ tên"><%= c.getFullName() %></td>
-                        <td data-label="Tổng chi tiêu (VNĐ)"><%= String.format("%,.0f", c.getTotalSpent()) %></td>
-                    </tr>
-                    <% } %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: #777;">Không có dữ liệu doanh thu theo khách hàng.</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header text-center">Doanh thu theo khách hàng</div>
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <div class="chart-container">
+                            <canvas id="revenueByCustomerChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <%-- Bắt đầu các bảng báo cáo --%>
+        <div class="card">
+            <div class="card-header">Doanh thu theo tháng</div>
+            <div class="card-body">
+                <%
+                    List<RevenueByMonth> monthList = (List<RevenueByMonth>) request.getAttribute("revenueList");
+                %>
+                <form method="get" action="revenue-chart" class="form-control-container">
+                    <label for="selectedMonth" class="form-label mb-0">Chọn tháng:</label>
+                    <select id="selectedMonth" name="selectedMonth" class="form-select">
+                        <option value="0">Tất cả</option>
+                        <% for (int i = 1; i <= 12; i++) { %>
+                            <option value="<%= i %>" <%= request.getParameter("selectedMonth") != null && request.getParameter("selectedMonth").equals(String.valueOf(i)) ? "selected" : "" %>>
+                                Tháng <%= i %>
+                            </option>
+                        <% } %>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tháng</th>
+                                <th class="text-right">Doanh thu (VNĐ)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (monthList != null && !monthList.isEmpty()) { %>
+                                <% for (RevenueByMonth r : monthList) { %>
+                                <tr>
+                                    <td data-label="Tháng">Tháng <%= r.getMonth() %></td>
+                                    <td data-label="Doanh thu (VNĐ)" class="text-right"><%= String.format("%,.0f", r.getRevenue()) %></td>
+                                </tr>
+                                <% } %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="2" class="no-data-message">Không có dữ liệu doanh thu theo tháng.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-        <h2>Thống kê đơn hàng theo trạng thái</h2>
-        <%
-            Map<String, Integer> statusMap = (Map<String, Integer>) request.getAttribute("orderStatusSummary");
-        %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Trạng thái</th>
-                    <th>Số đơn hàng</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (statusMap != null && !statusMap.isEmpty()) { %>
-                    <% for (Map.Entry<String, Integer> entry : statusMap.entrySet()) { %>
-                    <tr>
-                        <td data-label="Trạng thái"><%= entry.getKey() %></td>
-                        <td data-label="Số đơn hàng"><%= entry.getValue() %></td>
-                    </tr>
-                    <% } %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="2" style="text-align: center; color: #777;">Không có dữ liệu thống kê trạng thái đơn hàng.</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+        <div class="card">
+            <div class="card-header">Doanh thu theo sản phẩm</div>
+            <div class="card-body">
+                <%
+                    List<RevenueByProduct> productList = (List<RevenueByProduct>) request.getAttribute("productRevenueList");
+                %>
+                <form method="get" action="revenue-chart" class="form-control-container">
+                    <label for="productSearch" class="form-label mb-0">Tên sản phẩm:</label>
+                    <input type="text" id="productSearch" name="productSearch" class="form-control" placeholder="Nhập tên sản phẩm" value="<%= request.getParameter("productSearch") != null ? request.getParameter("productSearch") : "" %>">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Số lượng đã bán</th>
+                                <th class="text-right">Doanh thu (VNĐ)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (productList != null && !productList.isEmpty()) { %>
+                                <% for (RevenueByProduct p : productList) { %>
+                                <tr>
+                                    <td data-label="Tên sản phẩm"><%= p.getTitle() %></td>
+                                    <td data-label="Số lượng đã bán"><%= p.getTotalSold() %></td>
+                                    <td data-label="Doanh thu (VNĐ)" class="text-right"><%= String.format("%,.0f", p.getTotalRevenue()) %></td>
+                                </tr>
+                                <% } %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="no-data-message">Không có dữ liệu doanh thu theo sản phẩm.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Doanh thu theo khách hàng</div>
+            <div class="card-body">
+                <%
+                    List<RevenueByCustomer> customerList = (List<RevenueByCustomer>) request.getAttribute("customerRevenueList");
+                %>
+                <form method="get" action="revenue-chart" class="form-control-container">
+                    <label for="userSearch" class="form-label mb-0">Tên người dùng:</label>
+                    <input type="text" id="userSearch" name="userSearch" class="form-control" placeholder="Nhập tên người dùng" value="<%= request.getParameter("userSearch") != null ? request.getParameter("userSearch") : "" %>">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên đăng nhập</th>
+                                <th>Họ tên</th>
+                                <th class="text-right">Tổng chi tiêu (VNĐ)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (customerList != null && !customerList.isEmpty()) { %>
+                                <% for (RevenueByCustomer c : customerList) { %>
+                                <tr>
+                                    <td data-label="Tên đăng nhập"><%= c.getUsername() %></td>
+                                    <td data-label="Họ tên"><%= c.getFullName() %></td>
+                                    <td data-label="Tổng chi tiêu (VNĐ)" class="text-right"><%= String.format("%,.0f", c.getTotalSpent()) %></td>
+                                </tr>
+                                <% } %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="no-data-message">Không có dữ liệu doanh thu theo khách hàng.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Thống kê đơn hàng theo trạng thái</div>
+            <div class="card-body">
+                <%
+                    Map<String, Integer> statusMap = (Map<String, Integer>) request.getAttribute("orderStatusSummary");
+                %>
+                <form method="get" action="revenue-chart" class="form-control-container">
+                    <label for="statusSearch" class="form-label mb-0">Chọn trạng thái:</label>
+                    <select name="statusSearch" id="statusSearch" class="form-select">
+                        <option value="">Tất cả</option>
+                        <%
+                            if (statusMap != null && !statusMap.isEmpty()) {
+                                for (Map.Entry<String, Integer> entry : statusMap.entrySet()) {
+                        %>
+                        <option value="<%= entry.getKey() %>" <%= request.getParameter("statusSearch") != null && request.getParameter("statusSearch").equals(entry.getKey()) ? "selected" : "" %>>
+                            <%= entry.getKey() %>
+                        </option>
+                        <%
+                                }
+                            }
+                        %>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Trạng thái</th>
+                                <th class="text-right">Số đơn hàng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (statusMap != null && !statusMap.isEmpty()) { %>
+                                <% for (Map.Entry<String, Integer> entry : statusMap.entrySet()) { %>
+                                <tr>
+                                    <td data-label="Trạng thái"><%= entry.getKey() %></td>
+                                    <td data-label="Số đơn hàng" class="text-right"><%= entry.getValue() %></td>
+                                </tr>
+                                <% } %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="2" class="no-data-message">Không có dữ liệu thống kê trạng thái đơn hàng.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Lấy dữ liệu từ JSP sang JavaScript
+        const monthList = [
+            <% if (monthList != null) { %>
+                <% for (int i = 0; i < monthList.size(); i++) { %>
+                    { month: <%= monthList.get(i).getMonth() %>, revenue: <%= monthList.get(i).getRevenue() %> }<%= (i < monthList.size() - 1) ? "," : "" %>
+                <% } %>
+            <% } %>
+        ];
+
+        const productList = [
+            <% if (productList != null) { %>
+                <% for (int i = 0; i < productList.size(); i++) { %>
+                    { title: '<%= productList.get(i).getTitle().replace("'", "\\'") %>', totalSold: <%= productList.get(i).getTotalSold() %>, totalRevenue: <%= productList.get(i).getTotalRevenue() %> }<%= (i < productList.size() - 1) ? "," : "" %>
+                <% } %>
+            <% } %>
+        ];
+
+        const customerList = [
+            <% if (customerList != null) { %>
+                <% for (int i = 0; i < customerList.size(); i++) { %>
+                    { username: '<%= customerList.get(i).getUsername().replace("'", "\\'") %>', fullName: '<%= customerList.get(i).getFullName().replace("'", "\\'") %>', totalSpent: <%= customerList.get(i).getTotalSpent() %> }<%= (i < customerList.size() - 1) ? "," : "" %>
+                <% } %>
+            <% } %>
+        ];
+
+        // Hàm vẽ biểu đồ
+        function createChart(chartId, type, labels, data, labelText, backgroundColor) {
+            const ctx = document.getElementById(chartId);
+            if (!ctx) { // Kiểm tra xem canvas có tồn tại không
+                console.warn(`Canvas element with ID '${chartId}' not found.`);
+                return;
+            }
+            const context = ctx.getContext('2d');
+            new Chart(context, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelText,
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        borderColor: backgroundColor.map(color => color.replace('0.2', '1')), // Màu border đậm hơn
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Quan trọng để điều chỉnh kích thước tùy ý
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Doanh thu (VNĐ)'
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toLocaleString('vi-VN') + ' VNĐ'; // Định dạng tiền tệ
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: (chartId === 'revenueByMonthChart' ? 'Tháng' : (chartId === 'revenueByProductChart' ? 'Tên sản phẩm' : 'Khách hàng'))
+                            },
+                            // Điều chỉnh số lượng nhãn hiển thị trên trục X nếu có quá nhiều
+                            ticks: {
+                                autoSkip: true,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Ẩn legend nếu bạn thấy nó chiếm quá nhiều không gian với biểu đồ nhỏ
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toLocaleString('vi-VN') + ' VNĐ';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Tạo biểu đồ Doanh thu theo tháng
+        if (monthList.length > 0) {
+            const monthLabels = monthList.map(item => `Tháng ${item.month}`);
+            const monthData = monthList.map(item => item.revenue);
+            const monthColors = monthList.map(() => 'rgba(75, 192, 192, 0.6)'); // Màu xanh lá cây
+            createChart('revenueByMonthChart', 'bar', monthLabels, monthData, 'Doanh thu theo tháng', monthColors);
+        } else {
+            const chartContainer = document.getElementById('revenueByMonthChart')?.parentElement;
+            if (chartContainer) {
+                chartContainer.innerHTML = '<p class="no-data-message">Không có dữ liệu.</p>';
+            }
+        }
+
+        // Tạo biểu đồ Doanh thu theo sản phẩm (chỉ lấy top 5-7 sản phẩm để biểu đồ dễ nhìn hơn với không gian nhỏ)
+        if (productList.length > 0) {
+            const sortedProducts = [...productList].sort((a, b) => b.totalRevenue - a.totalRevenue).slice(0, 7); // Giảm xuống top 7
+            const productLabels = sortedProducts.map(item => item.title);
+            const productData = sortedProducts.map(item => item.totalRevenue);
+            const productColors = sortedProducts.map(() => 'rgba(153, 102, 255, 0.6)'); // Màu tím
+            createChart('revenueByProductChart', 'bar', productLabels, productData, 'Doanh thu theo sản phẩm', productColors);
+        } else {
+            const chartContainer = document.getElementById('revenueByProductChart')?.parentElement;
+            if (chartContainer) {
+                chartContainer.innerHTML = '<p class="no-data-message">Không có dữ liệu.</p>';
+            }
+        }
+
+        // Tạo biểu đồ Doanh thu theo khách hàng (chỉ lấy top 5-7 khách hàng)
+        if (customerList.length > 0) {
+            const sortedCustomers = [...customerList].sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 7); // Giảm xuống top 7
+            const customerLabels = sortedCustomers.map(item => item.fullName || item.username);
+            const customerData = sortedCustomers.map(item => item.totalSpent);
+            const customerColors = sortedCustomers.map(() => 'rgba(255, 159, 64, 0.6)'); // Màu cam
+            createChart('revenueByCustomerChart', 'bar', customerLabels, customerData, 'Tổng chi tiêu theo khách hàng', customerColors);
+        } else {
+            const chartContainer = document.getElementById('revenueByCustomerChart')?.parentElement;
+            if (chartContainer) {
+                chartContainer.innerHTML = '<p class="no-data-message">Không có dữ liệu.</p>';
+            }
+        }
+
+    </script>
 </body>
 </html>
