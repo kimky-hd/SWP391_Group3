@@ -32,6 +32,8 @@
                 <div class="mb-3">
                     <label for="title" class="form-label fw-bold fs-5 text-dark">Tên sản phẩm</label>
                     <input type="text" class="form-control" name="title" id="title" required>
+                    <img id="previewImage" src="#" alt="Ảnh sản phẩm" style="max-width: 200px; display: none; margin-top: 10px;">
+
                 </div>
 
                 <div class="mb-3">
@@ -115,6 +117,20 @@
                     allowClear: true,
                     width: '100%'
                 });
+            });
+        </script>
+        <script>
+            document.getElementById('image').addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.getElementById('previewImage');
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
         </script>
 

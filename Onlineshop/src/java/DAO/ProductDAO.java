@@ -57,6 +57,32 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByIndex(int indexPage) {
         List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product WHERE isActive = TRUE ORDER BY productID LIMIT ?, 8";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (indexPage - 1) * 8); // tính offset
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getBoolean(8),
+                        batches));
+
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductByIndex: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> getProductByIndexForManage(int indexPage) {
+        List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
@@ -71,11 +97,12 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
         } catch (SQLException e) {
-            System.out.println("getProductByIndex: " + e.getMessage());
+            System.out.println("getProductByIndexForManage: " + e.getMessage());
         }
         return list;
     }
@@ -95,6 +122,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches)
                 );
             }
@@ -113,14 +141,14 @@ public class ProductDAO extends DBContext {
             if (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
 
-                return new Product(
-                        rs.getInt(1),
+                return new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches
                 );
             }
@@ -149,6 +177,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -175,6 +204,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -201,6 +231,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -224,6 +255,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -320,24 +352,24 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public void updateProduct(Product updateproduct) {
+    public void updateProduct(int id, String title, String image, double price, String description, int colorID, int seasonID) {
         String sql = "UPDATE Product SET\n"
                 + "            title = ?,\n"
                 + "            image = ?,\n"
                 + "            price = ?,\n"
                 + "            description = ?,\n"
                 + "            colorID = ?,\n"
-                + "            seasonID = ?,\n"
+                + "            seasonID = ? \n"
                 + "        WHERE productID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, updateproduct.getTitle());
-            ps.setString(2, updateproduct.getImage());
-            ps.setDouble(3, updateproduct.getPrice());
-            ps.setString(4, updateproduct.getDescription());
-            ps.setInt(5, updateproduct.getColorID());
-            ps.setInt(6, updateproduct.getSeasonID());
-            ps.setInt(7, updateproduct.getProductID());
+            ps.setString(1, title);
+            ps.setString(2, image);
+            ps.setDouble(3, price);
+            ps.setString(4, description);
+            ps.setInt(5, colorID);
+            ps.setInt(6, seasonID);
+            ps.setInt(7, id);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -469,6 +501,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
@@ -494,6 +527,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
@@ -521,6 +555,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -692,6 +727,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
@@ -757,6 +793,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -785,14 +822,14 @@ public class ProductDAO extends DBContext {
             if (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
 
-                return new Product(
-                        rs.getInt(1),
+                return new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches
                 );
             }
@@ -879,4 +916,32 @@ public class ProductDAO extends DBContext {
         return null;
     }
 
+    public void updateProductIsActive(int productID, boolean isActive) {
+        String sql = "UPDATE Product SET isActive = ? WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isActive);
+            ps.setInt(2, productID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateProductIsActive : " + e.getMessage());
+        }
+    }
+
+    public void insertProductBatch(int productID, int quantity, double importPrice, String dateImport, String dateExpire) {
+        String sql = "INSERT INTO ProductBatch (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setInt(2, quantity);
+            ps.setDouble(3, importPrice);
+            ps.setString(4, dateImport);
+            ps.setString(5, dateExpire);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertProductBatch" + e.getMessage());;
+        }
+    }
+
+    
 }
