@@ -134,19 +134,24 @@ public class CategoryDAO extends DBContext {
         return list;
     }
 
-    public int getCategoryByProductID(int productID) {
-        String sql = "SELECT categoryID from CategoryProduct WHERE productID = ?";
+    public List<Category> getCategoryByProductID(int productID) {
+        List<Category> list = new ArrayList<>();
+        String sql = "SELECT c.categoryID, c.categoryName " +
+                 "FROM Category c " +
+                 "JOIN CategoryProduct cp ON c.categoryID = cp.categoryID " +
+                 "WHERE cp.productID = ?";
         try{
             ps = connection.prepareStatement(sql);
             ps.setInt(1, productID);
             rs = ps.executeQuery();
-            if(rs.next()){
-                return rs.getInt(1);
+            while (rs.next()) {
+                list.add(new Category(rs.getInt(1),
+                        rs.getString(2)));
             }
         }catch(SQLException e){
             
         }
-        return -1;
+        return list;
     }
     
     public int countAllCategory() {

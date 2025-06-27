@@ -208,13 +208,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <i class="fas fa-times"></i>
                             </button>
-
                         </div>
+
                         <div class="modal-body">
                             <input type="hidden" name="materialID" id="batchMaterialID" />
 
                             <div class="form-group mb-2">
-                                <label>Giá nhập (VNĐ):</label>
+                                <label>Giá nhập (VNĐ): <span class="text-danger">*</span></label>
                                 <input type="text" name="importPrice" value="${importPrice}" class="form-control" />
                                 <c:if test="${not empty errorPrice}">
                                     <small class="text-danger">${errorPrice}</small>
@@ -222,14 +222,15 @@
                             </div>
 
                             <div class="form-group mb-2">
-                                <label>Số lượng:</label>
+                                <label>Số lượng: <span class="text-danger">*</span></label>
                                 <input type="text" name="quantity" value="${quantity}" class="form-control" />
                                 <c:if test="${not empty errorQuantity}">
                                     <small class="text-danger">${errorQuantity}</small>
                                 </c:if>
                             </div>
+
                             <div class="form-group mb-2">
-                                <label>Ngày nhập:</label>
+                                <label>Ngày nhập: <span class="text-danger">*</span></label>
                                 <input type="date" name="dateImport"
                                        value="${dateImport != null ? dateImport : ''}"
                                        class="form-control" id="dateImportInput" />
@@ -237,8 +238,9 @@
                                     <small class="text-danger">${errorDateImport}</small>
                                 </c:if>
                             </div>
+
                             <div class="form-group mb-2">
-                                <label>Ngày hết hạn:</label>
+                                <label>Ngày hết hạn: <span class="text-danger">*</span></label>
                                 <input type="date" name="dateExpire"
                                        value="${dateExpire != null ? dateExpire : ''}"
                                        class="form-control" id="dateExpireInput" />
@@ -249,6 +251,7 @@
 
                             <p id="batchErrorMsg" class="text-danger"></p>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                             <button type="submit" class="btn btn-primary">Xác nhận</button>
@@ -257,6 +260,7 @@
                 </div>
             </div>
         </div>
+
         <script>
             function openAddQuantityModal(materialID) {
                 // Set hidden field

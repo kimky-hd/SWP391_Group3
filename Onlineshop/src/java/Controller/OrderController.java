@@ -124,6 +124,9 @@ public class OrderController extends HttpServlet {
             String district = request.getParameter("district");
             String city = request.getParameter("city");
             String paymentMethod = request.getParameter("paymentMethod");
+            
+            String selectedVoucherId = request.getParameter("selectedVoucherId");
+            double totalAfterDiscount = Double.parseDouble(request.getParameter("totalAfterDiscount"));
 
             // --- Bước 4: Kiểm tra thông tin bắt buộc ---
             if (fullName == null || phone == null || address == null ||
@@ -148,7 +151,7 @@ public class OrderController extends HttpServlet {
 
             order.setPaymentMethod(paymentMethod);
             // Tính tổng tiền đơn hàng bao gồm phí vận chuyển (ví dụ: 30,000 VND)
-            order.setTotal(cart.getTotal() + 30000);
+            order.setTotal(totalAfterDiscount);
             order.setStatus("Pending"); // Đặt trạng thái ban đầu là "Pending"
 
             // --- Bước 6: Tạo danh sách OrderDetail từ CartItem ---
@@ -176,6 +179,14 @@ public class OrderController extends HttpServlet {
                     // Giảm số lượng tồn kho của sản phẩm tương ứng trong bảng Product
                     cartDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());
                 }
+                
+                //update voucher and account voucher
+                if(selectedVoucherId != null && !selectedVoucherId.trim().equals("")){
+                    VoucherDAO vdao = new VoucherDAO();
+                    int voucherId = Integer.parseInt(selectedVoucherId);
+                    vdao.updateVoucherUsage(voucherId);
+                    vdao.updateAccountVoucherStatus(account.getAccountID(), voucherId);
+                }    
 
                 // --- Bước mới: Xóa giỏ hàng từ database ---
                 cartDAO.clearCart(account.getAccountID());

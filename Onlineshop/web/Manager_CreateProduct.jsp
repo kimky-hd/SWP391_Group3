@@ -11,66 +11,108 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Material Manager</title>
-        <!-- Bootstrap CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <!-- Custom CSS -->
-        <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
-        <link href="css/style.css" rel="stylesheet">
-        <!-- Select2 CSS -->
+        <title>Thêm sản phẩm</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .main-content {
+                margin: 40px auto;
+                background-color: #fff;
+                padding: 20px 30px;
+                border-radius: 16px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+
+            h2 {
+                text-align: center;
+                font-weight: bold;
+                margin-bottom: 30px;
+            }
+
+            .form-label {
+                font-weight: 600;
+            }
+
+            .form-control {
+                border-radius: 10px;
+                box-shadow: none;
+            }
+
+            .select2-container .select2-selection--multiple {
+                border-radius: 10px;
+            }
+
+            #previewImage {
+                max-width: 100%;
+                max-height: 250px;
+                display: block;
+                margin: 10px auto;
+                border-radius: 12px;
+                border: 1px solid #dee2e6;
+            }
+
+            .form-section {
+                margin-bottom: 20px;
+            }
+
+            .btn-primary {
+                border-radius: 10px;
+                padding: 10px 25px;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <jsp:include page="manager_topbarsidebar.jsp" />
 
-        <main class="main-content">
+        <div class="main-content">
             <h2>Thêm sản phẩm mới</h2>
             <form action="addproduct" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="title" class="form-label fw-bold fs-5 text-dark">Tên sản phẩm</label>
+                <div class="form-section">
+                    <label for="title" class="form-label">Tên sản phẩm</label>
                     <input type="text" class="form-control" name="title" id="title" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="image" class="form-label fw-bold fs-5 text-dark">Ảnh sản phẩm</label>
-                    <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
+                <div class="form-section text-center">
+                    <img id="previewImage" src="#" alt="Ảnh sản phẩm" style="display: none;">
+                    <input type="file" class="form-control mt-2" name="image" id="image" accept="image/*" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="price" class="form-label fw-bold fs-5 text-dark">Giá bán (VNĐ)</label>
+                <div class="form-section">
+                    <label for="price" class="form-label">Giá bán (VNĐ)</label>
                     <input type="text" class="form-control" name="price" id="price" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label fw-bold fs-5 text-dark">Mô tả</label>
+                <div class="form-section">
+                    <label for="description" class="form-label">Mô tả</label>
                     <textarea class="form-control" name="description" id="description" rows="3"></textarea>
                 </div>
 
-                <div class="mb-3">
-                    <label for="colorID" class="form-label fw-bold fs-5 text-dark">Màu sắc</label>
-                    <select name="colorID">
+                <div class="form-section">
+                    <label for="colorID" class="form-label">Màu sắc</label>
+                    <select name="colorID" class="form-control">
                         <c:forEach var="color" items="${colorList}">
                             <option value="${color.colorID}">${color.colorName}</option>
                         </c:forEach>
                     </select>
-
                 </div>
 
-                <div class="mb-3">
-                    <label for="seasonID" class="form-label fw-bold fs-5 text-dark">Mùa</label>
-                    <select name="seasonID">
+                <div class="form-section">
+                    <label for="seasonID" class="form-label">Mùa</label>
+                    <select name="seasonID" class="form-control">
                         <c:forEach var="season" items="${seasonList}">
                             <option value="${season.seasonID}">${season.seasonName}</option>
                         </c:forEach>
                     </select>
-
                 </div>
 
-                <div class="mb-3">
-                    <label for="categoryID" class="form-label fw-bold fs-5 text-dark">Danh mục</label>
+                <div class="form-section">
+                    <label for="categoryID" class="form-label">Danh mục</label>
                     <select id="categoryID" name="categoryID" class="form-control" multiple>
                         <c:forEach var="cat" items="${categoryList}">
                             <option value="${cat.categoryID}">${cat.categoryName}</option>
@@ -78,13 +120,12 @@
                     </select>
                 </div>
 
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold fs-5 text-dark">Chọn nguyên liệu</label>
+                <div class="form-section">
+                    <label class="form-label">Nguyên liệu sử dụng</label>
                     <c:forEach var="m" items="${materialList}">
-                        <div class="row mb-1">
-                            <div class="col-md-6">
-                                <label>${m.name} (${m.unit})</label>
+                        <div class="row mb-2">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <span>${m.name} (${m.unit})</span>
                             </div>
                             <div class="col-md-6">
                                 <input type="number" min="0" class="form-control" name="material_${m.materialID}" placeholder="Số lượng sử dụng">
@@ -93,20 +134,17 @@
                     </c:forEach>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
-            </form>
-        </main>
-
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <h3>Đây là footer</h3>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
                 </div>
-            </div>
+            </form>
+        </div>
+
+        <footer class="footer text-center mt-5">
+            <p>&copy; Quản lý sản phẩm - 2025</p>
         </footer>
-        <!-- jQuery -->
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Select2 JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script>
             $(document).ready(function () {
@@ -115,9 +153,20 @@
                     allowClear: true,
                     width: '100%'
                 });
+
+                // Preview ảnh
+                $('#image').on('change', function (event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#previewImage').attr('src', e.target.result).show();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
             });
         </script>
-
     </body>
-
 </html>
+
