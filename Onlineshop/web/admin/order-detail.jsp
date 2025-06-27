@@ -17,6 +17,62 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+         @media print {
+        /* Ẩn các phần không cần thiết khi in */
+        header, .sidebar, .btn, footer, .no-print {
+            display: none !important;
+        }
+        
+        /* Hiển thị toàn bộ nội dung */
+        .container-fluid {
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        /* Định dạng trang in */
+        body {
+            font-size: 12pt;
+            color: #000;
+            background: #fff;
+        }
+        
+        /* Định dạng bảng */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #000;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        
+        /* Thêm logo và thông tin cửa hàng */
+        .print-header {
+            display: block !important;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .print-footer {
+            display: block !important;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10pt;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    }
+    
+    /* Ẩn các phần chỉ hiển thị khi in */
+    .print-header, .print-footer {
+        display: none;
+    }
         .order-info-card {
             margin-bottom: 20px;
         }
@@ -100,7 +156,22 @@
             </div>
         </div>
     </nav>
+<!-- Phần header chỉ hiển thị khi in -->
+<div class="print-header">
+    <h2>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ XYZ</h2>
+    <p>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</p>
+    <p>Điện thoại: 028.1234.5678 | Email: contact@xyz.com</p>
+    <h3>HÓA ĐƠN BÁN HÀNG</h3>
+</div>
 
+<!-- Nội dung chi tiết đơn hàng -->
+<!-- ... existing code ... -->
+
+<!-- Phần footer chỉ hiển thị khi in -->
+<div class="print-footer">
+    <p>Cảm ơn quý khách đã mua hàng tại cửa hàng chúng tôi!</p>
+    <p>Hotline hỗ trợ: 1900.1234</p>
+</div>
     <!-- Sidebar & Content -->
     <div class="container-fluid">
         <div class="row">
@@ -375,9 +446,10 @@
                     <button class="btn btn-danger" onclick="confirmDelete(${order.orderId})">
                         <i class="fas fa-trash"></i> Xóa đơn hàng
                     </button>
-                    <button class="btn btn-info" onclick="printOrder()">
-                        <i class="fas fa-print"></i> In đơn hàng
-                    </button>
+                   <button class="btn btn-info d-flex align-items-center gap-2" onclick="printOrder()">
+    <i class="fas fa-print"></i>
+    <span>In đơn hàng</span>
+</button>
                 </div>
             </main>
         </div>
@@ -459,9 +531,23 @@
         }
         
         // Hàm in đơn hàng
-        function printOrder() {
-            window.print();
+function printOrder() {
+    // Hiển thị thông báo chuẩn bị in
+    Swal.fire({
+        title: 'Đang chuẩn bị in...',
+        text: 'Vui lòng đợi trong giây lát',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
         }
+    }).then(() => {
+        // Sau khi hiển thị thông báo, tiến hành in
+        window.print();
+    });
+}
         
         // Xử lý sự kiện khi nhấn nút xác nhận xóa trong modal
         $(document).ready(function() {

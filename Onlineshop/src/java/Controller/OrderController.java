@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import Utility.EmailSender;
 
 /**
  * **OrderController** là một Servlet chịu trách nhiệm xử lý các yêu cầu liên quan đến quản lý đơn hàng.
@@ -282,57 +283,83 @@ public class OrderController extends HttpServlet {
      * @throws IOException
      */
     private void cancelOrder(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws ServletException, IOException {
-        try {
-            // --- Bước 1: Kiểm tra đăng nhập ---
-            Account account = (Account) session.getAttribute("account");
-            if (account == null) {
-                sendJsonResponse(response, createErrorResponse("Vui lòng đăng nhập để hủy đơn hàng"));
-                return;
-            }
-
-            // --- Bước 2: Lấy Order ID và kiểm tra quyền sở hữu ---
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
-            Order order = orderDAO.getOrderById(orderId); // Lấy thông tin đơn hàng từ DB
-
-            // Kiểm tra xem đơn hàng có tồn tại và có thuộc về tài khoản hiện tại không
-            if (order == null || order.getAccountId() != account.getAccountID()) {
-                sendJsonResponse(response, createErrorResponse("Không tìm thấy đơn hàng hoặc bạn không có quyền hủy đơn hàng này."));
-                return;
-            }
-
-            // --- Bước 3: Kiểm tra trạng thái đơn hàng (chỉ hủy đơn hàng đang "Pending") ---
-            if (!order.getStatus().equals("Pending")) {
-                sendJsonResponse(response, createErrorResponse("Không thể hủy đơn hàng này vì trạng thái không phải là 'Pending'."));
-                return;
-            }
-
-            // --- Bước 4: Hủy đơn hàng trong database ---
-            if (orderDAO.cancelOrder(orderId)) {
-                // --- Bước 5: Hoàn trả số lượng sản phẩm vào tồn kho ---
-                List<OrderDetail> details = orderDAO.getOrderDetails(orderId);
-                for (OrderDetail detail : details) {
-                    // Tăng số lượng tồn kho của sản phẩm đã được đặt lại
-                    cartDAO.updateProductQuantity(detail.getProductId(), detail.getQuantity());
-                }
-
-                // --- Bước 6: Gửi phản hồi thành công ---
-                sendJsonResponse(response, createSuccessResponse("Hủy đơn hàng thành công. Số lượng sản phẩm đã được hoàn lại kho."));
-            } else {
-                // Nếu có lỗi khi hủy đơn hàng trong DB
-                sendJsonResponse(response, createErrorResponse("Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại."));
-            }
-
-        } catch (NumberFormatException e) {
-            // Xử lý lỗi nếu orderId không phải là số hợp lệ
-            sendJsonResponse(response, createErrorResponse("Mã đơn hàng không hợp lệ."));
-            e.printStackTrace();
-        } catch (Exception e) {
-            // Xử lý các ngoại lệ tổng quát khác
-            sendJsonResponse(response, createErrorResponse("Đã xảy ra lỗi hệ thống: " + e.getMessage()));
-            e.printStackTrace();
+        throws ServletException, IOException {
+    try {
+        // --- Bước 1: Kiểm tra đăng nhập ---
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            sendJsonResponse(response, createErrorResponse("Vui lòng đăng nhập để hủy đơn hàng"));
+            return;
         }
+
+        // --- Bước 2: Lấy Order ID và kiểm tra quyền sở hữu ---
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        Order order = orderDAO.getOrderById(orderId); // Lấy thông tin đơn hàng từ DB
+
+        // Kiểm tra xem đơn hàng có tồn tại và có thuộc về tài khoản hiện tại không
+        if (order == null || order.getAccountId() != account.getAccountID()) {
+            sendJsonResponse(response, createErrorResponse("Không tìm thấy đơn hàng hoặc bạn không có quyền hủy đơn hàng này."));
+            return;
+        }
+
+        // --- Bước 3: Kiểm tra trạng thái đơn hàng (chỉ hủy đơn hàng đang "Pending") ---
+        if (!order.getStatus().equals("Pending")) {
+            sendJsonResponse(response, createErrorResponse("Không thể hủy đơn hàng này vì trạng thái không phải là 'Pending'."));
+            return;
+        }
+
+        // --- Bước 4: Hủy đơn hàng trong database ---
+        if (orderDAO.cancelOrder(orderId)) {
+            // --- Bước 5: Hoàn trả số lượng sản phẩm vào tồn kho ---
+            List<OrderDetail> details = orderDAO.getOrderDetails(orderId);
+            for (OrderDetail detail : details) {
+                // Tăng số lượng tồn kho của sản phẩm đã được đặt lại
+                cartDAO.updateProductQuantity(detail.getProductId(), detail.getQuantity());
+            }
+            
+            // --- Bước 6: Gửi email thông báo hủy đơn hàng ---
+            if (order.getEmail() != null && !order.getEmail().isEmpty()) {
+                try {
+                    // Tạo HTML cho chi tiết đơn hàng
+                    String orderDetailsHtml = EmailSender.createOrderDetailsHtml(details);
+                    
+                    // Gửi email thông báo hủy đơn hàng
+                    boolean emailSent = EmailSender.sendOrderCancellationEmail(
+                            order.getEmail(),
+                            orderDetailsHtml,
+                            order.getFullName(),
+                            String.valueOf(orderId),
+                            "Đơn hàng đã bị hủy bởi khách hàng");
+                    
+                    if (emailSent) {
+                        System.out.println("Đã gửi email thông báo hủy đơn hàng thành công đến: " + order.getEmail());
+                    } else {
+                        System.out.println("Không thể gửi email thông báo hủy đơn hàng đến: " + order.getEmail());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Lỗi khi gửi email thông báo hủy đơn hàng: " + e.getMessage());
+                    e.printStackTrace();
+                    // Không dừng quy trình nếu gửi email thất bại
+                }
+            }
+
+            // --- Bước 7: Gửi phản hồi thành công ---
+            sendJsonResponse(response, createSuccessResponse("Hủy đơn hàng thành công. Số lượng sản phẩm đã được hoàn lại kho."));
+        } else {
+            // Nếu có lỗi khi hủy đơn hàng trong DB
+            sendJsonResponse(response, createErrorResponse("Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại."));
+        }
+
+    } catch (NumberFormatException e) {
+        // Xử lý lỗi nếu orderId không phải là số hợp lệ
+        sendJsonResponse(response, createErrorResponse("Mã đơn hàng không hợp lệ."));
+        e.printStackTrace();
+    } catch (Exception e) {
+        // Xử lý các lỗi khác
+        sendJsonResponse(response, createErrorResponse("Có lỗi xảy ra: " + e.getMessage()));
+        e.printStackTrace();
     }
+}
 
     /**
      * Phương thức tiện ích để gửi phản hồi HTTP dưới dạng JSON.
