@@ -72,6 +72,7 @@ public class AddCategoryController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String categoryName = request.getParameter("categoryName");
+        request.setAttribute("oldValue", categoryName);
         if (categoryName == null || categoryName.trim().isEmpty()) {
             request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng");
             request.getRequestDispatcher("Manager_CreateCategory.jsp").forward(request, response);

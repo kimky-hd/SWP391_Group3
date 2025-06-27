@@ -266,7 +266,7 @@ public class BlogListServlet extends HttpServlet {
         request.setAttribute("totalCount", totalCount);
         request.setAttribute("keyword", keyword);
 
-        request.getRequestDispatcher("blogList.jsp").forward(request, response);
+        request.getRequestDispatcher("/blogList.jsp").forward(request, response);
     }
 
     private void showBlogList(HttpServletRequest request, HttpServletResponse response)

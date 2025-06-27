@@ -22,14 +22,13 @@ public class Product {
     private String description;
     private int colorID;
     private int seasonID;
-    private String thanhphan;
     private List<ProductBatch> batches;
 
     public Product() {
         this.batches = new ArrayList<>();
     }
 
-    public Product(int productID, String title, String image, double price, String description, int colorID, int seasonID, String thanhphan, List<ProductBatch> batches) {
+    public Product(int productID, String title, String image, double price, String description, int colorID, int seasonID, List<ProductBatch> batches) {
         this.productID = productID;
         this.title = title;
         this.image = image;
@@ -37,7 +36,6 @@ public class Product {
         this.description = description;
         this.colorID = colorID;
         this.seasonID = seasonID;
-        this.thanhphan = thanhphan;
         this.batches = batches;
     }
 
@@ -97,14 +95,6 @@ public class Product {
         this.seasonID = seasonID;
     }
 
-    public String getThanhphan() {
-        return thanhphan;
-    }
-
-    public void setThanhphan(String thanhphan) {
-        this.thanhphan = thanhphan;
-    }
-
     public List<ProductBatch> getBatches() {
         return batches;
     }
@@ -162,7 +152,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", thanhphan=" + thanhphan + ", batches=" + batches + '}';
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", batches=" + batches + '}';
     }
 
 }

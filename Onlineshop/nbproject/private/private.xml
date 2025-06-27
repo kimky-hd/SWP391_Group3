@@ -3,60 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddCategoryController.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByTitle.java</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/header.jsp</file>
-            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Model/CartItem.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/DAO/VoucherDAO.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/ViewProductDetail.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CustomerController/AddRatingController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/OrderCountController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/admin.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/changepassword.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Model/Cart.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/admin/customers.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/SearchPriceAbove50.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ViewCategoryListController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/forgotpassword.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/blogEdit.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByTitle.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/index.html</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/blogAdd.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/CustomerController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/LogoutServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/DAO/ProfileDAO.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CustomerController/AddWishlistController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/AccountController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/AdminAuthFilter.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/SearchPrice0to50.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/footer.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/BlogListServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Utility/EmailSender.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/ContactServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/ChangePasswordServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/header.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/newpassword.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/contact.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Controller/LoginWithGoogleServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CustomerController/ManageWishListController.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/blogList.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Model/Voucher.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/web/login.jsp</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductBySeason.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/CommonController/ForgotPasswordServlet.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/Utility/GoogleUtils.java</file>
-            <file>file:/D:/PROJECTSWP/SWP391_Group3/Onlineshop/src/java/ManagerController/UpdateCategoryController.java</file>
-
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/src/java/CommonController/ViewProductDetail.java</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
+            <file>file:/D:/SWP291/Project/SWP391_Group3/Onlineshop/web/Manager_ListProduct.jsp</file>
         </group>
     </open-files>
 </project-private>

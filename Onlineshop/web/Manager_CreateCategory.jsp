@@ -14,7 +14,7 @@
         <!-- Custom CSS -->
         <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
-        
+
     </head>
 
     <body>
@@ -28,7 +28,8 @@
                 <form action="addcategory" method="post" onsubmit="return validateForm();" >
                     <div class="form-group">
                         <label>Tên thể loại</label>
-                        <input name="categoryName" required class="form-control" />                          
+                        <input name="categoryName" required class="form-control"
+                               value="${oldValue != null ? oldValue : ''}" />                       
                     </div>
                     <button type="submit" class="btn btn-primary">Thêm thể loại</button>
                     <p class="text-danger" style="color:#140C40">${msg}</p>
@@ -48,7 +49,7 @@
 
         <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-        
+
 
     </body>
 </html>

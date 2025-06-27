@@ -271,7 +271,7 @@
                                         </h6>
 
                                         <div class="d-flex justify-content-center">
-                                            <h6>${product.getPrice()} VNĐ</h6>
+                                            <h6><fmt:formatNumber value="${product.getPrice()}" pattern="#,##0" /> VNĐ</h6>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-center">

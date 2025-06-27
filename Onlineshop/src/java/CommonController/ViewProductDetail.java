@@ -8,6 +8,7 @@ import DAO.ProductDAO;
 import Model.AccountProfile;
 import Model.Feedback;
 import Model.Product;
+import Model.ProductComponent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -41,6 +42,8 @@ public class ViewProductDetail extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sản phẩm không tồn tại");
             return;
         }
+        
+        List<ProductComponent> componentList = productDAO.getProductComponentsByProductID(id);
         List<Feedback> listAllFeedback = productDAO.getAllReviewByProductID(id);
         int countAllFeedback = listAllFeedback.size();
         float rate = productDAO.getRateByProductID(id);
@@ -50,6 +53,7 @@ public class ViewProductDetail extends HttpServlet {
         System.out.println(listAllAccountprofile);
         System.out.println(listAllFeedback);
         System.out.println(countAllFeedback);
+        request.setAttribute("componentList", componentList);
         request.setAttribute("listFeedback", listAllFeedback);
         request.setAttribute("detail", p);
         request.setAttribute("totalFeedback", countAllFeedback);

@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class ProductBatch {
 
-    private int batchID;
+    private int productBatchID;
     private int productID;
     private int quantity;
     private double importPrice;
@@ -23,8 +23,8 @@ public class ProductBatch {
     public ProductBatch() {
     }
 
-    public ProductBatch(int batchID, int productID, int quantity, double price, Date dateImport, Date dateExpire, String status) {
-        this.batchID = batchID;
+    public ProductBatch(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire, String status) {
+        this.productBatchID = productBatchID;
         this.productID = productID;
         this.quantity = quantity;
         this.importPrice = price;
@@ -33,12 +33,12 @@ public class ProductBatch {
         this.status = status;
     }
 
-    public int getBatchID() {
-        return batchID;
+    public int getProductBatchID() {
+        return productBatchID;
     }
 
-    public void setBatchID(int batchID) {
-        this.batchID = batchID;
+    public void setProductBatchID(int productBatchID) {
+        this.productBatchID = productBatchID;
     }
 
     public int getProductID() {
@@ -91,7 +91,7 @@ public class ProductBatch {
 
     @Override
     public String toString() {
-        return "ProductBatch{" + "batchID=" + batchID + ", productID=" + productID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+        return "ProductBatch{" + "productBatchID=" + productBatchID + ", productID=" + productID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
     }
 
     
