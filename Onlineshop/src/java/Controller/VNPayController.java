@@ -61,6 +61,9 @@ public class VNPayController extends HttpServlet {
         String address = request.getParameter("address");
         String district = request.getParameter("district");
         String city = request.getParameter("city");
+        
+        String selectedVoucherId = request.getParameter("selectedVoucherId");
+        double totalAfterDiscount = Double.parseDouble(request.getParameter("totalAfterDiscount"));
 
         // Lưu thông tin vào session để sử dụng sau khi thanh toán
         session.setAttribute("vnp_fullName", fullName);
@@ -69,6 +72,9 @@ public class VNPayController extends HttpServlet {
         session.setAttribute("vnp_address", address);
         session.setAttribute("vnp_district", district);
         session.setAttribute("vnp_city", city);
+        
+        session.setAttribute("vnp_selectedVoucherId", selectedVoucherId);
+        session.setAttribute("vnp_totalAfterDiscount", totalAfterDiscount);
 
         // Tạo các tham số cho VNPay
         Map<String, String> vnp_Params = new HashMap<>();
@@ -77,7 +83,7 @@ public class VNPayController extends HttpServlet {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
 
         // Số tiền thanh toán (VNPay yêu cầu số tiền * 100)
-        long amount = (long) ((cart.getTotal() + 30000) * 100);
+        long amount = (long) (totalAfterDiscount * 100);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
 
         // Thông tin đơn hàng

@@ -136,6 +136,9 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
         
+        // In ra các tham số để debug
+        System.out.println("Filter parameters: customerName=" + customerName + ", status=" + status + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo);
+        
         // Tham số phân trang
         int page = 1;
         int size = 10;
@@ -155,11 +158,18 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
         
         // Lấy danh sách đơn hàng đã lọc
         List<Order> orders;
+        int totalOrders = 0;
+        
         if (customerName != null || status != null || dateFrom != null || dateTo != null) {
             orders = orderDAO.getFilteredOrders(status, dateFrom, dateTo, customerName, page, size);
+            totalOrders = orderDAO.countTotalFilteredOrders(status, dateFrom, dateTo, customerName);
         } else {
             orders = orderDAO.getAllOrders();
+            totalOrders = orders.size(); // Hoặc có thể gọi một phương thức đếm tổng số đơn hàng
         }
+        
+        // Tính toán thông tin phân trang
+        int totalPages = (int) Math.ceil((double) totalOrders / size);
         
         // Tính toán thống kê
         Map<String, Object> statistics = orderDAO.getOrderStatistics();
@@ -169,14 +179,23 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
         request.setAttribute("statistics", statistics);
         request.setAttribute("currentPage", page);
         request.setAttribute("pageSize", size);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalItems", totalOrders);
         request.setAttribute("customerName", customerName);
         request.setAttribute("status", status);
         request.setAttribute("dateFrom", dateFrom);
         request.setAttribute("dateTo", dateTo);
         
+        // Thêm thông báo nếu không tìm thấy kết quả
+        if (orders.isEmpty() && (customerName != null || status != null || dateFrom != null || dateTo != null)) {
+            request.setAttribute("noResultsMessage", "Không tìm thấy đơn hàng nào phù hợp với bộ lọc.");
+        }
+        
         request.getRequestDispatcher("admin/orders.jsp").forward(request, response);
         
     } catch (Exception e) {
+        System.out.println("Error in handleFilterOrders: " + e.getMessage());
+        e.printStackTrace();
         handleError(request, response, e);
     }
 }
@@ -196,9 +215,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             case "updateStatus":  // Thêm case này
                 updateOrderStatus(request, response);
                 break;
-            case "delete":
-                deleteOrder(request, response);
-                break;
+            
             default:
                 sendJsonError(response, "Hành động không được hỗ trợ");
                 break;
@@ -267,7 +284,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                     dummyProduct.setTitle("Lỗi tải sản phẩm");
                     dummyProduct.setImage("/img/no-image.jpg");
                     dummyProduct.setPrice(detail.getPrice());
-                    detail.setProduct(dummyProduct);
+                    detail.setProduct(dummyProduct); 
                 }
             }
             
@@ -305,6 +322,7 @@ private String createOrderDetailsHtml(List<OrderDetail> orderDetails) {
         
         double itemTotal = detail.getPrice() * detail.getQuantity();
         totalAmount += itemTotal;
+        
         
         html.append("<tr>");
         html.append("<td style='border: 1px solid #ddd; padding: 8px;'>").append(productName).append("</td>");
@@ -477,6 +495,7 @@ else if (statusId == 6 && currentOrder.getStatusId() != 6) {
                     cancelReason = "Đơn hàng đã bị hủy bởi quản trị viên";
                 }
                 
+System.out.println("Thông tin email người nhận: '" + currentOrder.getEmail() + "'");
                 // Gửi email thông báo hủy đơn hàng
                 boolean emailSent = EmailSender.sendOrderCancellationEmail(
                     currentOrder.getEmail(),
@@ -486,17 +505,8 @@ else if (statusId == 6 && currentOrder.getStatusId() != 6) {
                     cancelReason
                 );
                 
-                if (emailSent) {
-                    System.out.println("Đã gửi email thông báo hủy đơn hàng thành công");
-                    message = "Đơn hàng đã được hủy, số lượng sản phẩm đã được hoàn trả về kho và email thông báo đã được gửi";
-                } else {
-                    System.out.println("Không thể gửi email thông báo hủy đơn hàng");
-                    message = "Đơn hàng đã được hủy và số lượng sản phẩm đã được hoàn trả về kho, nhưng không thể gửi email thông báo";
-                }
-            } else {
-                message = "Đơn hàng đã được hủy và số lượng sản phẩm đã được hoàn trả về kho, nhưng không có email khách hàng để gửi thông báo";
             }
-        } catch (Exception emailError) {
+        }  catch (Exception emailError) {
             System.err.println("Lỗi khi gửi email thông báo hủy đơn hàng: " + emailError.getMessage());
             emailError.printStackTrace();
             message = "Đơn hàng đã được hủy và số lượng sản phẩm đã được hoàn trả về kho, nhưng có lỗi khi gửi email: " + emailError.getMessage();
@@ -510,14 +520,19 @@ else if (statusId == 6 && currentOrder.getStatusId() != 6) {
     }
 }
         // Các trạng thái khác chỉ cập nhật bình thường
+                // Các trạng thái khác chỉ cập nhật bình thường
         else {
             success = orderDAO.updateOrderStatus(orderId, statusId);
-            message = success ? "Cập nhật thành công" : "Cập nhật thất bại";
+            // CHỈ đặt message nếu chưa được đặt trước đó
+            if (message == null || message.isEmpty()) {
+                message = success ? "Cập nhật thành công" : "Cập nhật thất bại";
+            }
         }
         
         Map<String, Object> jsonResponse = new HashMap<>();
         jsonResponse.put("success", success);
         jsonResponse.put("message", message);
+         
         
         response.getWriter().write(gson.toJson(jsonResponse));
         
@@ -552,25 +567,6 @@ else if (statusId == 6 && currentOrder.getStatusId() != 6) {
     out.print(json.toString());
     out.flush();
 }
-    
-    
-    private void deleteOrder(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
-            boolean success = orderDAO.deleteOrder(orderId);
-            
-            Map<String, Object> jsonResponse = new HashMap<>();
-            jsonResponse.put("success", success);
-            jsonResponse.put("message", success ? "Xóa thành công" : "Xóa thất bại");
-            
-            response.setContentType("application/json");
-            response.getWriter().write(gson.toJson(jsonResponse));
-            
-        } catch (NumberFormatException e) {
-            sendJsonError(response, "Mã đơn hàng không hợp lệ");
-        }
-    }
     
 
     private void printOrder(HttpServletRequest request, HttpServletResponse response)

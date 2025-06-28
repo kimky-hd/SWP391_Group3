@@ -69,6 +69,90 @@
             }
 
         </style>
+
+        <style>
+            .detail-box {
+                background-color: #fff0f5;
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid #f8bbd0;
+                margin-top: 20px;
+            }
+
+            .detail-box h5 {
+                font-weight: bold;
+                color: #d63384;
+                margin-bottom: 15px;
+            }
+
+            .detail-box ul {
+                padding-left: 20px;
+                color: #333;
+            }
+
+            .detail-box li {
+                margin-bottom: 6px;
+                font-size: 1rem;
+                line-height: 1.4;
+            }
+
+            .label-title {
+                font-weight: bold;
+                color: #444;
+                display: inline-block;
+                width: 100px;
+            }
+
+            .text-danger {
+                font-weight: bold;
+                color: #dc3545;
+            }
+
+            .badge {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+                border-radius: 20px;
+                display: inline-block;
+                margin: 4px 4px 0 0;
+                text-decoration: none;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .bg-info {
+                background-color: #cce5ff;
+            }
+
+            .badge.bg-info:hover {
+                background-color: #339af0;
+                color: #fff !important;
+            }
+
+            .text-dark {
+                color: #333 !important;
+            }
+
+            .me-1 {
+                margin-right: 0.5rem !important;
+            }
+
+            .category-label {
+                display: block;
+                font-weight: bold;
+                margin-top: 15px;
+                color: #444;
+            }
+            .badge.bg-warning:hover {
+                background-color: #ffca2c;
+                color: #000 !important;
+            }
+
+            .badge.bg-success:hover {
+                background-color: #198754;
+                color: #fff !important;
+            }
+
+        </style>
+
     </head>
 
 
@@ -123,24 +207,45 @@
                             </h3>
                         </div>
 
-                        <!-- Thành phần -->
-                        <p style="font-size: 1.2rem;"><strong>Thành phần:</strong></p>
-                        <ul>
-                            <c:forEach items="${componentList}" var="comp" >
-                                <li>${comp.material.name} : ${comp.quantity} ${comp.material.unit}</li>
-                                </c:forEach>
-                        </ul>
-                        <p style="font-size: 1.2rem;"><strong>Tình trạng:</strong> ${detail.getStatus()}</p>
 
-                        <!-- Số lượng -->
-                        <c:choose>
-                            <c:when test="${detail.getQuantity() == 0}">
-                                <p style="font-size: 1.2rem;"><strong>Số lượng:</strong> <span class="text-danger">Hết hàng</span></p>
-                            </c:when>
-                            <c:otherwise>
-                                <p style="font-size: 1.2rem;"><strong>Số lượng:</strong> ${detail.getQuantity()}</p>
-                            </c:otherwise>
-                        </c:choose>
+
+                        <!-- Thành phần nguyên liệu -->
+                        <div class="detail-box mt-4">
+                            <h5>Thành phần sản phẩm:</h5>
+                            <ul>
+                                <c:forEach var="comp" items="${componentList}">
+                                    <li>${comp.material.name}: ${comp.materialQuantity} ${comp.material.unit}</li>
+                                    </c:forEach>
+                            </ul>
+
+                            <!-- Số lượng -->
+                            <p><span class="label-title">Số lượng:</span>
+                                <c:choose>
+                                    <c:when test="${detail.getQuantity() == 0}">
+                                        <span class="text-danger">Hết hàng</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${detail.getQuantity()}
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+
+                            <!-- Status -->
+                            <p><span class="label-title">Tình trạng:</span> ${detail.status}</p>
+
+                            <!-- Danh mục -->
+                            <p class="category-label">Danh mục:</p>
+                            <c:if test="${not empty categoryList}">
+                                <c:forEach var="cat" items="${categoryList}">
+                                    <a href="productlist?categoryID=${cat.categoryID}" class="badge bg-info text-dark me-1">${cat.categoryName}</a>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${empty categoryList}">
+                                <span><em>Không có</em></span>
+                            </c:if>
+                        </div>
+
+
 
                         <!-- Nút thêm vào giỏ & yêu thích -->
                         <div class="mt-4">
@@ -193,29 +298,7 @@
                     </c:forEach>
                 </ul>
 
-                <!-- Form gửi bình luận -->
-                <form action="AddRatingController" method="post" class="p-4 border rounded bg-white shadow-sm">
-                    <input type="hidden" name="pid" value="${detail.getProductID()}" />
-
-                    <!-- Căn chữ "Đánh giá:" và sao cùng hàng -->
-                    <div class="form-group d-flex align-items-center">
-                        <label class="mb-0 mr-3" style="min-width: 80px;">Đánh giá:</label>
-                        <div class="star-rating d-flex flex-row-reverse">
-                            <c:forEach var="i" begin="1" end="5">
-                                <input type="radio" id="star${i}" name="rating" value="${i}" style="display: none;" />
-                                <label for="star${i}" class="star" title="${i} sao">&#9733;</label>
-                            </c:forEach>
-                        </div>
-                    </div>
-
-                    <!-- Bình luận -->
-                    <div class="form-group">
-                        <label for="comment">Bình luận:</label>
-                        <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="Viết bình luận..." required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-success mt-3">Gửi bình luận</button>
-                </form>
+                
 
             </div>
         </section>

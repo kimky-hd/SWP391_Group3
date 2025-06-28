@@ -53,6 +53,36 @@ public class VoucherDAO extends DBContext {
         }
         return vouchers;
     }
+    
+    // Lấy danh sách voucher của account
+    public List<Voucher> getValidVouchersByAccountId(int accountId, double total) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = """
+                    SELECT v.* 
+                    FROM Voucher v 
+                    JOIN AccountVoucher av ON v.voucherId = av.voucherId 
+                    WHERE av.accountId = ? 
+                    AND av.isUsed = false 
+                    AND v.isActive = true 
+                    AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate
+                    AND v.usedCount < v.usageLimit
+                    AND v.minOrderValue <= ?
+                    """;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountId);
+            ps.setDouble(2, total);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                vouchers.add(mapVoucher(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("getValidVouchersByAccountId: " + e.getMessage());
+        }
+        return vouchers;
+    }
 
     // Cập nhật trạng thái sử dụng voucher
     public boolean updateVoucherUsage(int voucherId) {

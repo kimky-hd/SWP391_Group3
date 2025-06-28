@@ -127,7 +127,7 @@ CREATE TABLE `cart` (
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
   CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`),
   CONSTRAINT `cart_chk_1` CHECK ((`status` in (0,1,2)))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -271,7 +271,7 @@ CREATE TABLE `hoadon` (
   KEY `statusID` (`statusID`),
   CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
   CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`statusID`) REFERENCES `status` (`statusID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,6 +280,7 @@ CREATE TABLE `hoadon` (
 
 LOCK TABLES `hoadon` WRITE;
 /*!40000 ALTER TABLE `hoadon` DISABLE KEYS */;
+INSERT INTO `hoadon` VALUES (1,5,18030000.00,'2025-06-23',1),(2,5,6330000.00,'2025-06-23',3),(3,5,8030000.00,'2025-06-24',1);
 /*!40000 ALTER TABLE `hoadon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -307,6 +308,7 @@ CREATE TABLE `inforline` (
 
 LOCK TABLES `inforline` WRITE;
 /*!40000 ALTER TABLE `inforline` DISABLE KEYS */;
+INSERT INTO `inforline` VALUES (1,'Vũ Kim Kỳ','kimkyvu2004hd@gmail.com','65 Cảm Hội, Hai Bà Trưng, Hà Nội','0929343780'),(2,'Vũ Kim Kỳ','kimkyvu2004hd@gmail.com','65 Cảm Hội, Hai Bà Trưng, Hà Nội','0929343780'),(3,'Vũ Kim Kỳ','kimkyvu2004hd@gmail.com','65 Cảm Hội, Hai Bà Trưng, Hà Nội','0929343780');
 /*!40000 ALTER TABLE `inforline` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -385,7 +387,7 @@ CREATE TABLE `orderdetail` (
   KEY `productID` (`productID`),
   CONSTRAINT `orderdetail_ibfk_1` FOREIGN KEY (`maHD`) REFERENCES `hoadon` (`maHD`),
   CONSTRAINT `orderdetail_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -394,6 +396,7 @@ CREATE TABLE `orderdetail` (
 
 LOCK TABLES `orderdetail` WRITE;
 /*!40000 ALTER TABLE `orderdetail` DISABLE KEYS */;
+INSERT INTO `orderdetail` VALUES (1,1,1,450000.00,10),(2,1,2,2700000.00,5),(3,2,5,350000.00,18),(4,3,8,1000000.00,8);
 /*!40000 ALTER TABLE `orderdetail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -505,7 +508,7 @@ CREATE TABLE `productbatch` (
 
 LOCK TABLES `productbatch` WRITE;
 /*!40000 ALTER TABLE `productbatch` DISABLE KEYS */;
-INSERT INTO `productbatch` VALUES (1,1,10,320000.00,'2025-06-23','2025-06-30','Tươi mới'),(2,2,5,2000000.00,'2025-06-23','2025-06-28','Tươi mới'),(3,3,7,500000.00,'2025-06-23','2025-06-29','Tươi mới'),(4,4,3,480000.00,'2025-06-23','2025-06-27','Tươi mới'),(5,5,12,250000.00,'2025-06-23','2025-06-30','Tươi mới'),(6,6,4,720000.00,'2025-06-23','2025-06-28','Tươi mới'),(7,7,6,270000.00,'2025-06-23','2025-06-29','Tươi mới'),(8,8,8,750000.00,'2025-06-23','2025-06-29','Tươi mới'),(9,9,10,540000.00,'2025-06-23','2025-06-28','Tươi mới'),(10,10,5,700000.00,'2025-06-23','2025-06-30','Tươi mới');
+INSERT INTO `productbatch` VALUES (1,1,0,320000.00,'2025-06-23','2025-06-30','Tươi mới'),(2,2,0,2000000.00,'2025-06-23','2025-06-28','Tươi mới'),(3,3,0,500000.00,'2025-06-23','2025-06-29','Tươi mới'),(4,4,0,480000.00,'2025-06-23','2025-06-27','Tươi mới'),(5,5,21,250000.00,'2025-06-23','2025-06-30','Tươi mới'),(6,6,4,720000.00,'2025-06-23','2025-06-28','Tươi mới'),(7,7,4,270000.00,'2025-06-23','2025-06-29','Tươi mới'),(8,8,0,750000.00,'2025-06-23','2025-06-29','Tươi mới'),(9,9,10,540000.00,'2025-06-23','2025-06-28','Tươi mới'),(10,10,5,700000.00,'2025-06-23','2025-06-30','Tươi mới');
 /*!40000 ALTER TABLE `productbatch` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -747,4 +750,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-23 11:26:35
+-- Dump completed on 2025-06-24  9:34:23

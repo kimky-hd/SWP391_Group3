@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.CartDAO;
 import DAO.OrderDAO;
+import DAO.VoucherDAO;
 import Model.Cart;
 import Model.Order;
 import Model.OrderDetail;
@@ -85,6 +86,9 @@ public class VNPayReturnController extends HttpServlet {
                     String district = (String) session.getAttribute("vnp_district");
                     String city = (String) session.getAttribute("vnp_city");
                     
+                    String selectedVoucherId = (String) session.getAttribute("vnp_selectedVoucherId");
+                    double totalAfterDiscount = (double) session.getAttribute("vnp_totalAfterDiscount");
+                    
                     // Tạo đối tượng Order
                     Order order = new Order();
                     order.setAccountId(account.getAccountID());
@@ -98,7 +102,7 @@ public class VNPayReturnController extends HttpServlet {
                     order.setAddress(fullAddress);
                     
                     order.setPaymentMethod("VN Pay");
-                    order.setTotal(cart.getTotal() + 30000);
+                    order.setTotal(totalAfterDiscount);
                     order.setStatus("Paid"); // Đơn hàng đã thanh toán
                     
                     // Tạo danh sách OrderDetail từ CartItem
@@ -119,6 +123,14 @@ public class VNPayReturnController extends HttpServlet {
                             cartDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());
                         }
                         
+                        //update voucher and account voucher
+                        if(selectedVoucherId != null && !selectedVoucherId.trim().equals("")){
+                            VoucherDAO vdao = new VoucherDAO();
+                            int voucherId = Integer.parseInt(selectedVoucherId);
+                            vdao.updateVoucherUsage(voucherId);
+                            vdao.updateAccountVoucherStatus(account.getAccountID(), voucherId);
+                        }
+                        
                         // Xóa giỏ hàng từ database
                         cartDAO.clearCart(account.getAccountID());
                         
@@ -133,6 +145,9 @@ public class VNPayReturnController extends HttpServlet {
                         session.removeAttribute("vnp_address");
                         session.removeAttribute("vnp_district");
                         session.removeAttribute("vnp_city");
+                        
+                        session.removeAttribute("vnp_selectedVoucherId");
+                        session.removeAttribute("vnp_totalAfterDiscount");
                         
                         // Đặt thông báo thành công
                         session.setAttribute("message", "Thanh toán thành công! Đơn hàng của bạn đang được xử lý.");

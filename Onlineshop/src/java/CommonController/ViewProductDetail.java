@@ -4,11 +4,15 @@
  */
 package CommonController;
 
+import DAO.CategoryDAO;
 import DAO.ProductDAO;
 import Model.AccountProfile;
+import Model.Category;
+import Model.Color;
 import Model.Feedback;
 import Model.Product;
 import Model.ProductComponent;
+import Model.Season;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -35,25 +39,30 @@ public class ViewProductDetail extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         int id = Integer.parseInt(request.getParameter("productid"));
         ProductDAO productDAO = new ProductDAO();
+        CategoryDAO cateDAO = new CategoryDAO();
         Product p = productDAO.getProductById(id);
         if (p == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sản phẩm không tồn tại");
             return;
         }
-        
+
         List<ProductComponent> cpList = productDAO.getProductComponentsByProductID(id);
         List<Feedback> listAllFeedback = productDAO.getAllReviewByProductID(id);
         int countAllFeedback = listAllFeedback.size();
         float rate = productDAO.getRateByProductID(id);
         List<AccountProfile> listAllAccountprofile = productDAO.getAllAccountProfile();
+        List<Category> cateList = cateDAO.getCategoryByProductID(id);
+        
         System.out.println(rate);
         System.out.println(p);
         System.out.println(listAllAccountprofile);
         System.out.println(listAllFeedback);
         System.out.println(countAllFeedback);
         request.setAttribute("componentList", cpList);
+        request.setAttribute("categoryList", cateList);
         request.setAttribute("listFeedback", listAllFeedback);
         request.setAttribute("detail", p);
         request.setAttribute("totalFeedback", countAllFeedback);

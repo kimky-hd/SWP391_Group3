@@ -15,13 +15,30 @@
         <!-- Custom CSS -->
         <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
+        <style>
+            .btn-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                line-height: 1;
+            }
+            .btn-close::before {
+                content: "×";
+            }
 
+        </style>
     </head>
 
     <body>
         <jsp:include page="manager_topbarsidebar.jsp" />
 
         <main class="main-content">
+            <c:if test="${not empty sessionScope.isactive}">
+                <div class="alert alert-success text-center position-fixed top-50 start-50 translate-middle" role="alert" style="z-index: 9999;">
+                    ${sessionScope.isactive}
+                </div>
+                <c:remove var="isactive" scope="session"/>
+            </c:if>
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Danh sách sản phẩm</h1>
 
@@ -52,6 +69,7 @@
                                         <th>Ảnh</th>
                                         <th>Giá</th>
                                         <th>Số lượng</th>
+                                        <th>Tình Trạng</th>
                                         <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -76,19 +94,46 @@
                                             </td>
 
                                             <td>${p.status}</td>
+                                            <!-- Trạng thái -->
                                             <td>
+                                                <c:choose>
+                                                    <c:when test="${p.isActive}">
+                                                        <span class="badge bg-success">Đang sử dụng</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">Đã ẩn</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${p.isActive}">
+                                                        <form action="inactiveproduct" method="post" style="display:inline;">
+                                                            <input type="hidden" name="productID" value="${p.productID}" />
+                                                            <button type="submit" class="btn btn-warning btn-sm" style="min-width: 100px;">
+                                                                <i class="fas fa-eye-slash"></i> Ẩn
+                                                            </button>
+                                                        </form>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <form action="activeproduct" method="post" style="display:inline;">
+                                                            <input type="hidden" name="productID" value="${p.productID}" />
+                                                            <button type="submit" class="btn btn-success btn-sm" style="min-width: 100px;">
+                                                                <i class="fas fa-eye"></i> Hiện
+                                                            </button>
+                                                        </form>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 <a href="updateproduct?productID=${p.productID}" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="updatematerial?materialID=${p.productID}" class="btn btn-info btn-sm rounded-circle" title="Bổ sung số lượng" style="width: 30px; height: 30px; padding: 4px 0; text-align: center;">
+                                                <button type="button" class="btn btn-info btn-sm rounded-circle" title="Bổ sung số lượng"
+                                                        style="width: 30px; height: 30px; padding: 4px 0; text-align: center;"
+                                                        onclick="openAddProductQuantityModal(${p.productID})">
                                                     <i class="fas fa-plus"></i>
-                                                </a>
-                                                <form action="deleteproduct" method="post" style="display:inline;">
-                                                    <input type="hidden" name="productID" value="${p.productID}" />
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                </button>
+
+
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -127,7 +172,83 @@
                 </div>
             </div>
         </footer>
+        <script>
+            setTimeout(() => {
+                const alertBox = document.querySelector('.alert');
+                if (alertBox)
+                    alertBox.remove();
+            }, 5000);
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Modal bổ sung số lượng sản phẩm -->
+        <div class="modal fade" id="addProductQuantityModal" tabindex="-1" aria-labelledby="addQuantityModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post" action="addproductbatch" onsubmit="return validateProductBatchForm();">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Bổ sung số lượng sản phẩm</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="productID" id="productIDInput" />
+
+                            <div class="form-group mb-2">
+                                <label>Giá nhập (VND): <span class="text-danger">*</span></label>
+                                <input type="text" name="importPrice" id="importPriceInput" class="form-control" />
+                                <small class="text-danger">${errorImportPrice}</small>
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label>Số lượng: <span class="text-danger">*</span></label>
+                                <input type="text" name="quantity" id="quantityInput" class="form-control" />
+                                <small class="text-danger">${errorQuantity}</small>
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label>Ngày hết hạn: <span class="text-danger">*</span></label>
+                                <input type="date" name="dateExpire" id="dateExpireInput" class="form-control" />
+                                <small class="text-danger">${errorDateExpire}</small>
+                            </div>
+
+                            <small class="text-danger">${errorStock}</small>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary">Xác nhận</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openAddProductQuantityModal(productID) {
+                document.getElementById("productIDInput").value = productID;
+
+                const today = new Date().toISOString().split("T")[0];
+                document.getElementById("dateExpireInput").min = today;
+
+                const modal = new bootstrap.Modal(document.getElementById("addProductQuantityModal"));
+                modal.show();
+            }
+
+            function validateProductBatchForm() {
+                const price = document.getElementById("importPriceInput").value.trim();
+                const quantity = document.getElementById("quantityInput").value.trim();
+
+                if (isNaN(price) || price <= 0) {
+                    alert("Giá nhập không hợp lệ!");
+                    return false;
+                }
+                if (!Number.isInteger(Number(quantity)) || quantity <= 0) {
+                    alert("Số lượng phải là số nguyên dương!");
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+
     </body>
 </html>
