@@ -53,12 +53,19 @@ public class AddProductController extends HttpServlet {
         double price = 0;
         int colorID = 0, seasonID = 0;
 
-        // Validate dữ liệu đầu vào
+        ProductDAO productDAO = new ProductDAO();
+        MaterialDAO mateDAO = new MaterialDAO();
+
+        // --- Validate tên sản phẩm ---
         if (title == null || title.trim().isEmpty()) {
             request.setAttribute("errorTitle", "Vui lòng nhập tên sản phẩm.");
             hasError = true;
+        } else if (productDAO.isTitleDuplicated(title.trim())) {
+            request.setAttribute("errorTitle", "Tên sản phẩm đã tồn tại.");
+            hasError = true;
         }
 
+        // --- Validate giá ---
         if (priceRaw == null || priceRaw.trim().isEmpty()) {
             request.setAttribute("errorPrice", "Vui lòng nhập giá.");
             hasError = true;
@@ -75,6 +82,7 @@ public class AddProductController extends HttpServlet {
             }
         }
 
+        // --- Validate màu và mùa ---
         try {
             colorID = Integer.parseInt(colorIDRaw);
         } catch (NumberFormatException e) {
@@ -89,36 +97,49 @@ public class AddProductController extends HttpServlet {
             hasError = true;
         }
 
-        // Upload ảnh
+        // --- Validate ảnh ---
         Part imagePart = request.getPart("image");
         String imagePath = null;
 
         if (imagePart != null && imagePart.getSize() > 0) {
             String originalName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
-
-            // Thư mục lưu ảnh vật lý trong dự án (web/img)
             String uploadDir = getServletContext().getRealPath("/img");
             File folder = new File(uploadDir);
             if (!folder.exists()) {
                 folder.mkdirs();
             }
 
-            // Lưu file vào thư mục img/ với đúng tên gốc (không lọc trùng)
             File file = new File(uploadDir, originalName);
             imagePart.write(file.getAbsolutePath());
-
-            // Lưu tên ảnh (không có "img/") vào CSDL
             imagePath = originalName;
         } else {
             request.setAttribute("errorImage", "Vui lòng chọn ảnh.");
             hasError = true;
         }
 
-        // Nếu có lỗi → load lại dữ liệu và forward về form
-        if (hasError) {
-            ProductDAO productDAO = new ProductDAO();
-            MaterialDAO mateDAO = new MaterialDAO();
+        // --- Validate nguyên liệu ---
+        List<Material> materials = mateDAO.getAllMaterial();
+        boolean hasValidMaterial = false;
+        for (Material m : materials) {
+            String qtyRaw = request.getParameter("material_" + m.getMaterialID());
+            if (qtyRaw != null && !qtyRaw.trim().isEmpty()) {
+                try {
+                    int qty = Integer.parseInt(qtyRaw.trim());
+                    if (qty > 0) {
+                        hasValidMaterial = true;
+                        break;
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+        }
 
+        if (!hasValidMaterial) {
+            request.setAttribute("errorMaterial", "Vui lòng chọn ít nhất 1 nguyên liệu với số lượng > 0.");
+            hasError = true;
+        }
+
+        // --- Nếu có lỗi: forward lại form + giữ dữ liệu ---
+        if (hasError) {
             request.setAttribute("title", title);
             request.setAttribute("price", priceRaw);
             request.setAttribute("description", description);
@@ -135,23 +156,20 @@ public class AddProductController extends HttpServlet {
             return;
         }
 
-        // Nếu hợp lệ → lưu dữ liệu sản phẩm
-        ProductDAO productDAO = new ProductDAO();
+        // --- Lưu dữ liệu sản phẩm ---
         int productID = productDAO.addProduct(title, imagePath, price, description, colorID, seasonID);
 
-        // Lưu danh mục sản phẩm
+        // --- Lưu danh mục ---
         if (categoryID != null) {
             for (String catIDStr : categoryID) {
                 try {
                     int catID = Integer.parseInt(catIDStr);
                     productDAO.addCategoryProduct(productID, catID);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
 
-        // Lưu nguyên liệu
-        List<Material> materials = new MaterialDAO().getAllMaterial();
+        // --- Lưu nguyên liệu ---
         for (Material m : materials) {
             String qtyRaw = request.getParameter("material_" + m.getMaterialID());
             if (qtyRaw != null && !qtyRaw.trim().isEmpty()) {
@@ -160,8 +178,7 @@ public class AddProductController extends HttpServlet {
                     if (qty > 0) {
                         productDAO.insertProductComponent(productID, m.getMaterialID(), qty);
                     }
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
 
@@ -171,6 +188,6 @@ public class AddProductController extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Add Product Controller";
+        return "Add Product Controller with validation for duplicate title and ingredients";
     }
 }
