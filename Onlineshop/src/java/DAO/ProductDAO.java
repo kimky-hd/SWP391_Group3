@@ -711,7 +711,8 @@ public class ProductDAO extends DBContext {
                 + "    p.price,\n"
                 + "    p.description,\n"
                 + "    p.colorID,\n"
-                + "    p.seasonID \n"
+                + "    p.seasonID,\n"
+                + "    p.isActive \n"
                 + " FROM Product p \n"
                 + " JOIN Wishlist wl ON p.productID = wl.productID \n"
                 + " WHERE wl.AccountID = ?";
