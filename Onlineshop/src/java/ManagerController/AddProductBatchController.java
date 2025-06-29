@@ -6,16 +6,19 @@ package ManagerController;
 
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+import Model.ProductBatch;
+import Model.ProductComponent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.Map;
+import java.sql.Date;
+import java.util.List;
 
 /**
  *
@@ -62,6 +65,7 @@ public class AddProductBatchController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
     }
 
     /**
@@ -75,48 +79,99 @@ public class AddProductBatchController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String quantityStr = request.getParameter("quantity");
-        String importPriceStr = request.getParameter("importPrice");
-        String dateImportStr = request.getParameter("dateImport");
-        String dateExpireStr = request.getParameter("dateExpire");
-
-        List<String> errorList = new ArrayList<>();
-
-        int productID = Integer.parseInt(request.getParameter("productID"));
-        request.setAttribute("productID", productID); // để gửi lại modal đúng
-
         try {
+            int productID = Integer.parseInt(request.getParameter("productID"));
+            String quantityStr = request.getParameter("quantity");
+            String importPriceStr = request.getParameter("importPrice");
+            String dateImportStr = request.getParameter("dateImport");
+            String dateExpireStr = request.getParameter("dateExpire");
+
+            // Trả lại dữ liệu nếu có lỗi
+            request.setAttribute("productID", productID);
+            request.setAttribute("quantityVal", quantityStr);
+            request.setAttribute("importPriceVal", importPriceStr);
+            request.setAttribute("dateImportVal", dateImportStr);
+            request.setAttribute("dateExpireVal", dateExpireStr);
+
+            boolean hasError = false;
+
+            // Validate
+            if (quantityStr == null || quantityStr.isEmpty()) {
+                request.setAttribute("quantityError", "Vui lòng nhập số lượng.");
+                hasError = true;
+            } else if (Integer.parseInt(quantityStr) <= 0) {
+                request.setAttribute("quantityError", "Số lượng phải lớn hơn 0.");
+                hasError = true;
+            }
+
+            if (importPriceStr == null || importPriceStr.isEmpty()) {
+                request.setAttribute("priceError", "Vui lòng nhập giá nhập.");
+                hasError = true;
+            } else if (Double.parseDouble(importPriceStr) < 0) {
+                request.setAttribute("priceError", "Giá nhập không được âm.");
+                hasError = true;
+            }
+
+            if (dateImportStr == null || dateImportStr.isEmpty()) {
+                request.setAttribute("dateImportError", "Vui lòng chọn ngày nhập.");
+                hasError = true;
+            }
+
+            if (dateExpireStr == null || dateExpireStr.isEmpty()) {
+                request.setAttribute("dateExpireError", "Vui lòng chọn ngày hết hạn.");
+                hasError = true;
+            }
+
+            if (hasError) {
+                request.setAttribute("errorFlag", true);
+                request.getRequestDispatcher("managerproductlist").forward(request, response);
+                return;
+            }
+
             int quantity = Integer.parseInt(quantityStr);
             double importPrice = Double.parseDouble(importPriceStr);
             Date dateImport = Date.valueOf(dateImportStr);
             Date dateExpire = Date.valueOf(dateExpireStr);
 
-            if (quantity <= 0) {
-                errorList.add("Số lượng phải lớn hơn 0");
-            }
-            if (importPrice <= 0) {
-                errorList.add("Giá nhập phải lớn hơn 0");
-            }
-            if (!dateExpire.after(dateImport)) {
-                errorList.add("Ngày hết hạn phải sau ngày nhập");
-            }
-
-            if (!errorList.isEmpty()) {
-                request.setAttribute("errorList", errorList);
+            if (dateExpire.before(dateImport)) {
+                request.setAttribute("dateExpireError", "Ngày hết hạn phải sau ngày nhập.");
+                request.setAttribute("errorFlag", true);
                 request.getRequestDispatcher("managerproductlist").forward(request, response);
                 return;
             }
 
-            // Thêm ProductBatch & xử lý nguyên liệu ở đây...
-            request.getSession().setAttribute("success", "Đã bổ sung số lượng thành công!");
+            ProductDAO productDAO = new ProductDAO();
+            MaterialDAO materialDAO = new MaterialDAO();
+            List<ProductComponent> components = productDAO.getProductComponentsByProductID(productID);
+
+            for (ProductComponent comp : components) {
+                int requiredQty = comp.getMaterialQuantity() * quantity;
+                int availableQty = materialDAO.getAvailableMaterial(comp.getMaterialID());
+                if (availableQty < requiredQty) {
+                    request.setAttribute("quantityError", "Không đủ nguyên liệu: " + comp.getMaterial().getName());
+                    request.setAttribute("errorFlag", true);
+                    request.getRequestDispatcher("managerproductlist").forward(request, response);
+                    return;
+                }
+            }
+
+            for (ProductComponent comp : components) {
+                int requiredQty = comp.getMaterialQuantity() * quantity;
+                materialDAO.consumeMaterialFIFO(comp.getMaterialID(), requiredQty);
+            }
+
+            ProductBatch batch = new ProductBatch(productID, quantity, importPrice, dateImport, dateExpire);
+            productDAO.insertProductBatch(batch);
+
+            request.getSession().setAttribute("isactive", "Nhập hàng thành công.");
             response.sendRedirect("managerproductlist");
 
         } catch (Exception e) {
-            errorList.add("Dữ liệu không hợp lệ hoặc thiếu!");
-            request.setAttribute("errorList", errorList);
+            e.printStackTrace();
+            request.setAttribute("error", "Đã xảy ra lỗi khi nhập hàng.");
+            request.setAttribute("errorFlag", true);
             request.getRequestDispatcher("managerproductlist").forward(request, response);
         }
-
     }
 
     /**
