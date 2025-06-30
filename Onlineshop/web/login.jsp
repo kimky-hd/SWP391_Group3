@@ -256,7 +256,8 @@
                                 <form action="LoginServlet" method="post" onsubmit="return validateForm()">
                                     <div class="mb-4">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="userInput" name="userInput" placeholder="Email, SĐT hoặc Tên đăng nhập" required>
+                                            <input type="text" class="form-control" id="userInput" name="userInput" placeholder="Email, SĐT hoặc Tên đăng nhập" required
+                                            value="${userInput != null ? userInput : ''}">
                                             <label for="userInput"><i class="fas fa-user me-2"></i>Email, SĐT hoặc Tên đăng nhập</label>
                                         </div>
                                     </div>
