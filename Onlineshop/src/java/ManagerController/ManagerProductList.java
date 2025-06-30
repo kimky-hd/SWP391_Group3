@@ -43,7 +43,7 @@ public class ManagerProductList extends HttpServlet {
         }
         int indexPage = Integer.parseInt(index);
 
-        List<Product> listProductByIndex = productDAO.getProductByIndex(indexPage);
+        List<Product> listProductByIndex = productDAO.getProductByIndexForManage(indexPage);
         for (Product p : listProductByIndex) {
             p.setBatches(productDAO.getBatchesByProductID(p.getProductID()));
         }

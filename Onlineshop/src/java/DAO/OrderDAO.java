@@ -417,6 +417,85 @@ public boolean updateOrderStatus(int orderId, int statusId) {
 
         return 0; // Trả về 0 nếu không có đơn hàng hoặc có lỗi
     }
+    public int countTotalFilteredOrders(String status, String dateFrom, String dateTo, String customerName) {
+    int count = 0;
+    StringBuilder sql = new StringBuilder();
+    sql.append("SELECT COUNT(*) AS total ");
+    sql.append("FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD ");
+    sql.append("WHERE 1=1 ");
+    
+    List<Object> params = new ArrayList<>();
+    
+    // Thêm điều kiện lọc
+    if (status != null && !status.isEmpty()) {
+        // Chuyển đổi status từ chuỗi sang số
+        int statusId;
+        switch (status.toLowerCase()) { // Đảm bảo chuyển đổi sang chữ thường để so sánh
+            case "pending":
+                statusId = 1;
+                break;
+            case "completed":
+                statusId = 2;
+                break;
+            case "cancelled":
+                statusId = 3;
+                break;
+            case "delivered":
+                statusId = 4;
+                break;
+            case "paid":
+                statusId = 5;
+                break;
+            case "refunded":
+                statusId = 6;
+                break;
+            default:
+                statusId = -1; // Không lọc nếu không khớp
+                break;
+        }
+        
+        if (statusId > 0) {
+            sql.append("AND h.statusID = ? ");
+            params.add(statusId);
+        }
+    }
+    
+    if (dateFrom != null && !dateFrom.isEmpty()) {
+        sql.append("AND CONVERT(date, h.ngayXuat) >= ? ");
+        params.add(dateFrom);
+    }
+    
+    if (dateTo != null && !dateTo.isEmpty()) {
+        sql.append("AND CONVERT(date, h.ngayXuat) <= ? ");
+        params.add(dateTo);
+    }
+    
+    if (customerName != null && !customerName.isEmpty()) {
+        sql.append("AND i.name LIKE ? ");
+        params.add("%" + customerName + "%");
+    }
+    
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        
+        // Set parameters
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        }
+        
+    } catch (SQLException e) {
+        System.out.println("Error counting filtered orders: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return count;
+}
 
     /**
      * Xóa một đơn hàng cùng với tất cả các chi tiết liên quan (OrderDetail và
@@ -547,18 +626,46 @@ public List<Order> getFilteredOrders(String status, String dateFrom, String date
     List<Object> params = new ArrayList<>();
     
     // Thêm điều kiện lọc
-    if (status != null && !status.isEmpty() && !status.equals("all")) {
-        sql.append("AND h.statusID = ? ");
-        params.add(Integer.parseInt(status));
+    if (status != null && !status.isEmpty()) {
+        // Chuyển đổi status từ chuỗi sang số
+        int statusId;
+        switch (status.toLowerCase()) { // Đảm bảo chuyển đổi sang chữ thường để so sánh
+            case "pending":
+                statusId = 1;
+                break;
+            case "completed":
+                statusId = 2;
+                break;
+            case "cancelled":
+                statusId = 3;
+                break;
+            case "delivered":
+                statusId = 4;
+                break;
+            case "paid":
+                statusId = 5;
+                break;
+            case "refunded":
+                statusId = 6;
+                break;
+            default:
+                statusId = -1; // Không lọc nếu không khớp
+                break;
+        }
+        
+        if (statusId > 0) {
+            sql.append("AND h.statusID = ? ");
+            params.add(statusId);
+        }
     }
     
     if (dateFrom != null && !dateFrom.isEmpty()) {
-        sql.append("AND h.ngayXuat >= ? ");
+        sql.append("AND CONVERT(date, h.ngayXuat) >= ? ");
         params.add(dateFrom);
     }
     
     if (dateTo != null && !dateTo.isEmpty()) {
-        sql.append("AND h.ngayXuat <= ? ");
+        sql.append("AND CONVERT(date, h.ngayXuat) <= ? ");
         params.add(dateTo);
     }
     
@@ -566,6 +673,10 @@ public List<Order> getFilteredOrders(String status, String dateFrom, String date
         sql.append("AND i.name LIKE ? ");
         params.add("%" + customerName + "%");
     }
+    
+    // In ra câu truy vấn để debug
+    System.out.println("SQL Query: " + sql.toString());
+    System.out.println("Parameters: " + params);
     
     sql.append("ORDER BY h.ngayXuat DESC ");
     
@@ -581,6 +692,7 @@ public List<Order> getFilteredOrders(String status, String dateFrom, String date
         // Set parameters
         for (int i = 0; i < params.size(); i++) {
             ps.setObject(i + 1, params.get(i));
+            System.out.println("Param " + (i + 1) + ": " + params.get(i));
         }
         
         try (ResultSet rs = ps.executeQuery()) {
@@ -625,6 +737,9 @@ public List<Order> getFilteredOrders(String status, String dateFrom, String date
                 
                 orders.add(order);
             }
+            
+            // In ra số lượng kết quả tìm được
+            System.out.println("Found " + orders.size() + " orders");
         }
         
     } catch (SQLException e) {
