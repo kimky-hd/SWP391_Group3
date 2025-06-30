@@ -20,18 +20,16 @@
         <group name="New Folder (2)"/>
         <group>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddMaterialBatchController.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/MaterialBatch.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListProduct.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddProductBatchController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
         </group>
         <group>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/SearchProductByName.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/SearchMaterialByName.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CommonController/ViewProductDetail.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListProduct.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddProductBatchController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerProductList.java</file>
         </group>
     </open-files>
 </project-private>

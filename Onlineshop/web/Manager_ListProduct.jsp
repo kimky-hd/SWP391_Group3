@@ -64,6 +64,8 @@
                                         <th>Ảnh</th>
                                         <th>Giá</th>
                                         <th>Số lượng</th>
+                                        <th>Thành phần</th>
+                                        <th>Danh mục</th>
                                         <th>Tình Trạng</th>
                                         <th>Trạng thái</th>
                                         <th>Hành động</th>
@@ -85,6 +87,20 @@
                                                         <small class="text-muted">${p.quantity}</small>
                                                     </c:otherwise>
                                                 </c:choose>
+                                            </td>
+                                            <td>
+                                                <ul style="padding-left: 1rem;">
+                                                    <c:forEach var="c" items="${p.components}">
+                                                        <li>${c.material.name} (${c.materialQuantity} ${c.material.unit})</li>
+                                                        </c:forEach>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul style="padding-left: 1rem; margin-bottom: 0;">
+                                                    <c:forEach var="cat" items="${p.categories}">
+                                                        <li>${cat.categoryName}</li>
+                                                        </c:forEach>
+                                                </ul>
                                             </td>
                                             <td>${p.status}</td>
                                             <td>

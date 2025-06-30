@@ -237,7 +237,7 @@
                             <p class="category-label">Danh mục:</p>
                             <c:if test="${not empty categoryList}">
                                 <c:forEach var="cat" items="${categoryList}">
-                                    <a href="productlist?categoryID=${cat.categoryID}" class="badge bg-info text-dark me-1">${cat.categoryName}</a>
+                                    <a href="searchproductbycategory?cid=${cat.categoryID}" class="badge bg-info text-dark me-1">${cat.categoryName}</a>
                                 </c:forEach>
                             </c:if>
                             <c:if test="${empty categoryList}">
