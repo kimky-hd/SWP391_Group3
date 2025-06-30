@@ -13,14 +13,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author Duccon
  */
-public class ManagerProductList extends HttpServlet {
+public class SearchProductByName extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,36 +31,18 @@ public class ManagerProductList extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        ProductDAO productDAO = new ProductDAO();
-        
-         //Gọi cập nhật trạng thái các lô sản phẩm
-        productDAO.updateProductBatchStatus();
-        
-        String index = request.getParameter("index");
-        if (index == null || index.isEmpty()) {
-            index = "1";
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet SearchProductByName</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet SearchProductByName at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        int indexPage = Integer.parseInt(index);
-
-        List<Product> listProductByIndex = productDAO.getProductByIndexForManage(indexPage);
-        for (Product p : listProductByIndex) {
-            p.setBatches(productDAO.getBatchesByProductID(p.getProductID()));
-        }
-
-        int allProduct = productDAO.countAllProduct();
-        int endPage = allProduct / 8;
-        if (allProduct % 8 != 0) {
-            endPage++;
-        }
-        
-        System.out.println(listProductByIndex);
-        request.setAttribute("tag", indexPage);
-        request.setAttribute("count", allProduct);
-        request.setAttribute("endPage", endPage);
-        request.setAttribute("productList", listProductByIndex);
-        request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);
-
-    
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -75,7 +56,13 @@ public class ManagerProductList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String txt = request.getParameter("txt").trim();
+        ProductDAO productDAO = new ProductDAO();
+        List<Product> product = productDAO.getProductByTitle(txt);
+        
+        request.setAttribute("txt", txt);
+        request.setAttribute("productList", product);
+        request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);
     } 
 
     /** 

@@ -298,29 +298,7 @@
                     </c:forEach>
                 </ul>
 
-                <!-- Form gửi bình luận -->
-                <form action="AddRatingController" method="post" class="p-4 border rounded bg-white shadow-sm">
-                    <input type="hidden" name="pid" value="${detail.getProductID()}" />
-
-                    <!-- Căn chữ "Đánh giá:" và sao cùng hàng -->
-                    <div class="form-group d-flex align-items-center">
-                        <label class="mb-0 mr-3" style="min-width: 80px;">Đánh giá:</label>
-                        <div class="star-rating d-flex flex-row-reverse">
-                            <c:forEach var="i" begin="1" end="5">
-                                <input type="radio" id="star${i}" name="rating" value="${i}" style="display: none;" />
-                                <label for="star${i}" class="star" title="${i} sao">&#9733;</label>
-                            </c:forEach>
-                        </div>
-                    </div>
-
-                    <!-- Bình luận -->
-                    <div class="form-group">
-                        <label for="comment">Bình luận:</label>
-                        <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="Viết bình luận..." required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-success mt-3">Gửi bình luận</button>
-                </form>
+                
 
             </div>
         </section>

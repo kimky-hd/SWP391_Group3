@@ -4,6 +4,11 @@ import java.util.Properties; // Dùng để cấu hình các thuộc tính gửi
 import javax.mail.*;          // Lớp gốc để làm việc với email
 import javax.mail.internet.*; // Hỗ trợ email dạng MIME (HTML)
 
+import Model.OrderDetail;
+import Model.Product;
+import DAO.ProductDAO;
+import java.util.List;
+
 public class EmailSender {
 
     // Khai báo thông tin email người gửi
@@ -158,8 +163,8 @@ private static String createRegistrationVerificationEmailContent(String username
      * Gửi email thông báo chung (đơn hàng, khuyến mãi, v.v.)
      */
     public static boolean sendNotificationEmail(String recipientEmail, String subject, String content) {
-        // Cấu hình tương tự
-        Properties props = new Properties();
+    // Cấu hình tương tự
+    Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");
     props.put("mail.smtp.host", SMTP_HOST);
@@ -171,6 +176,11 @@ private static String createRegistrationVerificationEmailContent(String username
     props.put("mail.smtp.connectiontimeout", "15000"); // 15 giây timeout kết nối
     props.put("mail.smtp.timeout", "15000"); // 15 giây timeout đọc
     props.put("mail.debug", "true");
+
+    System.out.println("Đang sử dụng SMTP Host: " + SMTP_HOST + ", Port: " + SMTP_PORT);
+    System.out.println("Email người gửi: " + SENDER_EMAIL);
+    System.out.println("Email người nhận: " + recipientEmail);
+
 
         // Session với xác thực người gửi
         Session session = Session.getInstance(props, new Authenticator() {
@@ -194,6 +204,7 @@ private static String createRegistrationVerificationEmailContent(String username
     Transport.send(message);
     System.out.println("Email đã được gửi thành công đến " + recipientEmail);
     return true;
+    
 } catch (MessagingException | java.io.UnsupportedEncodingException e) {
     System.err.println("Chi tiết lỗi khi gửi email: ");
     System.err.println("- Loại lỗi: " + e.getClass().getSimpleName());
@@ -313,6 +324,7 @@ public static boolean sendOrderCancellationEmail(String recipientEmail, String o
         if (recipientEmail == null || recipientEmail.trim().isEmpty()) {
             System.err.println("Email người nhận không hợp lệ");
             return false;
+           
         }
         
         if (customerName == null || customerName.trim().isEmpty()) {
@@ -333,6 +345,7 @@ public static boolean sendOrderCancellationEmail(String recipientEmail, String o
         System.err.println("Lỗi trong sendOrderCancellationEmail: " + e.getMessage());
         e.printStackTrace();
         return false;
+       
     }
 }
 
@@ -343,7 +356,7 @@ private static String createOrderCancellationEmailContent(String customerName, S
     return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0; border-radius: 10px;'>"
             + "<h2 style='color: #FFB6C1; text-align: center;'>Flower Shop - Thông báo hủy đơn hàng</h2>"
             + "<p>Xin chào <b>" + customerName + "</b>,</p>"
-            + "<p>Đơn hàng của bạn đã bị hủy bởi quản trị viên.</p>"
+            + "<p>Đơn hàng của bạn đã bị hủy.</p>"
             + "<p><b>Mã đơn hàng:</b> #" + orderId + "</p>"
             + (cancelReason != null && !cancelReason.isEmpty() ? "<p><b>Lý do hủy:</b> " + cancelReason + "</p>" : "")
             + "<div style='background-color: #f9f9f9; padding: 15px; border-radius: 5px;'>"
@@ -354,5 +367,51 @@ private static String createOrderCancellationEmailContent(String customerName, S
             + "<p>Trân trọng,<br>Đội ngũ Flower Shop</p>"
             + "</div>";
 }
+
+
+/**
+ * Tạo HTML cho chi tiết đơn hàng để hiển thị trong email
+ * @param orderDetails Danh sách chi tiết đơn hàng
+ * @return Chuỗi HTML chứa bảng chi tiết đơn hàng
+ */
+public static String createOrderDetailsHtml(List<OrderDetail> orderDetails) {
+    StringBuilder html = new StringBuilder();
+    html.append("<table style='width: 100%; border-collapse: collapse;'>");
+    html.append("<tr style='background-color: #f2f2f2;'>");
+    html.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Sản phẩm</th>");
+    html.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: center;'>Số lượng</th>");
+    html.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: right;'>Đơn giá</th>");
+    html.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: right;'>Thành tiền</th>");
+    html.append("</tr>");
+    
+    double totalAmount = 0;
+    ProductDAO productDAO = new ProductDAO(); // Tạo đối tượng ProductDAO để lấy thông tin sản phẩm
+    
+    for (OrderDetail detail : orderDetails) {
+        // Lấy thông tin sản phẩm
+        Product product = productDAO.getProductById(detail.getProductId());
+        String productName = (product != null) ? product.getTitle() : "Sản phẩm không xác định";
+        
+        double itemTotal = detail.getPrice() * detail.getQuantity();
+        totalAmount += itemTotal;
+        
+        html.append("<tr>");
+        html.append("<td style='border: 1px solid #ddd; padding: 8px;'>").append(productName).append("</td>");
+        html.append("<td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>").append(detail.getQuantity()).append("</td>");
+        html.append("<td style='border: 1px solid #ddd; padding: 8px; text-align: right;'>").append(String.format("%,.0f VNĐ", detail.getPrice())).append("</td>");
+        html.append("<td style='border: 1px solid #ddd; padding: 8px; text-align: right;'>").append(String.format("%,.0f VNĐ", itemTotal)).append("</td>");
+        html.append("</tr>");
+    }
+    
+    html.append("<tr style='background-color: #f9f9f9; font-weight: bold;'>");
+    html.append("<td colspan='3' style='border: 1px solid #ddd; padding: 8px; text-align: right;'>Tổng cộng:</td>");
+    html.append("<td style='border: 1px solid #ddd; padding: 8px; text-align: right;'>").append(String.format("%,.0f VNĐ", totalAmount)).append("</td>");
+    html.append("</tr>");
+    html.append("</table>");
+    
+    return html.toString();
+}
+
+
     
 }
