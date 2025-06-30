@@ -9750,3 +9750,320 @@ a.text-dark:hover, a.text-dark:focus {
 .mr-2 {
     margin-right: 0.5rem;
 }
+  .flower-fixed-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px; /* từ right sang left */
+    z-index: 1000;
+  }
+
+  .flower-fixed-btn a {
+    background-color: #FADADD; /* pastel pink */
+    color: #8B005D; /* màu tím hồng nổi bật */
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px rgba(250, 218, 221, 0.6);
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+  }
+
+  .flower-fixed-btn a:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(250, 218, 221, 0.8);
+  }
+
+  .flower-fixed-btn a i {
+    font-size: 24px;
+  }
+
+  /* Tooltip khi hover */
+  .flower-fixed-btn a::after {
+    content: attr(title);
+    position: absolute;
+    left: 80px;
+    bottom: 50%;
+    transform: translateY(50%);
+    background-color: #fff0f5;
+    color: #8B005D;
+    padding: 6px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .flower-fixed-btn a:hover::after {
+    opacity: 1;
+  }
+        :root {
+            --primary-color: #f8bbd0; /* Pastel pink */
+            --secondary-color: #fce4ec; /* Lighter pastel pink */
+            --accent-color: #f48fb1; /* Darker pastel pink */
+            --text-color: #5d4037; /* Brown text */
+            --light-text: #8d6e63; /* Light brown text */
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: #fff9f9;
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-color);
+        }
+        
+        .custom-order-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 20px var(--shadow);
+            background-color: var(--white);
+            border: none;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 1.5rem;
+        }
+        
+        .card-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.6;
+            transform: rotate(30deg);
+        }
+        
+        .card-header h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .card-header p {
+            font-size: 1.1rem;
+            color: white;
+            opacity: 0.9;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+            background-color: var(--white);
+            position: relative;
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .form-section-title h5 {
+            margin-bottom: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .form-section-title i {
+            color: var(--accent-color);
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid var(--secondary-color);
+            padding: 0.1rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(244, 143, 177, 0.25);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+        }
+        
+        .text-muted {
+            color: var(--light-text) !important;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            border-radius: 30px;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(244, 143, 177, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background-color: #e91e63;
+            border-color: #e91e63;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+        
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn-primary:hover::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        #imagePreviewContainer {
+            background-color: var(--secondary-color);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        #imagePreview {
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            max-height: 200px;
+        }
+        
+        #imagePreview:hover {
+            transform: scale(1.05);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--secondary-color);
+        }
+        
+        .footer-note small {
+            display: block;
+            color: var(--light-text);
+            font-size: 0.875rem;
+        }
+        
+        .footer-note i {
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Decorative elements */
+        .flower-decoration {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23f8bbd0" d="M50,0 C60,30 70,50 100,50 C70,60 60,70 50,100 C40,70 30,60 0,50 C30,40 40,30 50,0 Z"/></svg>');
+            background-size: contain;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .flower-1 {
+            top: 10%;
+            right: 5%;
+            transform: rotate(15deg);
+        }
+        
+        .flower-2 {
+            bottom: 15%;
+            left: 5%;
+            transform: rotate(-20deg);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card-header h2 {
+                font-size: 2rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .form-section-title h5 {
+                font-size: 1.1rem;
+            }
+        }
+        
