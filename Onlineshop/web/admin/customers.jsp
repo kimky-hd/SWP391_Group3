@@ -8,51 +8,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Khách hàng</title>
     <!-- Bootstrap CSS -->
-    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <style>
-    /* CSS cho phần xem chi tiết khách hàng */
-    .avatar-circle {
-        width: 100px;
-        height: 100px;
+    /* Body và Layout chính */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: #f8f9fa;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #0dcaf0;
-    }
-    
-    .customer-info {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 10px;
-    }
-    
-    .info-item {
-        transition: all 0.3s;
-    }
-    
-    .info-item:hover {
-        background-color: #e9ecef;
-    }
-    
-    .info-label {
-        color: #6c757d;
-    }
-    
-    /* CSS cho toast notifications */
-    .toast-container {
-        z-index: 1060;
     }
 
-    /* Admin Dropdown Styles */
+    /* Topbar Styles */
+    .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: white;
+        border-bottom: 1px solid #e3e6f0;
+        z-index: 1001;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .topbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #5a5c69;
+        text-decoration: none;
+    }
+
+    .topbar-brand:hover {
+        color: #3a3b45;
+    }
+
+    .topbar-search {
+        position: relative;
+        width: 300px;
+    }
+
+    .topbar-search input {
+        padding-left: 40px;
+        border-radius: 20px;
+        border: 1px solid #d1d3e2;
+        background-color: #f8f9fc;
+    }
+
+    .topbar-search input:focus {
+        background-color: white;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+    .topbar-search i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #858796;
+    }
+
+    .topbar-actions .nav-link {
+        color: #5a5c69;
+        padding: 0.5rem;
+        margin: 0 0.25rem;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .topbar-actions .nav-link:hover {
+        color: #3a3b45;
+        background-color: #eaecf4;
+    }
+
+    /* User Dropdown Styles */
+    .user-dropdown {
+        border-radius: 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        padding: 8px 15px;
+    }
+
+    .user-dropdown:hover {
+        background: rgba(0,0,0,0.1);
+        color: inherit;
+    }
+
     .admin-dropdown {
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.15);
@@ -77,49 +125,242 @@
         transform: translateX(5px);
     }
 
-    .user-dropdown {
-        border-radius: 20px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .user-dropdown:hover {
-        background: rgba(0,0,0,0.1);
-        color: inherit;
-    }
-
     .logout-btn {
         cursor: pointer;
     }
 
-    /* Admin Modal Styles */
-    .admin-modal {
+    /* Main Content Styles */
+    .main-content {
+        margin-left: 250px;
+        margin-top: 60px;
+        padding: 30px;
+        min-height: calc(100vh - 60px);
+        background-color: #f8f9fa;
+    }
+
+    /* Card Styles */
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 2rem;
+    }
+
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        color: #5a5c69;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Table Styles */
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        border-top: none;
+        border-bottom: 2px solid #e3e6f0;
+        font-weight: 600;
+        color: #5a5c69;
+        background-color: #f8f9fc;
+        padding: 1rem 0.75rem;
+    }
+
+    .table tbody td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+        border-top: 1px solid #e3e6f0;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fc;
+    }
+
+    /* Button Styles */
+    .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        margin: 0 2px;
+    }
+
+    .btn-info {
+        background: linear-gradient(45deg, #36b9cc, #258391);
+        border: none;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #1cc88a, #13855c);
+        border: none;
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, #e74a3b, #c0392b);
+        border: none;
+    }
+
+    /* Badge Styles */
+    .badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.5rem 0.75rem;
+        border-radius: 10px;
+    }
+
+    /* Modal Styles */
+    .modal-content {
         border: none;
         border-radius: 15px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    .admin-modal .modal-header {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        border-bottom: none;
+    .modal-header {
+        border-bottom: 1px solid #e3e6f0;
+        border-radius: 15px 15px 0 0;
+        padding: 1.5rem;
     }
 
-    .admin-modal .btn-danger {
-        background: linear-gradient(45deg, #dc3545, #c82333);
-        border: none;
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #e3e6f0;
+        border-radius: 0 0 15px 15px;
+        padding: 1rem 1.5rem;
+    }
+
+    /* Form Styles */
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d3e2;
+        padding: 0.75rem 1rem;
         transition: all 0.3s ease;
     }
 
-    .admin-modal .btn-danger:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
     }
 
-    /* Responsive adjustments */
+    .form-label {
+        font-weight: 600;
+        color: #5a5c69;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Avatar và Customer Info Styles */
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #e3e6f0;
+        color: white;
+    }
+    
+    .customer-info {
+        background-color: #f8f9fc;
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid #e3e6f0;
+    }
+    
+    .info-item {
+        transition: all 0.3s;
+        border-radius: 8px;
+        margin: 0.25rem 0;
+    }
+    
+    .info-item:hover {
+        background-color: #eaecf4;
+        padding: 0.5rem;
+    }
+    
+    .info-label {
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .info-value {
+        color: #5a5c69;
+        font-weight: 500;
+    }
+
+    /* Alert Styles */
+    .alert {
+        border: none;
+        border-radius: 10px;
+        font-weight: 500;
+    }
+
+    .alert-success {
+        background: linear-gradient(45deg, #1cc88a, #17a673);
+        color: white;
+    }
+
+    .alert-danger {
+        background: linear-gradient(45deg, #e74a3b, #c0392b);
+        color: white;
+    }
+
+    /* Pagination Styles */
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
+        border: 1px solid #d1d3e2;
+        color: #5a5c69;
+        font-weight: 500;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border-color: #4e73df;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #eaecf4;
+        border-color: #d1d3e2;
+    }
+
+    /* Toast Styles */
+    .toast-container {
+        z-index: 1060;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
+        .main-content {
+            margin-left: 0;
+            padding: 15px;
+        }
+        
         .topbar-search {
             display: none;
         }
@@ -127,30 +368,41 @@
         .user-dropdown {
             font-size: 0.9rem;
         }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .table-responsive {
+            font-size: 0.875rem;
+        }
     }
 </style>
 
 <body>
     <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    
     <!-- Topbar -->
     <nav class="navbar navbar-expand-lg topbar">
         <div class="container-fluid px-4">
-            <a class="topbar-brand" href="#">Bán Hoa</a>
+            <a class="topbar-brand" href="#">
+                <i class="fas fa-flower me-2"></i>Bán Hoa
+            </a>
 
             <div class="d-flex align-items-center">
                 <div class="topbar-search me-4">
-                    <input type="text" class="form-control" placeholder="Search Keywords...">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm...">
                     <i class="fas fa-search"></i>
                 </div>
 
                 <ul class="navbar-nav topbar-actions">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="#" title="Thông báo">
                             <i class="fas fa-bell"></i>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="#" title="Cài đặt">
                             <i class="fas fa-cog"></i>
                         </a>
                     </li>
@@ -160,11 +412,10 @@
                             Account acc = (Account)session.getAttribute("account");
                         %>
                         <a class="nav-link dropdown-toggle user-dropdown" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="${pageContext.request.contextPath}/img/user.jpg" alt="user" class="rounded-circle me-2" width="32">
+                            <img src="${pageContext.request.contextPath}/img/user.jpg" alt="user" class="rounded-circle me-2" width="32" height="32">
                             <%= acc.getUsername() %>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end admin-dropdown" aria-labelledby="userDropdown">
-                           
                             <li>
                                 <button type="button" class="dropdown-item logout-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
@@ -182,222 +433,227 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <ul class="sidebar-menu">
-            <li>
-                <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/products" class="nav-link">
-                    <i class="fas fa-flower"></i>
-                    <span>Quản lý Sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/categories" class="nav-link">
-                    <i class="fas fa-list"></i>
-                    <span>Danh mục Sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/orders" class="nav-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Quản lý Đơn hàng</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/customers" class="nav-link active">
-                    <i class="fas fa-users"></i>
-                    <span>Quản lý Người Dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/staff" class="nav-link">
-                    <i class="fas fa-user-tie"></i>
-                    <span>Quản lý Nhân viên</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
-                    <i class="fas fa-percent"></i>
-                    <span>Khuyến mãi</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/blogs" class="nav-link">
-                    <i class="fas fa-blog"></i>
-                    <span>Quản lý Blog</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/reports" class="nav-link">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Báo cáo & Thống kê</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/settings" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span>Cài đặt Hệ thống</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <!-- Include Sidebar và Logout Modal -->
+    <jsp:include page="sidebar.jsp">
+        <jsp:param name="currentPage" value="customers" />
+    </jsp:include>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container-fluid px-4">
-            <div class="row mb-4">
-                <div class="col">
-                    <h2 class="mt-4">Quản Lý Người Dùng</h2>
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-users me-2"></i>Quản Lý Người Dùng
+                    </h1>
+                    <p class="mb-0 text-muted">Quản lý thông tin khách hàng và tài khoản người dùng</p>
                 </div>
-                <div class="col-auto mt-4">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
-                        <i class="fas fa-plus"></i> Thêm Người Dùng
-                    </button>
-                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                    <i class="fas fa-plus me-2"></i>Thêm Người Dùng
+                </button>
             </div>
 
             <!-- Thông báo -->
             <c:if test="${not empty message}">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class="fas fa-check-circle me-2"></i>${message}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </c:if>
             <c:if test="${not empty error}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${error}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class="fas fa-exclamation-circle me-2"></i>${error}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </c:if>
 
             <!-- Bảng danh sách khách hàng -->
-            <div class="card mb-4">
+            <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    Danh sách Người Dùng
+                    <i class="fas fa-table me-2"></i>Danh sách Người Dùng
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên đăng nhập</th>
-                                <th>Email</th>
-                                <th>Số điện thoại</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="customer" items="${customers}">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
-                                    <td>${customer.accountID}</td>
-                                    <td>${customer.username}</td>
-                                    <td>${customer.email}</td>
-                                    <td>${customer.phone}</td>
-                                    <td>
-                                        <c:if test="${customer.isActive}">
-                                            <span class="badge bg-success">Hoạt động</span>
-                                        </c:if>
-                                        <c:if test="${!customer.isActive}">
-                                            <span class="badge bg-danger">Vô hiệu hóa</span>
-                                        </c:if>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info" onclick="viewCustomer(${customer.accountID}, '${customer.username}', '${customer.email}', '${customer.phone}', ${customer.isActive})" data-bs-toggle="modal" data-bs-target="#viewCustomerModal">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary" onclick="editCustomer(${customer.accountID}, '${customer.username}', '${customer.email}', '${customer.phone}')" data-bs-toggle="modal" data-bs-target="#editCustomerModal">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <c:if test="${customer.isActive}">
-                                            <a href="customers?action=toggle&id=${customer.accountID}&status=true" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?')">
-                                                <i class="fas fa-ban"></i>
-                                            </a>
-                                        </c:if>
-                                        <c:if test="${!customer.isActive}">
-                                            <a href="customers?action=toggle&id=${customer.accountID}&status=false" class="btn btn-sm btn-success" onclick="return confirm('Bạn có chắc chắn muốn kích hoạt lại tài khoản này?')">
-                                                <i class="fas fa-check"></i>
-                                            </a>
-                                        </c:if>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Tên đăng nhập</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="customer" items="${customers}">
+                                    <tr>
+                                        <td><span class="fw-bold">${customer.accountID}</span></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm me-2">
+                                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                                        <i class="fas fa-user text-white"></i>
+                                                    </div>
+                                                </div>
+                                                <span class="fw-bold">${customer.username}</span>
+                                            </div>
+                                        </td>
+                                        <td>${customer.email}</td>
+                                        <td>${customer.phone != null ? customer.phone : '<span class="text-muted">Chưa cập nhật</span>'}</td>
+                                        <td>
+                                            <c:if test="${customer.isActive}">
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check me-1"></i>Hoạt động
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${!customer.isActive}">
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-ban me-1"></i>Vô hiệu hóa
+                                                </span>
+                                            </c:if>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-info" 
+                                                        onclick="viewCustomer(${customer.accountID}, '${customer.username}', '${customer.email}', '${customer.phone}', ${customer.isActive})" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#viewCustomerModal"
+                                                        title="Xem chi tiết">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-primary" 
+                                                        onclick="editCustomer(${customer.accountID}, '${customer.username}', '${customer.email}', '${customer.phone}')" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#editCustomerModal"
+                                                        title="Chỉnh sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <c:if test="${customer.isActive}">
+                                                    <a href="customers?action=toggle&id=${customer.accountID}&status=true" 
+                                                       class="btn btn-sm btn-danger" 
+                                                       onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?')"
+                                                       title="Vô hiệu hóa">
+                                                        <i class="fas fa-ban"></i>
+                                                    </a>
+                                                </c:if>
+                                                <c:if test="${!customer.isActive}">
+                                                    <a href="customers?action=toggle&id=${customer.accountID}&status=false" 
+                                                       class="btn btn-sm btn-success" 
+                                                       onclick="return confirm('Bạn có chắc chắn muốn kích hoạt lại tài khoản này?')"
+                                                       title="Kích hoạt">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
+                                                </c:if>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                <c:if test="${empty customers}">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">
+                                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted mb-0">Không có dữ liệu người dùng</p>
+                                        </td>
+                                    </tr>
+                                </c:if>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- Phân trang -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <c:if test="${currentPage > 1}">
-                        <li class="page-item">
-                            <a class="page-link" href="customers?page=${currentPage - 1}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                    </c:if>
-                    
-                    <c:forEach begin="1" end="${totalPages}" var="i">
-                        <li class="page-item ${currentPage == i ? 'active' : ''}">
-                            <a class="page-link" href="customers?page=${i}">${i}</a>
-                        </li>
-                    </c:forEach>
-                    
-                    <c:if test="${currentPage < totalPages}">
-                        <li class="page-item">
-                            <a class="page-link" href="customers?page=${currentPage + 1}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </c:if>
-                </ul>
-            </nav>
+            <c:if test="${totalPages > 1}">
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <c:if test="${currentPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="customers?page=${currentPage - 1}" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+                                </a>
+                            </li>
+                        </c:if>
+                        
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                <a class="page-link" href="customers?page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="customers?page=${currentPage + 1}" aria-label="Next">
+                                    <span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </c:if>
         </div>
     </main>
 
     <!-- Modal Thêm Khách hàng -->
     <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addCustomerModalLabel">Thêm người dùng mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addCustomerModalLabel">
+                        <i class="fas fa-user-plus me-2"></i>Thêm người dùng mới
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="customers" method="post">
+                <form action="customers" method="post" id="addCustomerForm">
                     <div class="modal-body">
                         <input type="hidden" name="action" value="add">
                         
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Tên đăng nhập</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">
+                                        <i class="fas fa-user me-1"></i>Tên đăng nhập <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="username" name="username" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">
+                                        <i class="fas fa-lock me-1"></i>Mật khẩu <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" id="phone" name="phone">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope me-1"></i>Email <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">
+                                        <i class="fas fa-phone me-1"></i>Số điện thoại
+                                    </label>
+                                    <input type="text" class="form-control" id="phone" name="phone">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>Đóng
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Lưu
+                        </button>
                     </div>
                 </form>
             </div>
@@ -405,60 +661,78 @@
     </div>
 
     <!-- Modal Xem Chi tiết Khách hàng -->
-<div class="modal fade" id="viewCustomerModal" tabindex="-1" aria-labelledby="viewCustomerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="viewCustomerModalLabel">
-                    <i class="fas fa-user-circle me-2"></i>Chi Tiết Người Dùng
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="customer-profile text-center mb-4">
-                    <div class="avatar-circle mx-auto mb-3">
-                        <i class="fas fa-user fa-3x text-info"></i>
-                    </div>
-                    <h4 id="view-username" class="mb-0 fw-bold"></h4>
-                    <p id="view-status" class="mb-0"></p>
+    <div class="modal fade" id="viewCustomerModal" tabindex="-1" aria-labelledby="viewCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="viewCustomerModalLabel">
+                        <i class="fas fa-user-circle me-2"></i>Chi Tiết Người Dùng
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                
-                <div class="customer-info">
-                    <div class="info-item d-flex border-bottom py-3">
-                        <div class="info-label col-4">
-                            <i class="fas fa-id-card me-2 text-secondary"></i>
-                            <span class="fw-bold">ID:</span>
+                <div class="modal-body">
+                    <div class="customer-profile text-center mb-4">
+                        <div class="avatar-circle mx-auto mb-3">
+                            <i class="fas fa-user fa-3x"></i>
                         </div>
-                        <div class="info-value col-8" id="view-id"></div>
+                        <h4 id="view-username" class="mb-1 fw-bold"></h4>
+                        <p id="view-status" class="mb-0"></p>
                     </div>
                     
-                    <div class="info-item d-flex border-bottom py-3">
-                        <div class="info-label col-4">
-                            <i class="fas fa-envelope me-2 text-secondary"></i>
-                            <span class="fw-bold">Email:</span>
+                    <div class="customer-info">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item d-flex border-bottom py-3">
+                                    <div class="info-label col-5">
+                                        <i class="fas fa-id-card me-2 text-secondary"></i>
+                                        <span class="fw-bold">ID:</span>
+                                    </div>
+                                    <div class="info-value col-7" id="view-id"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item d-flex border-bottom py-3">
+                                    <div class="info-label col-5">
+                                        <i class="fas fa-envelope me-2 text-secondary"></i>
+                                        <span class="fw-bold">Email:</span>
+                                    </div>
+                                    <div class="info-value col-7" id="view-email"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info-value col-8" id="view-email"></div>
-                    </div>
-                    
-                    <div class="info-item d-flex border-bottom py-3">
-                        <div class="info-label col-4">
-                            <i class="fas fa-phone me-2 text-secondary"></i>
-                            <span class="fw-bold">Số điện thoại:</span>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item d-flex py-3">
+                                    <div class="info-label col-5">
+                                        <i class="fas fa-phone me-2 text-secondary"></i>
+                                        <span class="fw-bold">Số điện thoại:</span>
+                                    </div>
+                                    <div class="info-value col-7" id="view-phone"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item d-flex py-3">
+                                    <div class="info-label col-5">
+                                        <i class="fas fa-calendar me-2 text-secondary"></i>
+                                        <span class="fw-bold">Ngày tạo:</span>
+                                    </div>
+                                    <div class="info-value col-7">
+                                        <span class="text-muted">Chưa cập nhật</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info-value col-8" id="view-phone"></div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Đóng
-                </button>
-               
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Đóng
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 
     <!-- Modal Chỉnh sửa Khách hàng -->
     <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel" aria-hidden="true">
@@ -493,36 +767,6 @@
                         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Logout Modal -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content admin-modal">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="logoutModalLabel">
-                        <i class="fas fa-sign-out-alt me-2"></i>Xác nhận đăng xuất
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body py-4 text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-question-circle text-warning" style="font-size: 3rem;"></i>
-                    </div>
-                    <p class="mb-0" style="font-size: 1.1rem; color: #000000; font-weight: 600;">
-                        Bạn có chắc chắn muốn đăng xuất khỏi tài khoản admin?
-                    </p>
-                </div>
-                <div class="modal-footer justify-content-center border-0 pt-0">
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Hủy
-                    </button>
-                    <a class="btn btn-danger px-4" href="LogoutServlet">
-                        <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -602,17 +846,6 @@
             // Xóa thông tin đã lưu
             sessionStorage.removeItem('formSubmitted');
         }
-
-        // Xử lý sự kiện khi nhấn vào nút đăng xuất
-        $('.logout-btn').on('click', function(e) {
-            e.preventDefault();
-            $('#logoutModal').modal('show');
-        });
-
-        // Đảm bảo dropdown hoạt động đúng
-        $('.user-dropdown').on('click', function(e) {
-            e.preventDefault();
-        });
     });
     
     // Hiển thị toast notification
