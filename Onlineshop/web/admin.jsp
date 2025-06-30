@@ -119,7 +119,7 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+                <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
                     <i class="fas fa-chart-bar"></i>
                     <span>Báo cáo & Thống kê</span>
                 </a>

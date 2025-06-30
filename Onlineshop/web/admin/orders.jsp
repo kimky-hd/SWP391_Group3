@@ -30,6 +30,23 @@
             padding: 20px;
         }
         
+        .icon-circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .dropdown-menu {
+        min-width: 200px;
+    }
         .dashboard-card {
             background: white;
             border-radius: 15px;
@@ -693,29 +710,35 @@
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </c:if>
-                                            
-                                            <button class="action-btn btn-delete" 
-                                                    onclick="deleteOrder(${order.orderId})" 
-                                                    title="Xóa đơn hàng">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                            
-                                            <div class="dropdown">
-                                                <button class="action-btn btn-view dropdown-toggle" 
-                                                        data-bs-toggle="dropdown" title="Thêm">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#" 
-                                                           onclick="sendNotification(${order.orderId})">
-                                                        <i class="fas fa-envelope me-2"></i>Gửi thông báo
-                                                    </a></li>
-                                                    <li><a class="dropdown-item" href="#" 
-                                                           onclick="printOrder(${order.orderId})">
-                                                        <i class="fas fa-print me-2"></i>In đơn hàng
-                                                    </a></li>
-                                                </ul>
-                                            </div>
+                                         
+<div class="dropdown">
+    <button class="action-btn btn-view dropdown-toggle" 
+            data-bs-toggle="dropdown" title="Thao tác khác">
+        <i class="fas fa-ellipsis-v"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+        <li>
+            <a class="dropdown-item d-flex align-items-center py-2" href="#" 
+               onclick="sendNotification(${order.orderId})">
+                <span class="icon-circle bg-primary text-white me-2">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <span>Gửi thông báo</span>
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center py-2" href="#" 
+               onclick="printOrder(${order.orderId})">
+                <span class="icon-circle bg-info text-white me-2">
+                    <i class="fas fa-print"></i>
+                </span>
+                <span>In đơn hàng</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -798,33 +821,42 @@
     </div>
     
     <!-- Notification Modal -->
-    <div class="modal fade" id="notificationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-envelope me-2"></i>
-                        Gửi thông báo
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="notificationForm">
-                        <input type="hidden" id="notificationOrderId">
-                        <div class="mb-3">
-                            <label class="form-label">Nội dung thông báo:</label>
-                            <textarea class="form-control" id="notificationMessage" rows="4" 
-                                    placeholder="Nhập nội dung thông báo..."></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-primary" onclick="sendNotificationEmail()">Gửi</button>
-                </div>
+<div class="modal fade" id="notificationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-envelope me-2"></i>
+                    Gửi thông báo đơn hàng
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="notificationForm">
+                    <input type="hidden" id="notificationOrderId">
+                    <div class="order-info mb-3 p-3 bg-light rounded">
+                        <h6 class="fw-bold mb-2">Thông tin đơn hàng: <span id="orderIdDisplay" class="text-primary"></span></h6>
+                        <div id="orderSummary" class="small"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nội dung thông báo:</label>
+                        <textarea class="form-control" id="notificationMessage" rows="4" 
+                                placeholder="Nhập nội dung thông báo..."></textarea>
+                        <div class="form-text">Thông báo sẽ được gửi qua email đến khách hàng.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Hủy
+                </button>
+                <button type="button" class="btn btn-primary" onclick="sendNotificationEmail()">
+                    <i class="fas fa-paper-plane me-1"></i> Gửi thông báo
+                </button>
             </div>
         </div>
     </div>
+</div>
     
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1087,69 +1119,34 @@ function updateStatus(orderId, statusId) {
         }
     });
 }
-        // Delete order
-        function deleteOrder(orderId) {
-            Swal.fire({
-                title: 'Xác nhận xóa',
-                text: 'Bạn có chắc chắn muốn xóa đơn hàng này? Hành động này không thể hoàn tác!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Xóa',
-                cancelButtonText: 'Hủy'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    showLoading();
-                    
-                    $.ajax({
-                        url: '${pageContext.request.contextPath}/orders',
-                        type: 'POST',
-                        data: {
-                            action: 'delete',
-                            orderId: orderId
-                        },
-                        success: function(response) {
-                            hideLoading();
-                            
-                            if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Đã xóa!',
-                                    text: response.message,
-                                    timer: 1500
-                                }).then(() => {
-                                    $(`tr[data-order-id="${orderId}"]`).fadeOut(500, function() {
-                                        $(this).remove();
-                                    });
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Lỗi!',
-                                    text: response.message
-                                });
-                            }
-                        },
-                        error: function() {
-                            hideLoading();
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Lỗi!',
-                                text: 'Đã xảy ra lỗi khi xóa đơn hàng'
-                            });
-                        }
-                    });
-                }
-            });
-        }
+       
         
         // Send notification
-        function sendNotification(orderId) {
-            $('#notificationOrderId').val(orderId);
-            $('#notificationMessage').val('');
-            $('#notificationModal').modal('show');
-        }
+        // Send notification
+function sendNotification(orderId) {
+    $('#notificationOrderId').val(orderId);
+    $('#orderIdDisplay').text('#' + orderId);
+    $('#notificationMessage').val('');
+    
+    // Hiển thị thông tin đơn hàng trong modal
+    const orderRow = $('tr[data-order-id="' + orderId + '"]');
+    const customerName = orderRow.find('td:eq(1)').text().trim();
+    const orderDate = orderRow.find('td:eq(2)').text().trim();
+    const orderTotal = orderRow.find('td:eq(3)').text().trim();
+    const orderStatus = orderRow.find('td:eq(4)').text().trim();
+    
+    let orderSummary = `
+        <div class="row g-2">
+            <div class="col-6"><strong>Khách hàng:</strong> ${customerName}</div>
+            <div class="col-6"><strong>Ngày đặt:</strong> ${orderDate}</div>
+            <div class="col-6"><strong>Tổng tiền:</strong> ${orderTotal}</div>
+            <div class="col-6"><strong>Trạng thái:</strong> ${orderStatus}</div>
+        </div>
+    `;
+    
+    $('#orderSummary').html(orderSummary);
+    $('#notificationModal').modal('show');
+}
         
         function sendNotificationEmail() {
             const orderId = $('#notificationOrderId').val();
@@ -1221,7 +1218,7 @@ function updateStatus(orderId, statusId) {
         }
         
        
-        // Enhanced Filter Functions
+// Enhanced Filter Functions
 function clearField(fieldId) {
     document.getElementById(fieldId).value = '';
 }
@@ -1264,26 +1261,25 @@ function quickFilter(type) {
             break;
     }
     
-  
+    // Tự động submit form sau khi thiết lập các giá trị lọc
+    document.getElementById('filterForm').submit();
 }
 
-// Auto-submit form when date changes
-document.addEventListener('DOMContentLoaded', function() {
-    const dateInputs = document.querySelectorAll('#dateFrom, #dateTo');
-    dateInputs.forEach(input => {
-        input.addEventListener('change', function() {
-            // Optional: Auto-submit after date selection
-            // document.getElementById('filterForm').submit();
-        });
-    });
-    
+//// Auto-submit form when date changes
+//document.addEventListener('DOMContentLoaded', function() {
+//    const dateInputs = document.querySelectorAll('#dateFrom, #dateTo');
+//    dateInputs.forEach(input => {
+//        input.addEventListener('change', function() {
+//            // Optional: Auto-submit after date selection
+//            // document.getElementById('filterForm').submit();
+//        });
+//    });
+//    
 //    // Status change auto-submit
 //    document.getElementById('status').addEventListener('change', function() {
-//        if (this.value !== '') {
-//            document.getElementById('filterForm').submit();
-//        }
+//        document.getElementById('filterForm').submit();
 //    });
-});
+//});
 
 //// Enhanced search with debounce
 //let searchTimeout;
