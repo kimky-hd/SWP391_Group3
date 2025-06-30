@@ -34,6 +34,36 @@
                 --secondary: #ffd6e7;
                 --dark: #2d3436;
                 --light: #f5f6fa;
+                --success: #00b894;
+                --warning: #fdcb6e;
+            }
+
+            .page-navigation {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .nav-btn {
+                background: linear-gradient(45deg, var(--primary), #ff1493);
+                border: none;
+                border-radius: 25px;
+                padding: 0.75rem 2rem;
+                margin: 0 0.5rem;
+                color: white;
+                font-weight: 500;
+                text-decoration: none;
+                display: inline-block;
+                transition: transform 0.2s;
+            }
+
+            .nav-btn:hover {
+                transform: translateY(-2px);
+                color: white;
+                text-decoration: none;
+            }
+
+            .nav-btn.active {
+                background: linear-gradient(45deg, var(--success), #00a085);
             }
 
             .card {
@@ -48,12 +78,38 @@
                 flex-direction: column;
             }
 
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 15px rgba(0,0,0,.2);
+            }
+
             .card-header {
                 background: linear-gradient(45deg, var(--primary), #ff1493);
                 padding: 1.5rem;
                 text-align: center;
                 border: none;
                 flex: 0 0 auto;
+                position: relative;
+            }
+
+            .card-header.added {
+                background: linear-gradient(45deg, var(--success), #00a085);
+            }
+
+            .card-header.used {
+                background: linear-gradient(45deg, #636e72, #2d3436);
+            }
+
+            .status-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(255,255,255,0.9);
+                color: var(--dark);
+                padding: 0.25rem 0.75rem;
+                border-radius: 15px;
+                font-size: 0.8rem;
+                font-weight: 600;
             }
 
             .card-body {
@@ -80,6 +136,8 @@
                 color: var(--dark);
                 display: inline-block;
                 margin-bottom: 1rem;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 1px;
             }
 
             .voucher-info {
@@ -97,9 +155,8 @@
                 color: var(--primary);
             }
 
-            .btn-use {
+            .btn-action {
                 width: 100%;
-                background: linear-gradient(45deg, var(--primary), #ff1493);
                 border: none;
                 border-radius: 25px;
                 padding: 0.75rem 1.5rem;
@@ -107,6 +164,31 @@
                 color: white;
                 transition: transform 0.2s;
                 margin-top: 1rem;
+            }
+
+            .btn-add {
+                background: linear-gradient(45deg, var(--primary), #ff1493);
+            }
+
+            .btn-added {
+                background: linear-gradient(45deg, var(--success), #00a085);
+            }
+
+            .btn-use {
+                background: linear-gradient(45deg, var(--warning), #e17055);
+            }
+
+            .btn-used {
+                background: linear-gradient(45deg, #636e72, #2d3436);
+            }
+
+            .btn-action:hover:not(:disabled) {
+                transform: translateY(-2px);
+            }
+
+            .btn-action:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
             }
 
             .filter-select {
@@ -138,6 +220,16 @@
             .expired {
                 opacity: 0.6;
             }
+
+            .alert {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                border-radius: 10px;
+                display: none;
+            }
         </style>
     </head>
 
@@ -146,15 +238,41 @@
         <jsp:include page="header.jsp"/>
         <!-- Include Header End -->
 
-
+        <!-- Alert Messages -->
+        <div id="alertSuccess" class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span id="successMessage"></span>
+        </div>
+        <div id="alertError" class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorMessage"></span>
+        </div>
 
         <!-- Vouchers Start -->
         <div class="container-fluid pt-5">
             <div class="text-center mb-4">
-                <h2 class="section-title px-5"><span class="px-2">Mã Giảm Giá Của Bạn</span></h2>
+                <h2 class="section-title px-5">
+                    <span class="px-2">
+                        <c:choose>
+                            <c:when test="${pageType == 'my'}">Voucher Của Tôi</c:when>
+                            <c:otherwise>Tất Cả Mã Giảm Giá</c:otherwise>
+                        </c:choose>
+                    </span>
+                </h2>
             </div>
 
             <div class="container">
+                <!-- Navigation -->
+                <div class="page-navigation">
+                    <a href="VoucherController" class="nav-btn ${pageType != 'my' ? 'active' : ''}">
+                        <i class="fas fa-gift"></i> Tất Cả Voucher
+                    </a>
+                    <a href="VoucherController?action=myVouchers" class="nav-btn ${pageType == 'my' ? 'active' : ''}">
+                        <i class="fas fa-wallet"></i> Voucher Của Tôi
+                    </a>
+                </div>
+
+                <!-- Filter -->
                 <select id="sortAndFilter" class="filter-select" onchange="handleVoucherDisplay()">
                     <option value="all">Tất Cả Mã Giảm Giá</option>
                     <option value="valid">Còn Hiệu Lực</option>
@@ -169,8 +287,18 @@
                             <div class="text-center w-100">
                                 <div class="p-5 bg-white rounded">
                                     <i class="fas fa-ticket-alt fa-4x text-primary mb-4"></i>
-                                    <h4>Chưa Có Mã Giảm Giá</h4>
-                                    <p class="text-muted">Hãy tiếp tục mua sắm để nhận thêm ưu đãi!</p>
+                                    <h4>
+                                        <c:choose>
+                                            <c:when test="${pageType == 'my'}">Chưa Có Voucher Nào</c:when>
+                                            <c:otherwise>Không Có Voucher Khả Dụng</c:otherwise>
+                                        </c:choose>
+                                    </h4>
+                                    <p class="text-muted">
+                                        <c:choose>
+                                            <c:when test="${pageType == 'my'}">Hãy thêm voucher từ trang "Tất Cả Voucher"!</c:when>
+                                            <c:otherwise>Hãy quay lại sau để kiểm tra voucher mới!</c:otherwise>
+                                        </c:choose>
+                                    </p>
                                 </div>
                             </div>
                         </c:when>
@@ -178,41 +306,100 @@
                             <c:forEach items="${vouchers}" var="voucher">
                                 <div class="voucher-item">
                                     <div class="card ${voucher.endDate lt now ? 'expired' : ''}">
-                                        <div class="card-header">
+                                        <div class="card-header
+                                             <c:choose>
+                                                 <c:when test="${voucher.used}">used</c:when>
+                                                 <c:when test="${voucher.added}">added</c:when>
+                                             </c:choose>">
                                             <h3 class="discount-amount">
                                                 <fmt:formatNumber value="${voucher.discountAmount}" type="currency" currencySymbol="₫"/>
                                             </h3>
+                                            <c:if test="${pageType != 'my'}">
+                                                <div class="status-badge">
+                                                    <c:choose>
+                                                        <c:when test="${voucher.used}">Đã Dùng</c:when>
+                                                        <c:when test="${voucher.added}">Đã Thêm</c:when>
+                                                        <c:otherwise>Có Sẵn</c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </c:if>
                                         </div>
                                         <div class="card-body">
-                                            <div>
-                                                <div class="voucher-code">${voucher.code}</div>
-                                                <p class="voucher-info">
-                                                    <i class="far fa-clock"></i>
-                                                    <span>Hết hạn: ${voucher.endDate}</span>
-                                                </p>
-                                                <p class="voucher-info">
-                                                    <i class="fas fa-shopping-cart"></i>
-                                                    <span>Đơn tối thiểu: 
-                                                        <fmt:formatNumber value="${voucher.minOrderValue}" type="currency" currencySymbol="₫"/>
-                                                    </span>
-                                                </p>
-                                                <p class="voucher-info">
-                                                    <i class="fas fa-redo-alt"></i>
-                                                    <span>Còn lại: ${voucher.usageLimit - voucher.usedCount} lượt</span>
-                                                </p>
-                                                <c:if test="${not empty voucher.description}">
-                                                    <p class="voucher-info">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        <span>${voucher.description}</span>
-                                                    </p>
-                                                </c:if>
+                                            <div class="voucher-code">${voucher.code}</div>
+
+                                            <div class="voucher-info">
+                                                <i class="fas fa-shopping-cart"></i>
+                                                <span>Đơn tối thiểu: <fmt:formatNumber value="${voucher.minOrderValue}" type="currency" currencySymbol="₫"/></span>
                                             </div>
-                                            <button type="button" 
-                                                    onclick="useVoucher('${voucher.code}', '${voucher.discountAmount}', ${voucher.voucherId})" 
-                                                    class="btn btn-use" 
-                                                    ${voucher.endDate lt now ? 'disabled' : ''}>
-                                                ${voucher.endDate lt now ? 'Đã Hết Hạn' : 'Sử Dụng Ngay'}
-                                            </button>
+
+                                            <div class="voucher-info">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span>Hết hạn: <fmt:formatDate value="${voucher.endDate}" pattern="dd/MM/yyyy"/></span>
+                                            </div>
+
+                                            <div class="voucher-info">
+                                                <i class="fas fa-users"></i>
+                                                <span>Còn lại: ${voucher.usageLimit - voucher.usedCount}/${voucher.usageLimit}</span>
+                                            </div>
+
+                                            <c:if test="${not empty voucher.description}">
+                                                <div class="voucher-info">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    <span>${voucher.description}</span>
+                                                </div>
+                                            </c:if>
+
+                                            <!-- Action Buttons -->
+                                            <c:choose>
+                                                <c:when test="${pageType == 'my'}">
+                                                    <c:choose>
+                                                        <c:when test="${voucher.used}">
+                                                            <button class="btn-action btn-used" disabled>
+                                                                <i class="fas fa-check"></i> Đã Sử Dụng
+                                                            </button>
+                                                        </c:when>
+                                                        <c:when test="${voucher.endDate lt now}">
+                                                            <button class="btn-action btn-used" disabled>
+                                                                <i class="fas fa-clock"></i> Đã Hết Hạn
+                                                            </button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn-action btn-use" onclick="useVoucher(${voucher.voucherId})">
+                                                                <i class="fas fa-hand-holding-usd"></i> Sử Dụng Ngay
+                                                            </button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:choose>
+                                                        <c:when test="${voucher.used}">
+                                                            <button class="btn-action btn-used" disabled>
+                                                                <i class="fas fa-check"></i> Đã Sử Dụng
+                                                            </button>
+                                                        </c:when>
+                                                        <c:when test="${voucher.added}">
+                                                            <button class="btn-action btn-added" disabled>
+                                                                <i class="fas fa-check"></i> Đã Thêm Vào Ví
+                                                            </button>
+                                                        </c:when>
+                                                        <c:when test="${voucher.endDate lt now}">
+                                                            <button class="btn-action btn-used" disabled>
+                                                                <i class="fas fa-clock"></i> Đã Hết Hạn
+                                                            </button>
+                                                        </c:when>
+                                                        <c:when test="${voucher.usedCount >= voucher.usageLimit}">
+                                                            <button class="btn-action btn-used" disabled>
+                                                                <i class="fas fa-times"></i> Đã Hết Lượt
+                                                            </button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn-action btn-add" onclick="addVoucher(${voucher.voucherId})">
+                                                                <i class="fas fa-plus"></i> Thêm Vào Ví
+                                                            </button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                 </div>
@@ -224,35 +411,9 @@
         </div>
         <!-- Vouchers End -->
 
-        <!-- Modal Xác nhận sử dụng voucher -->
-        <div class="modal fade" id="useVoucherModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title">Xác Nhận Sử Dụng</h5>
-                        <button type="button" class="close text-white" data-dismiss="modal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Bạn có muốn sử dụng mã giảm giá này không?</p>
-                        <p>Mã: <strong><span id="voucherCode"></span></strong></p>
-                        <p>Giá trị: <strong><span id="voucherAmount"></span>₫</strong></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy Bỏ</button>
-                        <button type="button" class="btn btn-primary" onclick="confirmUseVoucher()">Xác Nhận</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Include Footer Start -->
         <jsp:include page="footer.jsp"/>
         <!-- Include Footer End -->
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -260,104 +421,163 @@
         <script src="lib/easing/easing.min.js"></script>
         <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
-        <!-- Contact Javascript File -->
-        <script src="mail/jqBootstrapValidation.min.js"></script>
-        <script src="mail/contact.js"></script>
-
-        <!-- Template Javascript -->
-        <script src="js/main.js"></script>
-
         <!-- Custom JavaScript -->
         <script>
-                            let selectedVoucherId = null;
+                                                                // Thêm voucher vào tài khoản
+                                                                function addVoucher(voucherId) {
+                                                                    $.ajax({
+                                                                        url: 'VoucherController',
+                                                                        type: 'POST',
+                                                                        data: {
+                                                                            action: 'add',
+                                                                            voucherId: voucherId
+                                                                        },
+                                                                        dataType: 'json',
+                                                                        success: function (response) {
+                                                                            if (response.success) {
+                                                                                showAlert('success', response.message);
+                                                                                // Cập nhật button
+                                                                                updateButtonAfterAdd(voucherId);
+                                                                            } else {
+                                                                                showAlert('error', response.message);
+                                                                            }
+                                                                        },
+                                                                        error: function () {
+                                                                            showAlert('error', 'Có lỗi xảy ra khi thêm voucher');
+                                                                        }
+                                                                    });
+                                                                }
 
-                            function useVoucher(code, amount, voucherId) {
-                                // Đảm bảo voucherId là số
-                                selectedVoucherId = parseInt(voucherId);
-                                // Debug
-                                console.log('Selected Voucher:', {
-                                    code: code,
-                                    amount: amount,
-                                    voucherId: selectedVoucherId
-                                });
+                                                                // Sử dụng voucher (chuyển đến trang giỏ hàng)
+                                                                function useVoucher(voucherId) {
+                                                                    $.ajax({
+                                                                        url: 'VoucherController',
+                                                                        type: 'POST',
+                                                                        data: {
+                                                                            action: 'apply',
+                                                                            voucherId: voucherId
+                                                                        },
+                                                                        dataType: 'json',
+                                                                        success: function (response) {
+                                                                            if (response.success) {
+                                                                                showAlert('success', response.message);
+                                                                                // Chuyển đến trang giỏ hàng sau 1 giây
+                                                                                setTimeout(function () {
+                                                                                    window.location.href = 'Cart.jsp';
+                                                                                }, 1000);
+                                                                            } else {
+                                                                                showAlert('error', response.message);
+                                                                            }
+                                                                        },
+                                                                        error: function () {
+                                                                            showAlert('error', 'Có lỗi xảy ra khi áp dụng voucher');
+                                                                        }
+                                                                    });
+                                                                }
 
-                                $('#voucherCode').text(code);
-                                $('#voucherAmount').text(amount);
-                                $('#useVoucherModal').modal('show');
-                            }
+                                                                // Cập nhật button sau khi thêm voucher
+                                                                function updateButtonAfterAdd(voucherId) {
+                                                                    const button = $(`button[onclick="addVoucher(${voucherId})"]`);
+                                                                    button.removeClass('btn-add')
+                                                                            .addClass('btn-added')
+                                                                            .prop('disabled', true)
+                                                                            .html('<i class="fas fa-check"></i> Đã Thêm Vào Ví')
+                                                                            .attr('onclick', '');
 
+                                                                    // Cập nhật header của card
+                                                                    button.closest('.card').find('.card-header').addClass('added');
 
-                            function handleVoucherDisplay() {
-                                const selectValue = document.getElementById('sortAndFilter').value;
-                                const voucherItems = Array.from(document.querySelectorAll('.voucher-item'));
-                                const container = document.getElementById('voucherContainer');
+                                                                    // Thêm status badge nếu chưa có
+                                                                    const statusBadge = button.closest('.card').find('.status-badge');
+                                                                    if (statusBadge.length === 0) {
+                                                                        button.closest('.card').find('.card-header').append('<div class="status-badge">Đã Thêm</div>');
+                                                                    } else {
+                                                                        statusBadge.text('Đã Thêm');
+                                                                    }
+                                                                }
 
-                                voucherItems.forEach(item => {
-                                    const card = item.querySelector('.card');
-                                    if (selectValue === 'all') {
-                                        item.style.display = 'block';
-                                    } else if (selectValue === 'valid') {
-                                        item.style.display = !card.classList.contains('expired') ? 'block' : 'none';
-                                    }
-                                });
+                                                                // Hiển thị thông báo
+                                                                function showAlert(type, message) {
+                                                                    const alertId = type === 'success' ? '#alertSuccess' : '#alertError';
+                                                                    const messageId = type === 'success' ? '#successMessage' : '#errorMessage';
 
-                                if (['amount_asc', 'amount_desc', 'date_asc'].includes(selectValue)) {
-                                    const visibleItems = voucherItems.filter(item => item.style.display !== 'none');
-                                    visibleItems.sort((a, b) => {
-                                        const aAmount = parseFloat(a.querySelector('.discount-amount').textContent.replace(/[^0-9]/g, ''));
-                                        const bAmount = parseFloat(b.querySelector('.discount-amount').textContent.replace(/[^0-9]/g, ''));
-                                        const aDate = new Date(a.querySelector('.voucher-info').textContent.split(': ')[1]);
-                                        const bDate = new Date(b.querySelector('.voucher-info').textContent.split(': ')[1]);
+                                                                    $(messageId).text(message);
+                                                                    $(alertId).fadeIn().delay(3000).fadeOut();
+                                                                }
 
-                                        switch (selectValue) {
-                                            case 'amount_asc':
-                                                return aAmount - bAmount;
-                                            case 'amount_desc':
-                                                return bAmount - aAmount;
-                                            case 'date_asc':
-                                                return aDate - bDate;
-                                            default:
-                                                return 0;
-                                        }
-                                    });
+                                                                // Xử lý filter và sort
+                                                                function handleVoucherDisplay() {
+                                                                    const filterValue = $('#sortAndFilter').val();
+                                                                    const voucherItems = $('.voucher-item');
 
-                                    visibleItems.forEach(item => container.appendChild(item));
-                                }
-                            }
+                                                                    // Reset display
+                                                                    voucherItems.show();
 
-                            function confirmUseVoucher() {
-                                if (selectedVoucherId) {
-                                    // Tạo FormData object
-                                    const formData = new FormData();
-                                    formData.append('action', 'apply');
-                                    formData.append('voucherId', selectedVoucherId);
+                                                                    switch (filterValue) {
+                                                                        case 'valid':
+                                                                            voucherItems.each(function () {
+                                                                                const card = $(this).find('.card');
+                                                                                if (card.hasClass('expired')) {
+                                                                                    $(this).hide();
+                                                                                }
+                                                                            });
+                                                                            break;
 
-                                    fetch('VoucherController', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/x-www-form-urlencoded',
-                                        },
-                                        // Chuyển đổi dữ liệu thành chuỗi query
-                                        body: new URLSearchParams(formData).toString()
-                                    })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    // Nếu áp dụng voucher thành công, chuyển hướng tới Cart.jsp
-                                                    window.location.href = 'Cart.jsp';
-                                                } else {
-                                                    alert(data.message || 'Có lỗi xảy ra khi áp dụng voucher');
-                                                }
-                                                $('#useVoucherModal').modal('hide');
-                                            })
-                                            .catch(error => {
-                                                alert('Có lỗi xảy ra khi áp dụng voucher');
-                                                $('#useVoucherModal').modal('hide');
-                                            });
-                                }
+                                                                        case 'amount_desc':
+                                                                            sortVouchers('amount', 'desc');
+                                                                            break;
 
-                            }
+                                                                        case 'amount_asc':
+                                                                            sortVouchers('amount', 'asc');
+                                                                            break;
 
+                                                                        case 'date_asc':
+                                                                            sortVouchers('date', 'asc');
+                                                                            break;
+                                                                    }
+                                                                }
+
+                                                                // Sắp xếp vouchers
+                                                                function sortVouchers(type, order) {
+                                                                    const container = $('#voucherContainer');
+                                                                    const items = container.find('.voucher-item').get();
+
+                                                                    items.sort(function (a, b) {
+                                                                        let valueA, valueB;
+
+                                                                        if (type === 'amount') {
+                                                                            valueA = parseFloat($(a).find('.discount-amount').text().replace(/[₫,]/g, ''));
+                                                                            valueB = parseFloat($(b).find('.discount-amount').text().replace(/[₫,]/g, ''));
+                                                                        } else if (type === 'date') {
+                                                                            valueA = new Date($(a).find('.voucher-info:contains("Hết hạn")').text().split(': ')[1]);
+                                                                            valueB = new Date($(b).find('.voucher-info:contains("Hết hạn")').text().split(': ')[1]);
+                                                                        }
+
+                                                                        if (order === 'asc') {
+                                                                            return valueA - valueB;
+                                                                        } else {
+                                                                            return valueB - valueA;
+                                                                        }
+                                                                    });
+
+                                                                    container.empty().append(items);
+                                                                }
+
+                                                                // Khởi tạo khi trang load
+                                                                $(document).ready(function () {
+                                                                    // Ẩn các thông báo ban đầu
+                                                                    $('.alert').hide();
+
+                                                                    // Kiểm tra URL parameters để hiển thị thông báo
+                                                                    const urlParams = new URLSearchParams(window.location.search);
+                                                                    const message = urlParams.get('message');
+                                                                    const type = urlParams.get('type');
+
+                                                                    if (message && type) {
+                                                                        showAlert(type, decodeURIComponent(message));
+                                                                    }
+                                                                });
         </script>
     </body>
 </html>
+
