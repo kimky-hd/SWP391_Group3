@@ -35,7 +35,7 @@ CREATE TABLE `account` (
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `phone` (`phone`),
   UNIQUE KEY `unique_login` (`username`,`email`,`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'admin','admin123',1,'ducvmhe170394@fpt.edu.vn','0123456789',1),(2,'manager','manager123',2,'ducvmhe170394@gmail.com','0855555555',1),(3,'user1','duc31082003',0,'minhduc31082003@gmail.com','0964482825',1),(4,'user2','duc31082003',0,'duc31082003@gmail.com','0987654321',1);
+INSERT INTO `account` VALUES (1,'admin','admin123',1,'ducvmhe170394@fpt.edu.vn','0123456789',1),(2,'manager','manager123',2,'ducvmhe170394@gmail.com','0855555555',1),(3,'user1','duc31082003',0,'minhduc31082003@gmail.com','0964482825',1),(4,'user2','duc31082003',0,'duc31082003@gmail.com','0987654321',1),(5,'kyvk','Kimky2004hd@',0,'kimkyvu2004hd@gmail.com','0929343780',1);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +127,7 @@ CREATE TABLE `cart` (
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
   CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`),
   CONSTRAINT `cart_chk_1` CHECK ((`status` in (0,1,2)))
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,6 +136,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
+INSERT INTO `cart` VALUES (9,5,NULL,NULL,0),(10,5,NULL,NULL,0),(11,5,NULL,NULL,0),(12,5,NULL,NULL,0),(13,5,NULL,NULL,0),(14,5,3,5,1);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,16 +230,16 @@ DROP TABLE IF EXISTS `customordercart`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customordercart` (
   `customCartID` int NOT NULL AUTO_INCREMENT,
-  `cartID` int NOT NULL,
+  `accountID` int NOT NULL,
   `referenceImage` varchar(255) DEFAULT NULL,
   `description` text,
   `quantity` int DEFAULT '1',
   `status` varchar(50) DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`customCartID`),
-  KEY `cartID` (`cartID`),
-  CONSTRAINT `customordercart_ibfk_1` FOREIGN KEY (`cartID`) REFERENCES `cart` (`cartID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `accountID` (`accountID`),
+  CONSTRAINT `customordercart_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,6 +248,7 @@ CREATE TABLE `customordercart` (
 
 LOCK TABLES `customordercart` WRITE;
 /*!40000 ALTER TABLE `customordercart` DISABLE KEYS */;
+INSERT INTO `customordercart` VALUES (1,5,'uploads/9b84c15f-e4af-4dc1-b5c1-b93ae829910f_cf75f153-69f2-4186-9f0c-089c52c851e5.jpg','Thông tin liên hệ\r\nChúng tôi chuyên cung cấp các loại hoa tươi, hoa chúc mừng, hoa sinh nhật, hoa khai trương và các dịch vụ hoa tươi chuyên nghiệp.',1,'pending','2025-06-30 07:55:02');
 /*!40000 ALTER TABLE `customordercart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -640,7 +642,7 @@ CREATE TABLE `status` (
   `statusID` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`statusID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -649,7 +651,7 @@ CREATE TABLE `status` (
 
 LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
-INSERT INTO `status` VALUES (1,'Chờ duyệt'),(2,'Đơn hàng đã được duyệt và tiến hành đóng gói'),(3,'Đơn hàng đang được vận chuyển'),(4,'Đã giao hàng thành công'),(5,'Đã thanh toán thành công'),(6,'Đã hủy');
+INSERT INTO `status` VALUES (1,'Chờ duyệt'),(2,'Đơn hàng đã được duyệt và tiến hành đóng gói'),(3,'Đơn hàng đang được vận chuyển'),(4,'Đã giao hàng thành công'),(5,'Đã thanh toán thành công'),(6,'Đã hủy'),(7,'Đã duyệt đơn hàng thiết kế riêng');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -780,4 +782,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-30 13:17:45
+-- Dump completed on 2025-07-01  9:33:25
