@@ -64,6 +64,7 @@ public class AddProductController extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
 
+
         // --- Validate tên sản phẩm ---
         if (title == null || title.trim().isEmpty()) {
             request.setAttribute("errorTitle", "Vui lòng nhập tên sản phẩm.");

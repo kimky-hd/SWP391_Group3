@@ -127,7 +127,7 @@ CREATE TABLE `cart` (
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
   CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`),
   CONSTRAINT `cart_chk_1` CHECK ((`status` in (0,1,2)))
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,6 +136,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
+INSERT INTO `cart` VALUES (9,5,NULL,NULL,0),(10,5,NULL,NULL,0),(11,5,NULL,NULL,0),(12,5,NULL,NULL,0),(13,5,NULL,NULL,0),(14,5,3,5,1);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,6 +222,37 @@ LOCK TABLES `customize` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `customordercart`
+--
+
+DROP TABLE IF EXISTS `customordercart`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customordercart` (
+  `customCartID` int NOT NULL AUTO_INCREMENT,
+  `accountID` int NOT NULL,
+  `referenceImage` varchar(255) DEFAULT NULL,
+  `description` text,
+  `quantity` int DEFAULT '1',
+  `status` varchar(50) DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`customCartID`),
+  KEY `accountID` (`accountID`),
+  CONSTRAINT `customordercart_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customordercart`
+--
+
+LOCK TABLES `customordercart` WRITE;
+/*!40000 ALTER TABLE `customordercart` DISABLE KEYS */;
+INSERT INTO `customordercart` VALUES (1,5,'uploads/9b84c15f-e4af-4dc1-b5c1-b93ae829910f_cf75f153-69f2-4186-9f0c-089c52c851e5.jpg','Thông tin liên hệ\r\nChúng tôi chuyên cung cấp các loại hoa tươi, hoa chúc mừng, hoa sinh nhật, hoa khai trương và các dịch vụ hoa tươi chuyên nghiệp.',1,'pending','2025-06-30 07:55:02');
+/*!40000 ALTER TABLE `customordercart` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `feedback`
 --
 
@@ -266,12 +298,13 @@ CREATE TABLE `hoadon` (
   `tongGia` decimal(15,2) DEFAULT NULL,
   `ngayXuat` date DEFAULT NULL,
   `statusID` int DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`maHD`),
   KEY `accountID` (`accountID`),
   KEY `statusID` (`statusID`),
   CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
   CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`statusID`) REFERENCES `status` (`statusID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,7 +313,6 @@ CREATE TABLE `hoadon` (
 
 LOCK TABLES `hoadon` WRITE;
 /*!40000 ALTER TABLE `hoadon` DISABLE KEYS */;
-INSERT INTO `hoadon` VALUES (1,5,18030000.00,'2025-06-23',1),(2,5,6330000.00,'2025-06-23',3),(3,5,8030000.00,'2025-06-24',1);
 /*!40000 ALTER TABLE `hoadon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +340,6 @@ CREATE TABLE `inforline` (
 
 LOCK TABLES `inforline` WRITE;
 /*!40000 ALTER TABLE `inforline` DISABLE KEYS */;
-INSERT INTO `inforline` VALUES (1,'Vũ Kim Kỳ','kimkyvu2004hd@gmail.com','65 Cảm Hội, Hai Bà Trưng, Hà Nội','0929343780'),(2,'Vũ Kim Kỳ','kimkyvu2004hd@gmail.com','65 Cảm Hội, Hai Bà Trưng, Hà Nội','0929343780'),(3,'Vũ Kim Kỳ','kimkyvu2004hd@gmail.com','65 Cảm Hội, Hai Bà Trưng, Hà Nội','0929343780');
 /*!40000 ALTER TABLE `inforline` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -324,6 +355,7 @@ CREATE TABLE `material` (
   `name` varchar(100) DEFAULT NULL,
   `unit` varchar(50) DEFAULT NULL,
   `pricePerUnit` decimal(10,2) DEFAULT NULL,
+  `isActive` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`materialID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -334,7 +366,7 @@ CREATE TABLE `material` (
 
 LOCK TABLES `material` WRITE;
 /*!40000 ALTER TABLE `material` DISABLE KEYS */;
-INSERT INTO `material` VALUES (1,'Hồng đỏ pháp','cành',8000.00),(2,'Tulip trắng','cành',12000.00),(3,'Hoa hướng dương','cành',10000.00),(4,'Hoa hồng vàng','cành',9000.00),(5,'Cúc calimero','cành',5000.00),(6,'Hoa ly trắng','cành',10000.00),(7,'Cúc pingpong','cành',6000.00),(8,'Hoa hồng trắng','cành',8500.00),(9,'Cúc mai trắng','cành',4000.00),(10,'Hồng đỏ Ecuador DL','cành',15000.00),(11,'Cúc lưới xanh','cành',7000.00),(12,'Môn đỏ','cành',8000.00),(13,'Đồng tiền cam','cành',7500.00),(14,'Hoa hồng sen','cành',9500.00),(15,'Thạch thảo tím','cành',3000.00),(16,'Hồng tím cà','cành',10000.00),(17,'Cẩm chướng đỏ trắng','cành',11000.00);
+INSERT INTO `material` VALUES (1,'Hồng đỏ pháp','cành',8000.00,1),(2,'Tulip trắng','cành',12000.00,1),(3,'Hoa hướng dương','cành',10000.00,1),(4,'Hoa hồng vàng','cành',9000.00,1),(5,'Cúc calimero','cành',5000.00,1),(6,'Hoa ly trắng','cành',10000.00,1),(7,'Cúc pingpong','cành',6000.00,1),(8,'Hoa hồng trắng','cành',8500.00,1),(9,'Cúc mai trắng','cành',4000.00,1),(10,'Hồng đỏ Ecuador DL','cành',15000.00,1),(11,'Cúc lưới xanh','cành',7000.00,1),(12,'Môn đỏ','cành',8000.00,1),(13,'Đồng tiền cam','cành',7500.00,1),(14,'Hoa hồng sen','cành',9500.00,1),(15,'Thạch thảo tím','cành',3000.00,1),(16,'Hồng tím cà','cành',10000.00,1),(17,'Cẩm chướng đỏ trắng','cành',11000.00,1);
 /*!40000 ALTER TABLE `material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -365,7 +397,7 @@ CREATE TABLE `materialbatch` (
 
 LOCK TABLES `materialbatch` WRITE;
 /*!40000 ALTER TABLE `materialbatch` DISABLE KEYS */;
-INSERT INTO `materialbatch` VALUES (1,1,100,6800.00,'2025-06-10','2025-06-20','Tươi mới'),(2,2,100,10200.00,'2025-06-10','2025-06-20','Tươi mới'),(3,3,100,8500.00,'2025-06-10','2025-06-20','Tươi mới'),(4,4,100,7650.00,'2025-06-10','2025-06-20','Tươi mới'),(5,5,100,4250.00,'2025-06-10','2025-06-20','Tươi mới'),(6,6,100,8500.00,'2025-06-10','2025-06-20','Tươi mới'),(7,7,100,5100.00,'2025-06-10','2025-06-20','Tươi mới'),(8,8,100,7225.00,'2025-06-10','2025-06-20','Tươi mới'),(9,9,100,3400.00,'2025-06-10','2025-06-20','Tươi mới'),(10,10,100,12750.00,'2025-06-10','2025-06-20','Tươi mới'),(11,11,100,5950.00,'2025-06-10','2025-06-20','Tươi mới'),(12,12,100,6800.00,'2025-06-10','2025-06-20','Tươi mới'),(13,13,100,6375.00,'2025-06-10','2025-06-20','Tươi mới'),(14,14,100,8075.00,'2025-06-10','2025-06-20','Tươi mới'),(15,15,100,2550.00,'2025-06-10','2025-06-20','Tươi mới'),(16,16,100,8500.00,'2025-06-10','2025-06-20','Tươi mới'),(17,17,100,9350.00,'2025-06-10','2025-06-20','Tươi mới');
+INSERT INTO `materialbatch` VALUES (1,1,100,6800.00,'2025-06-30','2025-07-10','Tươi mới'),(2,2,100,10200.00,'2025-06-30','2025-07-10','Tươi mới'),(3,3,100,8500.00,'2025-06-30','2025-07-10','Tươi mới'),(4,4,100,7650.00,'2025-06-30','2025-07-10','Tươi mới'),(5,5,100,4250.00,'2025-06-30','2025-07-10','Tươi mới'),(6,6,100,8500.00,'2025-06-30','2025-07-10','Tươi mới'),(7,7,100,5100.00,'2025-06-30','2025-07-10','Tươi mới'),(8,8,100,7225.00,'2025-06-30','2025-07-10','Tươi mới'),(9,9,100,3400.00,'2025-06-30','2025-07-10','Tươi mới'),(10,10,100,12750.00,'2025-06-30','2025-07-10','Tươi mới'),(11,11,100,5950.00,'2025-06-30','2025-07-10','Tươi mới'),(12,12,100,6800.00,'2025-06-30','2025-07-10','Tươi mới'),(13,13,100,6375.00,'2025-06-30','2025-07-10','Tươi mới'),(14,14,100,8075.00,'2025-06-30','2025-07-10','Tươi mới'),(15,15,100,2550.00,'2025-06-30','2025-07-10','Tươi mới'),(16,16,100,8500.00,'2025-06-30','2025-07-10','Tươi mới'),(17,17,100,9350.00,'2025-06-30','2025-07-10','Tươi mới');
 /*!40000 ALTER TABLE `materialbatch` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -387,7 +419,7 @@ CREATE TABLE `orderdetail` (
   KEY `productID` (`productID`),
   CONSTRAINT `orderdetail_ibfk_1` FOREIGN KEY (`maHD`) REFERENCES `hoadon` (`maHD`),
   CONSTRAINT `orderdetail_ibfk_2` FOREIGN KEY (`productID`) REFERENCES `product` (`productID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -396,7 +428,6 @@ CREATE TABLE `orderdetail` (
 
 LOCK TABLES `orderdetail` WRITE;
 /*!40000 ALTER TABLE `orderdetail` DISABLE KEYS */;
-INSERT INTO `orderdetail` VALUES (1,1,1,450000.00,10),(2,1,2,2700000.00,5),(3,2,5,350000.00,18),(4,3,8,1000000.00,8);
 /*!40000 ALTER TABLE `orderdetail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -463,6 +494,7 @@ CREATE TABLE `product` (
   `description` text,
   `colorID` int DEFAULT NULL,
   `seasonID` int DEFAULT NULL,
+  `isActive` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`productID`),
   KEY `colorID` (`colorID`),
   KEY `seasonID` (`seasonID`),
@@ -477,7 +509,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'Bó hoa hồng sinh nhật','bohoahongsinhnhat.jpg',450000.00,'Bó hoa hồng tươi rực rỡ dành tặng sinh nhật.',2,2),(2,'Lẵng hoa cưới trắng tinh khôi','langhoacuoitrangtinhkhoi.jpg',2700000.00,'Lẵng hoa cưới sang trọng với sắc trắng tinh khôi.',6,3),(3,'Giỏ hoa chúc mừng khai giảng','giohoachucmungkhaigiang.jpg',700000.00,'Giỏ hoa rực rỡ chúc mừng ngày khai giảng.',3,1),(4,'Lẵng hoa chia buồn thanh lịch','langhoachiabuonthanhlich.jpg',700000.00,'Lẵng hoa chia buồn màu trắng, thể hiện sự trang nghiêm.',6,4),(5,'Bó hoa đỏ tình yêu nồng cháy','bohoadotinhyeunongchay.jpg',350000.00,'Bó hoa đỏ thể hiện tình cảm sâu sắc và đắm say.',2,2),(6,'Bó hoa khai trương phát tài','giohoakhaitruongphattai.jpg',1000000.00,'Bó hoa rực rỡ mang lại may mắn ngày khai trương.',8,1),(7,'Bó hoa hướng dương tốt nghiệp','bohoahuongduongtotnghiep.jpg',349000.00,'Bó hoa hướng dương chúc mừng tốt nghiệp đầy tươi sáng.',3,2),(8,'Giỏ hoa hồng tặng mẹ','giohoahongtangme.jpg',1000000.00,'Giỏ hoa tươi thắm dành tặng người mẹ yêu quý.',1,1),(9,'Bó hoa Valentine lãng mạn','bohoavalentinelangman.jpg',750000.00,'Bó hoa tình yêu dịp lễ Valentine thật ngọt ngào.',4,4),(10,'Lẵng hoa Giáng Sinh đỏ trắng','langhoagiangsinhdotrang.jpg',980000.00,'Lẵng hoa chủ đề Giáng Sinh phối đỏ và trắng.',9,4);
+INSERT INTO `product` VALUES (1,'Bó hoa hồng sinh nhật','bohoahongsinhnhat.jpg',450000.00,'Bó hoa hồng tươi rực rỡ dành tặng sinh nhật.',2,2,1),(2,'Lẵng hoa cưới trắng tinh khôi','langhoacuoitrangtinhkhoi.jpg',2700000.00,'Lẵng hoa cưới sang trọng với sắc trắng tinh khôi.',6,3,1),(3,'Giỏ hoa chúc mừng khai giảng','giohoachucmungkhaigiang.jpg',700000.00,'Giỏ hoa rực rỡ chúc mừng ngày khai giảng.',3,1,1),(4,'Lẵng hoa chia buồn thanh lịch','langhoachiabuonthanhlich.jpg',700000.00,'Lẵng hoa chia buồn màu trắng, thể hiện sự trang nghiêm.',6,4,1),(5,'Bó hoa đỏ tình yêu nồng cháy','bohoadotinhyeunongchay.jpg',350000.00,'Bó hoa đỏ thể hiện tình cảm sâu sắc và đắm say.',2,2,1),(6,'Bó hoa khai trương phát tài','giohoakhaitruongphattai.jpg',1000000.00,'Bó hoa rực rỡ mang lại may mắn ngày khai trương.',8,1,1),(7,'Bó hoa hướng dương tốt nghiệp','bohoahuongduongtotnghiep.jpg',349000.00,'Bó hoa hướng dương chúc mừng tốt nghiệp đầy tươi sáng.',3,2,1),(8,'Giỏ hoa hồng tặng mẹ','giohoahongtangme.jpg',1000000.00,'Giỏ hoa tươi thắm dành tặng người mẹ yêu quý.',1,1,1),(9,'Bó hoa Valentine lãng mạn','bohoavalentinelangman.jpg',750000.00,'Bó hoa tình yêu dịp lễ Valentine thật ngọt ngào.',4,4,1),(10,'Lẵng hoa Giáng Sinh đỏ trắng','langhoagiangsinhdotrang.jpg',980000.00,'Lẵng hoa chủ đề Giáng Sinh phối đỏ và trắng.',9,4,1);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -508,7 +540,7 @@ CREATE TABLE `productbatch` (
 
 LOCK TABLES `productbatch` WRITE;
 /*!40000 ALTER TABLE `productbatch` DISABLE KEYS */;
-INSERT INTO `productbatch` VALUES (1,1,0,320000.00,'2025-06-23','2025-06-30','Tươi mới'),(2,2,0,2000000.00,'2025-06-23','2025-06-28','Tươi mới'),(3,3,0,500000.00,'2025-06-23','2025-06-29','Tươi mới'),(4,4,0,480000.00,'2025-06-23','2025-06-27','Tươi mới'),(5,5,21,250000.00,'2025-06-23','2025-06-30','Tươi mới'),(6,6,4,720000.00,'2025-06-23','2025-06-28','Tươi mới'),(7,7,4,270000.00,'2025-06-23','2025-06-29','Tươi mới'),(8,8,0,750000.00,'2025-06-23','2025-06-29','Tươi mới'),(9,9,10,540000.00,'2025-06-23','2025-06-28','Tươi mới'),(10,10,5,700000.00,'2025-06-23','2025-06-30','Tươi mới');
+INSERT INTO `productbatch` VALUES (1,1,10,320000.00,'2025-06-30','2025-07-07','Tươi mới'),(2,2,5,2000000.00,'2025-06-30','2025-07-05','Tươi mới'),(3,3,7,500000.00,'2025-06-30','2025-07-06','Tươi mới'),(4,4,3,480000.00,'2025-06-30','2025-07-04','Tươi mới'),(5,5,12,250000.00,'2025-06-30','2025-07-07','Tươi mới'),(6,6,4,720000.00,'2025-06-30','2025-07-05','Tươi mới'),(7,7,6,270000.00,'2025-06-30','2025-07-06','Tươi mới'),(8,8,8,750000.00,'2025-06-30','2025-07-06','Tươi mới'),(9,9,10,540000.00,'2025-06-30','2025-07-05','Tươi mới'),(10,10,5,700000.00,'2025-06-30','2025-07-07','Tươi mới');
 /*!40000 ALTER TABLE `productbatch` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -571,7 +603,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES (1,'Nguyễn Văn A','0901234567','123 Lê Lợi, Hà Nội','avatar1.jpg','1995-05-20','Nam','2025-06-23 10:45:20',1),(2,'Trần Thị B','0987654321','456 Nguyễn Trãi, Đà Nẵng','avatar2.jpg','1998-08-15','Nữ','2025-06-23 10:45:20',3),(3,'Lê Văn C','0911223344','789 Lý Thường Kiệt, TP.HCM','avatar3.jpg','1990-01-10','Nam','2025-06-23 10:45:20',4);
+INSERT INTO `profile` VALUES (1,'Nguyễn Văn A','0901234567','123 Lê Lợi, Hà Nội','avatar1.jpg','1995-05-20','Nam','2025-06-30 13:08:45',1),(2,'Trần Thị B','0987654321','456 Nguyễn Trãi, Đà Nẵng','avatar2.jpg','1998-08-15','Nữ','2025-06-30 13:08:45',3),(3,'Lê Văn C','0911223344','789 Lý Thường Kiệt, TP.HCM','avatar3.jpg','1990-01-10','Nam','2025-06-30 13:08:45',4);
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -610,7 +642,7 @@ CREATE TABLE `status` (
   `statusID` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`statusID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -619,7 +651,7 @@ CREATE TABLE `status` (
 
 LOCK TABLES `status` WRITE;
 /*!40000 ALTER TABLE `status` DISABLE KEYS */;
-INSERT INTO `status` VALUES (1,'Chờ duyệt'),(2,'Đơn hàng đã được duyệt và tiến hành đóng gói'),(3,'Đơn hàng đang được vận chuyển'),(4,'Đã giao hàng thành công'),(5,'Đã thanh toán thành công'),(6,'Đã hủy');
+INSERT INTO `status` VALUES (1,'Chờ duyệt'),(2,'Đơn hàng đã được duyệt và tiến hành đóng gói'),(3,'Đơn hàng đang được vận chuyển'),(4,'Đã giao hàng thành công'),(5,'Đã thanh toán thành công'),(6,'Đã hủy'),(7,'Đã duyệt đơn hàng thiết kế riêng');
 /*!40000 ALTER TABLE `status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -750,4 +782,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-24  9:34:23
+-- Dump completed on 2025-07-01  9:33:25

@@ -7,6 +7,7 @@ package ManagerController;
 import DAO.CategoryDAO;
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+
 import Model.Account;
 import Model.Category;
 import Model.Product;
@@ -86,6 +87,7 @@ public class ManagerProductList extends HttpServlet {
 
     }
     }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

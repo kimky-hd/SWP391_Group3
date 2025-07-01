@@ -9757,7 +9757,7 @@ a.text-dark:hover, a.text-dark:focus {
     z-index: 1000;
   }
 
-  .flower-fixed-btn a {
+  .flower-fixed-btn a.main-btn {
     background-color: #FADADD; /* pastel pink */
     color: #8B005D; /* màu tím hồng nổi bật */
     width: 65px;
@@ -9767,41 +9767,112 @@ a.text-dark:hover, a.text-dark:focus {
     align-items: center;
     justify-content: center;
     box-shadow: 0 8px 16px rgba(250, 218, 221, 0.6);
-    transition: all 0.3s ease;
+
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: none;
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
   }
 
-  .flower-fixed-btn a:hover {
-    transform: scale(1.1);
-    box-shadow: 0 10px 25px rgba(250, 218, 221, 0.8);
+  .flower-fixed-btn a.main-btn:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
-  .flower-fixed-btn a i {
+  .flower-fixed-btn a.main-btn:hover {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 15px 25px rgba(250, 218, 221, 0.8);
+  }
+
+  .flower-fixed-btn a.main-btn:hover:before {
+    opacity: 1;
+  }
+
+  .flower-fixed-btn a.main-btn i {
     font-size: 24px;
+    transition: transform 0.3s ease;
   }
 
-  /* Tooltip khi hover */
-  .flower-fixed-btn a::after {
-    content: attr(title);
+  .flower-fixed-btn a.main-btn:hover i {
+    transform: scale(1.2);
+  }
+
+  /* Dropdown menu cho flower-fixed-btn */
+  .flower-dropdown-menu {
     position: absolute;
     left: 80px;
-    bottom: 50%;
-    transform: translateY(50%);
+    bottom: 0;
     background-color: #fff0f5;
-    color: #8B005D;
-    padding: 6px 10px;
-    border-radius: 8px;
-    white-space: nowrap;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(139, 0, 93, 0.15);
     opacity: 0;
-    pointer-events: none;
-    transition: 0.3s;
-    font-size: 14px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 200px;
+    z-index: 1001;
   }
 
-  .flower-fixed-btn a:hover::after {
+  .flower-fixed-btn:hover .flower-dropdown-menu {
     opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s;
+  }
+
+  .flower-fixed-btn.active .flower-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .flower-dropdown-menu .dropdown-item {
+    padding: 12px 18px;
+    color: #8B005D;
+    background-color: #fff0f5;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid rgba(139, 0, 93, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flower-dropdown-menu .dropdown-item:last-child {
+    border-bottom: none;
+  }
+
+  .flower-dropdown-menu .dropdown-item:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: #f48fb1;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
+
+  .flower-dropdown-menu .dropdown-item:hover {
+    background-color: #FADADD;
+    padding-left: 24px;
+  }
+
+  .flower-dropdown-menu .dropdown-item:hover:before {
+    transform: scaleY(1);
   }
         :root {
             --primary-color: #f8bbd0; /* Pastel pink */

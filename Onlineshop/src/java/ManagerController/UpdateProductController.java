@@ -105,7 +105,6 @@ public class UpdateProductController extends HttpServlet {
             request.setAttribute("mess", "Bạn cần đăng nhập");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-
         int productID = Integer.parseInt(request.getParameter("productID"));
         String title = request.getParameter("title").trim();
         String description = request.getParameter("description").trim();

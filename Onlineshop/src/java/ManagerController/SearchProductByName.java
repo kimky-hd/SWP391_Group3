@@ -14,7 +14,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -72,7 +74,9 @@ public class SearchProductByName extends HttpServlet {
         request.setAttribute("productList", product);
         request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);
     } 
+
     }
+
     /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
