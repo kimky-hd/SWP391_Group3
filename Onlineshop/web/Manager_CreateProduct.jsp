@@ -151,25 +151,28 @@
                 <!-- Nguyên liệu -->
                 <div class="form-section">
                     <label class="form-label">Nguyên liệu sử dụng</label>
-                    <c:forEach var="m" items="${materialList}">
-                        <c:set var="matKey" value="${'material_'}${m.materialID}" />
-                        <div class="row mb-2">
-                            <div class="col-md-6 d-flex align-items-center">
-                                <span>${m.name} (${m.unit})</span>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="number" min="0" class="form-control"
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 10px; padding: 15px;">
+                        <c:forEach var="m" items="${materialList}">
+                            <c:set var="matKey" value="${'material_'}${m.materialID}" />
+                            <div class="d-flex align-items-center mb-2">
+                                <!-- Tên nguyên liệu cố định chiều rộng, cắt nếu dài -->
+                                <div class="text-truncate me-3" style="flex: 1; max-width: 300px;" title="${m.name} (${m.unit})">
+                                    ${m.name} (${m.unit})
+                                </div>
+                                <!-- Input số lượng -->
+                                <input type="number" min="0" class="form-control" style="width: 120px;"
                                        name="material_${m.materialID}"
                                        value="${param[matKey]}"
-                                       placeholder="Số lượng sử dụng">
+                                       placeholder="Số lượng">
                             </div>
-                        </div>
-                    </c:forEach>
-
+                        </c:forEach>
+                    </div>
                     <c:if test="${not empty errorMaterial}">
                         <div class="text-danger mt-2">${errorMaterial}</div>
                     </c:if>
                 </div>
+
+
 
 
                 <div class="text-center">

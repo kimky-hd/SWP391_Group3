@@ -27,17 +27,43 @@ public class VoucherDAO extends DBContext {
         return null;
     }
 
-    // Lấy danh sách voucher của account
-    public List<Voucher> getVouchersByAccountId(int accountId) {
+    // Lấy tất cả vouchers có sẵn (chỉ những voucher đang active và chưa hết hạn)
+    public List<Voucher> getAllAvailableVouchers() {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = """
-                    SELECT v.* 
+                    SELECT * FROM Voucher 
+                    WHERE isActive = true 
+                    AND CURRENT_TIMESTAMP BETWEEN startDate AND endDate
+                    AND usedCount < usageLimit
+                    ORDER BY discountAmount DESC
+                    """;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                vouchers.add(mapVoucher(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllAvailableVouchers: " + e.getMessage());
+        }
+        return vouchers;
+    }
+
+    // **METHOD MỚI**: Lấy danh sách voucher với trạng thái đã thêm vào account hay chưa
+    public List<Voucher> getVouchersWithAccountStatus(int accountId) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = """
+                    SELECT v.*, 
+                           CASE WHEN av.accountId IS NOT NULL THEN true ELSE false END as isAdded,
+                           CASE WHEN av.isUsed IS NOT NULL THEN av.isUsed ELSE false END as isUsed
                     FROM Voucher v 
-                    JOIN AccountVoucher av ON v.voucherId = av.voucherId 
-                    WHERE av.accountId = ? 
-                    AND av.isUsed = false 
-                    AND v.isActive = true 
+                    LEFT JOIN AccountVoucher av ON v.voucherId = av.voucherId AND av.accountId = ?
+                    WHERE v.isActive = true 
                     AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate
+                    AND v.usedCount < v.usageLimit
+                    ORDER BY v.discountAmount DESC
                     """;
 
         try {
@@ -46,7 +72,73 @@ public class VoucherDAO extends DBContext {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                vouchers.add(mapVoucher(rs));
+                Voucher voucher = mapVoucher(rs);
+                voucher.setIsUsed(rs.getBoolean("isUsed"));
+                voucher.setIsAdded(rs.getBoolean("isAdded"));
+                vouchers.add(voucher);
+            }
+        } catch (SQLException e) {
+            System.out.println("getVouchersWithAccountStatus: " + e.getMessage());
+        }
+        return vouchers;
+    }
+
+    // **METHOD MỚI**: Kiểm tra voucher đã được thêm vào account chưa
+    public boolean isVoucherAddedToAccount(int accountId, int voucherId) {
+        String sql = "SELECT 1 FROM AccountVoucher WHERE accountId = ? AND voucherId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountId);
+            ps.setInt(2, voucherId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println("isVoucherAddedToAccount: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // **METHOD MỚI**: Thêm voucher vào tài khoản người dùng
+    public boolean addVoucherToAccount(int accountId, int voucherId) {
+        // Kiểm tra xem voucher đã được thêm vào account chưa
+        if (isVoucherAddedToAccount(accountId, voucherId)) {
+            return false; // Đã tồn tại
+        }
+
+        String sql = "INSERT INTO AccountVoucher (accountId, voucherId, isUsed, assignedDate) VALUES (?, ?, false, CURRENT_TIMESTAMP)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountId);
+            ps.setInt(2, voucherId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("addVoucherToAccount: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Lấy danh sách voucher của account (đã thêm vào tài khoản)
+    public List<Voucher> getVouchersByAccountId(int accountId) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = """
+                    SELECT v.*, av.isUsed 
+                    FROM Voucher v 
+                    JOIN AccountVoucher av ON v.voucherId = av.voucherId 
+                    WHERE av.accountId = ? 
+                    AND v.isActive = true 
+                    AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate
+                    ORDER BY av.assignedDate DESC
+                    """;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, accountId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Voucher voucher = mapVoucher(rs);
+                voucher.setIsUsed(rs.getBoolean("isUsed"));
+                vouchers.add(voucher);
             }
         } catch (SQLException e) {
             System.out.println("getVouchersByAccountId: " + e.getMessage());
@@ -54,7 +146,7 @@ public class VoucherDAO extends DBContext {
         return vouchers;
     }
     
-    // Lấy danh sách voucher của account
+    // Lấy danh sách voucher hợp lệ của account để sử dụng
     public List<Voucher> getValidVouchersByAccountId(int accountId, double total) {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = """
@@ -152,7 +244,7 @@ public class VoucherDAO extends DBContext {
         return voucher;
     }
 
-    // Lấy tất cả voucher có phân trang
+    // Các method khác giữ nguyên...
     public List<Voucher> getAllVouchersWithPaging(int page, int pageSize) {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = "SELECT * FROM Voucher ORDER BY voucherId ASC LIMIT ? OFFSET ?";
@@ -172,7 +264,6 @@ public class VoucherDAO extends DBContext {
         return vouchers;
     }
 
-    // Lấy tổng số voucher
     public int getTotalVouchers() {
         String sql = "SELECT COUNT(*) FROM Voucher";
         try {
@@ -187,7 +278,6 @@ public class VoucherDAO extends DBContext {
         return 0;
     }
 
-    // Kiểm tra mã voucher đã tồn tại chưa
     public boolean checkVoucherCodeExist(String code) {
         String sql = "SELECT 1 FROM Voucher WHERE code = ?";
         try {
@@ -201,7 +291,6 @@ public class VoucherDAO extends DBContext {
         }
     }
 
-    // Thêm voucher mới
     public boolean addVoucher(Voucher voucher) {
         String sql = "INSERT INTO Voucher (code, discountAmount, minOrderValue, startDate, endDate, isActive, usageLimit, usedCount, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -218,14 +307,10 @@ public class VoucherDAO extends DBContext {
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
-            System.err.println("SQL State: " + e.getSQLState());
-            System.err.println("Error Code: " + e.getErrorCode());
-            e.printStackTrace();
             return false;
         }
     }
 
-    // Cập nhật voucher
     public boolean updateVoucher(Voucher voucher) {
         String sql = "UPDATE Voucher SET code = ?, discountAmount = ?, minOrderValue = ?, startDate = ?, endDate = ?, usageLimit = ?, description = ? WHERE voucherId = ?";
         try {
@@ -245,7 +330,6 @@ public class VoucherDAO extends DBContext {
         }
     }
 
-    // Thay đổi trạng thái voucher
     public boolean toggleVoucherStatus(int voucherId, boolean status) {
         String sql = "UPDATE Voucher SET isActive = ? WHERE voucherId = ?";
         try {
@@ -258,5 +342,4 @@ public class VoucherDAO extends DBContext {
             return false;
         }
     }
-
 }

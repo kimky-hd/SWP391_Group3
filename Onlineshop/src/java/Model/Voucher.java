@@ -15,6 +15,7 @@ public class Voucher {
     private int usedCount;
     private String description;
     private boolean isUsed; // Trạng thái sử dụng của voucher với account hiện tại
+    private boolean isAdded;
 
     // Constructors, getters, setters
     // Getters and Setters
@@ -108,5 +109,11 @@ public class Voucher {
         this.isUsed = isUsed;
     }
 
-   
+   public boolean isAdded() {
+        return isAdded;
+    }
+
+    public void setIsAdded(boolean isAdded) {
+        this.isAdded = isAdded;
+    }
 }
