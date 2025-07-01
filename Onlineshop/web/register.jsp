@@ -298,6 +298,7 @@
                                             <label for="username"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
                                         </div>
                                         <small class="form-text text-muted">Tên đăng nhập không được chứa khoảng trắng</small>
+                                        <span id="username-error" class="text-danger" style="display: none;"></span>
                                     </div>
                                     
                                     <div class="mb-4">
@@ -305,7 +306,8 @@
                                             <input type="email" class="form-control" id="email" name="email" placeholder="Email" required value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
                                             <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
                                         </div>
-                                        <small class="form-text text-muted">Email phải có định dạng @gmail.com</small>
+                                        <small class="form-text text-muted">Email phải có định dạng @gmail.com và không chứa khoảng trắng</small>
+                                        <span id="email-error" class="text-danger" style="display: none;"></span>
                                     </div>
                                     
                                     <div class="mb-4">
@@ -313,7 +315,7 @@
                                             <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required value="<%= request.getAttribute("phone") != null ? request.getAttribute("phone") : "" %>">
                                             <label for="phone"><i class="fas fa-phone me-2"></i>Số điện thoại</label>
                                         </div>
-                                        <small class="form-text text-muted">Ví dụ: 0912345678, 0328888999</small>
+                                        <small class="form-text text-muted">Số điện thoại chỉ được chứa chữ số, không khoảng trắng</small>
                                         <span id="phone-error" class="text-danger" style="display: none;"></span>
                                     </div>
                                     
@@ -322,6 +324,8 @@
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
                                             <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
                                         </div>
+                                        <small class="form-text text-muted">Mật khẩu không được chứa khoảng trắng và phải có ít nhất một ký tự đặc biệt</small>
+                                        <span id="password-error" class="text-danger" style="display: none;"></span>
                                     </div>
                                     
                                     <div class="mb-4">
@@ -329,6 +333,7 @@
                                             <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Xác nhận mật khẩu" required>
                                             <label for="confirm-password"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu</label>
                                         </div>
+                                        <span id="confirm-password-error" class="text-danger" style="display: none;"></span>
                                     </div>
                                     
                                     <!-- Thêm reCAPTCHA widget -->
@@ -408,53 +413,113 @@
                 var registerForm = document.getElementById('register-form');
                 var verificationForm = document.getElementById('verification-form');
                 
-                // Nếu trường tồn tại, thêm sự kiện kiểm tra
+                // Kiểm tra số điện thoại
                 if (phoneInput) {
-                    phoneInput.addEventListener('input', validateVietnamesePhone);
+                    phoneInput.addEventListener('input', function(e) {
+                        var phone = e.target.value;
+                        var errorSpan = document.getElementById('phone-error');
+                        
+                        if (phone.indexOf(" ") !== -1) {
+                            errorSpan.textContent = "Số điện thoại không được chứa khoảng trắng";
+                            errorSpan.style.display = 'block';
+                            e.target.setCustomValidity("Số điện thoại không được chứa khoảng trắng");
+                        } else if (!/^\d*$/.test(phone)) {
+                            errorSpan.textContent = "Số điện thoại chỉ được chứa chữ số";
+                            errorSpan.style.display = 'block';
+                            e.target.setCustomValidity("Số điện thoại chỉ được chứa chữ số");
+                        } else {
+                            errorSpan.style.display = 'none';
+                            e.target.setCustomValidity("");
+                            validateVietnamesePhone(e);
+                        }
+                    });
                     phoneInput.addEventListener('blur', validateVietnamesePhone);
                 }
                 
-                // Thêm kiểm tra khoảng trắng cho tên đăng nhập
+                // Kiểm tra tên đăng nhập
                 if (usernameInput) {
                     usernameInput.addEventListener('input', function(e) {
                         var username = e.target.value;
+                        var errorSpan = document.getElementById('username-error');
+                        
                         if (username.indexOf(" ") !== -1) {
+                            errorSpan.textContent = "Tên đăng nhập không được chứa khoảng trắng";
+                            errorSpan.style.display = 'block';
                             e.target.setCustomValidity("Tên đăng nhập không được chứa khoảng trắng");
                         } else {
+                            errorSpan.style.display = 'none';
                             e.target.setCustomValidity("");
                         }
                     });
                 }
                 
-                // Thêm kiểm tra định dạng email
+                // Kiểm tra email
                 if (emailInput) {
                     emailInput.addEventListener('input', function(e) {
                         var email = e.target.value;
-                        if (!email.toLowerCase().endsWith("@gmail.com") && email.length > 0) {
+                        var errorSpan = document.getElementById('email-error');
+                        
+                        if (email.indexOf(" ") !== -1) {
+                            errorSpan.textContent = "Email không được chứa khoảng trắng";
+                            errorSpan.style.display = 'block';
+                            e.target.setCustomValidity("Email không được chứa khoảng trắng");
+                        } else if (!email.toLowerCase().endsWith("@gmail.com") && email.length > 0) {
+                            errorSpan.textContent = "Email phải có định dạng @gmail.com";
+                            errorSpan.style.display = 'block';
                             e.target.setCustomValidity("Email phải có định dạng @gmail.com");
                         } else {
+                            errorSpan.style.display = 'none';
                             e.target.setCustomValidity("");
                         }
                     });
                 }
                 
-                // Thêm kiểm tra mật khẩu xác nhận
-                if (confirmPasswordInput && passwordInput) {
-                    confirmPasswordInput.addEventListener('input', function(e) {
-                        if (passwordInput.value !== e.target.value) {
-                            e.target.setCustomValidity("Mật khẩu xác nhận không khớp");
+                // Kiểm tra mật khẩu
+                if (passwordInput) {
+                    passwordInput.addEventListener('input', function(e) {
+                        var password = e.target.value;
+                        var hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+                        var errorSpan = document.getElementById('password-error');
+                        
+                        if (password.indexOf(" ") !== -1) {
+                            errorSpan.textContent = "Mật khẩu không được chứa khoảng trắng";
+                            errorSpan.style.display = 'block';
+                            e.target.setCustomValidity("Mật khẩu không được chứa khoảng trắng");
+                        } else if (!hasSpecialChar && password.length > 0) {
+                            errorSpan.textContent = "Mật khẩu phải chứa ít nhất một ký tự đặc biệt";
+                            errorSpan.style.display = 'block';
+                            e.target.setCustomValidity("Mật khẩu phải chứa ít nhất một ký tự đặc biệt");
                         } else {
+                            errorSpan.style.display = 'none';
                             e.target.setCustomValidity("");
                         }
-                    });
-                    
-                    passwordInput.addEventListener('input', function() {
+                        
+                        // Kiểm tra lại mật khẩu xác nhận nếu đã nhập
                         if (confirmPasswordInput.value !== "") {
-                            if (passwordInput.value !== confirmPasswordInput.value) {
+                            var confirmErrorSpan = document.getElementById('confirm-password-error');
+                            if (password !== confirmPasswordInput.value) {
+                                confirmErrorSpan.textContent = "Mật khẩu xác nhận không khớp";
+                                confirmErrorSpan.style.display = 'block';
                                 confirmPasswordInput.setCustomValidity("Mật khẩu xác nhận không khớp");
                             } else {
+                                confirmErrorSpan.style.display = 'none';
                                 confirmPasswordInput.setCustomValidity("");
                             }
+                        }
+                    });
+                }
+                
+                // Kiểm tra mật khẩu xác nhận
+                if (confirmPasswordInput && passwordInput) {
+                    confirmPasswordInput.addEventListener('input', function(e) {
+                        var errorSpan = document.getElementById('confirm-password-error');
+                        if (passwordInput.value !== e.target.value) {
+                            errorSpan.textContent = "Mật khẩu xác nhận không khớp";
+                            errorSpan.style.display = 'block';
+                            e.target.setCustomValidity("Mật khẩu xác nhận không khớp");
+                        } else {
+                            errorSpan.style.display = 'none';
+                            e.target.setCustomValidity("");
                         }
                     });
                 }
@@ -608,6 +673,7 @@
                 var confirmPassword = document.getElementById("confirm-password").value;
                 var username = document.getElementById("username").value;
                 var email = document.getElementById("email").value;
+                var phone = document.getElementById("phone").value;
                 
                 // Kiểm tra khoảng trắng trong tên đăng nhập
                 if (username.indexOf(" ") !== -1) {
@@ -615,9 +681,40 @@
                     return false;
                 }
                 
+                // Kiểm tra khoảng trắng trong email
+                if (email.indexOf(" ") !== -1) {
+                    alert("Email không được chứa khoảng trắng!");
+                    return false;
+                }
+                
                 // Kiểm tra định dạng email phải là @gmail.com
                 if (!email.toLowerCase().endsWith("@gmail.com")) {
                     alert("Email phải có định dạng @gmail.com!");
+                    return false;
+                }
+                
+                // Kiểm tra khoảng trắng trong số điện thoại
+                if (phone.indexOf(" ") !== -1) {
+                    alert("Số điện thoại không được chứa khoảng trắng!");
+                    return false;
+                }
+                
+                // Kiểm tra số điện thoại chỉ chứa số
+                if (!/^\d+$/.test(phone)) {
+                    alert("Số điện thoại chỉ được chứa chữ số!");
+                    return false;
+                }
+                
+                // Kiểm tra khoảng trắng trong mật khẩu
+                if (password.indexOf(" ") !== -1) {
+                    alert("Mật khẩu không được chứa khoảng trắng!");
+                    return false;
+                }
+                
+                // Kiểm tra mật khẩu phải chứa ký tự đặc biệt
+                var hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+                if (!hasSpecialChar) {
+                    alert("Mật khẩu phải chứa ít nhất một ký tự đặc biệt!");
                     return false;
                 }
                 

@@ -22,13 +22,16 @@ public class Product {
     private String description;
     private int colorID;
     private int seasonID;
+    private boolean isActive;
     private List<ProductBatch> batches;
+    private List<ProductComponent> components;
+    private List<Category> categories;
 
     public Product() {
         this.batches = new ArrayList<>();
     }
 
-    public Product(int productID, String title, String image, double price, String description, int colorID, int seasonID, List<ProductBatch> batches) {
+    public Product(int productID, String title, String image, double price, String description, int colorID, int seasonID, boolean isActive, List<ProductBatch> batches) {
         this.productID = productID;
         this.title = title;
         this.image = image;
@@ -36,6 +39,7 @@ public class Product {
         this.description = description;
         this.colorID = colorID;
         this.seasonID = seasonID;
+        this.isActive = isActive;
         this.batches = batches;
     }
 
@@ -95,12 +99,36 @@ public class Product {
         this.seasonID = seasonID;
     }
 
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     public List<ProductBatch> getBatches() {
         return batches;
     }
 
     public void setBatches(List<ProductBatch> batches) {
         this.batches = batches;
+    }
+
+    public List<ProductComponent> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<ProductComponent> components) {
+        this.components = components;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public int getQuantity() {
@@ -152,7 +180,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", batches=" + batches + '}';
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", isActive=" + isActive + ", batches=" + batches + ", components=" + components + '}';
     }
 
 }

@@ -33,16 +33,16 @@ public class CartDAO extends DBContext {
     public boolean addToCart(int accountId, int productId, int quantity, boolean isUpdate) {
         String checkSql = "SELECT Quantity FROM Cart WHERE AccountID = ? AND ProductID = ?";
         try (Connection conn = getConnection(); PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
-
+    
             checkPs.setInt(1, accountId);
             checkPs.setInt(2, productId);
-
+    
             try (ResultSet rs = checkPs.executeQuery()) {
                 if (rs.next()) {
                     // Đã có sẵn trong giỏ
                     String updateSql = "UPDATE Cart SET Quantity = ? WHERE AccountID = ? AND ProductID = ?";
                     int newQuantity = isUpdate ? quantity : rs.getInt("Quantity") + quantity;
-
+    
                     try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
                         updatePs.setInt(1, newQuantity);
                         updatePs.setInt(2, accountId);
@@ -51,7 +51,7 @@ public class CartDAO extends DBContext {
                     }
                 } else {
                     // Chưa có → insert
-                    String insertSql = "INSERT INTO Cart (AccountID, ProductID, Quantity) VALUES (?, ?, ?)";
+                    String insertSql = "INSERT INTO Cart (AccountID, ProductID, Quantity, status) VALUES (?, ?, ?, 1)";
                     try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
                         insertPs.setInt(1, accountId);
                         insertPs.setInt(2, productId);
@@ -61,6 +61,7 @@ public class CartDAO extends DBContext {
                 }
             }
         } catch (SQLException e) {
+            System.out.println("Lỗi khi thêm vào giỏ hàng: " + e.getMessage());
             e.printStackTrace();
             return false;
         }

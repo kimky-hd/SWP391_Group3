@@ -21,7 +21,8 @@ import java.util.List;
 import java.sql.SQLException;
 import Model.WishList;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Statement;
 
 /**
  *
@@ -57,7 +58,7 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByIndex(int indexPage) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
+        String sql = "SELECT * FROM Product WHERE isActive = TRUE ORDER BY productID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, (indexPage - 1) * 8); // tính offset
@@ -71,11 +72,38 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
         } catch (SQLException e) {
             System.out.println("getProductByIndex: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Product> getProductByIndexForManage(int indexPage) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 5";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (indexPage - 1) * 5); // tính offset
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getBoolean(8),
+                        batches));
+
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductByIndexForManage: " + e.getMessage());
         }
         return list;
     }
@@ -95,6 +123,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches)
                 );
             }
@@ -112,14 +141,15 @@ public class ProductDAO extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
-                return new Product(
-                        rs.getInt(1),
+
+                return new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches
                 );
             }
@@ -148,6 +178,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -174,6 +205,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -200,6 +232,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -223,6 +256,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -261,31 +295,30 @@ public class ProductDAO extends DBContext {
     }
 
     public int addProduct(String title, String image, double price, String description, int colorID, int seasonID) {
-    String sql = "INSERT INTO Product (title, image, price, description, colorID, seasonID) VALUES (?, ?, ?, ?, ?, ?)";
-    int generatedId = 0;
+        String sql = "INSERT INTO Product (title, image, price, description, colorID, seasonID) VALUES (?, ?, ?, ?, ?, ?)";
+        int generatedId = 0;
 
-    try {
-        ps = connection.prepareStatement(sql);
-        ps.setString(1, title);
-        ps.setString(2, image);
-        ps.setDouble(3, price);
-        ps.setString(4, description);
-        ps.setInt(5, colorID);
-        ps.setInt(6, seasonID);
+        try {
+            ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, title);
+            ps.setString(2, image);
+            ps.setDouble(3, price);
+            ps.setString(4, description);
+            ps.setInt(5, colorID);
+            ps.setInt(6, seasonID);
 
-        int affectedRows = ps.executeUpdate();
-        if (affectedRows > 0) {
-            rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                generatedId = rs.getInt(1);  // Lấy ID vừa được insert
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);  // Lấy ID vừa được insert
+                }
             }
+        } catch (SQLException e) {
+            System.out.println("addProduct : " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("addProduct ERROR: " + e.getMessage());
+        return generatedId;
     }
-    return generatedId;
-}
-
 
     public void addProductBatch(int productID, ProductBatch batch) {
         String sql = "INSERT INTO ProductBatch (\n"
@@ -320,28 +353,53 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public void updateProduct(Product updateproduct) {
+    public void updateProduct(int id, String title, String image, double price, String description, int colorID, int seasonID) {
         String sql = "UPDATE Product SET\n"
                 + "            title = ?,\n"
                 + "            image = ?,\n"
                 + "            price = ?,\n"
                 + "            description = ?,\n"
                 + "            colorID = ?,\n"
-                + "            seasonID = ?,\n"
+                + "            seasonID = ? \n"
                 + "        WHERE productID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, updateproduct.getTitle());
-            ps.setString(2, updateproduct.getImage());
-            ps.setDouble(3, updateproduct.getPrice());
-            ps.setString(4, updateproduct.getDescription());
-            ps.setInt(5, updateproduct.getColorID());
-            ps.setInt(6, updateproduct.getSeasonID());
-            ps.setInt(7, updateproduct.getProductID());
+            ps.setString(1, title);
+            ps.setString(2, image);
+            ps.setDouble(3, price);
+            ps.setString(4, description);
+            ps.setInt(5, colorID);
+            ps.setInt(6, seasonID);
+            ps.setInt(7, id);
             ps.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println("updateProduct" + e.getMessage());
+        }
+    }
+
+    public void updateCateForProduct(int productID, List<Integer> categoryID) {
+        String deleteSQL = "DELETE FROM CategoryProduct WHERE productID = ?";
+        String insertSQL = "INSERT INTO CategoryProduct (productID, categoryID) VALUES (?, ?)";
+        
+        try{
+            PreparedStatement delps = connection.prepareStatement(deleteSQL);
+            delps.setInt(1, productID);
+            delps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("delete cate : "  + e.getMessage());
+        }
+        
+        try{
+            PreparedStatement insps = connection.prepareStatement(insertSQL);
+            for(int cateID : categoryID){
+                insps.setInt(1, productID);
+                insps.setInt(2, cateID);
+                insps.addBatch();;
+            }
+            insps.executeBatch();
+        }catch(SQLException e){
+            System.out.println("insert new cate : " + e.getMessage());
         }
     }
 
@@ -469,6 +527,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
@@ -494,6 +553,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
@@ -521,6 +581,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -675,7 +736,8 @@ public class ProductDAO extends DBContext {
                 + "    p.price,\n"
                 + "    p.description,\n"
                 + "    p.colorID,\n"
-                + "    p.seasonID \n"
+                + "    p.seasonID,\n"
+                + "    p.isActive \n"
                 + " FROM Product p \n"
                 + " JOIN Wishlist wl ON p.productID = wl.productID \n"
                 + " WHERE wl.AccountID = ?";
@@ -692,6 +754,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
 
             }
@@ -757,6 +820,7 @@ public class ProductDAO extends DBContext {
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches));
             }
         } catch (SQLException e) {
@@ -785,14 +849,14 @@ public class ProductDAO extends DBContext {
             if (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
 
-                return new Product(
-                        rs.getInt(1),
+                return new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
                         rs.getString(5),
                         rs.getInt(6),
                         rs.getInt(7),
+                        rs.getBoolean(8),
                         batches
                 );
             }
@@ -831,20 +895,121 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    public void insertProductComponent(int productID, int materialID, int materialQuantity){
+
+    public void insertProductComponent(int productID, int materialID, int materialQuantity) {
         String sql = "INSERT INTO ProductComponent("
                 + "     productID,\n"
                 + "     materialID,\n"
                 + "     materialQuantity\n"
                 + "     ) VALUES (?, ?, ?)";
-        try{
+        try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, productID);
             ps.setInt(2, materialID);
             ps.setInt(3, materialQuantity);
             ps.executeUpdate();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("insertProductComponent" + e.getMessage());
         }
     }
+
+    public String getColorNameByID(int colorID) {
+        String sql = "SELECT colorName FROM Color WHERE colorID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, colorID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("colorName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getColorNameByID: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String getSeasonNameByID(int seasonID) {
+        String sql = "SELECT seasonName FROM Season WHERE seasonID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, seasonID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("seasonName");
+            }
+        } catch (SQLException e) {
+            System.out.println("getSeasonNameByID: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public void updateProductIsActive(int productID, boolean isActive) {
+        String sql = "UPDATE Product SET isActive = ? WHERE productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isActive);
+            ps.setInt(2, productID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateProductIsActive : " + e.getMessage());
+        }
+    }
+
+    public void insertProductBatch(ProductBatch batch) {
+        String sql = "INSERT INTO ProductBatch "
+                + "   (productID,"
+                + "    quantity,"
+                + "    importPrice,"
+                + "    dateImport,"
+                + "    dateExpire)"
+                + "    VALUES (?, ?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, batch.getProductID());
+            ps.setInt(2, batch.getQuantity());
+            ps.setDouble(3, batch.getImportPrice());
+            ps.setDate(4, batch.getDateImport());
+            ps.setDate(5, batch.getDateExpire());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertProductBatch" + e.getMessage());
+        }
+    }
+
+    public List<ProductComponent> getProductComponentsWithMaterial(int productID) {
+        List<ProductComponent> list = new ArrayList<>();
+        String sql = "SELECT pc.*, m.name, m.unit, m.pricePerUnit, m.isActive "
+                + "FROM ProductComponent pc JOIN Material m ON pc.materialID = m.materialID "
+                + "WHERE pc.productID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            rs = ps.executeQuery();
+            MaterialDAO matedao = new MaterialDAO();
+            while (rs.next()) {
+                Material mate = new Material();
+                mate.setMaterialID(rs.getInt("materialID"));
+                mate.setName(rs.getString("name"));
+                mate.setUnit(rs.getString("unit"));
+                mate.setPricePerUnit(rs.getDouble("pricePerUnit"));
+                mate.setIsActive(rs.getBoolean("isActive"));
+
+                // Gán danh sách batch cho nguyên liệu
+                mate.setBatches(matedao.getBatchesByMaterialID(mate.getMaterialID()));
+
+                ProductComponent pc = new ProductComponent();
+                pc.setProductComponentID(rs.getInt("productComponentID"));
+                pc.setProductID(rs.getInt("productID"));
+                pc.setMaterialID(rs.getInt("materialID"));
+                pc.setMaterialQuantity(rs.getInt("materialQuantity"));
+                pc.setMaterial(mate);
+
+                list.add(pc);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

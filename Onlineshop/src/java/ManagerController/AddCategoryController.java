@@ -5,6 +5,7 @@
 package ManagerController;
 
 import DAO.CategoryDAO;
+import Model.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -73,19 +74,25 @@ public class AddCategoryController extends HttpServlet {
             throws ServletException, IOException {
         String categoryName = request.getParameter("categoryName");
         request.setAttribute("oldValue", categoryName);
+        
+        CategoryDAO cateDAO = new CategoryDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         if (categoryName == null || categoryName.trim().isEmpty()) {
             request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng");
             request.getRequestDispatcher("Manager_CreateCategory.jsp").forward(request, response);
             return;
         }
-        CategoryDAO cateDAO = new CategoryDAO();
         boolean checkduplicate = cateDAO.CheckDuplicateCategory(categoryName);
         if (checkduplicate) {
             request.setAttribute("msg", "Thể loại này đã tồn tại");
             request.getRequestDispatcher("Manager_CreateCategory.jsp").forward(request, response);
         } else {
             boolean addcate = cateDAO.createCategory(categoryName);
-            HttpSession session = request.getSession();
             if (addcate) {
                 session.setAttribute("success", "Đã thêm danh mục thành công");
             } else {
@@ -94,7 +101,7 @@ public class AddCategoryController extends HttpServlet {
             response.sendRedirect("viewcategorylist");
         }
     }
-
+    }
     /**
      * Returns a short description of the servlet.
      *

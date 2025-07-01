@@ -85,7 +85,7 @@ public class LoginServlet extends HttpServlet {
             
             // Kiểm tra role và chuyển hướng
             if (account.getRole() == 1) {
-                response.sendRedirect("admin.jsp");
+                response.sendRedirect("revenue-chart");
                 return;
             } else if (account.getRole() == 2) {
                 response.sendRedirect("managerproductlist");
@@ -95,7 +95,8 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
         } else {
-            request.setAttribute("error", "Sai thông tin đăng nhập!");
+            request.setAttribute("userInput", userInput);
+            request.setAttribute("error", "Tên Đăng Nhập Hoặc Mật Khẩu Sai !");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }

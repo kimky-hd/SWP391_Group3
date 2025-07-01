@@ -323,7 +323,7 @@
                                 </div>
                             </div>
                         </c:forEach>
-                     </div>
+                    </div>
                     <c:if test="${tag != null}">
                         <ul class="pagination">
                             <c:if test="${tag != 1}">
@@ -364,6 +364,13 @@
 
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+        <!-- Sticky Button for Custom Order -->
+        <div class="flower-fixed-btn">
+            <a href="CustomOrder.jsp" title="Đặt hoa theo yêu cầu">
+                <i class="fas fa-seedling"></i> <!-- Bạn có thể thay bằng: fa-pencil-alt, fa-heart, fa-rose -->
+            </a>
+        </div>
+        <!-- Sticky Button for Custom Order End -->
 
         <!-- Toast Message Container -->
         <style>

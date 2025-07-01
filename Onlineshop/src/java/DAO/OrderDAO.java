@@ -10,6 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import DAO.DBContext;
+import java.util.Map;
+import java.util.HashMap;
+
 
 // Lớp OrderDAO kế thừa từ DBContext để có thể kết nối với cơ sở dữ liệu.
 public class OrderDAO extends DBContext {
@@ -28,8 +31,8 @@ public class OrderDAO extends DBContext {
      */
     public boolean createOrder(Order order, List<OrderDetail> orderDetails) {
         // Câu lệnh SQL để chèn dữ liệu vào bảng HoaDon (Đơn hàng chính)
-        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID) "
-                + "VALUES (?, ?, ?, ?)";
+        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID, payment_method) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         // Câu lệnh SQL để chèn dữ liệu vào bảng InforLine (Thông tin người nhận/khách hàng)
         String infoSql = "INSERT INTO InforLine (maHD, name, email, address, phoneNumber) "
@@ -49,6 +52,7 @@ public class OrderDAO extends DBContext {
                 ps.setDouble(2, order.getTotal());
                 ps.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
                 ps.setInt(4, 1); // Đặt trạng thái mặc định là "Pending" (Đang chuẩn bị) (statusID = 1)
+                ps.setString(5, order.getPaymentMethod()); // Thêm phương thức thanh toán
 
                 int affectedRows = ps.executeUpdate(); // Thực thi câu lệnh chèn
 
@@ -114,7 +118,7 @@ public class OrderDAO extends DBContext {
     public List<Order> getOrdersByAccountId(int accountId) {
         List<Order> orders = new ArrayList<>(); // Khởi tạo danh sách để lưu trữ các đơn hàng
         // Câu lệnh SQL JOIN giữa HoaDon và InforLine để lấy thông tin đơn hàng và thông tin người nhận
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.accountID = ? ORDER BY h.maHD DESC"; // Sắp xếp theo maHD giảm dần
 
@@ -134,8 +138,8 @@ public class OrderDAO extends DBContext {
                     order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
-                    // Lưu ý: Cột payment_method không có trong SQL hiện tại, nên dòng này bị comment
-                    // order.setPaymentMethod(rs.getString("payment_method"));
+                    // Bỏ comment dòng này để lấy phương thức thanh toán
+                    order.setPaymentMethod(rs.getString("payment_method"));
                     order.setTotal(rs.getDouble("tongGia"));
 
                     // Chuyển đổi statusID dạng số thành chuỗi trạng thái dễ đọc
@@ -178,7 +182,7 @@ public class OrderDAO extends DBContext {
      */
     public Order getOrderById(int orderId) {
         // Câu lệnh SQL JOIN giữa HoaDon và InforLine để lấy thông tin đơn hàng và thông tin người nhận
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.maHD = ?"; // Lọc theo maHD
 
@@ -198,6 +202,8 @@ public class OrderDAO extends DBContext {
                     order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
+                    // Bỏ comment dòng này để lấy phương thức thanh toán
+                    order.setPaymentMethod(rs.getString("payment_method"));
                     order.setTotal(rs.getDouble("tongGia"));
 
                     // Chuyển đổi statusID dạng số thành chuỗi trạng thái
@@ -245,7 +251,7 @@ public class OrderDAO extends DBContext {
  */
 public List<Order> getAllOrders() {
     List<Order> orders = new ArrayList<>();
-    String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address " +
+    String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address " +
                  "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD " +
                  "ORDER BY h.ngayXuat DESC";
 
@@ -411,6 +417,85 @@ public boolean updateOrderStatus(int orderId, int statusId) {
 
         return 0; // Trả về 0 nếu không có đơn hàng hoặc có lỗi
     }
+    public int countTotalFilteredOrders(String status, String dateFrom, String dateTo, String customerName) {
+    int count = 0;
+    StringBuilder sql = new StringBuilder();
+    sql.append("SELECT COUNT(*) AS total ");
+    sql.append("FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD ");
+    sql.append("WHERE 1=1 ");
+    
+    List<Object> params = new ArrayList<>();
+    
+    // Thêm điều kiện lọc
+    if (status != null && !status.isEmpty()) {
+        // Chuyển đổi status từ chuỗi sang số
+        int statusId;
+        switch (status.toLowerCase()) { // Đảm bảo chuyển đổi sang chữ thường để so sánh
+            case "pending":
+                statusId = 1;
+                break;
+            case "completed":
+                statusId = 2;
+                break;
+            case "cancelled":
+                statusId = 3;
+                break;
+            case "delivered":
+                statusId = 4;
+                break;
+            case "paid":
+                statusId = 5;
+                break;
+            case "refunded":
+                statusId = 6;
+                break;
+            default:
+                statusId = -1; // Không lọc nếu không khớp
+                break;
+        }
+        
+        if (statusId > 0) {
+            sql.append("AND h.statusID = ? ");
+            params.add(statusId);
+        }
+    }
+    
+    if (dateFrom != null && !dateFrom.isEmpty()) {
+        sql.append("AND CONVERT(date, h.ngayXuat) >= ? ");
+        params.add(dateFrom);
+    }
+    
+    if (dateTo != null && !dateTo.isEmpty()) {
+        sql.append("AND CONVERT(date, h.ngayXuat) <= ? ");
+        params.add(dateTo);
+    }
+    
+    if (customerName != null && !customerName.isEmpty()) {
+        sql.append("AND i.name LIKE ? ");
+        params.add("%" + customerName + "%");
+    }
+    
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        
+        // Set parameters
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        }
+        
+    } catch (SQLException e) {
+        System.out.println("Error counting filtered orders: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return count;
+}
 
     /**
      * Xóa một đơn hàng cùng với tất cả các chi tiết liên quan (OrderDetail và
@@ -485,4 +570,183 @@ public boolean updateOrderStatus(int orderId, int statusId) {
             }
         }
     }
+
+   public Map<String, Object> getOrderStatistics() {
+    Map<String, Object> statistics = new HashMap<>();
+    String sql = "SELECT " +
+                 "COUNT(*) as totalOrders, " +
+                 "SUM(CASE WHEN statusID = 1 THEN 1 ELSE 0 END) as pendingOrders, " +
+                 "SUM(CASE WHEN statusID = 2 THEN 1 ELSE 0 END) as completedOrders, " +
+                 "SUM(CASE WHEN statusID = 3 THEN 1 ELSE 0 END) as cancelledOrders, " +
+                 "SUM(CASE WHEN statusID = 4 THEN 1 ELSE 0 END) as deliveredOrders, " +
+                 "SUM(CASE WHEN statusID = 5 THEN 1 ELSE 0 END) as paidOrders, " +
+                 "SUM(CASE WHEN statusID = 6 THEN 1 ELSE 0 END) as refundedOrders, " +
+                 "SUM(tongGia) as totalRevenue " +
+                 "FROM HoaDon";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        
+        if (rs.next()) {
+            statistics.put("totalOrders", rs.getInt("totalOrders"));
+            statistics.put("pendingOrders", rs.getInt("pendingOrders"));
+            statistics.put("completedOrders", rs.getInt("completedOrders"));
+            statistics.put("cancelledOrders", rs.getInt("cancelledOrders"));
+            statistics.put("deliveredOrders", rs.getInt("deliveredOrders"));
+            statistics.put("paidOrders", rs.getInt("paidOrders"));
+            statistics.put("refundedOrders", rs.getInt("refundedOrders"));
+            statistics.put("totalRevenue", rs.getDouble("totalRevenue"));
+        }
+        
+    } catch (SQLException e) {
+        System.out.println("Error getting order statistics: " + e.getMessage());
+        e.printStackTrace();
+        // Trả về statistics rỗng nếu có lỗi
+        statistics.put("totalOrders", 0);
+        statistics.put("pendingOrders", 0);
+        statistics.put("completedOrders", 0);
+        statistics.put("cancelledOrders", 0);
+        statistics.put("deliveredOrders", 0);
+        statistics.put("paidOrders", 0);
+        statistics.put("refundedOrders", 0);
+        statistics.put("totalRevenue", 0.0);
+    }
+    
+    return statistics;
+}
+
+public List<Order> getFilteredOrders(String status, String dateFrom, String dateTo, String customerName, int page, int size) {
+    List<Order> orders = new ArrayList<>();
+    StringBuilder sql = new StringBuilder();
+    sql.append("SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address ");
+    sql.append("FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD ");
+    sql.append("WHERE 1=1 ");
+    
+    List<Object> params = new ArrayList<>();
+    
+    // Thêm điều kiện lọc
+    if (status != null && !status.isEmpty()) {
+        // Chuyển đổi status từ chuỗi sang số
+        int statusId;
+        switch (status.toLowerCase()) { // Đảm bảo chuyển đổi sang chữ thường để so sánh
+            case "pending":
+                statusId = 1;
+                break;
+            case "completed":
+                statusId = 2;
+                break;
+            case "cancelled":
+                statusId = 3;
+                break;
+            case "delivered":
+                statusId = 4;
+                break;
+            case "paid":
+                statusId = 5;
+                break;
+            case "refunded":
+                statusId = 6;
+                break;
+            default:
+                statusId = -1; // Không lọc nếu không khớp
+                break;
+        }
+        
+        if (statusId > 0) {
+            sql.append("AND h.statusID = ? ");
+            params.add(statusId);
+        }
+    }
+    
+    if (dateFrom != null && !dateFrom.isEmpty()) {
+        sql.append("AND CONVERT(date, h.ngayXuat) >= ? ");
+        params.add(dateFrom);
+    }
+    
+    if (dateTo != null && !dateTo.isEmpty()) {
+        sql.append("AND CONVERT(date, h.ngayXuat) <= ? ");
+        params.add(dateTo);
+    }
+    
+    if (customerName != null && !customerName.isEmpty()) {
+        sql.append("AND i.name LIKE ? ");
+        params.add("%" + customerName + "%");
+    }
+    
+    // In ra câu truy vấn để debug
+    System.out.println("SQL Query: " + sql.toString());
+    System.out.println("Parameters: " + params);
+    
+    sql.append("ORDER BY h.ngayXuat DESC ");
+    
+    // Thêm phân trang
+    int offset = (page - 1) * size;
+    sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+    params.add(offset);
+    params.add(size);
+    
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        
+        // Set parameters
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+            System.out.println("Param " + (i + 1) + ": " + params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("maHD"));
+                order.setAccountId(rs.getInt("accountID"));
+                order.setOrderDate(rs.getTimestamp("ngayXuat"));
+                order.setTotal(rs.getDouble("tongGia"));
+                order.setFullName(rs.getString("name"));
+                order.setPhone(rs.getString("phoneNumber"));
+                order.setEmail(rs.getString("email"));
+                order.setAddress(rs.getString("address"));
+                
+                // Chuyển đổi statusID thành chuỗi trạng thái
+                int statusID = rs.getInt("statusID");
+                order.setStatusId(statusID);
+                String statusText;
+                switch (statusID) {
+                    case 1:
+                        statusText = "Pending";
+                        break;
+                    case 2:
+                        statusText = "Completed";
+                        break;
+                    case 3:
+                        statusText = "Cancelled";
+                        break;
+                    case 4:
+                        statusText = "Delivered";
+                        break;
+                    case 5:
+                        statusText = "Paid";
+                        break;
+                    case 6:
+                        statusText = "Refunded";
+                        break;
+                    default:
+                        statusText = "Unknown";
+                }
+                order.setStatus(statusText);
+                
+                orders.add(order);
+            }
+            
+            // In ra số lượng kết quả tìm được
+            System.out.println("Found " + orders.size() + " orders");
+        }
+        
+    } catch (SQLException e) {
+        System.out.println("Error getting filtered orders: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return orders;
+}
 }

@@ -1,86 +1,43 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package ManagerController;
 
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Category;
 import Model.Color;
 import Model.Material;
 import Model.Season;
-import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-/**
- *
- * @author Duccon
- */
 @MultipartConfig
 public class AddProductController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ProductDAO productDAO = new ProductDAO();
         MaterialDAO mateDAO = new MaterialDAO();
 
-        List<Color> allcolor = productDAO.getAllColor();
-        List<Season> allseason = productDAO.getAllSeason();
-        List<Category> allcategory = productDAO.getAllCategory();
-        List<Material> allmaterial = mateDAO.getAllMaterial();
+        request.setAttribute("colorList", productDAO.getAllColor());
+        request.setAttribute("seasonList", productDAO.getAllSeason());
+        request.setAttribute("categoryList", productDAO.getAllCategory());
+        request.setAttribute("materialList", mateDAO.getAllMaterial());
 
-        request.setAttribute("colorList", allcolor);
-        request.setAttribute("seasonList", allseason);
-        request.setAttribute("categoryList", allcategory);
-        request.setAttribute("materialList", allmaterial);
         request.getRequestDispatcher("Manager_CreateProduct.jsp").forward(request, response);
-
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -95,18 +52,28 @@ public class AddProductController extends HttpServlet {
         String seasonIDRaw = request.getParameter("seasonID");
 
         boolean hasError = false;
-
         double price = 0;
-        int colorID = 0;
-        int seasonID = 0;
+        int colorID = 0, seasonID = 0;
 
-        // Validate title
+        ProductDAO productDAO = new ProductDAO();
+        MaterialDAO mateDAO = new MaterialDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
+
+        // --- Validate tên sản phẩm ---
         if (title == null || title.trim().isEmpty()) {
             request.setAttribute("errorTitle", "Vui lòng nhập tên sản phẩm.");
             hasError = true;
+        } else if (productDAO.isTitleDuplicated(title.trim())) {
+            request.setAttribute("errorTitle", "Tên sản phẩm đã tồn tại.");
+            hasError = true;
         }
 
-        // Validate price
+        // --- Validate giá ---
         if (priceRaw == null || priceRaw.trim().isEmpty()) {
             request.setAttribute("errorPrice", "Vui lòng nhập giá.");
             hasError = true;
@@ -123,7 +90,7 @@ public class AddProductController extends HttpServlet {
             }
         }
 
-        // Validate color
+        // --- Validate màu và mùa ---
         try {
             colorID = Integer.parseInt(colorIDRaw);
         } catch (NumberFormatException e) {
@@ -131,7 +98,6 @@ public class AddProductController extends HttpServlet {
             hasError = true;
         }
 
-        // Validate season
         try {
             seasonID = Integer.parseInt(seasonIDRaw);
         } catch (NumberFormatException e) {
@@ -139,30 +105,49 @@ public class AddProductController extends HttpServlet {
             hasError = true;
         }
 
-        // Upload image
+        // --- Validate ảnh ---
         Part imagePart = request.getPart("image");
-        String imagePath = "";
-        if (imagePart != null && imagePart.getSize() > 0) {
-            String fileName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
-            String uploadPath = getServletContext().getRealPath("/img");
+        String imagePath = null;
 
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
+        if (imagePart != null && imagePart.getSize() > 0) {
+            String originalName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
+            String uploadDir = getServletContext().getRealPath("/img");
+            File folder = new File(uploadDir);
+            if (!folder.exists()) {
+                folder.mkdirs();
             }
 
-            imagePart.write(uploadPath + File.separator + fileName);
-            imagePath = "img/" + fileName;
+            File file = new File(uploadDir, originalName);
+            imagePart.write(file.getAbsolutePath());
+            imagePath = originalName;
         } else {
             request.setAttribute("errorImage", "Vui lòng chọn ảnh.");
             hasError = true;
         }
 
-        // Nếu có lỗi, load lại dữ liệu và forward về form
-        if (hasError) {
-            ProductDAO productDAO = new ProductDAO();
-            MaterialDAO mateDAO = new MaterialDAO();
+        // --- Validate nguyên liệu ---
+        List<Material> materials = mateDAO.getAllMaterial();
+        boolean hasValidMaterial = false;
+        for (Material m : materials) {
+            String qtyRaw = request.getParameter("material_" + m.getMaterialID());
+            if (qtyRaw != null && !qtyRaw.trim().isEmpty()) {
+                try {
+                    int qty = Integer.parseInt(qtyRaw.trim());
+                    if (qty > 0) {
+                        hasValidMaterial = true;
+                        break;
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+        }
 
+        if (!hasValidMaterial) {
+            request.setAttribute("errorMaterial", "Vui lòng chọn ít nhất 1 nguyên liệu với số lượng > 0.");
+            hasError = true;
+        }
+
+        // --- Nếu có lỗi: forward lại form + giữ dữ liệu ---
+        if (hasError) {
             request.setAttribute("title", title);
             request.setAttribute("price", priceRaw);
             request.setAttribute("description", description);
@@ -179,52 +164,38 @@ public class AddProductController extends HttpServlet {
             return;
         }
 
-        // Nếu hợp lệ → lưu dữ liệu
-        ProductDAO productDAO = new ProductDAO();
+        // --- Lưu dữ liệu sản phẩm ---
         int productID = productDAO.addProduct(title, imagePath, price, description, colorID, seasonID);
 
-        // Lưu danh mục
+        // --- Lưu danh mục ---
         if (categoryID != null) {
             for (String catIDStr : categoryID) {
                 try {
                     int catID = Integer.parseInt(catIDStr);
                     productDAO.addCategoryProduct(productID, catID);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
 
-        // Lưu nguyên liệu
-        MaterialDAO mateDAO = new MaterialDAO();
-        List<Material> allMaterials = mateDAO.getAllMaterial();
-        for (Material m : allMaterials) {
-            String param = "material_" + m.getMaterialID();
-            String mquantityStr = request.getParameter(param);
-            if (mquantityStr != null && !mquantityStr.trim().isEmpty()) {
+        // --- Lưu nguyên liệu ---
+        for (Material m : materials) {
+            String qtyRaw = request.getParameter("material_" + m.getMaterialID());
+            if (qtyRaw != null && !qtyRaw.trim().isEmpty()) {
                 try {
-                    int materialQuantity = Integer.parseInt(mquantityStr.trim());
-                    if (materialQuantity > 0) {
-                        productDAO.insertProductComponent(productID, m.getMaterialID(), materialQuantity);
+                    int qty = Integer.parseInt(qtyRaw.trim());
+                    if (qty > 0) {
+                        productDAO.insertProductComponent(productID, m.getMaterialID(), qty);
                     }
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
-        
-        
 
         request.getSession().setAttribute("isactive", "Thêm sản phẩm thành công!");
         response.sendRedirect("managerproductlist");
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    }
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Add Product Controller with validation for duplicate title and ingredients";
+    }
 }

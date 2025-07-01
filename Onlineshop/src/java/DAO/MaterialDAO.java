@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -118,7 +120,7 @@ public class MaterialDAO extends DBContext {
             System.out.println("updateMaterialBatchStatus() " + e.getMessage());
         }
     }
-    
+
     public Material getMaterialByID(int materialID) {
         List<Material> list = new ArrayList<>();
         String sql = "Select * from Material WHERE materialID = ? ";
@@ -214,9 +216,74 @@ public class MaterialDAO extends DBContext {
             ps.setBoolean(1, isActive);
             ps.setInt(2, materialID);
             ps.executeUpdate();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("updateMaterialIsActive : " + e.getMessage());
         }
     }
+
+    public int getAvailableMaterial(int materialID) {
+        String sql = "SELECT SUM(quantity) FROM MaterialBatch"
+                + "   WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, materialID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("getAvailableMaterial" + e.getMessage());
+        }
+        return 0;
+    }
+
+    public void consumeMaterialFIFO(int materialID, int quantity) throws SQLException {
+        boolean originalAutoCommit = connection.getAutoCommit();
+        connection.setAutoCommit(false);
+
+        try {
+            String sql = "SELECT materialBatchID, quantity "
+                    + "FROM MaterialBatch WHERE materialID = ? AND quantity > 0 "
+                    + "ORDER BY dateImport ASC";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, materialID);
+            rs = ps.executeQuery();
+
+            while (rs.next() && quantity > 0) {
+                int batchID = rs.getInt("materialBatchID");
+                int available = rs.getInt("quantity");
+                int consume = Math.min(quantity, available);
+
+                try (PreparedStatement update = connection.prepareStatement(
+                        "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?")) {
+                    update.setInt(1, consume);
+                    update.setInt(2, batchID);
+                    update.executeUpdate();
+                }
+
+                quantity -= consume;
+            }
+
+            if (quantity > 0) {
+                connection.rollback();
+                throw new SQLException("Không đủ nguyên liệu để tiêu thụ.");
+            }
+
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            connection.setAutoCommit(originalAutoCommit);
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+    }
+    
+    
 
 }

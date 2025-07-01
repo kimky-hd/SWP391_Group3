@@ -31,8 +31,9 @@ public class ForgotPasswordServlet extends HttpServlet {
             AccountDAO dao = new AccountDAO();
             Account account = dao.checkEmailExist(email);
             
-            if (account == null) {
+                        if (account == null) {
                 request.setAttribute("error", "Email không tồn tại trong hệ thống!");
+                request.setAttribute("email", email); // Thêm dòng này để lưu giá trị email
                 request.getRequestDispatcher("forgotpassword.jsp").forward(request, response);
                 return;
             }
@@ -53,6 +54,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                 response.sendRedirect("resetpassword.jsp");
             } else {
                 request.setAttribute("error", "Không thể gửi email. Vui lòng thử lại sau!");
+                request.setAttribute("email", email); // Thêm dòng này để lưu giá trị email
                 request.getRequestDispatcher("forgotpassword.jsp").forward(request, response);
             }
         } else if ("verify".equals(action)) {
