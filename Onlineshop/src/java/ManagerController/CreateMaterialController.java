@@ -5,6 +5,7 @@
 package ManagerController;
 
 import DAO.MaterialDAO;
+import Model.Account;
 import Model.Material;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -78,6 +80,12 @@ public class CreateMaterialController extends HttpServlet {
         boolean hasError = false;
 
         MaterialDAO mateDAO = new MaterialDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         
         if (name == null || name.trim().isEmpty()) {
             request.setAttribute("errorName", "Vui lòng nhập tên nguyên liệu.");
@@ -120,7 +128,7 @@ public class CreateMaterialController extends HttpServlet {
         request.getSession().setAttribute("isactive", "Thêm nguyên liệu thành công!");
         response.sendRedirect("managermateriallist");
     }
-
+    }
     /**
      * Returns a short description of the servlet.
      *

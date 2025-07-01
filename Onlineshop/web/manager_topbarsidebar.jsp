@@ -125,18 +125,18 @@
             <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
                 <!-- Left: Brand -->
-                <a class="topbar-brand fw-bold text-uppercase" href="#">
+                <a class="topbar-brand fw-bold text-uppercase" href="managerproductlist">
                     <i class="fas fa-seedling me-2"></i> <!-- icon cây hoa -->
                     Flower Shop
                 </a>
 
-                <!-- Center: Search -->
+<!--                 Center: Search 
                 <div class="flex-grow-1 mx-5">
                     <div class="topbar-search w-100">
                         <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm, danh mục...">
                         <i class="fas fa-search"></i>
                     </div>
-                </div>
+                </div>-->
 
                 <!-- Right: Actions -->
                 <ul class="navbar-nav topbar-actions d-flex align-items-center">

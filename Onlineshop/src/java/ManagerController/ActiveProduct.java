@@ -6,6 +6,7 @@
 package ManagerController;
 
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -72,13 +74,19 @@ public class ActiveProduct extends HttpServlet {
         
         ProductDAO productDAO = new ProductDAO();
         Product p = productDAO.getProductById(productID);
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         
         productDAO.updateProductIsActive(productID, true);
         request.getSession().setAttribute("isactive", "Đã kích hoạt sản phẩm: " + p.getTitle());
         
         response.sendRedirect("managerproductlist");
     }
-
+    }
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description

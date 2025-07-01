@@ -84,10 +84,10 @@ public class ProductDAO extends DBContext {
 
     public List<Product> getProductByIndexForManage(int indexPage) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 8";
+        String sql = "SELECT * FROM Product ORDER BY productID LIMIT ?, 5";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, (indexPage - 1) * 8); // tính offset
+            ps.setInt(1, (indexPage - 1) * 5); // tính offset
             rs = ps.executeQuery();
             while (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));

@@ -9767,6 +9767,7 @@ a.text-dark:hover, a.text-dark:focus {
     align-items: center;
     justify-content: center;
     box-shadow: 0 8px 16px rgba(250, 218, 221, 0.6);
+
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: none;
     text-decoration: none;
