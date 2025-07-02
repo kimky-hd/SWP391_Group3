@@ -70,6 +70,18 @@
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
+<!-- Sticky Button for Custom Order -->
+<div class="flower-fixed-btn">
+    <a href="javascript:void(0)" class="main-btn" title="Tùy chọn">
+        <i class="fas fa-seedling"></i>
+    </a>
+    <div class="flower-dropdown-menu">
+        <a href="CustomOrder.jsp" class="dropdown-item">Đặt hoa theo yêu cầu</a>
+        <a href="/Onlineshop/custom-cart" class="dropdown-item">Giỏ hàng tự thiết kế</a>
+    </div>
+</div>
+<!-- Sticky Button for Custom Order End -->
+
 <!-- Footer Styles -->
 <style>
     .bg-pink {
@@ -126,7 +138,7 @@
 
 <!-- Footer Scripts -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Back to top button
         $(window).scroll(function () {
             if ($(this).scrollTop() > 100) {
@@ -135,14 +147,14 @@
                 $('.back-to-top').fadeOut('slow');
             }
         });
-        
+
         $('.back-to-top').click(function () {
             $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
             return false;
         });
 
         // Newsletter form
-        $('form').submit(function(e) {
+        $('form').submit(function (e) {
             e.preventDefault();
             // Add your newsletter subscription logic here
             alert('Cảm ơn bạn đã đăng ký nhận tin!');

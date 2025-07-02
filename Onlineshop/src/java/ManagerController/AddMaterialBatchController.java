@@ -5,6 +5,7 @@
 package ManagerController;
 
 import DAO.MaterialDAO;
+import Model.Account;
 import Model.Material;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.util.List;
 
@@ -88,6 +90,12 @@ public class AddMaterialBatchController extends HttpServlet {
         Date dateExpire = null;
 
         MaterialDAO mateDAO = new MaterialDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
 
         if (importPriceRaw == null || importPriceRaw.trim().isEmpty()) {
             request.setAttribute("errorPrice", "Vui lòng nhập giá nhập.");
@@ -182,7 +190,7 @@ public class AddMaterialBatchController extends HttpServlet {
         request.getSession().setAttribute("isactive", "Bổ sung nguyên liệu thành công!");
         response.sendRedirect("managermateriallist");
     }
-
+    }
     /**
      * Returns a short description of the servlet.
      *

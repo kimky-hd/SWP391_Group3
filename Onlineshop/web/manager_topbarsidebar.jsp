@@ -206,6 +206,13 @@
                         <span>Quản lý Đơn hàng</span>
                     </a>
                 </li>
+                <!-- Thêm liên kết đến trang quản lý đơn hàng tự thiết kế -->
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
+                        <i class="fas fa-palette"></i>
+                        <span>Quản lý đơn hàng tự thiết kế</span>
+                    </a>
+                </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/customers" class="nav-link">
                         <i class="fas fa-users"></i>
