@@ -589,48 +589,6 @@
     </div>
 </div>
 
-<<<<<<< kyvk
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Khách hàng</th>
-                                    <th>Ngày đặt</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Phương thức</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach items="${orders}" var="order">
-                                    <tr>
-                                        <td>#${order.orderId}</td>
-                                        <td>${order.fullName}</td>
-                                        <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" /></td>
-                                        <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></td>
-                                        <td>${order.paymentMethod}</td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${order.status eq 'Pending'}">
-                                                    <span class="status-badge status-pending">Đang xử lý</span>
-                                                </c:when>
-                                                <c:when test="${order.status eq 'Completed'}">
-                                                    <span class="status-badge status-completed">Hoàn thành</span>
-                                                </c:when>
-                                                <c:when test="${order.status eq 'Cancelled'}">
-                                                    <span class="status-badge status-cancelled">Đã hủy</span>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <span class="status-badge">${order.status}</span>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td class="action-buttons">
-                                            <a href="${pageContext.request.contextPath}/orders?action=detail&orderId=${order.orderId}" class="btn btn-info btn-sm">
-=======
 
             
             <!-- Orders Table -->
@@ -693,7 +651,6 @@
                                             <button class="action-btn btn-view" 
                                                     onclick="viewOrder(${order.orderId})" 
                                                     title="Xem chi tiết">
->>>>>>> main
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             
