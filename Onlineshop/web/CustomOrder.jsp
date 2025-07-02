@@ -68,6 +68,9 @@
                                 <div class="form-group">
                                     <label for="quantity" class="form-label">Số lượng</label>
                                     <input type="number" class="form-control" id="quantity" name="quantity" value="1">
+                                    <div class="form-group mt-2">
+                                        <img id="previewImage" src="#" alt="Ảnh demo" style="max-width: 100%; display: none; border: 1px dashed #ccc; padding: 10px; margin-top: 10px;" />
+                                    </div>
                                     <small class="text-muted"><i class="fas fa-box"></i> Nhập số lượng sản phẩm bạn muốn đặt</small>
                                 </div>
                             </div>
@@ -178,12 +181,33 @@
             // Lấy message từ session JSP
             const message = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
             const messageType = '<%= session.getAttribute("messageType") != null ? session.getAttribute("messageType") : "" %>';
-            
+
             if (message && messageType) {
                 showToast(message, messageType);
-                <% session.removeAttribute("message"); %>
-                <% session.removeAttribute("messageType"); %>
+            <% session.removeAttribute("message"); %>
+            <% session.removeAttribute("messageType"); %>
             }
         </script>
+        <script>
+            document.getElementById("imageUpload").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                const preview = document.getElementById("previewImage");
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = "block";
+                    };
+
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = "#";
+                    preview.style.display = "none";
+                }
+            });
+        </script>
+
     </body>
 </html>
