@@ -3,19 +3,21 @@ package Model;
 import java.sql.Timestamp;
 
 public class CustomOrderCart {
+
     private int customCartID;
-    private int accountID; // Thay thế cartID bằng accountID
+    private int accountID;
     private String referenceImage;
     private String description;
     private int quantity;
-    private String status; // Đổi statusID thành status
+    private String status;
     private Timestamp createdAt;
+    private int statusID;
 
     // Constructors
     public CustomOrderCart() {
     }
 
-    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String description, int quantity, String status, Timestamp createdAt) {
+    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String description, int quantity, String status, Timestamp createdAt, int statusID) {
         this.customCartID = customCartID;
         this.accountID = accountID;
         this.referenceImage = referenceImage;
@@ -23,6 +25,7 @@ public class CustomOrderCart {
         this.quantity = quantity;
         this.status = status;
         this.createdAt = createdAt;
+        this.statusID = statusID;
     }
 
     public CustomOrderCart(int accountID, String referenceImage, String description, int quantity, String status) {
@@ -90,16 +93,25 @@ public class CustomOrderCart {
         this.createdAt = createdAt;
     }
 
+    public int getStatusID() {
+        return statusID;
+    }
+
+    public void setStatusID(int statusID) {
+        this.statusID = statusID;
+    }
+
     @Override
     public String toString() {
-        return "CustomOrderCart{" +
-                "customCartID=" + customCartID +
-                ", accountID=" + accountID +
-                ", referenceImage='" + referenceImage + '\'' +
-                ", description='" + description + '\'' +
-                ", quantity=" + quantity +
-                ", status='" + status + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
+        return "CustomOrderCart{"
+                + "customCartID=" + customCartID
+                + ", accountID=" + accountID
+                + ", referenceImage='" + referenceImage + '\''
+                + ", description='" + description + '\''
+                + ", quantity=" + quantity
+                + ", status='" + status + '\''
+                + ", createdAt=" + createdAt
+                + ", statusID=" + statusID
+                + '}';
     }
 }
