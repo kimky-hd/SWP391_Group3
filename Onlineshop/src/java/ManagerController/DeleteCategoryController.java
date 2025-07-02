@@ -6,6 +6,7 @@
 package ManagerController;
 
 import DAO.CategoryDAO;
+import Model.Account;
 import Model.Category;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,10 +71,15 @@ public class DeleteCategoryController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        HttpSession session = request.getSession();
         int categoryID = Integer.parseInt(request.getParameter("categoryID"));
         CategoryDAO cateDAO = new CategoryDAO();
         List<Category> category = cateDAO.getAllCategory();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         boolean deletcateP = cateDAO.deleteCategoryProduct(categoryID);
         boolean deletecate = cateDAO.deleteCategory(categoryID);
         if(deletcateP){
@@ -85,7 +91,7 @@ public class DeleteCategoryController extends HttpServlet {
             
         }
     }
-    
+    }
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description

@@ -2,6 +2,7 @@ package ManagerController;
 
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Category;
 import Model.Color;
 import Model.Material;
@@ -11,6 +12,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +57,13 @@ public class AddProductController extends HttpServlet {
 
         ProductDAO productDAO = new ProductDAO();
         MaterialDAO mateDAO = new MaterialDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
+
 
         // --- Validate tên sản phẩm ---
         if (title == null || title.trim().isEmpty()) {
@@ -185,7 +194,7 @@ public class AddProductController extends HttpServlet {
         request.getSession().setAttribute("isactive", "Thêm sản phẩm thành công!");
         response.sendRedirect("managerproductlist");
     }
-
+    }
     @Override
     public String getServletInfo() {
         return "Add Product Controller with validation for duplicate title and ingredients";

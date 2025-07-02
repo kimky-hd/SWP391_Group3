@@ -6,6 +6,7 @@ package ManagerController;
 
 import DAO.CategoryDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Category;
 import Model.Color;
 import Model.Product;
@@ -17,6 +18,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.InputStream;
@@ -96,7 +98,13 @@ public class UpdateProductController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         ProductDAO productDAO = new ProductDAO();
-
+        
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         int productID = Integer.parseInt(request.getParameter("productID"));
         String title = request.getParameter("title").trim();
         String description = request.getParameter("description").trim();
@@ -193,7 +201,7 @@ public class UpdateProductController extends HttpServlet {
         request.getSession().setAttribute("isactive", "Cập nhật sản phẩm thành công!");
         response.sendRedirect("managerproductlist");
     }
-
+    }
     /**
      * Returns a short description of the servlet.
      *
