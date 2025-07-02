@@ -26,7 +26,7 @@ public class CustomerController extends HttpServlet {
         
         switch (action) {
             case "list":
-                // Phân trang
+                // Phân trang - lấy cả Customer và Manager
                 int page = 1;
                 int pageSize = 10;
                 
@@ -34,11 +34,12 @@ public class CustomerController extends HttpServlet {
                     page = Integer.parseInt(request.getParameter("page"));
                 }
                 
-                List<Account> customers = accountDAO.getCustomersWithPaging(page, pageSize);
-                int totalCustomers = accountDAO.getTotalCustomers();
-                int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
+                // Lấy cả Customer (role = 0) và Manager (role = 2)
+                List<Account> users = accountDAO.getUsersWithPaging(page, pageSize);
+                int totalUsers = accountDAO.getTotalUsers();
+                int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
                 
-                request.setAttribute("customers", customers);
+                request.setAttribute("users", users);
                 request.setAttribute("currentPage", page);
                 request.setAttribute("totalPages", totalPages);
                 request.getRequestDispatcher("/admin/customers.jsp").forward(request, response);
@@ -46,8 +47,8 @@ public class CustomerController extends HttpServlet {
                 
             case "view":
                 int viewId = Integer.parseInt(request.getParameter("id"));
-                Account viewCustomer = accountDAO.getAccountById(viewId);
-                request.setAttribute("viewCustomer", viewCustomer);
+                Account viewUser = accountDAO.getAccountById(viewId);
+                request.setAttribute("viewUser", viewUser);
                 request.getRequestDispatcher("/admin/customers.jsp").forward(request, response);
                 break;
                 
@@ -56,27 +57,28 @@ public class CustomerController extends HttpServlet {
                 String password = request.getParameter("password");
                 String email = request.getParameter("email");
                 String phone = request.getParameter("phone");
+                int role = Integer.parseInt(request.getParameter("role")); // Thêm role
                 
                 // Kiểm tra xem username, email hoặc phone đã tồn tại chưa
                 if (accountDAO.checkAccountExist(username) != null) {
-                    request.setAttribute("error", "Username đã tồn tại!");
-                    request.getRequestDispatcher("/admin/customers.jsp").forward(request, response);
+                    request.getSession().setAttribute("error", "Username đã tồn tại!");
+                    response.sendRedirect("customers");
                     return;
                 }
                 
                 if (accountDAO.checkEmailExist(email) != null) {
-                    request.setAttribute("error", "Email đã tồn tại!");
-                    request.getRequestDispatcher("/admin/customers.jsp").forward(request, response);
+                    request.getSession().setAttribute("error", "Email đã tồn tại!");
+                    response.sendRedirect("customers");
                     return;
                 }
                 
-                Account newAccount = new Account(0, username, password, 0, email, phone, true);
+                Account newAccount = new Account(0, username, password, role, email, phone, true);
                 boolean success = accountDAO.addAccount(newAccount);
                 
                 if (success) {
-                    request.setAttribute("message", "Thêm khách hàng thành công!");
+                    request.getSession().setAttribute("message", "Thêm người dùng thành công!");
                 } else {
-                    request.setAttribute("error", "Thêm khách hàng thất bại!");
+                    request.getSession().setAttribute("error", "Thêm người dùng thất bại!");
                 }
                 
                 response.sendRedirect("customers");
@@ -84,8 +86,8 @@ public class CustomerController extends HttpServlet {
                 
             case "edit":
                 int editId = Integer.parseInt(request.getParameter("id"));
-                Account editCustomer = accountDAO.getAccountById(editId);
-                request.setAttribute("editCustomer", editCustomer);
+                Account editUser = accountDAO.getAccountById(editId);
+                request.setAttribute("editUser", editUser);
                 request.getRequestDispatcher("/admin/customers.jsp").forward(request, response);
                 break;
                 
@@ -94,6 +96,7 @@ public class CustomerController extends HttpServlet {
                 String updatedUsername = request.getParameter("username");
                 String updatedEmail = request.getParameter("email");
                 String updatedPhone = request.getParameter("phone");
+                int updatedRole = Integer.parseInt(request.getParameter("role")); // Thêm role
                 
                 Account accountToUpdate = accountDAO.getAccountById(id);
                 
@@ -101,13 +104,14 @@ public class CustomerController extends HttpServlet {
                     accountToUpdate.setUsername(updatedUsername);
                     accountToUpdate.setEmail(updatedEmail);
                     accountToUpdate.setPhone(updatedPhone);
+                    accountToUpdate.setRole(updatedRole); // Cập nhật role
                     
                     boolean updateSuccess = accountDAO.updateAccount(accountToUpdate);
                     
                     if (updateSuccess) {
-                        request.setAttribute("message", "Cập nhật khách hàng thành công!");
+                        request.getSession().setAttribute("message", "Cập nhật người dùng thành công!");
                     } else {
-                        request.setAttribute("error", "Cập nhật khách hàng thất bại!");
+                        request.getSession().setAttribute("error", "Cập nhật người dùng thất bại!");
                     }
                 }
                 
@@ -121,9 +125,9 @@ public class CustomerController extends HttpServlet {
                 boolean toggleSuccess = accountDAO.toggleAccountStatus(accountId, !status);
                 
                 if (toggleSuccess) {
-                    request.setAttribute("message", "Thay đổi trạng thái thành công!");
+                    request.getSession().setAttribute("message", "Thay đổi trạng thái thành công!");
                 } else {
-                    request.setAttribute("error", "Thay đổi trạng thái thất bại!");
+                    request.getSession().setAttribute("error", "Thay đổi trạng thái thất bại!");
                 }
                 
                 response.sendRedirect("customers");
