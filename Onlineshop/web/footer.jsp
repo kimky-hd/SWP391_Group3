@@ -77,7 +77,7 @@
     </a>
     <div class="flower-dropdown-menu">
         <a href="CustomOrder.jsp" class="dropdown-item">Đặt hoa theo yêu cầu</a>
-        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng tự thiết kế</a>
+        <a href="/Onlineshop/custom-cart" class="dropdown-item">Giỏ hàng tự thiết kế</a>
     </div>
 </div>
 <!-- Sticky Button for Custom Order End -->
