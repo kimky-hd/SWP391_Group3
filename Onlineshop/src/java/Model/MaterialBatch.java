@@ -21,6 +21,12 @@ public class MaterialBatch {
 
     public MaterialBatch() {
     }
+    
+    public MaterialBatch(int id, String materialId, int quantity) {
+    this.materialBatchID = materialBatchID;
+    this.materialID = materialID;
+    this.quantity = quantity;
+}
 
     public MaterialBatch(int materialBatchID, int materialID, int quantity, double importPrice, Date dateImport, Date dateExpire, String status) {
         this.materialBatchID = materialBatchID;

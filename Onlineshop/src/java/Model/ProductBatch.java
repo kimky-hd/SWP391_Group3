@@ -4,7 +4,7 @@
  */
 package Model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -21,6 +21,14 @@ public class ProductBatch {
     private String status;
 
     public ProductBatch() {
+    }
+    
+    public ProductBatch(int productID, int quantity, double price, Date dateImport, Date dateExpire) {
+        this.productID = productID;
+        this.quantity = quantity;
+        this.importPrice = price;
+        this.dateImport = dateImport;
+        this.dateExpire = dateExpire;
     }
 
     public ProductBatch(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire, String status) {

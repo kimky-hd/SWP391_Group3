@@ -12,6 +12,9 @@
         <meta charset="UTF-8">
         <title>Cập nhật sản phẩm</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Select2 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     </head>
     <body>
 
@@ -72,6 +75,22 @@
                         </select>
                     </div>
 
+                    <!-- Danh mục -->
+                    <div class="mb-3">
+                        <label for="categoryID" class="form-label">Danh mục</label>
+                        <select id="categoryID" name="categoryID" class="form-control" multiple>
+                            <c:forEach var="cat" items="${categoryList}">
+                                <option value="${cat.categoryID}"
+                                        <c:forEach var="selectedCat" items="${categoryIDs}">
+                                            <c:if test="${selectedCat == cat.categoryID}">
+                                                selected
+                                            </c:if>
+                                        </c:forEach>
+                                        >${cat.categoryName}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
 
 
                     <button type="submit" class="btn btn-warning">Cập nhật</button>
@@ -85,6 +104,20 @@
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- jQuery (Select2 needs it) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Select2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#categoryID').select2({
+                    placeholder: "Chọn danh mục",
+                    allowClear: true
+                });
+            });
+        </script>
+
     </body>
 </html>
 

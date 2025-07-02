@@ -24,6 +24,8 @@ public class Product {
     private int seasonID;
     private boolean isActive;
     private List<ProductBatch> batches;
+    private List<ProductComponent> components;
+    private List<Category> categories;
 
     public Product() {
         this.batches = new ArrayList<>();
@@ -104,7 +106,6 @@ public class Product {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
 
     public List<ProductBatch> getBatches() {
         return batches;
@@ -112,6 +113,22 @@ public class Product {
 
     public void setBatches(List<ProductBatch> batches) {
         this.batches = batches;
+    }
+
+    public List<ProductComponent> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<ProductComponent> components) {
+        this.components = components;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public int getQuantity() {
@@ -163,11 +180,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", isActive=" + isActive + ", batches=" + batches + '}';
+        return "Product{" + "productID=" + productID + ", title=" + title + ", image=" + image + ", price=" + price + ", description=" + description + ", colorID=" + colorID + ", seasonID=" + seasonID + ", isActive=" + isActive + ", batches=" + batches + ", components=" + components + '}';
     }
-
-    
-
-    
 
 }

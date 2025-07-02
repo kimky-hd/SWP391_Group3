@@ -156,6 +156,10 @@
         <servlet-name>AddProductBatchController</servlet-name>
         <servlet-class>ManagerController.AddProductBatchController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchProductByName</servlet-name>
+        <servlet-class>ManagerController.SearchProductByName</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
@@ -299,6 +303,10 @@
     <servlet-mapping>
         <servlet-name>AddProductBatchController</servlet-name>
         <url-pattern>/addproductbatch</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductByName</servlet-name>
+        <url-pattern>/searchproduct</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

@@ -6,6 +6,7 @@
 package ManagerController;
 
 import DAO.MaterialDAO;
+import Model.Account;
 import Model.Material;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -72,6 +74,12 @@ public class ActiveMaterial extends HttpServlet {
         
         MaterialDAO mate = new MaterialDAO();
         Material m = mate.getMaterialByID(materialID);
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
 
     
         mate.updateMaterialIsActive(materialID, true);
@@ -79,6 +87,7 @@ public class ActiveMaterial extends HttpServlet {
     
         
         response.sendRedirect("managermateriallist");
+    }
     }
 
     /** 

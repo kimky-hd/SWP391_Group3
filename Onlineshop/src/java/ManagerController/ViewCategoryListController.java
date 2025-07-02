@@ -5,6 +5,7 @@
 package ManagerController;
 
 import DAO.CategoryDAO;
+import Model.Account;
 import Model.Category;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,6 +45,11 @@ public class ViewCategoryListController extends HttpServlet {
             index = "1";
         }
         int indexPage = Integer.parseInt(index);
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         List<Category> category = cateDAO.getCategoryByIndex(indexPage);
         
         int allCategory = cateDAO.countAllCategory();
@@ -59,7 +65,7 @@ public class ViewCategoryListController extends HttpServlet {
 
         
     }
-
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

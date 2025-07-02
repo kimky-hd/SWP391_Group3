@@ -5,6 +5,7 @@
 package ManagerController;
 
 import DAO.CategoryDAO;
+import Model.Account;
 import Model.Category;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -61,13 +62,19 @@ public class SearchCategoryByName extends HttpServlet {
             throws ServletException, IOException {
         String txt = request.getParameter("txt").trim();
         CategoryDAO cateDAO = new CategoryDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         List<Category> category = cateDAO.getCategoryByName(txt);
         
         request.setAttribute("txt", txt);
         request.setAttribute("catelist", category);
         request.getRequestDispatcher("Manager_ListCategory.jsp").forward(request, response);
     }
-
+    }
     /**
      * Handles the HTTP <code>POST</code> method.
      *

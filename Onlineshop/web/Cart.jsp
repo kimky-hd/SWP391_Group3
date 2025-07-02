@@ -956,9 +956,14 @@
             </div>
         </div>
     </body>
-
+    <!-- Sticky Button for Custom Order -->
+    <div class="flower-fixed-btn">
+        <a href="CustomOrder.jsp" title="Đặt hoa theo yêu cầu">
+            <i class="fas fa-seedling"></i> <!-- Bạn có thể thay bằng: fa-pencil-alt, fa-heart, fa-rose -->
+        </a>
+    </div>
+    <!-- Sticky Button for Custom Order End -->
 </html>
-</body>
 <script>
 // Thêm xử lý cho các nút tăng/giảm số lượng sau khi trang được tải xong
     document.addEventListener('DOMContentLoaded', function () {
