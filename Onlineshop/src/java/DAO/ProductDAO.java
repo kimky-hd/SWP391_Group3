@@ -828,6 +828,35 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
+    
+    public List<Product> getSortProductManager(String sortOrder, int pageIndex) {
+        List<Product> list = new ArrayList<>();
+        String order = "ASC";
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            order = "DESC";
+        }
+        String sql = "SELECT * FROM Product ORDER BY price " + order + " LIMIT ?, 5";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (pageIndex - 1) * 5);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getBoolean(8),
+                        batches));
+            }
+        } catch (SQLException e) {
+            System.out.println("getSortProduct: " + e.getMessage());
+        }
+        return list;
+    }
 
     public boolean isTitleDuplicated(String title) {
         ProductDAO product = new ProductDAO();

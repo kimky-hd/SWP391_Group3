@@ -7,6 +7,8 @@
 <%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,6 +22,52 @@
         <!-- Custom CSS -->
         <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
+        <style>
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+            .dropdown-button {
+                background-color: #f8f9fa;
+                border: 1px solid #ccc;
+                padding: 8px 16px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                background-color: white;
+                min-width: 200px;
+                box-shadow: 0 8px 16px rgba(0,0,0,.2);
+                z-index: 1;
+                border: 1px solid #ddd;
+            }
+            .dropdown-content a {
+                color: black;
+                padding: 10px 14px;
+                text-decoration: none;
+                display: block;
+            }
+            .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+            .btn-close {
+                background:none;
+                border:none;
+                font-size:1.5rem;
+                line-height:1;
+            }
+            .btn-close::before {
+                content:"×";
+            }
+        </style>
+        
     </head>
     <body>
         <jsp:include page="manager_topbarsidebar.jsp" />
@@ -33,6 +81,18 @@
             </c:if>
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Danh sách nguyên liệu</h1>
+                <!-- === LABEL dropdown === -->
+                <c:choose>
+                    <c:when test="${param.sortOrder == 'asc'}">
+                        <c:set var="sortLabel" value="Giá: Thấp đến cao"/>
+                    </c:when>
+                    <c:when test="${param.sortOrder == 'desc'}">
+                        <c:set var="sortLabel" value="Giá: Cao đến thấp"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="sortLabel" value="Sắp xếp theo thứ tự"/>
+                    </c:otherwise>
+                </c:choose>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -42,6 +102,15 @@
                                 <i class="fas fa-search"></i>
                             </button>
                         </form>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <div class="dropdown">
+                                <div class="dropdown-button">${sortLabel} ⏷</div>
+                                <div class="dropdown-content">
+                                    <a href="managermateriallist">Sắp xếp theo thứ tự</a>
+                                    <a href="sortmaterial?sortOrder=asc">Giá: Thấp đến cao</a>
+                                    <a href="sortmaterial?sortOrder=desc">Giá: Cao đến thấp</a>
+                                </div>
+                            </div>
 
                         <a href="Manager_CreateMaterial.jsp" class="btn btn-success btn-icon-split">
                             <span class="icon text-white-50">
@@ -49,6 +118,7 @@
                             </span>
                             <span class="text">Thêm nguyên liệu mới</span>
                         </a>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -83,14 +153,36 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td>${m.status}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${m.status eq 'Tươi mới'}">
+                                                        <span class="badge bg-success text-white px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-leaf"></i> Tươi mới
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${m.status eq 'Lão hóa'}">
+                                                        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-clock"></i> Lão hóa
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${m.status eq 'Đã Héo'}">
+                                                        <span class="badge bg-danger text-white px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-skull-crossbones"></i> Đã Héo
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary text-white">Không có hàng</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${m.isActive}">
-                                                        <span class="badge bg-success">Đang sử dụng</span>
+                                                        <span style="color: green; font-weight: 600;">Đang sử dụng</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span class="badge bg-secondary">Đã ẩn</span>
+                                                        <span style="color: red; font-weight: 600;">Đã vô hiệu hóa</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
@@ -184,7 +276,8 @@
                     <form method="post" action="inactive">
                         <div class="modal-header">
                             <h5 class="modal-title" id="confirmHideLabel">Xác nhận ẩn nguyên liệu</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            </button>
                         </div>
                         <div class="modal-body">
                             Bạn có chắc chắn muốn ẩn nguyên liệu <strong id="materialName"></strong>?
@@ -333,7 +426,49 @@
                 });
             </script>
         </c:if>
+            <script>
+            function updateStatuses() {
+                const statusCells = document.querySelectorAll('.status-cell');
+                const today = new Date();
+                const oneDay = 24 * 60 * 60 * 1000;
 
+                statusCells.forEach(cell => {
+                    const importDateStr = cell.getAttribute('data-import');
+                    const expireDateStr = cell.getAttribute('data-expire');
+
+                    if (!importDateStr || !expireDateStr) {
+                        cell.innerText = 'Không xác định';
+                        return;
+                    }
+
+                    const importDate = new Date(importDateStr);
+                    const expireDate = new Date(expireDateStr);
+
+                    if (expireDate < today) {
+                        cell.innerText = 'Đã Héo';
+                        cell.classList.add('text-danger');
+                    } else {
+                        const diffTime = today.getTime() - importDate.getTime();
+                        const diffDays = diffTime / oneDay;
+
+                        if (diffDays <= 3) {
+                            cell.innerText = 'Tươi mới';
+                            cell.classList.remove('text-danger');
+                            cell.classList.add('text-success');
+                        } else {
+                            cell.innerText = 'Lão hóa';
+                            cell.classList.remove('text-danger');
+                            cell.classList.add('text-warning');
+                        }
+                    }
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                updateStatuses();
+                setInterval(updateStatuses, 60000); // mỗi phút
+            });
+        </script>
 
 
     </body>

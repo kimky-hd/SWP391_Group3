@@ -23,7 +23,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="container-fluid">
-                <h2>Thêm thể loại sách</h2>
+                <h2>Thêm danh mục sản phẩm</h2>
 
                 <form action="addcategory" method="post" onsubmit="return validateForm();" >
                     <div class="form-group">

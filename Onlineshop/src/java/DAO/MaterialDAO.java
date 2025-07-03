@@ -49,10 +49,10 @@ public class MaterialDAO extends DBContext {
 
     public List<Material> getMaterialByIndex(int indexPage) {
         List<Material> list = new ArrayList<>();
-        String sql = "SELECT * FROM Material ORDER BY materialID LIMIT ?, 10";
+        String sql = "SELECT * FROM Material ORDER BY materialID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, (indexPage - 1) * 10);
+            ps.setInt(1, (indexPage - 1) * 8);
             rs = ps.executeQuery();
             while (rs.next()) {
                 List<MaterialBatch> batches = getBatchesByMaterialID(rs.getInt(1));
@@ -284,6 +284,30 @@ public class MaterialDAO extends DBContext {
         }
     }
     
-    
+    public List<Material> getSortMaterial(String sortOrder, int pageIndex) {
+        List<Material> list = new ArrayList<>();
+        String order = "ASC";
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            order = "DESC";
+        }
+        String sql = "SELECT * FROM Material ORDER BY pricePerUnit " + order + " LIMIT ?, 8";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (pageIndex - 1) * 8);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<MaterialBatch> batches = getBatchesByMaterialID(rs.getInt(1));
+                list.add(new Material(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getBoolean(5),
+                        batches));
+            }
+        } catch (SQLException e) {
+            System.out.println("getSortMaterial: " + e.getMessage());
+        }
+        return list;
+    }
 
 }

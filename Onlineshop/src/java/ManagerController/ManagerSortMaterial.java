@@ -6,7 +6,6 @@
 package ManagerController;
 
 import DAO.MaterialDAO;
-import Model.Account;
 import Model.Material;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,14 +13,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author Duccon
  */
-public class ManagerMaterialList extends HttpServlet {
+public class ManagerSortMaterial extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,44 +31,36 @@ public class ManagerMaterialList extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        MaterialDAO materialDAO = new MaterialDAO();
-        
-        HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
-        if (a == null) {
-            request.setAttribute("mess", "Bạn cần đăng nhập");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-        
-         //Gọi cập nhật trạng thái các lô sản phẩm
-        materialDAO.updateMaterialBatchStatus();
-        
-        String index = request.getParameter("index");
-        if (index == null || index.isEmpty()) {
-            index = "1";
+        String sortOrder = request.getParameter("sortOrder");
+        MaterialDAO mateDAO = new MaterialDAO();
+        if (sortOrder == null) sortOrder = "asc";
+        int index = 1;
+        String indexParam = request.getParameter("index");
+        if (indexParam != null) {
+            index = Integer.parseInt(indexParam);
         }
-        int indexPage = Integer.parseInt(index);
-
-        List<Material> listMaterialByIndex = materialDAO.getMaterialByIndex(indexPage);
+        List<Material> listMaterialByIndex = mateDAO.getSortMaterial(sortOrder, index);
         for (Material p : listMaterialByIndex) {
-            p.setBatches(materialDAO.getBatchesByMaterialID(p.getMaterialID()));
+            p.setBatches(mateDAO.getBatchesByMaterialID(p.getMaterialID()));
         }
-
-        int allMaterial = materialDAO.countAllMaterial();
+        int allMaterial = mateDAO.countAllMaterial();
         int endPage = allMaterial / 8;
         if (allMaterial % 8 != 0) {
             endPage++;
         }
-        
-        System.out.println(listMaterialByIndex);
-        request.setAttribute("tag", indexPage);
+        request.setAttribute("tag", index);
         request.setAttribute("count", allMaterial);
         request.setAttribute("endPage", endPage);
+        request.setAttribute("now", new java.util.Date());
         request.setAttribute("materialList", listMaterialByIndex);
+        request.setAttribute("baseUrl", "SearchSortProduct");
+        request.setAttribute("extraParams", "&sortOrder=" + sortOrder);
+        request.setAttribute("sortOrder", sortOrder);
         request.getRequestDispatcher("Manager_ListMaterial.jsp").forward(request, response);
 
+    
     } 
-    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
      * Handles the HTTP <code>GET</code> method.
