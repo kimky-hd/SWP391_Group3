@@ -34,6 +34,13 @@ public class CustomCartController extends HttpServlet {
     @Override
     public void init() {
         customOrderCartDAO = new CustomOrderCartDAO();
+        
+        // Tạo thư mục uploads nếu chưa tồn tại
+        String uploadPath = getServletContext().getRealPath("/uploads/");
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
     }
 
     /**
@@ -170,7 +177,11 @@ public class CustomCartController extends HttpServlet {
             filePart.write(uploadPath + File.separator + uniqueFileName);
             
             // Cập nhật đường dẫn hình ảnh
+            // Thay đổi từ
             customOrderCart.setReferenceImage("uploads/" + uniqueFileName);
+            
+            // Thành
+            customOrderCart.setReferenceImage("img/uploads/" + uniqueFileName);
         }
         
         // Lưu thay đổi vào cơ sở dữ liệu

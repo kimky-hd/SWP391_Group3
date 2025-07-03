@@ -210,6 +210,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="custom-order-footer d-flex justify-content-end">
+                                                    <c:if test="${customOrder.statusID == 7}">
+                                                        <form action="custom-vnpay" method="post" class="mr-2">
+                                                            <input type="hidden" name="customCartId" value="${customOrder.customCartID}">
+                                                            <button type="submit" class="btn btn-sm btn-success">
+                                                                <i class="fas fa-credit-card mr-1"></i>Thanh toán
+                                                            </button>
+                                                        </form>
+                                                    </c:if>
                                                     <button class="btn btn-sm btn-outline-secondary mr-2" onclick="openEditModal(${customOrder.customCartID})">
                                                         <i class="fas fa-edit mr-1"></i>Sửa
                                                     </button>
@@ -258,7 +266,7 @@
                             <div class="form-group">
                                 <label>Hình ảnh hiện tại</label>
                                 <div class="text-center mb-3">
-                                    <img id="currentImage" src="" alt="HÃ¬nh áº£nh hiá»n táº¡i" class="img-fluid" style="max-height: 200px;">
+                                    <img id="currentImage" src="" alt="Hình ảnh tham khảo" class="img-fluid" style="max-height: 200px;">
                                 </div>
 
                                 <label for="editImageUpload">Tải lên hình ảnh mới</label>

@@ -345,7 +345,14 @@
                             </div>
                             <div class="card-body text-center">
                                 <div class="reference-image-container">
-                                    <img src="${pageContext.request.contextPath}/${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="reference-image">
+                                    <c:choose>
+                                        <c:when test="${empty customOrder.referenceImage}">
+                                            <img src="${pageContext.request.contextPath}/img/user.jpg" alt="Hình ảnh mặc định" class="reference-image">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="reference-image" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <div class="mt-3">
                                     <a href="${pageContext.request.contextPath}/${customOrder.referenceImage}" class="btn btn-outline-primary" target="_blank">
