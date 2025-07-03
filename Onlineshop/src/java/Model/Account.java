@@ -77,4 +77,30 @@ public class Account {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
+    public String getRoleText() {
+        switch (this.role) {
+            case 0:
+                return "Khách hàng";
+            case 1:
+                return "Admin";
+            case 2:
+                return "Quản lý";
+            default:
+                return "Không xác định";
+        }
+    }
+    
+    // Thêm method để lấy class CSS cho role
+    public String getRoleClass() {
+        switch (this.role) {
+            case 0:
+                return "bg-info";
+            case 1:
+                return "bg-danger";
+            case 2:
+                return "bg-warning text-dark";
+            default:
+                return "bg-secondary";
+        }
+    }
 }

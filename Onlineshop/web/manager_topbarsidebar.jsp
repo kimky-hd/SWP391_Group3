@@ -226,7 +226,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/promotions" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
                         <i class="fas fa-percent"></i>
                         <span>Khuyến mãi</span>
                     </a>
