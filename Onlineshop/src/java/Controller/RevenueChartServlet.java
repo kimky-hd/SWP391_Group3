@@ -31,7 +31,7 @@ public class RevenueChartServlet extends HttpServlet {
     }
 
     @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RevenueDAO dao = new RevenueDAO();
 
@@ -41,8 +41,24 @@ public class RevenueChartServlet extends HttpServlet {
         String statusSearch = request.getParameter("statusSearch");
 
         // 1. Doanh thu theo tháng
-        List<RevenueByMonth> revenueList = dao.getRevenuePerMonth();
+        String monthParam = request.getParameter("selectedMonth"); // Đúng với name trong form
+        int selectedMonth = 0;
+
+        try {
+            selectedMonth = (monthParam != null && !monthParam.isEmpty()) ? Integer.parseInt(monthParam) : 0;
+        } catch (NumberFormatException e) {
+            selectedMonth = 0;
+        }
+
+        List<RevenueByMonth> revenueList;
+        if (selectedMonth > 0) {
+            revenueList = dao.getRevenuePerMonthBySelectedMonth(selectedMonth); // lọc theo tháng
+        } else {
+            revenueList = dao.getRevenuePerMonth(); // tất cả tháng
+        }
+
         request.setAttribute("revenueList", revenueList);
+        request.setAttribute("selectedMonth", monthParam); // để giữ lại lựa chọn trong dropdown
 
         // 2. Tổng doanh thu
         double totalRevenue = dao.getTotalRevenue();
