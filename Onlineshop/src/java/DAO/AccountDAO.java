@@ -29,6 +29,48 @@ public class AccountDAO extends DBContext {
         }
     }
 
+// Lấy cả Customer và Manager với phân trang
+    public List<Account> getUsersWithPaging(int page, int pageSize) {
+        List<Account> users = new ArrayList<>();
+        String sql = "SELECT * FROM Account WHERE role IN (0, 2) ORDER BY accountID LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Account account = new Account();
+                account.setAccountID(rs.getInt("accountID"));
+                account.setUsername(rs.getString("username"));
+                account.setPassword(rs.getString("password"));
+                account.setRole(rs.getInt("role"));
+                account.setEmail(rs.getString("email"));
+                account.setPhone(rs.getString("phone"));
+                account.setIsActive(rs.getBoolean("isActive"));
+                users.add(account);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+// Đếm tổng số Customer và Manager
+    public int getTotalUsers() {
+        String sql = "SELECT COUNT(*) FROM Account WHERE role IN (0, 2)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public Account login(String userInput, String password) {
         try {
             // Kiểm tra đầu vào

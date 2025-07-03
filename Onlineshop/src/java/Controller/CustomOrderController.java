@@ -281,8 +281,8 @@ public class CustomOrderController extends HttpServlet {
      * @return ID của đơn hàng tùy chỉnh mới được tạo
      */
     private int addCustomOrderToCart(int accountID, String imagePath, String description, int quantity) {
-        String sql = "INSERT INTO customordercart (accountID, referenceImage, description, quantity, status) "
-                + "VALUES (?, ?, ?, ?, 'pending')";
+        String sql = "INSERT INTO customordercart (accountID, referenceImage, description, quantity, statusID) "
+                + "VALUES (?, ?, ?, ?, 1)";  // Sử dụng statusID = 1 (tương ứng với trạng thái 'pending')
         try (Connection conn = new DBContext().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, accountID);

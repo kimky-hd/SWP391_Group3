@@ -82,13 +82,19 @@
         <group name="New Folder (2)">
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
+            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
+            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/web/admin/order-print.jsp</file>
+            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/CommonController/AccountVerification.java</file>
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
         </group>
         <group name="New Folder (2)">
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
+            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
+            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/web/admin/order-print.jsp</file>
+            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/CommonController/AccountVerification.java</file>
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
         </group>
     </open-files>
