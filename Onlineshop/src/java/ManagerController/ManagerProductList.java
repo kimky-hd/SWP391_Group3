@@ -63,8 +63,8 @@ public class ManagerProductList extends HttpServlet {
         }
 
         int allProduct = productDAO.countAllProduct();
-        int endPage = allProduct / 8;
-        if (allProduct % 8 != 0) {
+        int endPage = allProduct / 5;
+        if (allProduct % 5 != 0) {
             endPage++;
         }
         
@@ -73,6 +73,8 @@ public class ManagerProductList extends HttpServlet {
         request.setAttribute("count", allProduct);
         request.setAttribute("endPage", endPage);
         request.setAttribute("productList", listProductByIndex);
+        request.setAttribute("now", new java.util.Date());
+
         
         request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);
 

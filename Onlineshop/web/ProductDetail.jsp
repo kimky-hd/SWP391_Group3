@@ -231,7 +231,23 @@
                             </p>
 
                             <!-- Status -->
-                            <p><span class="label-title">Tình trạng:</span> ${detail.status}</p>
+                            <p><span class="label-title">Tình trạng:</span>
+                                <c:choose>
+                                    <c:when test="${fn:containsIgnoreCase(detail.status, 'lão hóa')}">
+                                        <span style="color: orange; font-weight: bold;">${detail.status}</span>
+                                    </c:when>
+                                    <c:when test="${fn:containsIgnoreCase(detail.status, 'mới')}">
+                                        <span style="color: #007bff; font-weight: bold;">${detail.status}</span>
+                                    </c:when>
+                                    <c:when test="${fn:containsIgnoreCase(detail.status, 'hết hạn') || fn:containsIgnoreCase(detail.status, 'không sử dụng')}">
+                                        <span style="color: red; font-weight: bold;">${detail.status}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="color: #333;">${detail.status}</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+
 
                             <!-- Danh mục -->
                             <p class="category-label">Danh mục:</p>
@@ -298,7 +314,7 @@
                     </c:forEach>
                 </ul>
 
-                
+
 
             </div>
         </section>

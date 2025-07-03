@@ -21,10 +21,13 @@
         <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <style>
+            /* ===== TOPBAR (WHITE) ===== */
             .topbar {
-                background-color: var(--dark); /* hoặc dùng màu cụ thể: #1F2937 */
-                padding: 10px 0;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background: #ffffff !important;
+                height: 60px;
+                padding: 0 24px;
+                border-bottom: 1px solid #e5e7eb;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -32,89 +35,143 @@
                 z-index: 1030;
             }
             .topbar-brand {
-                color: #3B82F6;
-                font-size: 28px;
+                color: #111827 !important; /* đen khói */
+                font-size: 24px;
                 font-weight: 700;
-                text-decoration: none;
                 text-transform: uppercase;
-                letter-spacing: 1px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
             }
             .topbar-actions .nav-link {
-                color: #ffffff; /* trắng trên nền tối */
+                color: #1f2937 !important;
+                font-size: 18px;
+                margin-left: 12px;
             }
+            .topbar-actions .nav-link:hover {
+                color: #3b82f6 !important; /* primary */
+            }
+            /* Search */
             .topbar-search {
                 position: relative;
+                max-width: 400px;
                 width: 100%;
-                max-width: 600px;
-                margin: 0 auto;
             }
-
             .topbar-search input {
-                padding: 10px 15px 10px 45px;
+                padding: 10px 15px 10px 40px;
                 border-radius: 30px;
-                border: 1px solid #e5e7eb;
+                border: 1px solid #d1d5db;
+                background: #f9fafb;
+                font-size: 14px;
+                color: #111827;
                 width: 100%;
-                font-size: 15px;
             }
-
             .topbar-search i {
                 position: absolute;
-                left: 15px;
+                left: 14px;
                 top: 50%;
                 transform: translateY(-50%);
-                color: var(--secondary);
-                font-size: 16px;
+                color: #9ca3af;
+            }
+            /* Avatar */
+            .user-dropdown img {
+                border: 2px solid #e5e7eb;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            /* ===== SIDEBAR (GRADIENT) ===== */
+            :root {
+                --sidebar-width: 260px;
+                --sidebar-grad-start: #4c1d95;
+                --sidebar-grad-end:   #6d28d9;
             }
             .sidebar {
-                width: 250px;
-                background-color: #f8f9fa; /* sáng hơn rõ ràng so với topbar */
-                border-right: 1px solid #e0e0e0;
+                width: var(--sidebar-width);
                 height: 100vh;
                 position: fixed;
-                top: 60px;
+                top: 60px; /* dưới topbar */
                 left: 0;
-                padding: 20px 0;
                 overflow-y: auto;
-                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05); /* bóng tách topbar */
+                padding: 0;
+                background: linear-gradient(180deg, var(--sidebar-grad-start) 0%, var(--sidebar-grad-end) 100%);
+                box-shadow: inset -1px 0 0 rgba(255,255,255,.05);
             }
-
+            .sidebar-menu {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
             .sidebar-menu .nav-link {
-                color: var(--dark); /* tối lại cho rõ */
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 24px;
+                font-size: 15px;
+                font-weight: 500;
+                color: #f1f5f9;
+                text-decoration: none;
+                transition: background .25s ease;
             }
-
+            .sidebar-menu .nav-link i {
+                font-size: 18px;
+                min-width: 20px;
+                text-align: center;
+            }
+            /* Hover + Active */
             .sidebar-menu .nav-link:hover,
             .sidebar-menu .nav-link.active {
-                background-color: var(--light);
-                color: #3B82F6;
+                background: rgba(255,255,255,.12);
+                color: #ffffff;
             }
+            .sidebar-menu .nav-link.active::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 4px;
+                height: 100%;
+                background: #ffffff;
+            }
+            /* Icon màu */
+            .sidebar-menu li:nth-child(1)  i{
+                color:#3b82f6;
+            }
+            .sidebar-menu li:nth-child(2)  i{
+                color:#22c55e;
+            }
+            .sidebar-menu li:nth-child(3)  i{
+                color:#ec4899;
+            }
+            .sidebar-menu li:nth-child(4)  i{
+                color:#f97316;
+            }
+            .sidebar-menu li:nth-child(5)  i{
+                color:#22c55e;
+            }
+            .sidebar-menu li:nth-child(6)  i{
+                color:#eab308;
+            }
+            .sidebar-menu li:nth-child(7)  i{
+                color:#ef4444;
+            }
+            .sidebar-menu li:nth-child(8)  i{
+                color:#0ea5e9;
+            }
+            .sidebar-menu li:nth-child(9)  i{
+                color:#facc15;
+            }
+            .sidebar-menu li:nth-child(10) i{
+                color:#d1d5db;
+            }
+            /* Main content offset */
             .main-content {
-                margin-left: 250px; /* tránh đè sidebar */
-                margin-top: 60px;   /* tránh đè topbar */
+                margin-left: var(--sidebar-width);
+                margin-top: 60px;
                 padding: 20px;
-                background-color: #f9fafb;
+                background: #f9fafb;
                 min-height: calc(100vh - 60px);
-            }
-            .alert-box {
-                position: fixed;
-                top: 20%;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: #d4edda;
-                color: #155724;
-                padding: 16px 32px;
-                border: 1px solid #c3e6cb;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                z-index: 1000;
-                font-size: 1.1rem;
-                animation: fadeOut 0.5s ease-in-out 2.5s forwards;
-            }
-
-            @keyframes fadeOut {
-                to {
-                    opacity: 0;
-                    visibility: hidden;
-                }
             }
         </style>
     </head>
@@ -130,13 +187,7 @@
                     Flower Shop
                 </a>
 
-                <!-- Center: Search -->
-                <div class="flex-grow-1 mx-5">
-                    <div class="topbar-search w-100">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm, danh mục...">
-                        <i class="fas fa-search"></i>
-                    </div>
-                </div>
+
 
                 <!-- Right: Actions -->
                 <ul class="navbar-nav topbar-actions d-flex align-items-center">

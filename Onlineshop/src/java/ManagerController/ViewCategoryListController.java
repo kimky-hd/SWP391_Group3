@@ -47,8 +47,8 @@ public class ViewCategoryListController extends HttpServlet {
         List<Category> category = cateDAO.getCategoryByIndex(indexPage);
         
         int allCategory = cateDAO.countAllCategory();
-        int endPage = allCategory / 5;
-        if (allCategory % 5 != 0) {
+        int endPage = allCategory / 8;
+        if (allCategory % 8 != 0) {
             endPage++;
         }
         request.setAttribute("tag", indexPage);

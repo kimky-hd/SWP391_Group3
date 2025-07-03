@@ -246,13 +246,18 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <h2 style="margin: 0;">Danh sách sản phẩm</h2>
 
-                        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-                            <div class="dropdown">
-                                <div class="dropdown-button">${sortLabel} ⏷</div>
-                                <div class="dropdown-content">
-                                    <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
-                                    <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
-                                </div>
+                        <div class="dropdown">
+                            <div class="dropdown-button">
+                                <c:choose>
+                                    <c:when test="${param.sortOrder == 'asc'}">Giá: Thấp đến cao ⏷</c:when>
+                                    <c:when test="${param.sortOrder == 'desc'}">Giá: Cao đến thấp ⏷</c:when>
+                                    <c:otherwise>Sắp xếp theo thứ tự ⏷</c:otherwise>
+                                </c:choose>
+                            </div>
+                            <div class="dropdown-content">
+                                <a href="ViewListProductController">Sắp xếp theo thứ tự</a>
+                                <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
+                                <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
                             </div>
                         </div>
                     </div>
