@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -102,13 +103,437 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
         
+
+/* Modal Header Gradient */
+.bg-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* Customer Info Compact */
+.customer-info-compact {
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.customer-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customer-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.customer-details {
+    flex: 1;
+}
+
+.customer-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.customer-email {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.status-badge-compact {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Message Form */
+.message-form {
+    padding: 25px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.message-input {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.message-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Quick Templates */
+.quick-templates {
+    margin-top: 20px;
+}
+
+.template-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.template-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.template-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+/* Send Button */
+.btn-send {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-send:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .customer-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .template-buttons {
+        justify-content: center;
+    }
+}
+/* Thay thế CSS highlight từ dòng 105 */
+.sort-btn-modern.highlighted {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+    border: none !important;
+    position: relative;
+    z-index: 10;
+}
+
+.sort-btn-modern.highlighted::before {
+    background: linear-gradient(45deg, #11998e, #38ef7d, #11998e);
+    background-size: 200% 200%;
+    animation: borderGlow 2s linear infinite;
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Hover effect cho sort buttons chưa được chọn */
+.sort-btn-modern:not(.highlighted):hover {
+    background: rgba(102, 126, 234, 0.1) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Click animation */
+.sort-btn-modern.clicking {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* Icon animation trong sort button */
+.sort-btn-modern.highlighted .btn-icon {
+    animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+        
         .table-container {
             background: white;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        
+       /* Sort Section Styles */
+/* Thay thế CSS cũ từ dòng 113-156 */
+/* Modern Sort Section Styles */
+.sort-section-modern {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+    overflow: hidden;
+    position: relative;
+}
+
+.sort-section-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.sort-container {
+    padding: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.sort-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sort-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sort-icon {
+    font-size: 24px;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.sort-label {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.sort-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.count-text {
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+}
+
+.count-badge {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.sort-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.sort-btn-modern {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.sort-btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+}
+
+.sort-btn-modern:hover::before {
+    left: 100%;
+}
+
+.sort-btn-modern:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.sort-btn-modern.active {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.6);
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.sort-btn-modern.active .btn-icon {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+.btn-icon {
+    background: rgba(255,255,255,0.2);
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-icon i {
+    font-size: 20px;
+    color: #fff;
+}
+
+.btn-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.btn-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.btn-subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sort-buttons-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .sort-btn-modern {
+        padding: 15px;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .btn-content {
+        align-items: center;
+    }
+    
+    .sort-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .sort-buttons-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .sort-container {
+        padding: 20px;
+    }
+}
+
+/* Animation cho loading state */
+@keyframes sortLoading {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.sort-btn-modern.loading {
+    animation: sortLoading 1.5s infinite;
+    pointer-events: none;
+}
+@keyframes sortPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
         .table thead th {
             background: linear-gradient(135deg, var(--primary-color), #224abe);
             color: white;
@@ -323,12 +748,215 @@
 }
 
 .filter-section {
-    background: white;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
     border-radius: 20px;
-    padding: 30px;
+    padding: 0;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.filter-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+.sort-btn {
+    margin: 2px;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-width: 1.5px;
+}
+
+.sort-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.sort-btn.active {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    font-weight: 600;
+}
+
+.btn-group {
+    gap: 5px;
+}
+
+@media (max-width: 768px) {
+    .sort-btn {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        margin: 1px;
+    }
+    
+    .btn-group {
+        gap: 2px;
+    }
+}
+.filter-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(180deg); }
+}
+
+.filter-body {
+    padding: 25px;
+    background: white;
+}
+
+.quick-search-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 20px;
     margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    border: 1px solid #e3e6f0;
+    border: 1px solid #dee2e6;
+    position: relative;
+}
+
+.quick-search-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 15px 15px 0 0;
+}
+
+.form-control {
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.9);
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background: white;
+    transform: translateY(-1px);
+}
+
+.form-select {
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.9);
+}
+
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.btn-outline-secondary {
+    border-radius: 12px;
+    border: 2px solid #6c757d;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.quick-filter-buttons {
+    background: rgba(248, 249, 250, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.quick-filter-buttons .btn {
+    border-radius: 25px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin: 2px;
+}
+
+.quick-filter-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.input-group-text {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #e9ecef;
+    border-radius: 12px 0 0 12px;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.animate-fade-in {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .form-label {
@@ -398,7 +1026,50 @@
             transform: translate(-50%, -50%);
             z-index: 9999;
         }
-        
+        /* Fix dropdown menu position */
+.table-container {
+    background: white;
+    border-radius: 15px;
+    overflow: visible; /* Thay đổi từ hidden thành visible */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Ensure dropdown menu appears above other elements */
+.dropdown-menu {
+    z-index: 1050 !important;
+    position: absolute !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    border: 1px solid #e3e6f0 !important;
+    border-radius: 10px !important;
+}
+
+/* Fix table row position */
+.table tbody tr {
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensure dropdown toggle button has proper z-index */
+.dropdown-toggle {
+    position: relative;
+    z-index: 2;
+}
+
+/* Fix dropdown menu positioning for last rows */
+.table tbody tr:nth-last-child(-n+3) .dropdown-menu {
+    transform: translateY(-100%);
+    top: auto;
+    bottom: 100%;
+}
+
+/* Ensure dropdown menu is fully visible */
+.dropdown {
+    position: static;
+}
+
+.table-responsive {
+    overflow: visible;
+}
         .modal-content {
             border-radius: 15px;
             border: none;
@@ -410,7 +1081,178 @@
             color: white;
             border-radius: 15px 15px 0 0;
         }
+        .action-btn.btn-notification {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    margin-left: 5px;
+}
+
+.action-btn.btn-notification:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-1px);
+}
+
+.action-btn.btn-print {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    margin-left: 5px;
+}
+
+.action-btn.btn-print:hover {
+    background: linear-gradient(135deg, #138496, #0f6674);
+    transform: translateY(-1px);
+}
+/* Enhanced Modal Styles */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.modal-lg {
+    max-width: 800px;
+}
+
+#orderDetailInfo .col-md-6 {
+    margin-bottom: 1rem;
+}
+
+#orderDetailInfo i {
+    width: 20px;
+    text-align: center;
+}
+
+.form-control-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.btn-outline-secondary.btn-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
     </style>
+    <style>
+/* Thêm vào phần <head> hoặc cuối file trước </body> */
+
+/* Tooltip styles */
+.tooltip-cell {
+    position: relative;
+    cursor: pointer;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tooltip-cell:hover {
+    overflow: visible;
+    white-space: normal;
+    z-index: 1000;
+}
+
+/* Custom tooltip */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 300px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1001;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -150px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    line-height: 1.4;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.custom-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Expandable cell */
+.expandable-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.expandable-cell:hover {
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    position: relative;
+}
+
+/* Table improvements */
+.table td {
+    vertical-align: middle;
+    position: relative;
+}
+
+.customer-info {
+    max-width: 180px;
+}
+
+.customer-info:hover {
+    max-width: none;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* Status badge improvements */
+.status-badge {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+</style>
 </head>
 <body>
     <jsp:include page="../manager_topbarsidebar.jsp" />
@@ -480,115 +1322,291 @@
                     </div>
                 </div>
             </div>
+          </div>
             
-            <!-- Filter Section -->
-          
-<div class="filter-section mb-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-filter me-2"></i>Bộ lọc tìm kiếm
-            </h5>
-        </div>
-        <div class="card-body">
-           <form id="filterForm" method="get" action="orders">
-                <input type="hidden" name="action" value="list">
-                <div class="row g-3">
-                    <!-- Tên khách hàng -->
-                    <div class="col-md-3">
-                        <label for="customerName" class="form-label">
-                            <i class="fas fa-user me-1"></i>Tên khách hàng
-                        </label>
+            <!-- THÊM PHẦN NÀY: Alert Messages for Search Results -->
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success alert-dismissible fade show animate-fade-in" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Thành công!</strong> ${successMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+            
+            <c:if test="${not empty warningMessage}">
+                <div class="alert alert-warning alert-dismissible fade show animate-fade-in" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Cảnh báo!</strong> ${warningMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+            
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger alert-dismissible fade show animate-fade-in" role="alert">
+                    <i class="fas fa-times-circle me-2"></i>
+                    <strong>Lỗi!</strong> ${errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+            
+            <!-- Search Result Info -->
+            <c:if test="${not empty searchedOrderId}">
+                <div class="alert alert-info alert-dismissible fade show animate-fade-in" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Kết quả tìm kiếm:</strong> Đang hiển thị kết quả cho mã đơn hàng <strong>#${searchedOrderId}</strong>
+                    <a href="orders?action=list" class="alert-link ms-2">
+                        <i class="fas fa-list me-1"></i>Xem tất cả đơn hàng
+                    </a>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+           
+                                
+ <!-- Enhanced Filter Section -->
+<div class="filter-section animate-fade-in">
+    <!-- Filter Header -->
+    <div class="filter-header">
+        <h5 class="mb-0 d-flex align-items-center">
+            <i class="fas fa-filter me-3"></i>
+            <span>Bộ lọc tìm kiếm nâng cao</span>
+            <div class="ms-auto">
+                <small class="opacity-75">Tìm kiếm và lọc đơn hàng</small>
+            </div>
+        </h5>
+    </div>
+    
+    <div class="filter-body">
+        <!-- Quick Search Section -->
+        <div class="quick-search-section">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <h6 class="mb-0 text-primary">
+                        <i class="fas fa-bolt me-2"></i>Tìm kiếm nhanh
+                    </h6>
+                    <small class="text-muted">Theo mã đơn hàng</small>
+                </div>
+                <div class="col-md-9">
+                    <form id="quickSearchForm" method="get" action="orders" class="d-flex gap-2">
+                        <input type="hidden" name="action" value="quickSearch">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="customerName" 
-                                   name="customerName" placeholder="Nhập tên khách hàng..."
-                                   value="${param.customerName}">
-                            <button class="btn btn-outline-secondary" type="button" 
-                                    onclick="clearField('customerName')">
-                                <i class="fas fa-times"></i>
+                            <span class="input-group-text">
+                                <i class="fas fa-hashtag"></i>
+                            </span>
+                            <input type="text" class="form-control" id="quickOrderId" 
+                                   name="quickOrderId" placeholder="Nhập mã đơn hàng (VD: 1, 2, 3...)" 
+                                   value="${param.quickOrderId}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search me-1"></i>Tìm ngay
                             </button>
+                            
+<button class="btn btn-warning" type="button" 
+        onclick="clearQuickSearch()">
+    <i class="fas fa-times"></i>
+</button>
+
                         </div>
-                    </div>
-                    
-                    <!-- Trạng thái -->
-                    <div class="col-md-2">
-                        <label for="status" class="form-label">
-                            <i class="fas fa-flag me-1"></i>Trạng thái
-                        </label>
-                        <select class="form-select" id="status" name="status">
-                            <option value="">Tất cả</option>
-                            <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Chờ xử lý</option>
-                            <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>Hoàn thành</option>
-                            <option value="cancelled" ${param.status == 'cancelled' ? 'selected' : ''}>Đã hủy</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Từ ngày -->
-                    <div class="col-md-2">
-                        <label for="dateFrom" class="form-label">
-                            <i class="fas fa-calendar-alt me-1"></i>Từ ngày
-                        </label>
-                        <input type="date" class="form-control" id="dateFrom" 
-                               name="dateFrom" value="${param.dateFrom}">
-                    </div>
-                    
-                    <!-- Đến ngày -->
-                    <div class="col-md-2">
-                        <label for="dateTo" class="form-label">
-                            <i class="fas fa-calendar-alt me-1"></i>Đến ngày
-                        </label>
-                        <input type="date" class="form-control" id="dateTo" 
-                               name="dateTo" value="${param.dateTo}">
-                    </div>
-                    
-                    <!-- Buttons -->
-                    <div class="col-md-3">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary flex-fill">
-                                <i class="fas fa-search me-1"></i>Tìm kiếm
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" 
-                                    onclick="resetFilters()">
-                                <i class="fas fa-redo me-1"></i>Reset
-                            </button>
-                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Filter Form -->
+        <form id="filterForm" method="get" action="orders">
+            <input type="hidden" name="action" value="list">
+            
+            <div class="row g-4">
+                <!-- Customer Name -->
+                <div class="col-md-4">
+                    <label for="customerName" class="form-label">
+                        <i class="fas fa-user me-2 text-primary"></i>Tên khách hàng
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-user-circle"></i>
+                        </span>
+                        <input type="text" class="form-control" id="customerName" 
+                               name="customerName" placeholder="Nhập tên khách hàng..."
+                               value="${param.customerName}">
+                        <button class="btn btn-warning" type="button" 
+                                onclick="clearField('customerName')">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <!-- Quick Filter Buttons -->
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="d-flex gap-2 flex-wrap">
-                            <span class="text-muted me-2">Lọc nhanh:</span>
-                            <button type="button" class="btn btn-sm btn-outline-warning" 
-                                    onclick="quickFilter('pending')">
-                                <i class="fas fa-clock me-1"></i>Chờ xử lý
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-success" 
-                                    onclick="quickFilter('completed')">
-                                <i class="fas fa-check me-1"></i>Hoàn thành
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" 
-                                    onclick="quickFilter('cancelled')">
-                                <i class="fas fa-times me-1"></i>Đã hủy
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-info" 
-                                    onclick="quickFilter('today')">
-                                <i class="fas fa-calendar-day me-1"></i>Hôm nay
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-info" 
-                                    onclick="quickFilter('week')">
-                                <i class="fas fa-calendar-week me-1"></i>Tuần này
-                            </button>
-                        </div>
+                <!-- Status -->
+                <div class="col-md-2">
+                    <label for="status" class="form-label">
+                        <i class="fas fa-flag me-2 text-warning"></i>Trạng thái
+                    </label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>
+                            🕐 Chờ xử lý
+                        </option>
+                        <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>
+                            ✅ Hoàn thành
+                        </option>
+                        <option value="cancelled" ${param.status == 'cancelled' ? 'selected' : ''}>
+                            ❌ Đã hủy
+                        </option>
+                    </select>
+                </div>
+                
+                <!-- Date From -->
+                <div class="col-md-2">
+                    <label for="dateFrom" class="form-label">
+                        <i class="fas fa-calendar-alt me-2 text-success"></i>Từ ngày
+                    </label>
+                    <input type="date" class="form-control" id="dateFrom" 
+                           name="dateFrom" value="${param.dateFrom}">
+                </div>
+                
+                <!-- Date To -->
+                <div class="col-md-2">
+                    <label for="dateTo" class="form-label">
+                        <i class="fas fa-calendar-check me-2 text-success"></i>Đến ngày
+                    </label>
+                    <input type="date" class="form-control" id="dateTo" 
+                           name="dateTo" value="${param.dateTo}">
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Tìm kiếm
+                        </button>
+                        <button type="button" class="btn btn-warning btn-refresh" 
+        onclick="resetFilters()">
+    <i class="fas fa-redo me-2"></i>Làm mới
+</button>
                     </div>
                 </div>
-            </form>
+            </div>
+            
+            <!-- Quick Filter Buttons -->
+            <div class="quick-filter-buttons">
+                <div class="d-flex align-items-center flex-wrap gap-2">
+                    <span class="text-muted fw-bold me-3">
+                        <i class="fas fa-magic me-1"></i>Lọc nhanh:
+                    </span>
+                    <button type="button" class="btn btn-sm btn-outline-warning" 
+                            onclick="quickFilter('pending')">
+                        <i class="fas fa-clock me-1"></i>Chờ xử lý
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-success" 
+                            onclick="quickFilter('completed')">
+                        <i class="fas fa-check-circle me-1"></i>Hoàn thành
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                            onclick="quickFilter('cancelled')">
+                        <i class="fas fa-times-circle me-1"></i>Đã hủy
+                    </button>
+                    <div class="vr mx-2"></div>
+                    <button type="button" class="btn btn-sm btn-outline-info" 
+                            onclick="quickFilter('today')">
+                        <i class="fas fa-calendar-day me-1"></i>Hôm nay
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-info" 
+                            onclick="quickFilter('week')">
+                        <i class="fas fa-calendar-week me-1"></i>Tuần này
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-info" 
+                            onclick="quickFilter('month')">
+                        <i class="fas fa-calendar me-1"></i>Tháng này
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+       
+<!-- Sort Section -->
+<!-- Sort Section - Thay thế từ dòng 1148-1180 -->
+<div class="sort-section-modern mb-4">
+    <div class="sort-container">
+        <div class="sort-header">
+            <div class="sort-title">
+                <i class="fas fa-sort-amount-down sort-icon"></i>
+                <span class="sort-label">Sắp xếp đơn hàng</span>
+            </div>
+            <div class="sort-count">
+                <span class="count-text">Tổng:</span>
+                <span class="count-badge">${fn:length(orders)} đơn hàng</span>
+            </div>
+        </div>
+        
+        <div class="sort-buttons-grid">
+            <button type="button" class="sort-btn-modern" 
+                    onclick="sortOrders('date_desc')" data-sort="date_desc">
+                <div class="btn-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-title">Mới nhất</span>
+                    <span class="btn-subtitle">Đơn hàng gần đây</span>
+                </div>
+            </button>
+            
+            <button type="button" class="sort-btn-modern" 
+                    onclick="sortOrders('date_asc')" data-sort="date_asc">
+                <div class="btn-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-title">Cũ nhất</span>
+                    <span class="btn-subtitle">Đơn hàng cũ trước</span>
+                </div>
+            </button>
+            
+            <button type="button" class="sort-btn-modern" 
+                    onclick="sortOrders('total_desc')" data-sort="total_desc">
+                <div class="btn-icon">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-title">Giá cao</span>
+                    <span class="btn-subtitle">Từ cao đến thấp</span>
+                </div>
+            </button>
+            
+            <button type="button" class="sort-btn-modern" 
+                    onclick="sortOrders('total_asc')" data-sort="total_asc">
+                <div class="btn-icon">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-title">Giá thấp</span>
+                    <span class="btn-subtitle">Từ thấp đến cao</span>
+                </div>
+            </button>
+            
+            <button type="button" class="sort-btn-modern" 
+                    onclick="sortOrders('status')" data-sort="status">
+                <div class="btn-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-title">Trạng thái</span>
+                    <span class="btn-subtitle">Theo tình trạng</span>
+                </div>
+            </button>
+            
+            <button type="button" class="sort-btn-modern" 
+                    onclick="sortOrders('order_id')" data-sort="order_id">
+                <div class="btn-icon">
+                    <i class="fas fa-hashtag"></i>
+                </div>
+                <div class="btn-content">
+                    <span class="btn-title">Mã đơn</span>
+                    <span class="btn-subtitle">Theo ID đơn hàng</span>
+                </div>
+            </button>
         </div>
     </div>
 </div>
-
 
             
             <!-- Orders Table -->
@@ -605,114 +1623,163 @@
                                 <th><i class="fas fa-cogs me-2"></i>Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:forEach items="${orders}" var="order">
-                                <tr data-order-id="${order.orderId}">
-                                    <td class="fw-bold">#${order.orderId}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
-                                                <i class="fas fa-user text-white"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold">${order.fullName}</div>
-                                                <small class="text-muted">${order.email}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" />
-                                    </td>
-                                    <td class="fw-bold text-success">
-                                        <fmt:formatNumber value="${order.total}" type="currency" 
-                                                        currencySymbol="₫" maxFractionDigits="0"/>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${order.status eq 'Pending'}">
-                                                <span class="status-badge status-pending">
-                                                    <i class="fas fa-clock"></i> Đang xử lý
-                                                </span>
-                                            </c:when>
-                                            <c:when test="${order.status eq 'Completed'}">
-                                                <span class="status-badge status-completed">
-                                                    <i class="fas fa-check"></i> Hoàn thành
-                                                </span>
-                                            </c:when>
-                                            <c:when test="${order.status eq 'Cancelled'}">
-                                                <span class="status-badge status-cancelled">
-                                                    <i class="fas fa-times"></i> Đã hủy
-                                                </span>
-                                            </c:when>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <button class="action-btn btn-view" 
-                                                    onclick="viewOrder(${order.orderId})" 
-                                                    title="Xem chi tiết">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            
-                                            <c:if test="${order.status eq 'Pending'}">
-                                                <button class="action-btn btn-approve" 
-                                                        onclick="updateStatus(${order.orderId}, 2)" 
-                                                        title="Duyệt đơn">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
-                                                
-                                                <button class="action-btn btn-edit" 
-                                                        onclick="updateStatus(${order.orderId}, 3)" 
-                                                        title="Hủy đơn">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                            </c:if>
-                                         
-<div class="dropdown">
-    <button class="action-btn btn-view dropdown-toggle" 
-            data-bs-toggle="dropdown" title="Thao tác khác">
-        <i class="fas fa-ellipsis-v"></i>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-        <li>
-            <a class="dropdown-item d-flex align-items-center py-2" href="#" 
-               onclick="sendNotification(${order.orderId})">
-                <span class="icon-circle bg-primary text-white me-2">
-                    <i class="fas fa-envelope"></i>
+                        
+<tbody>
+    <c:forEach items="${orders}" var="order">
+        <tr data-order-id="${order.orderId}">
+            <td class="fw-bold">#${order.orderId}</td>
+            <td>
+                <div class="d-flex align-items-center customer-info">
+                    <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div class="custom-tooltip">
+                        <div class="expandable-cell">
+                            <div class="fw-bold">${order.fullName}</div>
+                            <small class="text-muted">${order.email}</small>
+                        </div>
+                        <span class="tooltip-text">
+                            <strong>Thông tin khách hàng:</strong><br>
+                            <strong>Tên:</strong> ${order.fullName}<br>
+                            <strong>Email:</strong> ${order.email}<br>
+                            <strong>Số điện thoại:</strong> ${order.phone}<br>
+                            <strong>Địa chỉ:</strong> ${order.address}
+                        </span>
+                    </div>
+                </div>
+            </td>
+            <td class="custom-tooltip">
+                <span class="expandable-cell">
+                    <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm" />
                 </span>
-                <span>Gửi thông báo</span>
-            </a>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class="dropdown-item d-flex align-items-center py-2" href="#" 
-               onclick="printOrder(${order.orderId})">
-                <span class="icon-circle bg-info text-white me-2">
-                    <i class="fas fa-print"></i>
+                <span class="tooltip-text">
+                    <strong>Thời gian đặt hàng:</strong><br>
+                    <fmt:formatDate value="${order.orderDate}" pattern="EEEE, dd/MM/yyyy 'lúc' HH:mm:ss" />
                 </span>
-                <span>In đơn hàng</span>
-            </a>
-        </li>
-    </ul>
-</div>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                            
-                            <c:if test="${empty orders}">
-                                <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <div class="text-muted">
-                                            <i class="fas fa-inbox fa-3x mb-3"></i>
-                                            <h5>Không có đơn hàng nào</h5>
-                                            <p>Chưa có đơn hàng nào được tìm thấy với bộ lọc hiện tại.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:if>
-                        </tbody>
+            </td>
+            <td class="fw-bold text-success custom-tooltip">
+                <span class="expandable-cell">
+                    <fmt:formatNumber value="${order.total}" type="currency" 
+                                    currencySymbol="₫" maxFractionDigits="0"/>
+                </span>
+                <span class="tooltip-text">
+                    <strong>Chi tiết thanh toán:</strong><br>
+                    <strong>Tổng tiền:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="₫" maxFractionDigits="0"/><br>
+                    <strong>Phương thức:</strong> ${order.paymentMethod != null ? order.paymentMethod : 'Chưa xác định'}
+                </span>
+            </td>
+            <td>
+    <c:choose>
+        <c:when test="${order.status eq 'Pending' || order.status eq 'Chờ duyệt'}">
+            <span class="status-badge status-pending custom-tooltip">
+                <i class="fas fa-clock"></i> Đang xử lý
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> Đang xử lý<br>
+                    <strong>Mô tả:</strong> Đơn hàng đang được xem xét và chuẩn bị xử lý
+                </span>
+            </span>
+        </c:when>
+        <c:when test="${order.status eq 'Completed' || order.status eq 'Đã giao hàng thành công'}">
+            <span class="status-badge status-completed custom-tooltip">
+                <i class="fas fa-check"></i> Hoàn thành
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> Hoàn thành<br>
+                    <strong>Mô tả:</strong> Đơn hàng đã được xử lý và hoàn thành thành công
+                </span>
+            </span>
+        </c:when>
+        <c:when test="${order.status eq 'Cancelled' || order.status eq 'Đã hủy'}">
+            <span class="status-badge status-cancelled custom-tooltip">
+                <i class="fas fa-times"></i> Đã hủy
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> Đã hủy<br>
+                    <strong>Mô tả:</strong> Đơn hàng đã bị hủy bỏ
+                </span>
+            </span>
+        </c:when>
+        <c:when test="${order.status eq 'Đơn hàng đã được duyệt và tiến hành đóng gói'}">
+            <span class="status-badge status-approved custom-tooltip">
+                <i class="fas fa-box"></i> Đã duyệt
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> Đã duyệt<br>
+                    <strong>Mô tả:</strong> Đơn hàng đã được duyệt và đang đóng gói
+                </span>
+            </span>
+        </c:when>
+        <c:when test="${order.status eq 'Đơn hàng đang được vận chuyển'}">
+            <span class="status-badge status-shipping custom-tooltip">
+                <i class="fas fa-truck"></i> Đang giao hàng
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> Đang giao hàng<br>
+                    <strong>Mô tả:</strong> Đơn hàng đang được vận chuyển
+                </span>
+            </span>
+        </c:when>
+        <c:when test="${order.status eq 'Đã thanh toán thành công'}">
+            <span class="status-badge status-paid custom-tooltip">
+                <i class="fas fa-credit-card"></i> Đã thanh toán
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> Đã thanh toán<br>
+                    <strong>Mô tả:</strong> Đơn hàng đã được thanh toán thành công
+                </span>
+            </span>
+        </c:when>
+        <c:otherwise>
+            <span class="status-badge status-unknown custom-tooltip">
+                <i class="fas fa-question"></i> ${order.status}
+                <span class="tooltip-text">
+                    <strong>Trạng thái:</strong> ${order.status}<br>
+                    <strong>StatusID:</strong> ${order.statusId}<br>
+                    <strong>Mô tả:</strong> Trạng thái không xác định
+                </span>
+            </span>
+        </c:otherwise>
+    </c:choose>
+</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <c:if test="${order.status eq 'Pending'}">
+                        <button class="action-btn btn-approve" 
+                                onclick="updateStatus(${order.orderId}, 2)" 
+                                title="Duyệt đơn hàng #${order.orderId}">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        
+                        <button class="action-btn btn-edit" 
+                                onclick="updateStatus(${order.orderId}, 3)" 
+                                title="Hủy đơn hàng #${order.orderId}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </c:if>
+                 
+                    <button class="action-btn btn-notification" 
+                            onclick="sendNotification(${order.orderId})" 
+                            title="Gửi thông báo cho khách hàng về đơn hàng #${order.orderId}">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    
+                    <button class="action-btn btn-print" 
+                            onclick="printOrder(${order.orderId})" 
+                            title="In hóa đơn cho đơn hàng #${order.orderId}">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </c:forEach>
+    
+    <c:if test="${empty orders}">
+        <tr>
+            <td colspan="6" class="text-center py-5">
+                <div class="text-muted">
+                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                    <h5>Không có đơn hàng nào</h5>
+                    <p>Chưa có đơn hàng nào được tìm thấy với bộ lọc hiện tại.</p>
+                </div>
+            </td>
+        </tr>
+    </c:if>
+</tbody>
                     </table>
                 </div>
                 
@@ -777,38 +1844,88 @@
         </div>
     </div>
     
-    <!-- Notification Modal -->
+   <!-- Enhanced Notification Modal -->
+<!-- Thay thế modal hiện tại (từ dòng 1657) bằng code này -->
 <div class="modal fade" id="notificationModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-envelope me-2"></i>
-                    Gửi thông báo đơn hàng
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Header với gradient đẹp -->
+            <div class="modal-header bg-gradient text-white border-0">
+                <h5 class="modal-title d-flex align-items-center mb-0">
+                    <div class="notification-icon me-3">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Gửi thông báo</div>
+                        <small class="opacity-75">Đơn hàng <span id="orderIdDisplay" class="fw-bold"></span></small>
+                    </div>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body p-4">
-                <form id="notificationForm">
-                    <input type="hidden" id="notificationOrderId">
-                    <div class="order-info mb-3 p-3 bg-light rounded">
-                        <h6 class="fw-bold mb-2">Thông tin đơn hàng: <span id="orderIdDisplay" class="text-primary"></span></h6>
-                        <div id="orderSummary" class="small"></div>
+            
+            <div class="modal-body p-0">
+                <!-- Thông tin khách hàng gọn gàng -->
+                <div class="customer-info-compact">
+                    <div class="customer-card">
+                        <div class="customer-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="customer-details">
+                            <div class="customer-name" id="customerName">Đang tải...</div>
+                            <div class="customer-email" id="customerEmail">Đang tải...</div>
+                        </div>
+                        <div class="order-status">
+                            <span id="orderStatus" class="status-badge-compact">Đang tải...</span>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Nội dung thông báo:</label>
-                        <textarea class="form-control" id="notificationMessage" rows="4" 
-                                placeholder="Nhập nội dung thông báo..."></textarea>
-                        <div class="form-text">Thông báo sẽ được gửi qua email đến khách hàng.</div>
-                    </div>
-                </form>
+                </div>
+                
+                <!-- Form nhập tin nhắn -->
+                <div class="message-form">
+                    <form id="notificationForm">
+                        <input type="hidden" id="notificationOrderId">
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-edit me-2"></i>Nội dung thông báo
+                            </label>
+                            <textarea class="form-control message-input" 
+                                    id="notificationMessage" 
+                                    rows="4" 
+                                    placeholder="Nhập tin nhắn gửi đến khách hàng..."></textarea>
+                        </div>
+                        
+                        <!-- Quick templates -->
+                        <div class="quick-templates">
+                            <label class="form-label small text-muted mb-2">
+                                <i class="fas fa-magic me-1"></i>Mẫu tin nhắn nhanh:
+                            </label>
+                            <div class="template-buttons">
+                                <button type="button" class="template-btn" onclick="setTemplate('approved')">
+                                    Đã duyệt
+                                </button>
+                                <button type="button" class="template-btn" onclick="setTemplate('shipping')">
+                                    Đang giao
+                                </button>
+                                <button type="button" class="template-btn" onclick="setTemplate('completed')">
+                                    Hoàn thành
+                                </button>
+                                <button type="button" class="template-btn" onclick="setTemplate('cancelled')">
+                                    Đã hủy
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="modal-footer bg-light">
+            
+            <!-- Footer với buttons đẹp -->
+            <div class="modal-footer border-0 bg-light">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> Hủy
+                    <i class="fas fa-times me-1"></i>Hủy
                 </button>
-                <button type="button" class="btn btn-primary" onclick="sendNotificationEmail()">
-                    <i class="fas fa-paper-plane me-1"></i> Gửi thông báo
+                <button type="button" class="btn btn-primary btn-send" onclick="sendNotificationEmail()">
+                    <i class="fas fa-paper-plane me-1"></i>Gửi thông báo
                 </button>
             </div>
         </div>
@@ -1076,35 +2193,104 @@ function updateStatus(orderId, statusId) {
         }
     });
 }
-       
-        
-        // Send notification
-        // Send notification
+             
+// Enhanced Send notification function
+// Thay thế hàm sendNotification hiện tại (dòng 2034) bằng code này:
 function sendNotification(orderId) {
     $('#notificationOrderId').val(orderId);
     $('#orderIdDisplay').text('#' + orderId);
     $('#notificationMessage').val('');
     
-    // Hiển thị thông tin đơn hàng trong modal
-    const orderRow = $('tr[data-order-id="' + orderId + '"]');
-    const customerName = orderRow.find('td:eq(1)').text().trim();
-    const orderDate = orderRow.find('td:eq(2)').text().trim();
-    const orderTotal = orderRow.find('td:eq(3)').text().trim();
-    const orderStatus = orderRow.find('td:eq(4)').text().trim();
+    // Show loading state
+    $('#customerName').text('Đang tải...');
+    $('#customerEmail').text('Đang tải...');
+    $('#orderStatus').text('Đang tải...');
     
-    let orderSummary = `
-        <div class="row g-2">
-            <div class="col-6"><strong>Khách hàng:</strong> ${customerName}</div>
-            <div class="col-6"><strong>Ngày đặt:</strong> ${orderDate}</div>
-            <div class="col-6"><strong>Tổng tiền:</strong> ${orderTotal}</div>
-            <div class="col-6"><strong>Trạng thái:</strong> ${orderStatus}</div>
-        </div>
-    `;
-    
-    $('#orderSummary').html(orderSummary);
-    $('#notificationModal').modal('show');
+    // Load customer info
+    $.ajax({
+        url: '${pageContext.request.contextPath}/orders',
+        type: 'GET',
+        data: {
+            action: 'getOrderDetails',
+            orderId: orderId
+        },
+        dataType: 'json',
+        success: function(data) {
+            $('#customerName').text(data.fullName || 'Khách hàng');
+            $('#customerEmail').text(data.email || 'Chưa có email');
+            
+            // Debug log
+            console.log('Status from server:', data.status);
+            console.log('StatusID from server:', data.statusId);
+            
+            // Set status with proper mapping
+            const statusBadge = $('#orderStatus');
+            let displayStatus = 'Chưa xác định';
+            let statusClass = 'bg-secondary';
+            
+            // Map status values từ database (tiếng Việt)
+            if (data.status) {
+                const status = data.status.toLowerCase();
+                if (status.includes('chờ duyệt')) {
+                    displayStatus = 'Chờ duyệt';
+                    statusClass = 'bg-warning text-dark';
+                } else if (status.includes('đã được duyệt') || status.includes('đóng gói')) {
+                    displayStatus = 'Đã duyệt';
+                    statusClass = 'bg-success';
+                } else if (status.includes('đang được vận chuyển')) {
+                    displayStatus = 'Đang giao hàng';
+                    statusClass = 'bg-info';
+                } else if (status.includes('đã giao hàng')) {
+                    displayStatus = 'Hoàn thành';
+                    statusClass = 'bg-success';
+                } else if (status.includes('đã thanh toán')) {
+                    displayStatus = 'Đã thanh toán';
+                    statusClass = 'bg-success';
+                } else if (status.includes('đã hủy')) {
+                    displayStatus = 'Đã hủy';
+                    statusClass = 'bg-danger';
+                } else {
+                    displayStatus = data.status;
+                    statusClass = 'bg-secondary';
+                }
+            }
+            
+            // Set text và class một lần duy nhất
+            statusBadge.text(displayStatus);
+            statusBadge.removeClass('bg-warning bg-success bg-danger bg-info bg-secondary text-dark');
+            statusBadge.addClass(statusClass);
+        },
+        error: function() {
+            $('#customerName').text('Không thể tải');
+            $('#customerEmail').text('Không thể tải');
+            $('#orderStatus').text('Không xác định')
+                .removeClass('bg-warning bg-success bg-danger bg-info bg-secondary text-dark')
+                .addClass('bg-secondary');
+        },
+        complete: function() {
+            $('#notificationModal').modal('show');
+        }
+    });
 }
-        
+
+// Hàm set template tin nhắn nhanh
+function setTemplate(type) {
+    const templates = {
+        approved: 'Chào bạn! Đơn hàng của bạn đã được duyệt và sẽ sớm được giao đến bạn. Cảm ơn bạn đã tin tưởng chúng tôi!',
+        shipping: 'Đơn hàng của bạn đang được giao đến địa chỉ đã đăng ký. Vui lòng chú ý điện thoại để nhận hàng.',
+        completed: 'Đơn hàng đã được giao thành công! Cảm ơn bạn đã mua sắm tại cửa hàng. Hẹn gặp lại bạn!',
+        cancelled: 'Rất tiếc, đơn hàng của bạn đã bị hủy. Nếu có thắc mắc, vui lòng liên hệ với chúng tôi.'
+    };
+    
+    $('#notificationMessage').val(templates[type] || '');
+    
+    // Add visual feedback
+    event.target.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        event.target.style.transform = '';
+    }, 150);
+}
+
         function sendNotificationEmail() {
             const orderId = $('#notificationOrderId').val();
             const message = $('#notificationMessage').val();
@@ -1177,79 +2363,542 @@ function sendNotification(orderId) {
        
 // Enhanced Filter Functions
 function clearField(fieldId) {
-    document.getElementById(fieldId).value = '';
+    const field = document.getElementById(fieldId);
+    field.value = '';
+    field.focus();
+    
+    // Add animation
+    field.style.transform = 'scale(1.05)';
+    setTimeout(() => field.style.transform = 'scale(1)', 150);
 }
-
 function resetFilters() {
-    document.getElementById('filterForm').reset();
-    window.location.href = 'orders?action=list';
+    const form = document.getElementById('filterForm');
+    form.reset();
+    
+    // Clear URL parameters
+    const url = new URL(window.location);
+    url.search = '';
+    window.history.replaceState({}, '', url);
+    
+    // Add visual feedback
+    const resetBtn = event.target;
+    resetBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang làm mới...';
+    
+    setTimeout(() => {
+        window.location.href = 'orders?action=list';
+    }, 500);
 }
 
 function quickFilter(type) {
     const form = document.getElementById('filterForm');
+    const statusSelect = document.getElementById('status');
+    const dateFrom = document.getElementById('dateFrom');
+    const dateTo = document.getElementById('dateTo');
     
-    // Reset form
-    form.reset();
+    // Reset previous filters
+    statusSelect.value = '';
+    dateFrom.value = '';
+    dateTo.value = '';
     
     const today = new Date();
     const formatDate = (date) => date.toISOString().split('T')[0];
     
     switch(type) {
         case 'pending':
-            document.getElementById('status').value = 'pending';
-            break;
         case 'completed':
-            document.getElementById('status').value = 'completed';
-            break;
         case 'cancelled':
-            document.getElementById('status').value = 'cancelled';
+            statusSelect.value = type;
             break;
         case 'today':
-            document.getElementById('dateFrom').value = formatDate(today);
-            document.getElementById('dateTo').value = formatDate(today);
+            dateFrom.value = formatDate(today);
+            dateTo.value = formatDate(today);
             break;
         case 'week':
             const weekStart = new Date(today);
             weekStart.setDate(today.getDate() - today.getDay());
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            document.getElementById('dateFrom').value = formatDate(weekStart);
-            document.getElementById('dateTo').value = formatDate(weekEnd);
+            dateFrom.value = formatDate(weekStart);
+            dateTo.value = formatDate(today);
+            break;
+        case 'month':
+            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+            dateFrom.value = formatDate(monthStart);
+            dateTo.value = formatDate(today);
             break;
     }
     
-    // Tự động submit form sau khi thiết lập các giá trị lọc
-    document.getElementById('filterForm').submit();
+    // Add visual feedback
+    const button = event.target;
+    button.classList.add('active');
+    setTimeout(() => button.classList.remove('active'), 200);
+    
+    form.submit();
+}
+function clearQuickSearch() {
+    const field = document.getElementById('quickOrderId');
+    field.value = '';
+    field.focus();
+    
+    // Remove from URL
+    const url = new URL(window.location);
+    url.searchParams.delete('quickOrderId');
+    url.searchParams.delete('action');
+    window.history.replaceState({}, '', url);
 }
 
-//// Auto-submit form when date changes
-//document.addEventListener('DOMContentLoaded', function() {
-//    const dateInputs = document.querySelectorAll('#dateFrom, #dateTo');
-//    dateInputs.forEach(input => {
-//        input.addEventListener('change', function() {
-//            // Optional: Auto-submit after date selection
-//            // document.getElementById('filterForm').submit();
-//        });
-//    });
-//    
-//    // Status change auto-submit
-//    document.getElementById('status').addEventListener('change', function() {
-//        document.getElementById('filterForm').submit();
-//    });
-//});
+// Xử lý Enter key cho quick search
+document.getElementById('quickOrderId').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('quickSearchForm').submit();
+    }
+});
 
-//// Enhanced search with debounce
-//let searchTimeout;
-//function debounceSearch() {
-//    clearTimeout(searchTimeout);
-//    searchTimeout = setTimeout(() => {
-//        document.getElementById('filterForm').submit();
-//    }, 500);
-//}
-//
-//// Add to customer name input
-//document.getElementById('customerName').addEventListener('input', debounceSearch);
+// Validation cho quick search - chỉ cho phép số
+document.getElementById('quickOrderId').addEventListener('input', function(e) {
+    let value = e.target.value;
+    // Chỉ cho phép số
+    e.target.value = value.replace(/[^0-9]/g, '');
+});
+// Auto-submit on date change
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Add subtle animation
+            this.style.borderColor = '#28a745';
+            setTimeout(() => this.style.borderColor = '', 1000);
+        });
+    });
+    
+    // Enhanced form validation
+    const form = document.getElementById('filterForm');
+    form.addEventListener('submit', function(e) {
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        
+        if (dateFrom && dateTo && new Date(dateFrom) > new Date(dateTo)) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Lỗi ngày tháng',
+                text: 'Ngày bắt đầu không thể lớn hơn ngày kết thúc!',
+                confirmButtonColor: '#667eea'
+            });
+        }
+    });
+});
+// Sort functionality
+// Enhanced Active Button Management
+function updateActiveSortButton() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sortBy') || 'date_desc';
+    
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-sort') === currentSort) {
+            btn.classList.add('active');
+            // Add pulse effect for active button
+            btn.style.animation = 'pulse 0.6s ease-in-out';
+        }
+    });
+}
 
-    </script>
+// Enhanced Table Animations with Stagger Effect
+function animateTableEntrance() {
+    const rows = document.querySelectorAll('#ordersTable tbody tr');
+    rows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            row.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, index * 80); // Staggered animation
+    });
+}
+
+// Enhanced Loading States
+function showSortLoading() {
+    const sortSection = document.querySelector('.sort-section');
+    if (sortSection) {
+        sortSection.classList.add('loading-state');
+    }
+}
+
+function hideSortLoading() {
+    const sortSection = document.querySelector('.sort-section');
+    if (sortSection) {
+        sortSection.classList.remove('loading-state');
+    }
+}
+
+// Enhanced DOMContentLoaded with Improved Initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize sort state
+    updateActiveSortButton();
+    
+    // Animate table entrance
+    setTimeout(animateTableEntrance, 100);
+    
+    // Enhanced dropdown initialization
+    const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+    const dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl);
+    });
+    
+    // Add enhanced hover effects to sort buttons
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.3)';
+            }
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            }
+        });
+    });
+    
+    // Enhanced table row interactions
+    const tableRows = document.querySelectorAll('#ordersTable tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+            this.style.transform = 'scale(1.01)';
+            this.style.transition = 'all 0.2s ease';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+            this.style.zIndex = '1';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+            this.style.transform = '';
+            this.style.boxShadow = '';
+            this.style.zIndex = '';
+        });
+    });
+});
+
+
+// Highlight current sort button on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sortBy') || 'date_desc';
+    
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        if (btn.getAttribute('data-sort') === currentSort) {
+            btn.classList.add('active');
+        }
+    });
+});
+// Initialize sort state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sortBy') || 'date_desc';
+    
+    // Update dropdown text and active state
+    const sortTexts = {
+        'date_desc': 'Mới nhất trước',
+        'date_asc': 'Cũ nhất trước',
+        'total_desc': 'Tổng tiền: Cao → Thấp', 
+        'total_asc': 'Tổng tiền: Thấp → Cao',
+        'status': 'Theo trạng thái',
+        'order_id': 'Theo mã đơn hàng'
+    };
+    
+    
+    document.querySelector(`[data-sort="${currentSort}"]`)?.classList.add('active');
+    
+    const sortDropdown = document.getElementById('sortDropdown');
+    if (sortDropdown) {
+        sortDropdown.addEventListener('click', function() {
+            this.classList.add('sort-indicator');
+            setTimeout(() => this.classList.remove('sort-indicator'), 500);
+        });
+    }
+});
+
+// Enhanced table animations
+function animateTableUpdate() {
+    const rows = document.querySelectorAll('#ordersTable tbody tr');
+    rows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, index * 50);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Đảm bảo Bootstrap dropdown được khởi tạo
+    const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+    const dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl);
+    });
+    
+    console.log('Bootstrap dropdowns initialized:', dropdownList.length);
+});
+    
+// Cải thiện tooltip positioning
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltips = document.querySelectorAll('.custom-tooltip');
+    
+    tooltips.forEach(tooltip => {
+        const tooltipText = tooltip.querySelector('.tooltip-text');
+        if (tooltipText) {
+            tooltip.addEventListener('mouseenter', function() {
+                // Adjust tooltip position if it goes off screen
+                const rect = tooltipText.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                
+                if (rect.right > viewportWidth) {
+                    tooltipText.style.left = 'auto';
+                    tooltipText.style.right = '0';
+                    tooltipText.style.marginLeft = '0';
+                }
+                
+                if (rect.left < 0) {
+                    tooltipText.style.left = '0';
+                    tooltipText.style.marginLeft = '0';
+                }
+            });
+        }
+    });
+    
+    // Add click to expand functionality for mobile
+    const expandableCells = document.querySelectorAll('.expandable-cell');
+    expandableCells.forEach(cell => {
+        cell.addEventListener('click', function() {
+            this.classList.toggle('expanded');
+        });
+    });
+});
+
+// Enhanced table row hover effect
+const tableRows = document.querySelectorAll('#ordersTable tbody tr');
+tableRows.forEach(row => {
+    row.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = '#f8f9fa';
+        this.style.transform = 'scale(1.01)';
+        this.style.transition = 'all 0.2s ease';
+        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+    });
+    
+    row.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = '';
+        this.style.transform = '';
+        this.style.boxShadow = '';
+    });
+});
+// ===== SORT HIGHLIGHT FUNCTIONALITY =====
+
+// Initialize sort highlighting when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSortHighlight();
+});
+
+function initializeSortHighlight() {
+    // Tìm tất cả sort buttons với class đúng
+    const sortButtons = document.querySelectorAll('.sort-btn-modern');
+    
+    // Get current sort from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sortBy') || 'date_desc';
+    
+    // Highlight current sort button
+    sortButtons.forEach(btn => {
+        const sortType = btn.getAttribute('data-sort');
+        
+        // Remove any existing highlights
+        btn.classList.remove('highlighted');
+        
+        // Add highlight to current sort
+        if (sortType === currentSort) {
+            btn.classList.add('highlighted');
+            // Add entrance animation
+            btn.style.animation = 'highlightEntrance 0.6s ease-out';
+        }
+        
+        // Add click handler
+        btn.addEventListener('click', function(e) {
+            // Remove highlight from all buttons
+            sortButtons.forEach(b => b.classList.remove('highlighted'));
+            
+            // Add highlight to clicked button
+            this.classList.add('highlighted');
+            
+            // Add ripple effect
+            addRippleEffect(this, e);
+        });
+        
+        // Enhanced hover effects
+        btn.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('highlighted')) {
+                this.style.transform = 'translateY(-1px)';
+                this.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.2)';
+            }
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('highlighted')) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            }
+        });
+    });
+}
+
+// Highlight the current active sort button
+function highlightCurrentSortButton() {
+    // Get current sort from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sortBy') || 'date_desc';
+    
+    // Remove highlight from all sort buttons
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.classList.remove('highlighted');
+    });
+    
+    // Add highlight to current sort button
+    const currentSortBtn = document.querySelector(`[data-sort="${currentSort}"]`);
+    if (currentSortBtn) {
+        currentSortBtn.classList.add('highlighted');
+        
+        // Add entrance animation
+        currentSortBtn.style.animation = 'highlightEntrance 0.6s ease';
+        setTimeout(() => currentSortBtn.style.animation = '', 600);
+    }
+}
+
+// Add click handlers to sort buttons
+function addSortButtonHandlers() {
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // Add click animation
+            this.classList.add('clicking');
+            setTimeout(() => this.classList.remove('clicking'), 100);
+            
+            // Remove highlight from all buttons
+            document.querySelectorAll('.sort-btn').forEach(b => {
+                b.classList.remove('highlighted');
+            });
+            
+            // Add highlight to clicked button
+            this.classList.add('highlighted');
+            
+            // Add ripple effect
+            addRippleEffect(this, e);
+        });
+        
+        // Enhanced hover effects
+        btn.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('highlighted')) {
+                this.style.transform = 'translateY(-1px)';
+                this.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.2)';
+            }
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('highlighted')) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            }
+        });
+    });
+}
+
+// Add ripple effect to button click
+function addRippleEffect(button, event) {
+    const rect = button.getBoundingClientRect();
+    const ripple = document.createElement('div');
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+        z-index: 1;
+    `;
+    
+    button.style.position = 'relative';
+    button.style.overflow = 'hidden';
+    button.appendChild(ripple);
+    
+    setTimeout(() => ripple.remove(), 600);
+}
+
+// Enhanced sortOrders function with highlight
+function sortOrders(sortType) {
+    // Show loading state on clicked button
+    const clickedButton = document.querySelector(`[data-sort="${sortType}"]`);
+    if (clickedButton) {
+        const originalContent = clickedButton.innerHTML;
+        clickedButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang sắp xếp...';
+        clickedButton.disabled = true;
+        
+        // Add loading class
+        clickedButton.classList.add('loading');
+    }
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('sortBy', sortType);
+    urlParams.set('page', '1');
+    
+    // Smooth transition với delay
+    setTimeout(() => {
+        window.location.search = urlParams.toString();
+    }, 300);
+}
+
+// Add CSS animations
+const sortHighlightStyle = document.createElement('style');
+sortHighlightStyle.textContent = `
+    @keyframes highlightEntrance {
+        0% {
+            transform: scale(0.8) translateY(-2px);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.1) translateY(-2px);
+        }
+        100% {
+            transform: scale(1.05) translateY(-2px);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    
+    .sort-btn.loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+`;
+document.head.appendChild(sortHighlightStyle);
+
+
+</script>
 </body>
 </html>
