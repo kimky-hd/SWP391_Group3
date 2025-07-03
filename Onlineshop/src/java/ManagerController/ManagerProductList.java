@@ -7,6 +7,8 @@ package ManagerController;
 import DAO.CategoryDAO;
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+
+import Model.Account;
 import Model.Category;
 import Model.Product;
 import Model.ProductComponent;
@@ -49,6 +51,13 @@ public class ManagerProductList extends HttpServlet {
             index = "1";
         }
         int indexPage = Integer.parseInt(index);
+        
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
 
         List<Product> listProductByIndex = productDAO.getProductByIndexForManage(indexPage);
         for (Product p : listProductByIndex) {
@@ -79,6 +88,8 @@ public class ManagerProductList extends HttpServlet {
         request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);
 
     }
+    }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

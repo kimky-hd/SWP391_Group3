@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class VoucherDAO extends DBContext {
@@ -35,7 +36,7 @@ public class VoucherDAO extends DBContext {
                     WHERE isActive = true 
                     AND CURRENT_TIMESTAMP BETWEEN startDate AND endDate
                     AND usedCount < usageLimit
-                    ORDER BY discountAmount DESC
+                    ORDER BY created_date DESC, discountAmount DESC
                     """;
 
         try {
@@ -51,7 +52,7 @@ public class VoucherDAO extends DBContext {
         return vouchers;
     }
 
-    // **METHOD MỚI**: Lấy danh sách voucher với trạng thái đã thêm vào account hay chưa
+    // Lấy danh sách voucher với trạng thái đã thêm vào account hay chưa
     public List<Voucher> getVouchersWithAccountStatus(int accountId) {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = """
@@ -63,7 +64,7 @@ public class VoucherDAO extends DBContext {
                     WHERE v.isActive = true 
                     AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate
                     AND v.usedCount < v.usageLimit
-                    ORDER BY v.discountAmount DESC
+                    ORDER BY v.created_date DESC, v.discountAmount DESC
                     """;
 
         try {
@@ -83,7 +84,7 @@ public class VoucherDAO extends DBContext {
         return vouchers;
     }
 
-    // **METHOD MỚI**: Kiểm tra voucher đã được thêm vào account chưa
+    // Kiểm tra voucher đã được thêm vào account chưa
     public boolean isVoucherAddedToAccount(int accountId, int voucherId) {
         String sql = "SELECT 1 FROM AccountVoucher WHERE accountId = ? AND voucherId = ?";
         try {
@@ -98,7 +99,7 @@ public class VoucherDAO extends DBContext {
         }
     }
 
-    // **METHOD MỚI**: Thêm voucher vào tài khoản người dùng
+    // Thêm voucher vào tài khoản người dùng
     public boolean addVoucherToAccount(int accountId, int voucherId) {
         // Kiểm tra xem voucher đã được thêm vào account chưa
         if (isVoucherAddedToAccount(accountId, voucherId)) {
@@ -159,6 +160,7 @@ public class VoucherDAO extends DBContext {
                     AND CURRENT_TIMESTAMP BETWEEN v.startDate AND v.endDate
                     AND v.usedCount < v.usageLimit
                     AND v.minOrderValue <= ?
+                    ORDER BY v.discountAmount DESC
                     """;
 
         try {
@@ -228,7 +230,7 @@ public class VoucherDAO extends DBContext {
         }
     }
 
-    // Helper method để map ResultSet thành Voucher object
+    // Helper method để map ResultSet thành Voucher object - CẬP NHẬT
     private Voucher mapVoucher(ResultSet rs) throws SQLException {
         Voucher voucher = new Voucher();
         voucher.setVoucherId(rs.getInt("voucherId"));
@@ -241,13 +243,14 @@ public class VoucherDAO extends DBContext {
         voucher.setUsageLimit(rs.getInt("usageLimit"));
         voucher.setUsedCount(rs.getInt("usedCount"));
         voucher.setDescription(rs.getString("description"));
+        voucher.setCreatedDate(rs.getTimestamp("created_date")); // Thêm dòng này
         return voucher;
     }
 
-    // Các method khác giữ nguyên...
+    // Lấy tất cả vouchers với phân trang - CẬP NHẬT
     public List<Voucher> getAllVouchersWithPaging(int page, int pageSize) {
         List<Voucher> vouchers = new ArrayList<>();
-        String sql = "SELECT * FROM Voucher ORDER BY voucherId ASC LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM Voucher ORDER BY  voucherId ASC LIMIT ? OFFSET ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -291,26 +294,28 @@ public class VoucherDAO extends DBContext {
         }
     }
 
+    // Thêm voucher mới - CẬP NHẬT
     public boolean addVoucher(Voucher voucher) {
-        String sql = "INSERT INTO Voucher (code, discountAmount, minOrderValue, startDate, endDate, isActive, usageLimit, usedCount, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Voucher (code, discountAmount, minOrderValue, startDate, endDate, isActive, usageLimit, usedCount, description, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, voucher.getCode());
             ps.setDouble(2, voucher.getDiscountAmount());
             ps.setDouble(3, voucher.getMinOrderValue());
-            ps.setTimestamp(4, (Timestamp) voucher.getStartDate());
-            ps.setTimestamp(5, (Timestamp) voucher.getEndDate());
+            ps.setTimestamp(4, new Timestamp(voucher.getStartDate().getTime()));
+            ps.setTimestamp(5, new Timestamp(voucher.getEndDate().getTime()));
             ps.setBoolean(6, voucher.isActive());
             ps.setInt(7, voucher.getUsageLimit());
             ps.setInt(8, voucher.getUsedCount());
             ps.setString(9, voucher.getDescription());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("SQL Error: " + e.getMessage());
+            System.err.println("SQL Error in addVoucher: " + e.getMessage());
             return false;
         }
     }
 
+    // Cập nhật voucher - KHÔNG thay đổi created_date
     public boolean updateVoucher(Voucher voucher) {
         String sql = "UPDATE Voucher SET code = ?, discountAmount = ?, minOrderValue = ?, startDate = ?, endDate = ?, usageLimit = ?, description = ? WHERE voucherId = ?";
         try {
@@ -318,8 +323,8 @@ public class VoucherDAO extends DBContext {
             ps.setString(1, voucher.getCode());
             ps.setDouble(2, voucher.getDiscountAmount());
             ps.setDouble(3, voucher.getMinOrderValue());
-            ps.setTimestamp(4, (Timestamp) voucher.getStartDate());
-            ps.setTimestamp(5, (Timestamp) voucher.getEndDate());
+            ps.setTimestamp(4, new Timestamp(voucher.getStartDate().getTime()));
+            ps.setTimestamp(5, new Timestamp(voucher.getEndDate().getTime()));
             ps.setInt(6, voucher.getUsageLimit());
             ps.setString(7, voucher.getDescription());
             ps.setInt(8, voucher.getVoucherId());
@@ -341,5 +346,44 @@ public class VoucherDAO extends DBContext {
             System.out.println("toggleVoucherStatus: " + e.getMessage());
             return false;
         }
+    }
+
+    // Method mới: Lấy vouchers theo khoảng thời gian tạo
+    public List<Voucher> getVouchersByDateRange(Date startDate, Date endDate) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = "SELECT * FROM Voucher WHERE created_date BETWEEN ? AND ? ORDER BY created_date DESC";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setTimestamp(1, new Timestamp(startDate.getTime()));
+            ps.setTimestamp(2, new Timestamp(endDate.getTime()));
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                vouchers.add(mapVoucher(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("getVouchersByDateRange: " + e.getMessage());
+        }
+        return vouchers;
+    }
+
+    // Method mới: Lấy vouchers mới nhất
+    public List<Voucher> getRecentVouchers(int limit) {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = "SELECT * FROM Voucher ORDER BY created_date DESC LIMIT ?";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                vouchers.add(mapVoucher(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("getRecentVouchers: " + e.getMessage());
+        }
+        return vouchers;
     }
 }

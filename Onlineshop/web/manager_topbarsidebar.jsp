@@ -182,12 +182,10 @@
             <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
                 <!-- Left: Brand -->
-                <a class="topbar-brand fw-bold text-uppercase" href="#">
+                <a class="topbar-brand fw-bold text-uppercase" href="managerproductlist">
                     <i class="fas fa-seedling me-2"></i> <!-- icon cây hoa -->
                     Flower Shop
                 </a>
-
-
 
                 <!-- Right: Actions -->
                 <ul class="navbar-nav topbar-actions d-flex align-items-center">
@@ -257,6 +255,13 @@
                         <span>Quản lý Đơn hàng</span>
                     </a>
                 </li>
+                <!-- Thêm liên kết đến trang quản lý đơn hàng tự thiết kế -->
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
+                        <i class="fas fa-palette"></i>
+                        <span>Quản lý đơn hàng tự thiết kế</span>
+                    </a>
+                </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/customers" class="nav-link">
                         <i class="fas fa-users"></i>
@@ -270,7 +275,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/promotions" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
                         <i class="fas fa-percent"></i>
                         <span>Khuyến mãi</span>
                     </a>

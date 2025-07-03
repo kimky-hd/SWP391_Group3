@@ -6,6 +6,7 @@
 package ManagerController;
 
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import jakarta.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -58,12 +62,20 @@ public class SearchProductByName extends HttpServlet {
     throws ServletException, IOException {
         String txt = request.getParameter("txt").trim();
         ProductDAO productDAO = new ProductDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         List<Product> product = productDAO.getProductByTitle(txt);
         
         request.setAttribute("txt", txt);
         request.setAttribute("productList", product);
         request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);
     } 
+
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.

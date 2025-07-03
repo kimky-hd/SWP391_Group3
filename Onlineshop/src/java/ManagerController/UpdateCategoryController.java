@@ -6,6 +6,7 @@
 package ManagerController;
 
 import DAO.CategoryDAO;
+import Model.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -74,13 +75,18 @@ public class UpdateCategoryController extends HttpServlet {
         String categoryName =request.getParameter("categoryName");
         request.setAttribute("oldValue", categoryName);
         CategoryDAO catedao =new CategoryDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
         boolean checkduplicate = catedao.CheckDuplicateCategory(categoryName);
         
         if(checkduplicate){
             request.setAttribute("msg", "Thể loại này đã tồn tại!");
             request.getRequestDispatcher("Manager_UpdateCategory.jsp").forward(request, response);
         }else{
-            HttpSession session = request.getSession();
             boolean updatecheck = catedao.update(categoryID,categoryName);
             if(updatecheck){
             session.setAttribute("success", "Sửa thành công!");
@@ -88,7 +94,7 @@ public class UpdateCategoryController extends HttpServlet {
             }
         }
     }
-
+    }
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description
