@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.CartDAO;
+import DAO.DBContext;
 import DAO.OrderDAO;
 import DAO.ProductDAO;
 import Model.Order;
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @WebServlet(name = "AdminOrderController", urlPatterns = {"/orders"})
 public class AdminOrderController extends HttpServlet {
@@ -40,22 +44,28 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     
     try {
         switch (action) {
-            case "list":
-                handleFilterOrders(request, response);
-                break;
-            case "detail":
-                viewOrderDetail(request, response);
-                break;
-            case "print":
-                printOrder(request, response);
-                break;
-            case "searchCustomers":
-                searchCustomers(request, response);
-                break;
-            default:
-                handleFilterOrders(request, response);
-                break;
-        }
+    case "list":
+        handleFilterOrders(request, response);
+        break;
+    case "detail":
+        viewOrderDetail(request, response);
+        break;
+    case "print":
+        printOrder(request, response);
+        break;
+    case "searchCustomers":
+        searchCustomers(request, response);
+        break;
+    case "quickSearch":
+        handleQuickSearch(request, response);
+        break;
+    case "getOrderDetails":  
+    getOrderDetailsForNotification(request, response); 
+    break;  
+default:
+    handleFilterOrders(request, response);
+    break;
+}
     } catch (Exception e) {
         handleError(request, response, e);
     }
@@ -75,7 +85,7 @@ private void searchCustomers(HttpServletRequest request, HttpServletResponse res
         }
         
         // Tìm kiếm khách hàng theo tên
-        List<Order> orders = orderDAO.getFilteredOrders(null, null, null, query, 1, 10);
+       List<Order> orders = orderDAO.getFilteredOrders(null, null, null, query, 1, 10, "date_desc");
         
         // Tạo danh sách khách hàng unique
         Map<String, CustomerInfo> uniqueCustomers = new HashMap<>();
@@ -135,7 +145,10 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
         String status = request.getParameter("status");
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
-        
+        String sortBy = request.getParameter("sortBy");
+if (sortBy == null || sortBy.isEmpty()) {
+    sortBy = "date_desc"; // Mặc định sắp xếp theo ngày mới nhất
+}
         // In ra các tham số để debug
         System.out.println("Filter parameters: customerName=" + customerName + ", status=" + status + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo);
         
@@ -160,13 +173,8 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
         List<Order> orders;
         int totalOrders = 0;
         
-        if (customerName != null || status != null || dateFrom != null || dateTo != null) {
-            orders = orderDAO.getFilteredOrders(status, dateFrom, dateTo, customerName, page, size);
-            totalOrders = orderDAO.countTotalFilteredOrders(status, dateFrom, dateTo, customerName);
-        } else {
-            orders = orderDAO.getAllOrders();
-            totalOrders = orders.size(); // Hoặc có thể gọi một phương thức đếm tổng số đơn hàng
-        }
+       orders = orderDAO.getFilteredOrders(status, dateFrom, dateTo, customerName, page, size, sortBy);
+totalOrders = orderDAO.countTotalFilteredOrders(status, dateFrom, dateTo, customerName, sortBy);
         
         // Tính toán thông tin phân trang
         int totalPages = (int) Math.ceil((double) totalOrders / size);
@@ -185,6 +193,7 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
         request.setAttribute("status", status);
         request.setAttribute("dateFrom", dateFrom);
         request.setAttribute("dateTo", dateTo);
+        request.setAttribute("sortBy", sortBy);
         
         // Thêm thông báo nếu không tìm thấy kết quả
         if (orders.isEmpty() && (customerName != null || status != null || dateFrom != null || dateTo != null)) {
@@ -214,6 +223,10 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             case "update":
             case "updateStatus":  // Thêm case này
                 updateOrderStatus(request, response);
+                break;
+            
+            case "notify":  // THÊM CASE NÀY
+                sendCustomNotification(request, response);
                 break;
             
             default:
@@ -463,7 +476,7 @@ private String createOrderDetailsHtml(List<OrderDetail> orderDetails) {
 // Trong phần xử lý statusId = 6 (hủy đơn hàng)
 // Trong phần xử lý statusId = 6 (hủy đơn hàng)
 else if (statusId == 6 && currentOrder.getStatusId() != 6) {
-    success = orderDAO.updateOrderStatus(orderId, statusId);
+    orderDAO.cancelOrder(orderId);
     
     if (success) {
         // Hoàn trả số lượng sản phẩm về kho
@@ -485,7 +498,7 @@ else if (statusId == 6 && currentOrder.getStatusId() != 6) {
         
         // Gửi email thông báo hủy đơn hàng
         try {
-            if (currentOrder.getEmail() != null && !currentOrder.getEmail().trim().isEmpty()) {
+        if (currentOrder.getEmail() != null && !currentOrder.getEmail().trim().isEmpty()) {
                 // Lấy chi tiết đơn hàng để tạo nội dung email
                 String orderDetailsHtml = createOrderDetailsHtml(orderDetails);
                 
@@ -503,9 +516,17 @@ System.out.println("Thông tin email người nhận: '" + currentOrder.getEmail
                     currentOrder.getFullName(),
                     String.valueOf(orderId),
                     cancelReason
-                );
-                
+                );             
+            if (emailSent) {
+                System.out.println("Đã gửi email thông báo hủy đơn hàng thành công đến: " + currentOrder.getEmail());
+                message = "Đơn hàng đã được hủy, số lượng sản phẩm đã được hoàn trả về kho và email thông báo đã được gửi";
+            } else {
+                System.out.println("Không thể gửi email thông báo hủy đơn hàng đến: " + currentOrder.getEmail());
+                message = "Đơn hàng đã được hủy và số lượng sản phẩm đã được hoàn trả về kho, nhưng không thể gửi email thông báo";
             }
+        } else {
+            message = "Đơn hàng đã được hủy và số lượng sản phẩm đã được hoàn trả về kho, nhưng không có email khách hàng để gửi thông báo";
+        }
         }  catch (Exception emailError) {
             System.err.println("Lỗi khi gửi email thông báo hủy đơn hàng: " + emailError.getMessage());
             emailError.printStackTrace();
@@ -540,32 +561,26 @@ System.out.println("Thông tin email người nhận: '" + currentOrder.getEmail
         sendJsonError(response, "Dữ liệu số không hợp lệ");
     }
 }
-    private void testEmailConnection(HttpServletRequest request, HttpServletResponse response) 
+    // Thêm method test email
+private void testEmail(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
     
-    PrintWriter out = response.getWriter();
-    JsonObject json = new JsonObject();
-    
     try {
         boolean connectionSuccess = EmailSender.testEmailConnection();
         
-        if (connectionSuccess) {
-            json.addProperty("success", true);
-            json.addProperty("message", "Kết nối email thành công!");
-        } else {
-            json.addProperty("success", false);
-            json.addProperty("message", "Không thể kết nối đến máy chủ email.");
-        }
+        Map<String, Object> jsonResponse = new HashMap<>();
+        jsonResponse.put("success", connectionSuccess);
+        jsonResponse.put("message", connectionSuccess ? "Kết nối email thành công!" : "Không thể kết nối email");
+        
+        response.getWriter().write(gson.toJson(jsonResponse));
     } catch (Exception e) {
-        json.addProperty("success", false);
-        json.addProperty("message", "Lỗi kiểm tra kết nối email: " + e.getMessage());
-        e.printStackTrace();
+        Map<String, Object> jsonResponse = new HashMap<>();
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Lỗi: " + e.getMessage());
+        response.getWriter().write(gson.toJson(jsonResponse));
     }
-    
-    out.print(json.toString());
-    out.flush();
 }
     
 
@@ -620,5 +635,281 @@ System.out.println("Thông tin email người nhận: '" + currentOrder.getEmail
         request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
         viewAllOrders(request, response);
     }
+    private void handleQuickSearch(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        // Lấy tham số quickOrderId từ form
+        String quickOrderIdParam = request.getParameter("quickOrderId");
+        
+        // Kiểm tra nếu tham số rỗng hoặc null
+        if (quickOrderIdParam == null || quickOrderIdParam.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Vui lòng nhập mã đơn hàng để tìm kiếm.");
+            // Chuyển về trang orders với thông báo lỗi
+            handleFilterOrders(request, response);
+            return;
+        }
+        
+        // Chuyển đổi string thành số nguyên
+        int orderId;
+        try {
+            orderId = Integer.parseInt(quickOrderIdParam.trim());
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Mã đơn hàng phải là một số nguyên hợp lệ.");
+            // Chuyển về trang orders với thông báo lỗi
+            handleFilterOrders(request, response);
+            return;
+        }
+        
+        // Tìm kiếm đơn hàng theo ID
+        Order order = orderDAO.getOrderById(orderId);
+        
+        if (order != null) {
+            // Tìm thấy đơn hàng
+            List<Order> orders = new ArrayList<>();
+            orders.add(order);
+            
+            // Set attributes cho JSP
+            request.setAttribute("orders", orders);
+            request.setAttribute("successMessage", "Tìm thấy đơn hàng với mã: " + orderId);
+            request.setAttribute("searchedOrderId", orderId);
+            
+            // Tính toán thống kê (có thể giữ nguyên hoặc tạo thống kê riêng)
+            Map<String, Object> statistics = orderDAO.getOrderStatistics();
+            request.setAttribute("statistics", statistics);
+            
+            // Set thông tin phân trang (chỉ có 1 kết quả)
+            request.setAttribute("currentPage", 1);
+            request.setAttribute("pageSize", 1);
+            request.setAttribute("totalPages", 1);
+            request.setAttribute("totalItems", 1);
+            
+        } else {
+            // Không tìm thấy đơn hàng
+            request.setAttribute("orders", new ArrayList<>());
+            request.setAttribute("warningMessage", "Không tìm thấy đơn hàng với mã: " + orderId);
+            request.setAttribute("searchedOrderId", orderId);
+            
+            // Vẫn hiển thị thống kê tổng quan
+            Map<String, Object> statistics = orderDAO.getOrderStatistics();
+            request.setAttribute("statistics", statistics);
+            
+            // Set thông tin phân trang (0 kết quả)
+            request.setAttribute("currentPage", 1);
+            request.setAttribute("pageSize", 10);
+            request.setAttribute("totalPages", 0);
+            request.setAttribute("totalItems", 0);
+        }
+        
+        // Chuyển đến trang orders.jsp để hiển thị kết quả
+        request.getRequestDispatcher("admin/orders.jsp").forward(request, response);
+        
+    } catch (Exception e) {
+        System.out.println("Error in handleQuickSearch: " + e.getMessage());
+        e.printStackTrace();
+        handleError(request, response, e);
+    }
+}
+    /**
+ * Tạo template HTML đơn giản cho email thông báo đơn hàng
+ */
+private String createOrderNotificationEmailTemplate(Order order, String customMessage) {
+    StringBuilder html = new StringBuilder();
     
+    html.append("<!DOCTYPE html>")
+        .append("<html lang='vi'>")
+        .append("<head>")
+        .append("<meta charset='UTF-8'>")
+        .append("<meta name='viewport' content='width=device-width, initial-scale=1.0'>")
+        .append("<style>")
+        .append("body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f4f4f4; }")
+        .append(".container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }")
+        .append(".header { text-align: center; border-bottom: 2px solid #4CAF50; padding-bottom: 20px; margin-bottom: 20px; }")
+        .append(".header h1 { color: #4CAF50; margin: 0; }")
+        .append(".message { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; }")
+        .append(".order-info { margin: 20px 0; }")
+        .append(".info-table { width: 100%; border-collapse: collapse; }")
+        .append(".info-table td { padding: 8px; border-bottom: 1px solid #ddd; }")
+        .append(".info-table td:first-child { font-weight: bold; width: 30%; }")
+        .append(".footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; }")
+        .append("</style>")
+        .append("</head>")
+        .append("<body>");
+    
+    html.append("<div class='container'>");
+    
+    // Header đơn giản
+    html.append("<div class='header'>")
+        .append("<h1>Thông báo đơn hàng</h1>")
+        .append("</div>");
+    
+    // Lời chào
+    html.append("<p>Kính chào <strong>")
+        .append(order.getFullName() != null ? order.getFullName() : "Quý khách")
+        .append("</strong>,</p>");
+    
+    // Tin nhắn tùy chỉnh
+    if (customMessage != null && !customMessage.trim().isEmpty()) {
+        html.append("<div class='message'>")
+            .append("<strong>Thông báo:</strong><br>")
+            .append(customMessage.replace("\n", "<br>"))
+            .append("</div>");
+    }
+    
+    // Thông tin đơn hàng
+    html.append("<div class='order-info'>")
+        .append("<h3>Thông tin đơn hàng #").append(order.getOrderId()).append("</h3>")
+        .append("<table class='info-table'>");
+    
+    html.append("<tr><td>Ngày đặt:</td><td>")
+        .append(order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A")
+        .append("</td></tr>");
+    
+    html.append("<tr><td>Khách hàng:</td><td>")
+        .append(order.getFullName() != null ? order.getFullName() : "N/A")
+        .append("</td></tr>");
+    
+    html.append("<tr><td>Email:</td><td>")
+        .append(order.getEmail() != null ? order.getEmail() : "N/A")
+        .append("</td></tr>");
+    
+    html.append("<tr><td>Số điện thoại:</td><td>")
+        .append(order.getPhone() != null ? order.getPhone() : "N/A")
+        .append("</td></tr>");
+    
+    html.append("<tr><td>Địa chỉ:</td><td>")
+        .append(order.getAddress() != null ? order.getAddress() : "N/A")
+        .append("</td></tr>");
+    
+    html.append("<tr><td>Tổng tiền:</td><td>")
+    .append(String.format("%,.0f VNĐ", order.getTotal())) 
+    .append("</td></tr>");
+    
+    html.append("<tr><td>Trạng thái:</td><td>")
+        .append(order.getStatus() != null ? order.getStatus() : "Pending")
+        .append("</td></tr>");
+    
+    html.append("</table></div>");
+    
+    // Lời cảm ơn
+    html.append("<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>");
+    
+    // Footer đơn giản
+    html.append("<div class='footer'>")
+        .append("<p><strong>Cửa hàng trực tuyến</strong></p>")
+        .append("<p>Email: anhhoang30012004@gmail.com | Hotline: 0123 456 789</p>")
+        .append("<p><small>Email này được gửi tự động, vui lòng không trả lời.</small></p>")
+        .append("</div>");
+    
+    html.append("</div></body></html>");
+    
+    return html.toString();
+}
+    private void sendCustomNotification(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+    
+    try {
+        String orderIdParam = request.getParameter("orderId");
+        String customMessage = request.getParameter("message");
+        
+        if (orderIdParam == null || customMessage == null) {
+            sendJsonError(response, "Thiếu thông tin cần thiết");
+            return;
+        }
+        
+        int orderId = Integer.parseInt(orderIdParam);
+        
+        // Lấy thông tin đơn hàng
+        Order order = orderDAO.getOrderById(orderId);
+        if (order == null) {
+            sendJsonError(response, "Không tìm thấy đơn hàng");
+            return;
+        }
+        
+        // Kiểm tra email khách hàng
+        if (order.getEmail() == null || order.getEmail().trim().isEmpty()) {
+            sendJsonError(response, "Đơn hàng không có thông tin email khách hàng");
+            return;
+        }
+        
+          // Tạo tiêu đề email
+        String subject = "🛍️ Thông báo về đơn hàng #" + orderId + " - Cửa hàng trực tuyến";
+        
+        // Tạo nội dung email HTML đẹp
+        String htmlContent = createOrderNotificationEmailTemplate(order, customMessage);
+        
+        // Gửi email
+        boolean emailSent = EmailSender.sendNotificationEmail(
+            order.getEmail(),
+            subject,
+            htmlContent
+        );
+        
+        Map<String, Object> jsonResponse = new HashMap<>();
+        if (emailSent) {
+            jsonResponse.put("success", true);
+            jsonResponse.put("message", "Thông báo đã được gửi thành công đến " + order.getEmail());
+        } else {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Không thể gửi thông báo. Vui lòng thử lại.");
+        }
+        
+        response.getWriter().write(gson.toJson(jsonResponse));
+        
+    } catch (NumberFormatException e) {
+        sendJsonError(response, "Mã đơn hàng không hợp lệ");
+    } catch (Exception e) {
+        sendJsonError(response, "Lỗi hệ thống: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+ private void getOrderDetailsForNotification(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+    
+    try {
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        
+        Map<String, String> orderInfo = orderDAO.getOrderInfoForNotification(orderId);
+        
+        Map<String, Object> jsonResponse = new HashMap<>();
+        
+        if (orderInfo != null && !orderInfo.isEmpty()) {
+            jsonResponse.put("success", true);
+            jsonResponse.put("fullName", orderInfo.get("name") != null ? orderInfo.get("name") : "N/A");
+            jsonResponse.put("email", orderInfo.get("email") != null ? orderInfo.get("email") : "N/A");
+            jsonResponse.put("address", orderInfo.get("address") != null ? orderInfo.get("address") : "N/A");
+            jsonResponse.put("phoneNumber", orderInfo.get("phoneNumber") != null ? orderInfo.get("phoneNumber") : "N/A");
+            // THÊM CÁC DÒNG NÀY:
+            jsonResponse.put("status", orderInfo.get("status") != null ? orderInfo.get("status") : "N/A");
+            jsonResponse.put("statusId", orderInfo.get("statusId") != null ? orderInfo.get("statusId") : "N/A");
+        } else {
+            jsonResponse.put("success", false);
+            jsonResponse.put("fullName", "N/A");
+            jsonResponse.put("email", "N/A");
+            jsonResponse.put("address", "N/A");
+            jsonResponse.put("phoneNumber", "N/A");
+            // THÊM CÁC DÒNG NÀY:
+            jsonResponse.put("status", "N/A");
+            jsonResponse.put("statusId", "N/A");
+        }
+        
+        response.getWriter().write(gson.toJson(jsonResponse));
+        
+    } catch (Exception e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("success", false);
+        errorResponse.put("fullName", "N/A");
+        errorResponse.put("email", "N/A");
+        errorResponse.put("address", "N/A");
+        errorResponse.put("phoneNumber", "N/A");
+        // THÊM CÁC DÒNG NÀY:
+        errorResponse.put("status", "N/A");
+        errorResponse.put("statusId", "N/A");
+        response.getWriter().write(gson.toJson(errorResponse));
+        e.printStackTrace();
+    }
+}
 }
