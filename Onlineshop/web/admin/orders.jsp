@@ -1252,11 +1252,19 @@
     align-items: center;
     gap: 5px;
 }
+
 </style>
 </head>
 <body>
+    <jsp:include page="sidebar.jsp">
+    <jsp:param name="currentPage" value="orders" />
+</jsp:include>
+    <!-- Include Manager Topbar -->
     <jsp:include page="../manager_topbarsidebar.jsp" />
     
+    <jsp:include page="sidebar.jsp">
+    <jsp:param name="currentPage" value="orders" />
+</jsp:include>
     <main class="main-content">
         <div class="container-fluid">
             <h1 class="page-title animate-fade-in">
