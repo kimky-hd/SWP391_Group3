@@ -252,6 +252,7 @@
 
 <!-- Sidebar -->
 <nav class="sidebar">
+    
     <ul class="sidebar-menu">
         <li>
             <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
@@ -272,11 +273,11 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/orders" class="nav-link">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Quản lý Đơn hàng</span>
-            </a>
-        </li>
+    <a href="${pageContext.request.contextPath}/orders" class="nav-link ${param.currentPage == 'orders' ? 'active' : ''}">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Quản lý Đơn hàng</span>
+    </a>
+</li>
         <li>
             <a href="${pageContext.request.contextPath}/customers" class="nav-link ${param.currentPage == 'customers' ? 'active' : ''}">
                 <i class="fas fa-users"></i>
@@ -302,7 +303,7 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+            <a href="${pageContext.request.contextPath}/revenueChart.jsp" class="nav-link">
                 <i class="fas fa-chart-bar"></i>
                 <span>Báo cáo & Thống kê</span>
             </a>

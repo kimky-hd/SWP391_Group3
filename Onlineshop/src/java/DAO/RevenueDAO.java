@@ -11,7 +11,7 @@ public class RevenueDAO extends DBContext {
     public List<RevenueByMonth> getRevenuePerMonth() {
         List<RevenueByMonth> list = new ArrayList<>();
         String sql = "SELECT MONTH(ngayXuat) AS thang, SUM(tongGia) AS doanhThu "
-                + "FROM HoaDon WHERE statusID = 2 GROUP BY MONTH(ngayXuat)";
+                + "FROM HoaDon WHERE statusID = 4 GROUP BY MONTH(ngayXuat)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -28,7 +28,7 @@ public class RevenueDAO extends DBContext {
     // Tổng doanh thu toàn bộ sản phẩm đã bán
     public double getTotalRevenue() {
         String sql = "SELECT SUM(price * quantity) AS total FROM OrderDetail od "
-                + "JOIN HoaDon hd ON od.maHD = hd.maHD WHERE hd.statusID = 2";
+                + "JOIN HoaDon hd ON od.maHD = hd.maHD WHERE hd.statusID = 4";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
@@ -64,7 +64,7 @@ public class RevenueDAO extends DBContext {
                 + "FROM OrderDetail od "
                 + "JOIN Product p ON od.productID = p.productID "
                 + "JOIN HoaDon hd ON od.maHD = hd.maHD "
-                + "WHERE hd.statusID = 2 "
+                + "WHERE hd.statusID = 4 "
                 + "GROUP BY p.title ORDER BY totalSold DESC";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -87,7 +87,7 @@ public class RevenueDAO extends DBContext {
                 + "FROM Account a JOIN Profile p ON a.accountID = p.accountID "
                 + "JOIN HoaDon hd ON a.accountID = hd.accountID "
                 + "JOIN OrderDetail od ON hd.maHD = od.maHD "
-                + "WHERE hd.statusID = 2 "
+                + "WHERE hd.statusID = 4 "
                 + "GROUP BY a.username, p.fullName "
                 + "ORDER BY totalSpent DESC";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -110,7 +110,7 @@ public class RevenueDAO extends DBContext {
                 + "FROM HoaDon hd "
                 + "JOIN InforLine il ON hd.maHD = il.maHD "
                 + "JOIN Account a ON hd.accountID = a.accountID "
-                + "WHERE hd.statusID = 2 "
+                + "WHERE hd.statusID = 4 "
                 + "GROUP BY a.username, il.name "
                 + "ORDER BY totalSpent DESC";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -131,7 +131,7 @@ public class RevenueDAO extends DBContext {
     public List<RevenueByMonth> getRevenuePerMonthBySelectedMonth(int selectedMonth) {
         List<RevenueByMonth> list = new ArrayList<>();
         String sql = "SELECT MONTH(ngayXuat) AS thang, SUM(tongGia) AS doanhThu "
-                + "FROM HoaDon WHERE statusID = 2 AND MONTH(ngayXuat) = ? "
+                + "FROM HoaDon WHERE statusID = 4 AND MONTH(ngayXuat) = ? "
                 + "GROUP BY MONTH(ngayXuat)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, selectedMonth); // Thêm tháng vào query
@@ -155,7 +155,7 @@ public class RevenueDAO extends DBContext {
                 + "FROM OrderDetail od "
                 + "JOIN Product p ON od.productID = p.productID "
                 + "JOIN HoaDon hd ON od.maHD = hd.maHD "
-                + "WHERE hd.statusID = 2 AND p.title LIKE ? "
+                + "WHERE hd.statusID = 4 AND p.title LIKE ? "
                 + "GROUP BY p.title ORDER BY totalSold DESC";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "%" + productSearch + "%");  // Tìm kiếm theo tên sản phẩm
@@ -179,7 +179,7 @@ public class RevenueDAO extends DBContext {
                 + "FROM HoaDon hd "
                 + "JOIN InforLine il ON hd.maHD = il.maHD "
                 + "JOIN Account a ON hd.accountID = a.accountID "
-                + "WHERE hd.statusID = 2 AND (a.username LIKE ? OR il.name LIKE ?) "
+                + "WHERE hd.statusID = 4 AND (a.username LIKE ? OR il.name LIKE ?) "
                 + "GROUP BY a.username, il.name "
                 + "ORDER BY totalSpent DESC";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

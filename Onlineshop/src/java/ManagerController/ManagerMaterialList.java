@@ -57,8 +57,8 @@ public class ManagerMaterialList extends HttpServlet {
         }
 
         int allMaterial = materialDAO.countAllMaterial();
-        int endPage = allMaterial / 10;
-        if (allMaterial % 10 != 0) {
+        int endPage = allMaterial / 8;
+        if (allMaterial % 8 != 0) {
             endPage++;
         }
         
