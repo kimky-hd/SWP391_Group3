@@ -313,9 +313,9 @@ public class OrderController extends HttpServlet {
             return;
         }
 
-        // --- Bước 3: Kiểm tra trạng thái đơn hàng (chỉ hủy đơn hàng đang "Pending") ---
-        if (!order.getStatus().equals("Pending")) {
-            sendJsonResponse(response, createErrorResponse("Không thể hủy đơn hàng này vì trạng thái không phải là 'Pending'."));
+        // --- Bước 3: Kiểm tra trạng thái đơn hàng (chỉ hủy đơn hàng đang "Chờ duyệt") ---
+        if (!order.getStatus().equals("Chờ duyệt")) {
+            sendJsonResponse(response, createErrorResponse("Không thể hủy đơn hàng này vì trạng thái không phải là 'Chờ duyệt'."));
             return;
         }
 

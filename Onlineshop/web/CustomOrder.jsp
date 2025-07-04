@@ -61,13 +61,13 @@
 
                                 <div class="form-group">
                                     <label for="description" class="form-label">Mô tả chi tiết</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5"placeholder="Mô tả chi tiết về sản phẩm bạn muốn đặt hàng (loại hoa, màu sắc, kích thước, dịp sử dụng, ngân sách dự kiến...)"></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="5"placeholder="Mô tả chi tiết về sản phẩm bạn muốn đặt hàng (loại hoa, màu sắc, kích thước, dịp sử dụng, ngân sách dự kiến...)"><c:out value="${sessionScope.savedDescription}"/></textarea>
                                     <small class="text-muted"><i class="fas fa-lightbulb"></i> Càng chi tiết càng giúp chúng tôi hiểu rõ nhu cầu của bạn</small>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="quantity" class="form-label">Số lượng</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" value="1">
+                                    <input type="number" class="form-control" id="quantity" name="quantity" value="${not empty sessionScope.savedQuantity ? sessionScope.savedQuantity : '1'}">
                                     <div class="form-group mt-2">
                                         <img id="previewImage" src="#" alt="Ảnh demo" style="max-width: 100%; display: none; border: 1px dashed #ccc; padding: 10px; margin-top: 10px;" />
                                     </div>
