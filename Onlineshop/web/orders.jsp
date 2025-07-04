@@ -494,9 +494,9 @@
                                         <i class="fa fa-receipt"></i> Đơn hàng #${order.orderId} - <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy" />
                                     </button>
                                 </h5>
-                                <span class="badge ${order.status eq 'Pending' ? 'badge-warning' : 
-                                                     order.status eq 'Completed' ? 'badge-success' : 
-                                                     order.status eq 'Cancelled' ? 'badge-danger' : 'badge-info'} order-status-badge">
+                                <span class="badge ${order.status eq 'Chờ duyệt' ? 'badge-warning' : 
+                                                     order.status eq 'Đã giao hàng thành công' ? 'badge-success' : 
+                                                     order.status eq 'Đã hủy' ? 'badge-danger' : 'badge-info'} order-status-badge">
                                           ${order.status}
                                       </span>
                                       <strong class="order-total ml-4">Tổng tiền: <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="đ"/></strong>
@@ -572,7 +572,7 @@
                                             </table>
                                         </div>
 
-                                        <c:if test="${order.status eq 'Pending'}">
+                                        <c:if test="${order.status eq 'Chờ duyệt'}">
                                             <div class="text-right mt-4">
                                                 <button class="btn btn-danger" onclick="cancelOrder(${order.orderId})">
                                                     <i class="fa fa-times-circle mr-2"></i> Hủy đơn hàng

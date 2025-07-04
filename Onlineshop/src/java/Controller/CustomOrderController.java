@@ -83,6 +83,10 @@ public class CustomOrderController extends HttpServlet {
             String description = request.getParameter("description");
             String quantityStr = request.getParameter("quantity");
             
+            // Lưu giá trị đã nhập vào session để hiển thị lại nếu validate không thành công
+            session.setAttribute("savedDescription", description);
+            session.setAttribute("savedQuantity", quantityStr);
+            
             // Xác thực mô tả
             if (description == null || description.trim().isEmpty()) {
                 session.setAttribute("message", "Vui lòng nhập mô tả chi tiết");
@@ -189,6 +193,9 @@ public class CustomOrderController extends HttpServlet {
             if (customOrderID > 0) {
                 session.setAttribute("message", "Yêu cầu đặt hàng tùy chỉnh của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất!");
                 session.setAttribute("messageType", "success");
+                // Xóa các giá trị đã lưu khi gửi thành công
+                session.removeAttribute("savedDescription");
+                session.removeAttribute("savedQuantity");
             } else {
                 session.setAttribute("message", "Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau!");
                 session.setAttribute("messageType", "error");
