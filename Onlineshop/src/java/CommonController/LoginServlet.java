@@ -83,12 +83,18 @@ public class LoginServlet extends HttpServlet {
                 response.addCookie(passCookie);
             }
             
-            // Kiểm tra role và chuyển hướng
+            // Manager
             if (account.getRole() == 1) {
-                response.sendRedirect("revenue-chart");
-                return;
-            } else if (account.getRole() == 2) {
                 response.sendRedirect("managerproductlist");
+                return;
+            // Staff
+            } else if (account.getRole() == 2) {
+                response.sendRedirect(request.getContextPath() + "/staff/blogs");
+                return;
+            }
+            // Shiper
+             else if (account.getRole() == 3) {
+                response.sendRedirect(request.getContextPath() + "/shipper/dashboard");
                 return;
             } else {
                 response.sendRedirect("Homepage");
