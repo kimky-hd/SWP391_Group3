@@ -1,0 +1,460 @@
+/* ===== SHIPPER STYLE ===== */
+:root {
+    --shipper-primary: #dc2626;
+    --shipper-secondary: #ef4444;
+    --shipper-accent: #f87171;
+    --shipper-gradient-start: #b91c1c;
+    --shipper-gradient-end: #ef4444;
+    --sidebar-width: 280px;
+}
+
+/* ===== TOPBAR (WHITE) ===== */
+.topbar {
+    background: #ffffff !important;
+    height: 65px;
+    padding: 0 24px;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+}
+
+.topbar-brand {
+    color: var(--shipper-primary) !important;
+    font-size: 26px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.topbar-brand .brand-icon {
+    background: linear-gradient(135deg, var(--shipper-primary), var(--shipper-secondary));
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
+
+.topbar-actions .nav-link {
+    color: #374151 !important;
+    font-size: 18px;
+    margin-left: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.topbar-actions .nav-link:hover {
+    color: var(--shipper-primary) !important;
+    background: rgba(220, 38, 38, 0.1);
+}
+
+/* ===== SIDEBAR (SHIPPER GRADIENT) ===== */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    top: 65px;
+    left: 0;
+    overflow-y: auto;
+    padding: 0;
+    background: linear-gradient(180deg, var(--shipper-gradient-start) 0%, var(--shipper-gradient-end) 100%);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.sidebar-menu .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 28px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-menu .nav-link i {
+    font-size: 20px;
+    min-width: 24px;
+    text-align: center;
+}
+
+.sidebar-menu .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border-left: 4px solid #ffffff;
+    transform: translateX(4px);
+}
+
+.sidebar-menu .nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-left: 4px solid #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Shipper specific icons */
+.sidebar-menu li:nth-child(1) i { color: #fbbf24; }
+.sidebar-menu li:nth-child(2) i { color: #60a5fa; }
+.sidebar-menu li:nth-child(3) i { color: #34d399; }
+.sidebar-menu li:nth-child(4) i { color: #f472b6; }
+.sidebar-menu li:nth-child(5) i { color: #a78bfa; }
+.sidebar-menu li:nth-child(6) i { color: #d1d5db; }
+
+/* Main content */
+.main-content {
+    margin-left: var(--sidebar-width);
+    margin-top: 65px;
+    min-height: calc(100vh - 65px);
+    background: #f8f9fa;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, var(--shipper-gradient-start), var(--shipper-gradient-end));
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+/* Stats Cards */
+.stats-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stats-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stats-card h5 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Enhanced Table Styles */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table td {
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Status Badges */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+}
+
+/* Action Buttons */
+.btn-group .btn {
+    margin-right: 0.25rem;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--shipper-primary);
+    box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+}
+
+/* Pagination */
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 2px;
+    border: 1px solid #dee2e6;
+    color: var(--shipper-primary);
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: var(--shipper-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--shipper-primary);
+    border-color: var(--shipper-primary);
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.empty-state h5 {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--shipper-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== USER DROPDOWN STYLING FOR SHIPPER ===== */
+body[data-role="3"] .user-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #374151 !important;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+body[data-role="3"] .user-dropdown:hover {
+    color: var(--shipper-primary) !important;
+    background: rgba(220, 38, 38, 0.1);
+}
+
+body[data-role="3"] .user-dropdown img {
+    border: 2px solid var(--shipper-accent);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+/* ===== DROPDOWN MENU FOR SHIPPER ===== */
+body[data-role="3"] .dropdown-menu {
+    background: #ffffff !important;
+    border: 2px solid #fecaca !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15) !important;
+    padding: 10px 0 !important;
+    min-width: 220px !important;
+    margin-top: 5px !important;
+    z-index: 1035 !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="3"] .dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+body[data-role="3"] .dropdown-menu.admin-dropdown {
+    background: #ffffff !important;
+    border: 2px solid #fecaca !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15) !important;
+    padding: 10px 0 !important;
+    min-width: 220px !important;
+    margin-top: 5px !important;
+    z-index: 1035 !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="3"] .dropdown-menu.admin-dropdown.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+body[data-role="3"] .dropdown-item {
+    color: #374151 !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    background: transparent !important;
+    width: 100% !important;
+    text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+}
+
+body[data-role="3"] .dropdown-item:hover {
+    background: #fecaca !important;
+    color: var(--shipper-primary) !important;
+    transform: translateX(5px) !important;
+}
+
+body[data-role="3"] .dropdown-item:focus {
+    background: #fecaca !important;
+    color: var(--shipper-primary) !important;
+}
+
+body[data-role="3"] .dropdown-item i {
+    color: var(--shipper-secondary) !important;
+    width: 16px !important;
+    text-align: center !important;
+}
+
+body[data-role="3"] .dropdown-divider {
+    border-color: #fecaca !important;
+    margin: 8px 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+    
+    .topbar-brand {
+        font-size: 20px;
+    }
+    
+    .page-header {
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 0.5rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .stats-card h5 {
+        font-size: 1.5rem;
+    }
+}

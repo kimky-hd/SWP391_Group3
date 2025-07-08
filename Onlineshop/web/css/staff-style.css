@@ -1,0 +1,1130 @@
+/* ===== STAFF THEME CSS - COMPLETELY STANDALONE ===== */
+/* Professional Green Theme for Staff */
+
+/* ===== CSS RESET & BASE ===== */
+:root {
+    --staff-primary: #059669;
+    --staff-secondary: #10b981;
+    --staff-accent: #34d399;
+    --staff-light: #d1fae5;
+    --staff-dark: #064e3b;
+    --staff-gradient-start: #047857;
+    --staff-gradient-end: #10b981;
+    --staff-white: #ffffff;
+}
+
+/* ===== BODY & LAYOUT FOR STAFF ===== */
+body[data-role="2"] {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100vh !important;
+}
+
+/* ===== TOPBAR STYLING FOR STAFF ===== */
+body[data-role="2"] .topbar {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+    border-bottom: 3px solid var(--staff-primary) !important;
+    box-shadow: 0 4px 20px rgba(5, 150, 105, 0.15) !important;
+    height: 70px !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1030 !important;
+    width: 100% !important;
+    overflow: visible !important;
+    display: block !important;
+}
+
+body[data-role="2"] .topbar.navbar {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+    border-bottom: 3px solid var(--staff-primary) !important;
+    box-shadow: 0 4px 20px rgba(5, 150, 105, 0.15) !important;
+    height: 70px !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1030 !important;
+    width: 100% !important;
+    min-height: 70px !important;
+    max-height: 70px !important;
+}
+
+body[data-role="2"] .topbar .container-fluid {
+    height: 70px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 30px !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 70px !important;
+    flex-wrap: nowrap !important;
+}
+
+/* ===== TOPBAR BRAND FOR STAFF ===== */
+body[data-role="2"] .topbar-brand {
+    color: var(--staff-primary) !important;
+    font-weight: 800 !important;
+    font-size: 22px !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 8px 16px !important;
+    border-radius: 15px !important;
+    background: rgba(5, 150, 105, 0.08) !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    height: 50px !important;
+    min-width: 180px !important;
+    max-width: 300px !important;
+    flex-shrink: 0 !important;
+}
+
+body[data-role="2"] .topbar-brand:hover {
+    color: var(--staff-secondary) !important;
+    transform: translateY(-2px) !important;
+    background: rgba(5, 150, 105, 0.12) !important;
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.2) !important;
+    text-decoration: none !important;
+}
+
+body[data-role="2"] .topbar-brand .brand-icon {
+    font-size: 20px !important;
+    color: var(--staff-secondary) !important;
+    background: var(--staff-light) !important;
+    padding: 6px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    animation: staffIconPulse 2s infinite !important;
+    flex-shrink: 0 !important;
+}
+
+body[data-role="2"] .topbar-brand span {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: var(--staff-primary) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* ===== TOPBAR ACTIONS FOR STAFF ===== */
+body[data-role="2"] .topbar-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    flex-shrink: 0 !important;
+    height: 50px !important;
+}
+
+body[data-role="2"] .topbar-actions.navbar-nav {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    flex-shrink: 0 !important;
+    height: 50px !important;
+    flex-direction: row !important;
+}
+
+body[data-role="2"] .topbar-actions .nav-item {
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    height: 40px !important;
+}
+
+body[data-role="2"] .topbar-actions .nav-link {
+    color: var(--staff-primary) !important;
+    font-size: 16px !important;
+    padding: 8px 12px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    text-decoration: none !important;
+}
+
+body[data-role="2"] .topbar-actions .nav-link:hover {
+    background: var(--staff-light) !important;
+    color: var(--staff-secondary) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2) !important;
+}
+
+body[data-role="2"] .topbar-actions .user-dropdown {
+    background: var(--staff-light) !important;
+    border-radius: 20px !important;
+    padding: 6px 12px !important;
+    color: var(--staff-primary) !important;
+    font-weight: 600 !important;
+    min-width: 120px !important;
+    height: 40px !important;
+    width: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+}
+
+body[data-role="2"] .topbar-actions .user-dropdown:hover {
+    background: var(--staff-accent) !important;
+    transform: translateY(-1px) !important;
+    text-decoration: none !important;
+}
+
+body[data-role="2"] .topbar-actions .user-dropdown img {
+    width: 28px !important;
+    height: 28px !important;
+    border: 2px solid var(--staff-secondary) !important;
+    flex-shrink: 0 !important;
+}
+
+body[data-role="2"] .topbar-actions .badge {
+    background: var(--staff-secondary) !important;
+    color: var(--staff-dark) !important;
+    font-weight: 600 !important;
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+}
+
+/* ===== NOTIFICATION BADGE ===== */
+body[data-role="2"] .topbar-actions .badge.bg-danger {
+    background: #ef4444 !important;
+    color: white !important;
+    font-size: 10px !important;
+    min-width: 16px !important;
+    height: 16px !important;
+    border-radius: 8px !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10 !important;
+}
+
+body[data-role="2"] .topbar-actions .badge.bg-secondary {
+    background: var(--staff-primary) !important;
+    color: white !important;
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+    border-radius: 8px !important;
+    margin-left: 4px !important;
+}
+
+/* ===== DROPDOWN MENU FOR STAFF ===== */
+body[data-role="2"] .dropdown-menu {
+    background: var(--staff-white) !important;
+    border: 2px solid var(--staff-light) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.15) !important;
+    padding: 10px 0 !important;
+    min-width: 220px !important;
+    margin-top: 5px !important;
+    z-index: 1035 !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+body[data-role="2"] .dropdown-menu.admin-dropdown {
+    background: var(--staff-white) !important;
+    border: 2px solid var(--staff-light) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.15) !important;
+    padding: 10px 0 !important;
+    min-width: 220px !important;
+    margin-top: 5px !important;
+    z-index: 1035 !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .dropdown-menu.admin-dropdown.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+body[data-role="2"] .dropdown-item {
+    color: var(--staff-dark) !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    background: transparent !important;
+    width: 100% !important;
+    text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+}
+
+body[data-role="2"] .dropdown-item:hover {
+    background: var(--staff-light) !important;
+    color: var(--staff-primary) !important;
+    transform: translateX(5px) !important;
+}
+
+body[data-role="2"] .dropdown-item:focus {
+    background: var(--staff-light) !important;
+    color: var(--staff-primary) !important;
+}
+
+body[data-role="2"] .dropdown-item i {
+    color: var(--staff-secondary) !important;
+    width: 16px !important;
+    text-align: center !important;
+}
+
+body[data-role="2"] .dropdown-divider {
+    border-color: var(--staff-light) !important;
+    margin: 8px 0 !important;
+}
+
+body[data-role="2"] .logout-btn {
+    color: #dc3545 !important;
+}
+
+body[data-role="2"] .logout-btn:hover {
+    background: #fef2f2 !important;
+    color: #dc3545 !important;
+}
+
+@keyframes staffIconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes staffBadgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* ===== USER DROPDOWN FOR STAFF ===== */
+body[data-role="2"] .user-dropdown {
+    background: rgba(5, 150, 105, 0.05) !important;
+    border: 2px solid rgba(5, 150, 105, 0.2) !important;
+    border-radius: 15px !important;
+    padding: 8px 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .user-dropdown:hover {
+    background: rgba(5, 150, 105, 0.1) !important;
+    border-color: var(--staff-primary) !important;
+    transform: translateY(-1px) !important;
+}
+
+body[data-role="2"] .user-dropdown .badge {
+    background: var(--staff-primary) !important;
+    color: white !important;
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+    border-radius: 8px !important;
+}
+
+/* ===== SIDEBAR STYLING FOR STAFF ===== */
+body[data-role="2"] .sidebar {
+    background: linear-gradient(180deg, var(--staff-gradient-start) 0%, var(--staff-gradient-end) 100%) !important;
+    border-right: 3px solid var(--staff-primary) !important;
+    width: 280px !important;
+    height: calc(100vh - 70px) !important;
+    position: fixed !important;
+    top: 70px !important;
+    left: 0 !important;
+    z-index: 1020 !important;
+    box-shadow: 4px 0 20px rgba(5, 150, 105, 0.2) !important;
+    overflow-y: auto !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .sidebar::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+body[data-role="2"] .sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body[data-role="2"] .sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 3px !important;
+}
+
+body[data-role="2"] .sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ===== SIDEBAR MENU FOR STAFF ===== */
+body[data-role="2"] .sidebar-menu {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 20px 0 !important;
+}
+
+body[data-role="2"] .sidebar-menu li {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link {
+    color: var(--staff-white) !important;
+    text-decoration: none !important;
+    padding: 15px 25px !important;
+    margin: 4px 15px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    border-left: 4px solid transparent !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+    transition: left 0.5s ease !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link:hover::before {
+    left: 100% !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-left-color: var(--staff-accent) !important;
+    transform: translateX(8px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    color: var(--staff-white) !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link.active {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-left-color: var(--staff-white) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 600 !important;
+    transform: translateX(5px) !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link i {
+    width: 24px !important;
+    margin-right: 15px !important;
+    font-size: 18px !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link:hover i {
+    transform: scale(1.1) !important;
+    color: var(--staff-accent) !important;
+}
+
+body[data-role="2"] .sidebar-menu .nav-link span {
+    transition: all 0.3s ease !important;
+}
+
+/* ===== MOBILE TOGGLE FOR STAFF ===== */
+body[data-role="2"] .mobile-toggle {
+    background: linear-gradient(135deg, var(--staff-primary), var(--staff-secondary)) !important;
+    border: none !important;
+    color: white !important;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 12px !important;
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    z-index: 1040 !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .mobile-toggle:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4) !important;
+}
+
+body[data-role="2"] .mobile-toggle:active {
+    transform: scale(0.95) !important;
+}
+
+/* ===== MAIN CONTENT AREA FOR STAFF ===== */
+body[data-role="2"] .main-content {
+    margin-left: 280px !important;
+    margin-top: 70px !important;
+    padding: 30px !important;
+    min-height: calc(100vh - 70px) !important;
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* ===== SIDEBAR OVERLAY FOR MOBILE ===== */
+body[data-role="2"] .sidebar-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 1015 !important;
+    display: none !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+body[data-role="2"] .sidebar-overlay.show {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* ===== RESPONSIVE DESIGN FOR STAFF ===== */
+@media (max-width: 768px) {
+    body[data-role="2"] .mobile-toggle {
+        display: flex !important;
+    }
+    
+    body[data-role="2"] .sidebar {
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease !important;
+    }
+    
+    body[data-role="2"] .sidebar.show {
+        transform: translateX(0) !important;
+    }
+    
+    body[data-role="2"] .main-content {
+        margin-left: 0 !important;
+        padding: 20px 15px !important;
+    }
+    
+    body[data-role="2"] .topbar .container-fluid {
+        padding: 0 70px 0 20px !important;
+    }
+    
+    body[data-role="2"] .topbar-brand {
+        font-size: 20px !important;
+        padding: 8px 15px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .nav-link {
+        padding: 8px 10px !important;
+        margin: 0 2px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    body[data-role="2"] .topbar {
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
+    }
+    
+    body[data-role="2"] .topbar .container-fluid {
+        height: 60px !important;
+        min-height: 60px !important;
+        padding: 0 10px !important;
+    }
+    
+    body[data-role="2"] .topbar-brand {
+        height: 40px !important;
+        min-width: 60px !important;
+        padding: 4px 8px !important;
+    }
+    
+    body[data-role="2"] .topbar-brand .brand-icon {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 14px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions {
+        gap: 4px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .nav-link {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 12px !important;
+        padding: 6px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .user-dropdown {
+        min-width: 60px !important;
+        height: 32px !important;
+        padding: 2px 6px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .user-dropdown img {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    
+    body[data-role="2"] .sidebar {
+        top: 60px !important;
+    }
+}
+
+/* ===== RESPONSIVE TOPBAR FOR STAFF ===== */
+@media (max-width: 992px) {
+    body[data-role="2"] .topbar .container-fluid {
+        padding: 0 20px !important;
+    }
+    
+    body[data-role="2"] .topbar-brand {
+        font-size: 18px !important;
+        padding: 6px 12px !important;
+        min-width: 150px !important;
+        gap: 8px !important;
+    }
+    
+    body[data-role="2"] .topbar-brand span {
+        font-size: 14px !important;
+    }
+    
+    body[data-role="2"] .topbar-brand .brand-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 16px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions {
+        gap: 8px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .nav-link {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 14px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .user-dropdown {
+        min-width: 100px !important;
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+        height: 36px !important;
+    }
+    
+    body[data-role="2"] .topbar-actions .user-dropdown img {
+        width: 24px !important;
+        height: 24px !important;
+    }
+}
+
+@media (max-width: 992px) {
+    body[data-role="2"] .mobile-toggle {
+        display: flex !important;
+    }
+    
+    body[data-role="2"] .sidebar {
+        transform: translateX(-100%) !important;
+    }
+    
+    body[data-role="2"] .sidebar.show {
+        transform: translateX(0) !important;
+    }
+    
+    body[data-role="2"] .sidebar-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        z-index: 1019 !important;
+        display: none !important;
+    }
+    
+    body[data-role="2"] .sidebar-overlay.show {
+        display: block !important;
+    }
+}
+
+/* ===== CUSTOM SCROLLBAR FOR STAFF ===== */
+body[data-role="2"]::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+body[data-role="2"]::-webkit-scrollbar-track {
+    background: var(--staff-light) !important;
+}
+
+body[data-role="2"]::-webkit-scrollbar-thumb {
+    background: var(--staff-primary) !important;
+    border-radius: 4px !important;
+}
+
+body[data-role="2"]::-webkit-scrollbar-thumb:hover {
+    background: var(--staff-dark) !important;
+}
+
+/* ===== ADDITIONAL STAFF ELEMENTS ===== */
+body[data-role="2"] .card {
+    border: none !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 20px rgba(5, 150, 105, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 30px rgba(5, 150, 105, 0.2) !important;
+}
+
+body[data-role="2"] .btn-primary {
+    background: linear-gradient(135deg, var(--staff-primary), var(--staff-secondary)) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 25px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3) !important;
+}
+
+/* ===== STAFF THEME ANIMATIONS ===== */
+@keyframes staffFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes staffSlideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes staffSlideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+body[data-role="2"] .sidebar-menu .nav-link {
+    animation: staffSlideInLeft 0.6s ease-out !important;
+    animation-fill-mode: backwards !important;
+}
+
+body[data-role="2"] .sidebar-menu li:nth-child(1) .nav-link { animation-delay: 0.1s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(2) .nav-link { animation-delay: 0.2s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(3) .nav-link { animation-delay: 0.3s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(4) .nav-link { animation-delay: 0.4s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(5) .nav-link { animation-delay: 0.5s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(6) .nav-link { animation-delay: 0.6s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(7) .nav-link { animation-delay: 0.7s !important; }
+body[data-role="2"] .sidebar-menu li:nth-child(8) .nav-link { animation-delay: 0.8s !important; }
+
+body[data-role="2"] .topbar-actions .nav-item {
+    animation: staffSlideInRight 0.6s ease-out !important;
+    animation-fill-mode: backwards !important;
+}
+
+body[data-role="2"] .topbar-actions .nav-item:nth-child(1) { animation-delay: 0.2s !important; }
+body[data-role="2"] .topbar-actions .nav-item:nth-child(2) { animation-delay: 0.3s !important; }
+body[data-role="2"] .topbar-actions .nav-item:nth-child(3) { animation-delay: 0.4s !important; }
+
+/* ===== STAFF SUCCESS INDICATOR ===== */
+body[data-role="2"]::after {
+    content: "✓ Staff Theme Loaded" !important;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    background: var(--staff-primary) !important;
+    color: white !important;
+    padding: 8px 15px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    z-index: 9999 !important;
+    opacity: 0 !important;
+    animation: staffThemeLoaded 3s ease-in-out !important;
+}
+
+@keyframes staffThemeLoaded {
+    0%, 90% { opacity: 0; transform: translateY(20px); }
+    10%, 80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
+
+/* ===== ADDITIONAL TOPBAR FIXES FOR STAFF ===== */
+body[data-role="2"] .navbar {
+    position: fixed !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body[data-role="2"] .navbar-nav {
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-direction: row !important;
+}
+
+body[data-role="2"] .dropdown-menu {
+    background: white !important;
+    border: 1px solid var(--staff-light) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.15) !important;
+    margin-top: 10px !important;
+}
+
+body[data-role="2"] .dropdown-item {
+    color: var(--staff-primary) !important;
+    padding: 10px 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .dropdown-item:hover {
+    background: var(--staff-light) !important;
+    color: var(--staff-secondary) !important;
+}
+
+body[data-role="2"] .dropdown-divider {
+    border-color: var(--staff-light) !important;
+}
+
+/* ===== HIDE ELEMENTS THAT CAUSE LAYOUT ISSUES ===== */
+body[data-role="2"] .topbar-actions .nav-item .position-absolute {
+    position: absolute !important;
+    top: -2px !important;
+    right: -2px !important;
+    z-index: 10 !important;
+}
+
+body[data-role="2"] .topbar-actions .nav-item {
+    position: relative !important;
+}
+
+/* ===== FIX TOPBAR OVERFLOW ISSUES ===== */
+body[data-role="2"] .topbar {
+    overflow: visible !important;
+}
+
+body[data-role="2"] .topbar .container-fluid {
+    overflow: visible !important;
+}
+
+body[data-role="2"] .topbar-actions {
+    overflow: visible !important;
+}
+
+/* ===== PREVENT DROPDOWN VISIBILITY ISSUES ===== */
+body[data-role="2"] .dropdown {
+    position: relative !important;
+}
+
+body[data-role="2"] .dropdown-toggle::after {
+    display: inline-block !important;
+    margin-left: 0.255em !important;
+    vertical-align: 0.255em !important;
+    content: "" !important;
+    border-top: 0.3em solid !important;
+    border-right: 0.3em solid transparent !important;
+    border-bottom: 0 !important;
+    border-left: 0.3em solid transparent !important;
+}
+
+body[data-role="2"] .dropdown-toggle:empty::after {
+    margin-left: 0 !important;
+}
+
+/* ===== FORCE CORRECT POSITIONING ===== */
+body[data-role="2"] .topbar-actions .dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    float: none !important;
+    min-width: 200px !important;
+    margin: 0.125rem 0 0 !important;
+    font-size: 0.875rem !important;
+    color: #212529 !important;
+    text-align: left !important;
+    list-style: none !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ===== FIX USER DROPDOWN LAYOUT ===== */
+body[data-role="2"] .topbar-actions .user-dropdown {
+    cursor: pointer !important;
+    border: none !important;
+    outline: none !important;
+}
+
+body[data-role="2"] .topbar-actions .user-dropdown:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* ===== FORCE LAYOUT FIXES ===== */
+body[data-role="2"] {
+    padding-top: 70px !important;
+}
+
+body[data-role="2"] .container-fluid {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* ===== Z-INDEX HIERARCHY ===== */
+body[data-role="2"] .mobile-toggle {
+    z-index: 1050 !important;
+}
+
+body[data-role="2"] .topbar {
+    z-index: 1040 !important;
+}
+
+body[data-role="2"] .sidebar {
+    z-index: 1030 !important;
+}
+
+body[data-role="2"] .sidebar-overlay {
+    z-index: 1025 !important;
+}
+
+body[data-role="2"] .main-content {
+    z-index: 1 !important;
+}
+
+/* ===== BOOTSTRAP OVERRIDES FOR STAFF ===== */
+body[data-role="2"] .navbar-expand-lg {
+    flex-wrap: nowrap !important;
+}
+
+body[data-role="2"] .navbar-brand {
+    margin-right: auto !important;
+}
+
+body[data-role="2"] .px-4 {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
+body[data-role="2"] .d-flex {
+    display: flex !important;
+}
+
+body[data-role="2"] .justify-content-between {
+    justify-content: space-between !important;
+}
+
+body[data-role="2"] .align-items-center {
+    align-items: center !important;
+}
+
+body[data-role="2"] .fw-bold {
+    font-weight: 700 !important;
+}
+
+body[data-role="2"] .text-uppercase {
+    text-transform: uppercase !important;
+}
+
+/* ===== MODAL OVERRIDES FOR STAFF ===== */
+body[data-role="2"] .modal-content {
+    border-radius: 15px !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2) !important;
+}
+
+body[data-role="2"] .modal-header {
+    background: linear-gradient(135deg, var(--staff-primary) 0%, var(--staff-secondary) 100%) !important;
+    color: white !important;
+    border-bottom: none !important;
+    padding: 20px !important;
+}
+
+body[data-role="2"] .modal-header .modal-title {
+    font-weight: 600 !important;
+    font-size: 18px !important;
+}
+
+body[data-role="2"] .modal-body {
+    padding: 30px 20px !important;
+    text-align: center !important;
+    background: white !important;
+}
+
+body[data-role="2"] .modal-footer {
+    border-top: 1px solid var(--staff-light) !important;
+    padding: 20px !important;
+    background: #f8f9fa !important;
+    justify-content: center !important;
+}
+
+body[data-role="2"] .modal-footer .btn {
+    min-width: 120px !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .modal-footer .btn-secondary {
+    background: #6b7280 !important;
+    border-color: #6b7280 !important;
+    color: white !important;
+}
+
+body[data-role="2"] .modal-footer .btn-secondary:hover {
+    background: #4b5563 !important;
+    border-color: #4b5563 !important;
+    transform: translateY(-1px) !important;
+}
+
+body[data-role="2"] .modal-footer .btn-danger {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: white !important;
+}
+
+body[data-role="2"] .modal-footer .btn-danger:hover {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ===== MODAL LOGOUT FIXES FOR STAFF ===== */
+body[data-role="2"] .modal {
+    z-index: 1055 !important;
+}
+
+body[data-role="2"] .modal-backdrop {
+    z-index: 1050 !important;
+}
+
+body[data-role="2"] .modal.show {
+    display: block !important;
+}
+
+body[data-role="2"] .modal-content.admin-modal {
+    border-radius: 15px !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2) !important;
+    overflow: hidden !important;
+}
+
+body[data-role="2"] .modal-header {
+    background: linear-gradient(135deg, var(--staff-primary) 0%, var(--staff-secondary) 100%) !important;
+    color: white !important;
+    border-bottom: none !important;
+    padding: 20px !important;
+}
+
+body[data-role="2"] .modal-header .modal-title {
+    font-weight: 600 !important;
+    font-size: 18px !important;
+}
+
+body[data-role="2"] .modal-body {
+    padding: 30px 20px !important;
+    text-align: center !important;
+    background: white !important;
+}
+
+body[data-role="2"] .modal-footer {
+    border-top: 1px solid var(--staff-light) !important;
+    padding: 20px !important;
+    background: #f8f9fa !important;
+    justify-content: center !important;
+}
+
+body[data-role="2"] .modal-footer .btn {
+    min-width: 120px !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="2"] .modal-footer .btn-secondary {
+    background: #6b7280 !important;
+    border-color: #6b7280 !important;
+    color: white !important;
+}
+
+body[data-role="2"] .modal-footer .btn-secondary:hover {
+    background: #4b5563 !important;
+    border-color: #4b5563 !important;
+    transform: translateY(-1px) !important;
+}
+
+body[data-role="2"] .modal-footer .btn-danger {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: white !important;
+}
+
+body[data-role="2"] .modal-footer .btn-danger:hover {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ===== LOADING STATE FOR LOGOUT ===== */
+body[data-role="2"] .btn.loading {
+    opacity: 0.7 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+}
+
+body[data-role="2"] .btn.loading .fas.fa-spinner {
+    animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
