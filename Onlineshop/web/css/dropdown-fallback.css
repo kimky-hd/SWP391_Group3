@@ -1,0 +1,50 @@
+/* ===== FALLBACK CSS FOR DROPDOWN ISSUES ===== */
+
+/* Ensure dropdown works for all roles if specific CSS fails */
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    z-index: 1000 !important;
+    display: none !important;
+    min-width: 10rem !important;
+    padding: 0.5rem 0 !important;
+    margin: 0 !important;
+    font-size: 1rem !important;
+    color: #212529 !important;
+    text-align: left !important;
+    list-style: none !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid rgba(0,0,0,.15) !important;
+    border-radius: 0.375rem !important;
+}
+
+.dropdown-menu.show {
+    display: block !important;
+}
+
+.dropdown-item {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.25rem 1rem !important;
+    clear: both !important;
+    font-weight: 400 !important;
+    color: #212529 !important;
+    text-align: inherit !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    background-color: transparent !important;
+    border: 0 !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    color: #1e2125 !important;
+    background-color: #e9ecef !important;
+}
+
+/* Force dropdown to work with manual click */
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block !important;
+}

@@ -1,6 +1,8 @@
 package Model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 public class Blog {
 
@@ -8,20 +10,29 @@ public class Blog {
     private int accountID;
     private String title;
     private String content;
-    private String image;
-    private String datePosted;
+    private String note;
+    private String blogStatus;
+    private Date dateCreated;
+    private List<BlogImg> blogImages;
+    private String mainImage;
 
     // Constructor rỗng để set bằng setter
     public Blog() {
     }
 
-    public Blog(int blogID, int accountID, String title, String content, String image, String datePosted) {
+    public Blog(int blogID, int accountID, String title, Date dateCreated) {
+        this.blogID = blogID;
+        this.accountID = accountID;
+        this.title = title;
+        this.dateCreated = dateCreated;
+    }
+    
+    public Blog(int blogID, int accountID, String title, String content, Date dateCreated) {
         this.blogID = blogID;
         this.accountID = accountID;
         this.title = title;
         this.content = content;
-        this.image = image;
-        this.datePosted = datePosted;
+        this.dateCreated = dateCreated;
     }
 
     // Getter + Setter
@@ -57,19 +68,43 @@ public class Blog {
         this.content = content;
     }
 
-    public String getImage() {
-        return image;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+    
+    public List<BlogImg> getBlogImages() {
+        return blogImages;
     }
 
-    public String getDatePosted() {
-        return datePosted;
+    public void setBlogImages(List<BlogImg> blogImages) {
+        this.blogImages = blogImages;
+    }
+    
+    public String getBlogStatus() {
+        return blogStatus;
     }
 
-    public void setDatePosted(String datePosted) {
-        this.datePosted = datePosted;
+    public void setBlogStatus(String blogStatus) {
+        this.blogStatus = blogStatus;
+    }
+
+    public String getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }
