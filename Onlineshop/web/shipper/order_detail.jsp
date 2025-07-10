@@ -126,7 +126,8 @@
                                         <tr>
                                             <th>Sản phẩm</th>
                                             <th>Số lượng</th>
-                                            
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -147,7 +148,8 @@
                                                     </div>
                                                 </td>
                                                 <td>${detail.quantity}</td>
-                                                
+                                                <td><fmt:formatNumber value="${detail.price}" pattern="#,##0" /> VND</td>
+                                                <td><fmt:formatNumber value="${detail.total}" pattern="#,##0" /> VND</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

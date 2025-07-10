@@ -448,4 +448,31 @@ public class BlogDAO extends DBContext {
         }
         return null;
     }
+    public List<Blog> getAllBlogsForGuest(int page, int pageSize) throws SQLException {
+        List<Blog> blogs = new ArrayList<>();
+        String sql = "SELECT b.*, (SELECT bi.image FROM blogImg bi WHERE bi.blogID = b.blogID AND bi.IsMain = 1 LIMIT 1) as mainImage " +
+                     "FROM blog b WHERE b.blogStatus = 'Approved' ORDER BY b.dateCreated DESC LIMIT ? OFFSET ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Blog blog = new Blog();
+                blog.setBlogID(rs.getInt("blogID"));
+                blog.setAccountID(rs.getInt("accountID"));
+                blog.setTitle(rs.getString("title"));
+                blog.setContent(rs.getString("content"));
+                blog.setBlogStatus(rs.getString("blogStatus"));
+                blog.setNote(rs.getString("note"));
+                blog.setDateCreated(rs.getTimestamp("dateCreated"));
+                blog.setMainImage(rs.getString("mainImage"));
+                blogs.add(blog);
+            }
+        } finally {
+            closeResources();
+        }
+        return blogs;
+    }
 }

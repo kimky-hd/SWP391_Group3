@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+A<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Flower Shop - Product List</title>
+    <title>Flower Shop - Blog List</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Google Web Fonts -->
@@ -17,317 +17,320 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 
     <style>
-        html, body {
+        .blog-list-page {
+            /* Reset for this page only */
+        }
+        .blog-list-page html, .blog-list-page body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background: url('https://img.lovepik.com/photo/50091/3710.jpg_wh860.jpg') no-repeat top left,
-                        url('https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg') no-repeat top right,
-                        #fdfdfd;
-            background-size: auto 100vh, auto 100vh;
-            background-attachment: fixed;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #fdf6e3 0%, #f5e6ff 100%);
+            font-family: 'Roboto', Arial, sans-serif;
         }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px 30px;
+        .blog-list-page .container {
+            width: 95%;
+            max-width: 1280px;
+            margin: 24px auto;
+            background: rgba(255,255,255,0.98);
+            padding: 32px 18px 24px 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+        }
+        .blog-list-page h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 2.1rem;
+            color: #7c3aed;
+            letter-spacing: 1px;
+        }
+        .blog-list-page p.sub-heading {
+            text-align: center;
+            color: #a0aec0;
+            margin-bottom: 28px;
+            font-size: 1rem;
+        }
+        .blog-list-page .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .blog-list-page .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .blog-list-page .search-box input[type="text"] {
+            width: 220px;
+            padding: 8px 12px;
+            border: 1.5px solid #c7b8f5;
             border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 15px;
+            transition: border 0.2s;
         }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 10px;
+        .blog-list-page .search-box input[type="text"]:focus {
+            border: 1.5px solid #7c3aed;
+            outline: none;
         }
-
-        p.sub-heading {
-            text-align: center;
-            color: #777;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 10px;
-        }
-
-        .btn-add {
-            display: inline-block;
-            background-color: #28a745;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-add:hover {
-            background-color: #218838;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .search-box input[type="text"] {
-            width: 250px;
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .search-box button {
-            padding: 6px 12px;
-            background-color: #ff6600;
+        .blog-list-page .search-box button {
+            padding: 8px 18px;
+            background: linear-gradient(90deg, #7c3aed 60%, #f472b6 100%);
             color: white;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .search-box button:hover {
-            background-color: #e65c00;
-        }
-
-        .grid-container {
-            margin-top: 20px;
-        }
-
-        .card-blog {
-            border: 1px solid #ddd;
             border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(124,58,237,0.08);
+            transition: background 0.2s;
+        }
+        .blog-list-page .search-box button:hover {
+            background: linear-gradient(90deg, #5b21b6 60%, #ec4899 100%);
+        }
+        .blog-list-page .grid-container {
+            margin-top: 18px;
+        }
+        .blog-list-page .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px 18px;
+            justify-content: flex-start;
+        }
+        .blog-list-page .col-lg-3, .blog-list-page .col-md-4, .blog-list-page .col-sm-6, .blog-list-page .col-12 {
+            flex: 1 1 220px;
+            max-width: 23%;
+            min-width: 220px;
+            box-sizing: border-box;
+        }
+        @media (max-width: 1024px) {
+            .blog-list-page .col-lg-3, .blog-list-page .col-md-4, .blog-list-page .col-sm-6 {
+                max-width: 48%;
+            }
+        }
+        @media (max-width: 700px) {
+            .blog-list-page .row {
+                gap: 18px 0;
+            }
+            .blog-list-page .col-lg-3, .blog-list-page .col-md-4, .blog-list-page .col-sm-6 {
+                max-width: 100%;
+                min-width: 100%;
+            }
+        }
+        .blog-list-page .card-blog {
+            border: none;
+            border-radius: 10px;
             overflow: hidden;
-            transition: box-shadow 0.2s ease;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(124,58,237,0.07);
+            transition: box-shadow 0.22s, transform 0.18s;
             height: 100%;
+            display: flex;
+            flex-direction: column;
         }
-
-        .card-blog:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .blog-list-page .card-blog:hover {
+            box-shadow: 0 8px 32px rgba(124,58,237,0.18);
+            transform: translateY(-4px) scale(1.025);
         }
-
-        .card-blog img {
+        .blog-list-page .card-blog img {
             width: 100%;
-            height: 180px;
+            height: 170px;
             object-fit: cover;
+            background: #f3f3f3;
         }
-
-        .card-body-center {
-            padding: 10px;
+        .blog-list-page .card-body-center {
+            padding: 14px 12px 10px 12px;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
         }
-
-        .card-body-center h5 {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin: 10px 0;
+        .blog-list-page .card-body-center h5 {
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: #4b2995;
+            margin: 8px 0 6px 0;
+            min-height: 40px;
         }
-
-        .card-body-center p {
-            font-size: 14px;
-            color: #777;
-            margin-bottom: 15px;
-            height: 60px;
+        .blog-list-page .card-body-center p {
+            font-size: 0.98rem;
+            color: #6b7280;
+            margin-bottom: 14px;
+            height: 54px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
-
-        .btn-detail {
+        .blog-list-page .btn-detail {
             display: inline-block;
-            background-color: #3498db;
+            background: linear-gradient(90deg, #7c3aed 60%, #f472b6 100%);
             color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 7px 16px;
+            border-radius: 5px;
             text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
+            font-size: 0.98rem;
+            font-weight: 500;
+            transition: background 0.18s;
+            box-shadow: 0 1px 4px rgba(124,58,237,0.08);
+            margin-top: auto;
         }
-
-        .btn-detail:hover {
-            background-color: #2980b9;
+        .blog-list-page .btn-detail:hover {
+            background: linear-gradient(90deg, #5b21b6 60%, #ec4899 100%);
         }
-
-        .action-btn {
-            display: inline-block;
-            margin-left: 5px;
-            background-color: #ffc107;
-            color: black;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .action-btn.delete-btn {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .no-blogs {
+        .blog-list-page .no-blogs {
             text-align: center;
-            color: #777;
-            padding: 40px 0;
-            font-size: 16px;
+            color: #bdbdbd;
+            padding: 48px 0 32px 0;
+            font-size: 1.1rem;
         }
-
-        .pagination {
-            margin: 20px 0;
+        .blog-list-page .pagination {
+            margin: 28px 0 10px 0;
             text-align: center;
         }
-
-        .pagination a, .pagination span {
+        .blog-list-page .pagination a, .blog-list-page .pagination span {
             display: inline-block;
             margin: 0 4px;
-            padding: 6px 10px;
-            color: #333;
+            padding: 7px 13px;
+            color: #7c3aed;
             text-decoration: none;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1.5px solid #e0d7fa;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            background: #f8f5ff;
+            transition: background 0.18s, color 0.18s;
         }
-
-        .pagination a:hover {
-            background-color: #eee;
+        .blog-list-page .pagination a:hover {
+            background: #e9d5ff;
+            color: #4b2995;
         }
-
-        .pagination .current {
-            background-color: #ff6600;
+        .blog-list-page .pagination .current {
+            background: linear-gradient(90deg, #7c3aed 60%, #f472b6 100%);
             color: white;
-            border-color: #ff6600;
+            border-color: #c7b8f5;
         }
-
-        .info-count {
-            margin-top: 8px;
-            font-size: 14px;
-            color: #555;
+        .blog-list-page .info-count {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #6b7280;
             text-align: right;
+        }
+        @media (max-width: 700px) {
+            .blog-list-page .container {
+                padding: 10px 2px 10px 2px;
+            }
+            .blog-list-page .info-count {
+                text-align: center;
+                font-size: 0.98rem;
+            }
+            .blog-list-page .pagination a, .blog-list-page .pagination span {
+                padding: 7px 8px;
+                font-size: 0.98rem;
+            }
         }
     </style>
 </head>
 <body>
     <jsp:include page="header.jsp" />
-    <div class="container">
-        <h2>Danh sách tin tức</h2>
-        <p class="sub-heading">Quản lý danh sách tin tức thuộc campus</p>
+    <div class="blog-list-page">
+        <div class="container">
+            <h2>Danh sách tin tức</h2>
+            <p class="sub-heading">Tin tức mới nhất từ Flower Shop</p>
 
-        <div class="top-bar">
-            <div>
-                <c:if test="${not empty sessionScope.account and (sessionScope.account.role == 1 or sessionScope.account.role == 3)}">
-                    <a href="${pageContext.request.contextPath}/blogs?action=add" class="btn-add">+ Thêm Blog</a>
-                </c:if>
+            <div class="top-bar">
+                <div class="search-box">
+                    <form action="${pageContext.request.contextPath}/blogs" method="get">
+                        <input type="text" name="keyword" value="${param.keyword}" placeholder="Tìm kiếm tiêu đề..." />
+                        <button type="submit">Tìm</button>
+                    </form>
+                </div>
             </div>
-            <div class="search-box">
-                <form action="${pageContext.request.contextPath}/blogs" method="get">
-                    <input type="hidden" name="action" value="search"/>
-                    <input type="text" name="keyword" value="${keyword}" placeholder="Tìm kiếm tiêu đề..." />
-                    <button type="submit">Tìm</button>
-                </form>
-            </div>
-        </div>
 
-        <div class="grid-container">
-            <div class="row">
-                <c:forEach var="blog" items="${blogList}">
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="card-blog h-100">
-                            <c:choose>
-                                <c:when test="${not empty blog.image}">
-                                    <img src="${pageContext.request.contextPath}/img/${blog.image}" alt="Ảnh bài viết" />
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="${pageContext.request.contextPath}/images/default.png" alt="No Image" />
-                                </c:otherwise>
-                            </c:choose>
-                            <div class="card-body-center">
-                                <h5>${blog.title}</h5>
-                                <p>
-                                    <c:choose>
-                                        <c:when test="${fn:length(blog.content) > 100}">
-                                            ${fn:substring(blog.content, 0, 100)}...
-                                        </c:when>
-                                        <c:otherwise>
-                                            ${blog.content}
-                                        </c:otherwise>
-                                    </c:choose>
-                                </p>
-                                <a href="${pageContext.request.contextPath}/blogs?action=detail&bid=${blog.blogID}" class="btn-detail">Xem chi tiết</a>
-                                <c:if test="${not empty sessionScope.account and (sessionScope.account.role == 1 or sessionScope.account.role == 3)}">
-                                    <a href="${pageContext.request.contextPath}/blogs?action=edit&bid=${blog.blogID}" class="action-btn">Sửa</a>
-                                    <a href="${pageContext.request.contextPath}/blogs?action=delete&bid=${blog.blogID}" class="action-btn delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">Xóa</a>
-                                </c:if>
+            <div class="grid-container">
+                <div class="row">
+                    <c:forEach var="blog" items="${blogs}">
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="card-blog h-100">
+                                <c:choose>
+                                    <c:when test="${not empty blog.mainImage}">
+                                        <img src="${pageContext.request.contextPath}/img/blog/${blog.mainImage}" alt="Main Image"
+                                             style="background:#eee;" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default.png';" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/images/default.png" alt="No Image" />
+                                    </c:otherwise>
+                                </c:choose>
+                                <div class="card-body-center">
+                                    <h5>${blog.title}</h5>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${fn:length(blog.content) > 100}">
+                                                ${fn:substring(blog.content, 0, 100)}...
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${blog.content}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    <a href="${pageContext.request.contextPath}/blog-detail?bid=${blog.blogID}" class="btn-detail">Xem chi tiết</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </c:forEach>
-                <c:if test="${empty blogList}">
-                    <div class="col-12"><div class="no-blogs">Chưa có bài viết nào.</div></div>
+                    </c:forEach>
+                    <c:if test="${empty blogs}">
+                        <div class="col-12"><div class="no-blogs">Chưa có bài viết nào.</div></div>
+                    </c:if>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <c:if test="${totalPages > 1}">
+                    <c:if test="${currentPage > 1}">
+                        <a href="${pageContext.request.contextPath}/blogs?page=${currentPage - 1}${not empty param.keyword ? '&keyword='.concat(param.keyword) : ''}">Prev</a>
+                    </c:if>
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <c:choose>
+                            <c:when test="${i == currentPage}">
+                                <span class="current">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/blogs?page=${i}${not empty param.keyword ? '&keyword='.concat(param.keyword) : ''}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="${pageContext.request.contextPath}/blogs?page=${currentPage + 1}${not empty param.keyword ? '&keyword='.concat(param.keyword) : ''}">Next</a>
+                    </c:if>
+                </c:if>
+            </div>
+
+            <div class="info-count">
+                <c:if test="${totalCount > 0}">
+                    Hiển thị 
+                    <c:out value="${(currentPage - 1) * 10 + 1}"/> - 
+                    <c:choose>
+                        <c:when test="${(currentPage * 10) < totalCount}">
+                            <c:out value="${currentPage * 10}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:out value="${totalCount}"/>
+                        </c:otherwise>
+                    </c:choose>
+                    trên tổng số 
+                    <c:out value="${totalCount}"/> bài viết
                 </c:if>
             </div>
         </div>
-
-        <div class="pagination">
-            <c:if test="${totalPages > 1}">
-                <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/blogs?action=list&page=${currentPage - 1}">Prev</a>
-                </c:if>
-                <c:forEach var="i" begin="1" end="${totalPages}">
-                    <c:choose>
-                        <c:when test="${i == currentPage}">
-                            <span class="current">${i}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/blogs?action=list&page=${i}">${i}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
-                <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/blogs?action=list&page=${currentPage + 1}">Next</a>
-                </c:if>
-            </c:if>
-        </div>
-
-        <div class="info-count">
-            <c:if test="${totalCount > 0}">
-                Hiển thị 
-                <c:out value="${(currentPage - 1) * 10 + 1}"/> - 
-                <c:choose>
-                    <c:when test="${(currentPage * 10) < totalCount}">
-                        <c:out value="${currentPage * 10}"/>
-                    </c:when>
-                    <c:otherwise>
-                        <c:out value="${totalCount}"/>
-                    </c:otherwise>
-                </c:choose>
-                trên tổng số 
-                <c:out value="${totalCount}"/> bài viết
-            </c:if>
-        </div>
     </div>
-
     <jsp:include page="footer.jsp" />
-       <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="${pageContext.request.contextPath}/lib/easing/easing.min.js"></script>
     <script src="${pageContext.request.contextPath}/lib/owlcarousel/owl.carousel.min.js"></script>

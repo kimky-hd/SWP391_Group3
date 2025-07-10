@@ -21,22 +21,6 @@
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
         </group>
         <group>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/manager/custom_order_detail.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/manager/blog-list.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/staff/blog-detail.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/Controller/BlogListServlet.java</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/Controller/staff/StaffBlogDetailController.java</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/shipper/shipper_dashboard.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/staff/blog-list.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/Controller/manager/ManagerBlogListController.java</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/Controller/staff/StaffBlogEditController.java</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/Controller/Shipper/ShipperController.java</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/web/shipper/order_detail_fragment.jsp</file>
-            <file>file:/C:/Users/dungb/Downloads/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/Controller/staff/StaffBlogListController.java</file>
-        </group>
-        <group>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
         </group>
         <group>
@@ -49,6 +33,13 @@
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/ProductBatchDAO.java</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
             <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/Model/Status.java</file>
+        </group>
+        <group>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/DAO/BlogDAO.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
+            <file>file:/C:/Users/ADMIN/OneDrive/Documents/NetBeansProjects/SWP391_Group3/Onlineshop/web/shipper/order_detail.jsp</file>
         </group>
     </open-files>
 </project-private>
