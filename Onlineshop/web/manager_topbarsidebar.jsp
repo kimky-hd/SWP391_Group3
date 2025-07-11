@@ -45,13 +45,13 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <!-- Role-specific CSS -->
         <% if (roleId == 1) { %>
-            <link href="${pageContext.request.contextPath}/css/manager-style.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/manager-style.css" rel="stylesheet">
         <% } else if (roleId == 2) { %>
-            <link href="${pageContext.request.contextPath}/css/staff-style.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/staff-style.css" rel="stylesheet">
         <% } else if (roleId == 3) { %>
-            <link href="${pageContext.request.contextPath}/css/shipper-style.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/shipper-style.css" rel="stylesheet">
         <% } else { %>
-            <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
         <% } %>
         <!-- Common responsive CSS -->
         <link href="${pageContext.request.contextPath}/css/common-responsive.css" rel="stylesheet">
@@ -76,24 +76,24 @@
                 <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "managerproductlist" : (roleId == 2 ? "staffdashboard" : (roleId == 3 ? "shipperdashboard" : "#")) %>">
                     <div class="brand-icon">
                         <% if (roleId == 1) { %>
-                            <i class="fas fa-crown"></i>
+                        <i class="fas fa-crown"></i>
                         <% } else if (roleId == 2) { %>
-                            <i class="fas fa-user-tie"></i>
+                        <i class="fas fa-user-tie"></i>
                         <% } else if (roleId == 3) { %>
-                            <i class="fas fa-truck"></i>
+                        <i class="fas fa-truck"></i>
                         <% } else { %>
-                            <i class="fas fa-seedling"></i>
+                        <i class="fas fa-seedling"></i>
                         <% } %>
                     </div>
                     <span>
                         <% if (roleId == 1) { %>
-                            Manager Panel
+                        Manager Panel
                         <% } else if (roleId == 2) { %>
-                            Staff Panel
+                        Staff Panel
                         <% } else if (roleId == 3) { %>
-                            Shipper Panel
+                        Shipper Panel
                         <% } else { %>
-                            Flower Shop
+                        Flower Shop
                         <% } %>
                     </span>
                 </a>
@@ -136,7 +136,7 @@
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                 </a>
                             </li>
-                           
+
                         </ul>
                         <% } else { %>
                         <a class="nav-link" href="login.jsp">
@@ -152,108 +152,115 @@
         <nav class="sidebar">
             <ul class="sidebar-menu">
                 <% if (roleId == 1) { // Manager Menu %>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="managerproductlist" class="nav-link">
-                            <i class="fas fa-boxes"></i>
-                            <span>Quản lý Sản phẩm</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="viewcategorylist" class="nav-link">
-                            <i class="fas fa-tags"></i>
-                            <span>Danh mục Sản phẩm</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="managermateriallist" class="nav-link">
-                            <i class="fas fa-seedling"></i>
-                            <span>Quản lý nguyên liệu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/orders" class="nav-link">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Quản lý Đơn hàng</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
-                            <i class="fas fa-palette"></i>
-                            <span>Đơn hàng tự thiết kế</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/customers" class="nav-link">
-                            <i class="fas fa-users"></i>
-                            <span>Quản lý Khách hàng</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/staff" class="nav-link">
-                            <i class="fas fa-user-tie"></i>
-                            <span>Quản lý Nhân viên</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
-                            <i class="fas fa-percent"></i>
-                            <span>Khuyến mãi</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/manager/blogs" class="nav-link">
-                            <i class="fas fa-blog"></i>
-                            <span>Quản lý Blog</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/reports" class="nav-link">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Báo cáo & Thống kê</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/settings" class="nav-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Cài đặt Hệ thống</span>
-                        </a>
-                    </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="managerproductlist" class="nav-link">
+                        <i class="fas fa-boxes"></i>
+                        <span>Quản lý Sản phẩm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="viewcategorylist" class="nav-link">
+                        <i class="fas fa-tags"></i>
+                        <span>Danh mục Sản phẩm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="managermateriallist" class="nav-link">
+                        <i class="fas fa-seedling"></i>
+                        <span>Quản lý nguyên liệu</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/orders" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Quản lý Đơn hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
+                        <i class="fas fa-palette"></i>
+                        <span>Đơn hàng tự thiết kế</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Quản lý Nhân viên</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
+                        <i class="fas fa-percent"></i>
+                        <span>Khuyến mãi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/blogs" class="nav-link">
+                        <i class="fas fa-blog"></i>
+                        <span>Quản lý Blog</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo & Thống kê</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/settings" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Cài đặt Hệ thống</span>
+                    </a>
+                </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
-                   
-                    <li>
-                        <a href="${pageContext.request.contextPath}/staff/blogs" class="nav-link">
-                            <i class="fas fa-blog"></i>
-                            <span>Quản lý Blog</span>
-                        </a>
-                    </li>
+
+                <li>
+                    <a href="${pageContext.request.contextPath}/staff/blogs" class="nav-link">
+                        <i class="fas fa-blog"></i>
+                        <span>Quản lý Blog</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/staff/customers" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/staff/shippers" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Shippers</span>
+                    </a>
+                </li>
                 <% } else if (roleId == 3) { // Shipper Menu %>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/shipper/dashboard" class="nav-link">
-                            <i class="fas fa-route"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                   
-                  
+                <li>
+                    <a href="${pageContext.request.contextPath}/shipper/dashboard" class="nav-link">
+                        <i class="fas fa-route"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+
                 <% } else { // Guest or Default Menu %>
-                    <li>
-                        <a href="login.jsp" class="nav-link">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Đăng nhập</span>
-                        </a>
-                    </li>
+                <li>
+                    <a href="login.jsp" class="nav-link">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Đăng nhập</span>
+                    </a>
+                </li>
                 <% } %>
             </ul>
         </nav>
 
         <!-- Logout Modal -->
-        
+
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -263,13 +270,13 @@
         <script src="${pageContext.request.contextPath}/js/mobile-navigation.js"></script>
         <!-- Role-specific JS -->
         <% if (roleId == 1) { %>
-            <script src="${pageContext.request.contextPath}/js/manager-script.js"></script>
+        <script src="${pageContext.request.contextPath}/js/manager-script.js"></script>
         <% } else if (roleId == 2) { %>
-            <script src="${pageContext.request.contextPath}/js/staff-script.js"></script>
+        <script src="${pageContext.request.contextPath}/js/staff-script.js"></script>
         <% } else if (roleId == 3) { %>
-            <script src="${pageContext.request.contextPath}/js/shipper-script.js"></script>
+        <script src="${pageContext.request.contextPath}/js/shipper-script.js"></script>
         <% } else { %>
-            <script src="${pageContext.request.contextPath}/js/main.js"></script>
+        <script src="${pageContext.request.contextPath}/js/main.js"></script>
         <% } %>
     </body>
 </html>

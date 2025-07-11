@@ -28,11 +28,26 @@ public class AccountDAO extends DBContext {
             e.printStackTrace();
         }
     }
-
+public int countCustomers() {
+    int count = 0;
+    try {
+        // Đảm bảo chỉ đếm khách hàng (role = 0)
+        String sql = "SELECT COUNT(*) FROM Account WHERE role = 0";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+        System.out.println("Total customers count: " + count); // Log để debug
+    } catch (SQLException ex) {
+        System.out.println("Error counting customers: " + ex.getMessage());
+    }
+    return count;
+}
 // Lấy cả Customer và Manager với phân trang
     public List<Account> getUsersWithPaging(int page, int pageSize) {
         List<Account> users = new ArrayList<>();
-        String sql = "SELECT * FROM Account WHERE role IN (0, 2) ORDER BY accountID LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM Account WHERE role = 0 ORDER BY accountID LIMIT ? OFFSET ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, pageSize);
