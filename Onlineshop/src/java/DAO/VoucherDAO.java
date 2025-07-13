@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 public class VoucherDAO extends DBContext {
-
+    
     // Lấy voucher theo ID
     public Voucher getVoucherById(int voucherId) {
         String sql = "SELECT * FROM Voucher WHERE voucherId = ?";

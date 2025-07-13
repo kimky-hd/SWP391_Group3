@@ -340,21 +340,5 @@
         <url-pattern>/address</url-pattern>
     </servlet-mapping>
     
-    <!-- Shipper Controller -->
-    <servlet>
-        <servlet-name>ShipperController</servlet-name>
-        <servlet-class>Controller.Shipper.ShipperController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ShipperController</servlet-name>
-        <url-pattern>/shipper/dashboard</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ShipperController</servlet-name>
-        <url-pattern>/shipper/update-status</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ShipperController</servlet-name>
-        <url-pattern>/shipper/order-detail</url-pattern>
-    </servlet-mapping>
+    
 </web-app>
