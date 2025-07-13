@@ -196,6 +196,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="${pageContext.request.contextPath}/manager/shipper" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Shippers</span>
+                    </a>
+                </li>
+                <li>
                     <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
                         <i class="fas fa-percent"></i>
                         <span>Khuyến mãi</span>
@@ -233,12 +239,7 @@
                         <span>Quản lý Khách hàng</span>
                     </a>
                 </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/staff/shippers" class="nav-link">
-                        <i class="fas fa-users"></i>
-                        <span>Quản lý Shippers</span>
-                    </a>
-                </li>
+                
                 <% } else if (roleId == 3) { // Shipper Menu %>
                 <li>
                     <a href="${pageContext.request.contextPath}/shipper/dashboard" class="nav-link">
