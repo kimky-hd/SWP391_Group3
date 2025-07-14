@@ -19,7 +19,7 @@
         <style>
             .dropdown {
                 position: relative;
-                display: inline-block;
+                z-index: auto; /* hoặc xóa dòng này */
             }
             .dropdown-button {
                 background-color: #f8f9fa;
@@ -31,12 +31,13 @@
             .dropdown-content {
                 display: none;
                 position: absolute;
+                top: 100%;
                 right: 0;
                 background-color: white;
+                border: 1px solid #ccc;
                 min-width: 200px;
-                box-shadow: 0 8px 16px rgba(0,0,0,.2);
-                z-index: 1;
-                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                z-index: 1000;
             }
             .dropdown-content a {
                 color: black;
@@ -59,6 +60,12 @@
             }
             .btn-close::before {
                 content:"×";
+            }
+
+            .card-header {
+                position: relative !important; /* hoặc static */
+                overflow: visible !important;
+                z-index: auto !important;
             }
         </style>
     </head>
@@ -98,16 +105,17 @@
                 </c:choose>
 
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-                        <!-- form tìm kiếm -->
-                        <form action="searchproduct" method="get" class="d-flex" style="max-width:300px;">
-                            <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm sản phẩm...">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
-                        </form>
+                        <!-- BÊN TRÁI: form tìm kiếm + dropdown sort -->
+                        <div class="d-flex align-items-center flex-wrap gap-2">
+                            <!-- Tìm kiếm -->
+                            <form action="searchproduct" method="get" class="d-flex" style="max-width: 300px;">
+                                <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm sản phẩm...">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            </form>
 
-                        <!-- Dropdown + nút thêm -->
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <!-- Dropdown sort -->
                             <div class="dropdown">
                                 <div class="dropdown-button">${sortLabel} ⏷</div>
                                 <div class="dropdown-content">
@@ -116,13 +124,15 @@
                                     <a href="managersortproduct?sortOrder=desc">Giá: Cao đến thấp</a>
                                 </div>
                             </div>
-
-                            <a href="addproduct" class="btn btn-success btn-icon-split">
-                                <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
-                                <span class="text">Thêm sản phẩm mới</span>
-                            </a>
                         </div>
+
+                        <!-- BÊN PHẢI: nút thêm -->
+                        <a href="addproduct" class="btn btn-success btn-icon-split">
+                            <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
+                            <span class="text">Thêm sản phẩm mới</span>
+                        </a>
                     </div>
+
 
                     <!-- === BẢNG SẢN PHẨM === -->
                     <div class="card-body">
@@ -303,7 +313,7 @@
 
                             <!-- Số lượng -->
                             <div class="mb-3">
-                                <label class="form-label">Số lượng</label>
+                                <label class="form-label">Số lượng <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="quantity" value="${quantityVal}">
                                 <c:if test="${not empty quantityError}">
                                     <div class="text-danger mt-1">${quantityError}</div>
@@ -312,7 +322,7 @@
 
                             <!-- Giá nhập -->
                             <div class="mb-3">
-                                <label class="form-label">Giá nhập (mỗi sản phẩm)</label>
+                                <label class="form-label">Giá nhập (mỗi sản phẩm) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="importPrice" value="${importPriceVal}">
                                 <c:if test="${not empty priceError}">
                                     <div class="text-danger mt-1">${priceError}</div>
@@ -321,7 +331,7 @@
 
                             <!-- Ngày nhập -->
                             <div class="mb-3">
-                                <label class="form-label">Ngày nhập</label>
+                                <label class="form-label">Ngày nhập <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" name="dateImport" id="dateImportInput" value="${dateImportVal}">
                                 <c:if test="${not empty dateImportError}">
                                     <div class="text-danger mt-1">${dateImportError}</div>
@@ -330,7 +340,7 @@
 
                             <!-- Ngày hết hạn -->
                             <div class="mb-3">
-                                <label class="form-label">Ngày hết hạn</label>
+                                <label class="form-label">Ngày hết hạn <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" name="dateExpire" value="${dateExpireVal}">
                                 <c:if test="${not empty dateExpireError}">
                                     <div class="text-danger mt-1">${dateExpireError}</div>
@@ -411,7 +421,26 @@
 
             document.addEventListener('DOMContentLoaded', () => {
                 updateStatuses();
-                setInterval(updateStatuses, 60000); // mỗi phút
+                setInterval(updateStatuses, 60000);
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const importInput = document.querySelector('input[name="dateImport"]');
+                const expireInput = document.querySelector('input[name="dateExpire"]');
+
+                // Khi load trang, nếu chưa có ngày hết hạn thì đặt min = ngày nhập
+                const updateExpireMin = () => {
+                    if (importInput.value) {
+                        expireInput.min = importInput.value;
+                        if (expireInput.value && expireInput.value < importInput.value) {
+                            expireInput.value = importInput.value;
+                        }
+                    }
+                };
+
+                importInput.addEventListener('change', updateExpireMin);
+                updateExpireMin();
             });
         </script>
 

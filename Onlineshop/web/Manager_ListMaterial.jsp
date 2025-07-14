@@ -25,7 +25,7 @@
         <style>
             .dropdown {
                 position: relative;
-                display: inline-block;
+                z-index: auto; /* hoặc xóa dòng này */
             }
             .dropdown-button {
                 background-color: #f8f9fa;
@@ -37,12 +37,13 @@
             .dropdown-content {
                 display: none;
                 position: absolute;
+                top: 100%;
                 right: 0;
                 background-color: white;
+                border: 1px solid #ccc;
                 min-width: 200px;
-                box-shadow: 0 8px 16px rgba(0,0,0,.2);
-                z-index: 1;
-                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                z-index: 1000;
             }
             .dropdown-content a {
                 color: black;
@@ -66,8 +67,14 @@
             .btn-close::before {
                 content:"×";
             }
+
+            .card-header {
+                position: relative !important; /* hoặc static */
+                overflow: visible !important;
+                z-index: auto !important;
+            }
         </style>
-        
+
     </head>
     <body>
         <jsp:include page="manager_topbarsidebar.jsp" />
@@ -95,30 +102,29 @@
                 </c:choose>
 
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div class="d-flex align-items-center flex-wrap gap-2">
                         <form action="searchmaterialname" method="get" class="d-flex" style="max-width: 300px;">
                             <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm nguyên liệu..." />
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-search"></i>
                             </button>
                         </form>
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
                         <div class="dropdown">
-                                <div class="dropdown-button">${sortLabel} ⏷</div>
-                                <div class="dropdown-content">
-                                    <a href="managermateriallist">Sắp xếp theo thứ tự</a>
-                                    <a href="sortmaterial?sortOrder=asc">Giá: Thấp đến cao</a>
-                                    <a href="sortmaterial?sortOrder=desc">Giá: Cao đến thấp</a>
-                                </div>
+                            <div class="dropdown-button">${sortLabel} ⏷</div>
+                            <div class="dropdown-content">
+                                <a href="managermateriallist">Sắp xếp theo thứ tự</a>
+                                <a href="sortmaterial?sortOrder=asc">Giá: Thấp đến cao</a>
+                                <a href="sortmaterial?sortOrder=desc">Giá: Cao đến thấp</a>
                             </div>
+                        </div>
+                        </div>
 
                         <a href="Manager_CreateMaterial.jsp" class="btn btn-success btn-icon-split">
-                            <span class="icon text-white-50">
-                                <i class="fa-solid fa-plus"></i>
-                            </span>
-                            <span class="text">Thêm nguyên liệu mới</span>
+                            <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
+                            <span  class="text">Thêm nguyên liệu mới</span>
                         </a>
-                        </div>
+
                     </div>
 
                     <div class="card-body">
@@ -308,7 +314,7 @@
 
                             <div class="form-group mb-2">
                                 <label>Giá nhập (VNĐ): <span class="text-danger">*</span></label>
-                                <input type="text" name="importPrice" value="${importPrice}" class="form-control" />
+                                <input type="number" name="importPrice" value="${importPrice}" class="form-control" />
                                 <c:if test="${not empty errorPrice}">
                                     <small class="text-danger">${errorPrice}</small>
                                 </c:if>
@@ -316,7 +322,7 @@
 
                             <div class="form-group mb-2">
                                 <label>Số lượng: <span class="text-danger">*</span></label>
-                                <input type="text" name="quantity" value="${quantity}" class="form-control" />
+                                <input type="number" name="quantity" value="${quantity}" class="form-control" />
                                 <c:if test="${not empty errorQuantity}">
                                     <small class="text-danger">${errorQuantity}</small>
                                 </c:if>
@@ -426,7 +432,7 @@
                 });
             </script>
         </c:if>
-            <script>
+        <script>
             function updateStatuses() {
                 const statusCells = document.querySelectorAll('.status-cell');
                 const today = new Date();

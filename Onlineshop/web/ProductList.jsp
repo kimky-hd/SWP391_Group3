@@ -118,6 +118,15 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
                 animation: fadeOut 0.5s ease-in-out 2.5s forwards;
             }
+            body {
+                background-color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                color: #555;
+                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }
 
             /* Ẩn sau 3s bằng animation */
             @keyframes fadeOut {
@@ -150,86 +159,7 @@
 
         <!-- Products Start -->
 
-        <div class="container-fluid pt-5">
-            <div class="row px-xl-5">
-                <!-- SIDEBAR BÊN TRÁI -->
-                <div class="col-lg-3 mb-5 sidebar-pink">
-                    <h4 class="font-weight-semi-bold mb-4">Lọc sản phẩm</h4>
-
-                    <!-- SẮP XẾP THEO GIÁ -->
-
-                    <!<!-- Category -->
-                    <h3>Danh mục</h3>
-                    <div class="mb-3">
-                        <c:forEach items="${listAllCategory}" var="category">
-                            <a href="searchproductbycategory?cid=${category.categoryID}"
-                               class="black-link font-weight-medium mb-2
-                               <c:if test='${selectedCategoryId == category.categoryID}'> text-warning font-weight-bold</c:if>'">
-                                ${category.categoryName} <br>
-                            </a>
-                        </c:forEach>
-
-
-                    </div>
-
-                    <!-- MÀU -->
-                    <h3>Màu</h3>
-                    <div class="mb-3">
-                        <c:forEach items="${listAllColors}" var="color">
-                            <a href="searchproductbycolor?colorId=${color.colorID}"
-                               class="black-link font-weight-medium mb-2
-                               <c:if test='${selectedColorId == color.colorID}'> text-warning font-weight-bold</c:if>'">
-                                ${color.colorName} <br>
-                            </a>
-                        </c:forEach>
-
-
-                    </div>
-                    <!-- MÙA -->
-                    <h3>Mùa</h3>
-                    <div class="mb-4">
-
-                        <c:forEach items="${listAllSeasons}" var="season">
-                            <a href="searchproductbyseason?seasonId=${season.seasonID}"
-                               class="black-link font-weight-medium mb-2
-                               <c:if test='${selectedSeasonId == season.seasonID}'> text-warning font-weight-bold</c:if>'">
-                                ${season.seasonName} <br>
-                            </a>
-                        </c:forEach>                 
-                    </div>
-                    <!-- GIÁ -->
-                    <form action="SearchPriceMinToMax" onsubmit="return validatePriceRange()" class="mt-4">
-                        <div class="form-row align-items-end">
-                            <!-- Min Price -->
-                            <div class="col">
-                                <label for="priceMin" class="small font-weight-bold text-muted">Giá thấp nhất</label>
-                                <input id="priceMin" name="priceMin" type="number" min="0" value="${priceMin}" class="form-control" placeholder="Tối thiểu">
-                            </div>
-
-                            <!-- Separator -->
-                            <div class="col-auto d-flex align-items-center justify-content-center">
-                                <span class="text-muted px-2">–</span>
-                            </div>
-
-                            <!-- Max Price -->
-                            <div class="col">
-                                <label for="priceMax" class="small font-weight-bold text-muted">Giá cao nhất</label>
-                                <input id="priceMax" name="priceMax" type="number" min="0" value="${priceMax}" class="form-control" placeholder="Tối đa">
-                            </div>
-
-                            <!-- Search Button -->
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary mt-3">Lọc</button>
-                            </div>
-                        </div>
-
-                        <!-- ✅ Đưa thông báo lỗi ra ngoài hàng input để không làm co giao diện -->
-                        <div id="priceError" class="text-danger small mt-2" style="display: none;"></div>
-                    </form>
-
-
-
-                </div>
+        <jsp:include page="FilterUserView.jsp" />
 
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
                 <c:set var="sortOrder" value="${sortOrder != null ? sortOrder : 'asc'}" />

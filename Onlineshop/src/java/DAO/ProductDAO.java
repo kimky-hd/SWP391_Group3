@@ -590,12 +590,13 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Feedback> getAllReviewByProductID(int id) {
+    public List<Feedback> getAllReviewByProductID(int id, int indexPage) {
         List<Feedback> list = new ArrayList<>();
-        String sql = "Select * from Feedback where productID = ?";
+        String sql = "Select * from Feedback where productID = ? ORDER BY feedbackID LIMIT ?, 3";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
+            ps.setInt(2, (indexPage - 1) * 3);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Feedback(rs.getInt(1),
@@ -610,6 +611,20 @@ public class ProductDAO extends DBContext {
             System.out.println("getAllReviewByProductID" + e.getMessage());
         }
         return list;
+    }
+    
+    public int countAllFeedback() {
+        String sql = "select count(*) from Feedback";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("countAllFeedback" + e.getMessage());
+        }
+        return 0;
     }
 
     public float getRateByProductID(int id) {

@@ -150,7 +150,16 @@
                 background-color: #198754;
                 color: #fff !important;
             }
-
+            
+            body {
+                background-color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                color: #555;
+                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }
         </style>
 
     </head>
@@ -163,7 +172,7 @@
         <jsp:include page="header.jsp" />
         <!-- Topbar End -->
 
-
+        <jsp:include page="FilterUserView.jsp" />
 
 
         <!-- Product Start -->
@@ -290,12 +299,7 @@
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- Product End -->
-
-        <!<!-- Rate and Comment -->
-
-        <section class="comment-section py-5 bg-light">
+                                <section class="comment-section py-5 bg-light">
             <div class="container">
                 <h4 class="mb-4">Bình luận (${totalFeedback})</h4>
 
@@ -312,12 +316,35 @@
                             </c:if>
                         </c:forEach>
                     </c:forEach>
+                    <ul class="pagination">
+                        <c:if test="${tag > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="ViewProductDetail?productid=${detail.getProductID()}&index=${tag - 1}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${endPage}" var="i">
+                            <li class="page-item ${tag == i ? 'active' : ''}">
+                                <a class="page-link" href="ViewProductDetail?productid=${detail.getProductID()}&index=${i}">
+                                    ${i}
+                                </a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${tag < endPage}">
+                            <li class="page-item">
+                                <a class="page-link" href="ViewProductDetail?productid=${detail.getProductID()}&index=${tag + 1}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+
                 </ul>
-
-
-
             </div>
         </section>
+        </section>
+        <!-- Product End -->
+
+        <!<!-- Rate and Comment -->
+
+        
 
 
 
