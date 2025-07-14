@@ -34,29 +34,53 @@ public class AddWishlistController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String id = request.getParameter("pid");
-        int productID = Integer.parseInt(id);
+
         HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
-        if (a == null) {
+        Account account = (Account) session.getAttribute("account");
+
+        // Lấy pid và from từ request
+        String id = request.getParameter("pid");
+        String from = request.getParameter("from"); // detail hoặc null
+        String indexParam = request.getParameter("index");
+        String index = (indexParam != null && !indexParam.isEmpty()) ? indexParam : "1";
+
+        // Kiểm tra đăng nhập
+        if (account == null) {
             request.setAttribute("mess", "Bạn cần đăng nhập");
             request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-            int accountID = a.getAccountID();
-            ProductDAO productDAO = new ProductDAO();
-            WishList WishListExisted = productDAO.checkWishListExist(accountID, productID);
+            return;
+        }
 
-            if (WishListExisted != null) {
-                productDAO.removeWishList(accountID, productID);
-                request.setAttribute("mess", "Đã xóa sản phẩm vào mục ưa thích");
-                request.getRequestDispatcher("ViewListProductController").forward(request, response);
+        // Kiểm tra id
+        if (id == null || id.isEmpty()) {
+            session.setAttribute("mess", "Không tìm thấy sản phẩm");
+            if ("detail".equals(from)) {
+                response.sendRedirect("ViewProductDetail"); // fallback
             } else {
-                productDAO.insertWishList(accountID, productID);
-                request.setAttribute("mess", "Đã thêm sản phẩm vào mục ưa thích");
-                request.getRequestDispatcher("ViewListProductController").forward(request, response);
+                response.sendRedirect("ViewListProductController?index=" + index);
             }
+            return;
+        }
 
-            
+        int productID = Integer.parseInt(id);
+        int accountID = account.getAccountID();
+
+        ProductDAO productDAO = new ProductDAO();
+        WishList wishListExisted = productDAO.checkWishListExist(accountID, productID);
+
+        if (wishListExisted != null) {
+            productDAO.removeWishList(accountID, productID);
+            session.setAttribute("mess", "Đã xóa sản phẩm khỏi mục ưa thích");
+        } else {
+            productDAO.insertWishList(accountID, productID);
+            session.setAttribute("mess", "Đã thêm sản phẩm vào mục ưa thích");
+        }
+
+        // ✅ Điều hướng lại đúng trang
+        if ("detail".equals(from)) {
+            response.sendRedirect("ViewProductDetail?productid=" + productID);
+        } else {
+            response.sendRedirect("ViewListProductController?index=" + index);
         }
     }
 

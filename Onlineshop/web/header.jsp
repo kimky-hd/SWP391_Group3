@@ -20,6 +20,15 @@
         z-index: 1020;
         background-color: var(--primary);
     }
+    body {
+                background-color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                color: #555;
+                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+            }
 </style>
 
 <!-- Topbar Start -->
