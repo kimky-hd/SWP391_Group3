@@ -91,28 +91,6 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
-    public List<Material> getAllMaterialActive() {
-        List<Material> list = new ArrayList<>();
-        String sql = "SELECT * FROM Material WHERE isActive = TRUE";
-        try {
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                List<MaterialBatch> batches = getBatchesByMaterialID(rs.getInt(1));
-                list.add(new Material(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getBoolean(5),
-                        batches
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("getAllMaterialActive : " + e.getMessage());
-        }
-        return list;
-    }
 
     public int countAllMaterial() {
         String sql = "select count(*) from Material";

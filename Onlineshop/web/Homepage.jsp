@@ -34,17 +34,6 @@
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
-        <style>
-            body {
-                background-color: #fff;
-                font-family: 'Montserrat', sans-serif;
-                color: #555;
-                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
-                background-size: cover;
-                background-attachment: fixed;
-                background-position: center;
-            }
-        </style>
     </head>
 
     <body>

@@ -33,7 +33,7 @@ public class AddProductController extends HttpServlet {
         request.setAttribute("colorList", productDAO.getAllColor());
         request.setAttribute("seasonList", productDAO.getAllSeason());
         request.setAttribute("categoryList", productDAO.getAllCategory());
-        request.setAttribute("materialList", mateDAO.getAllMaterialActive());
+        request.setAttribute("materialList", mateDAO.getAllMaterial());
 
         request.getRequestDispatcher("Manager_CreateProduct.jsp").forward(request, response);
     }
@@ -127,7 +127,7 @@ public class AddProductController extends HttpServlet {
         }
 
         // --- Validate nguyên liệu ---
-        List<Material> materials = mateDAO.getAllMaterialActive();
+        List<Material> materials = mateDAO.getAllMaterial();
         boolean hasValidMaterial = false;
         for (Material m : materials) {
             String qtyRaw = request.getParameter("material_" + m.getMaterialID());
@@ -159,7 +159,7 @@ public class AddProductController extends HttpServlet {
             request.setAttribute("colorList", productDAO.getAllColor());
             request.setAttribute("seasonList", productDAO.getAllSeason());
             request.setAttribute("categoryList", productDAO.getAllCategory());
-            request.setAttribute("materialList", mateDAO.getAllMaterialActive());
+            request.setAttribute("materialList", mateDAO.getAllMaterial());
 
             request.getRequestDispatcher("Manager_CreateProduct.jsp").forward(request, response);
             return;

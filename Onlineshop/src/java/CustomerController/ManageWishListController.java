@@ -6,7 +6,10 @@ package CustomerController;
 
 import DAO.ProductDAO;
 import Model.Account;
+import Model.Category;
+import Model.Color;
 import Model.Product;
+import Model.Season;
 import Model.WishList;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -36,20 +39,39 @@ public class ManageWishListController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
+        String index = request.getParameter("index");
+        if (index == null || index.isEmpty()) {
+            index = "1";
+        }
+        int indexPage = Integer.parseInt(index);
+
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
         if (a == null) {
             request.setAttribute("mess", "Bạn cần đăng nhập");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
-            List<Product> ListWishLishProduct = productDAO.getListWishListProduct(a.getAccountID());
+            List<Product> ListWishLishProduct = productDAO.getListWishListProduct(a.getAccountID(), indexPage);
             int count = productDAO.countProductWishLish(a.getAccountID());
+            int allWishList = productDAO.countProductWishLish(a.getAccountID());
+            int endPage = allWishList / 8;
+            if (allWishList % 8 != 0) {
+                endPage++;
+            }
             List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
-            System.out.println(ListWishListProductByAccount);
-            System.out.println(ListWishLishProduct);
+            List<Category> listAllCategory = productDAO.getAllCategory();
+            List<Color> listAllColors = productDAO.getAllColor();
+            List<Season> listAllSeasons = productDAO.getAllSeason();
             request.setAttribute("countWL", count);
+            request.setAttribute("tag", indexPage);
+            request.setAttribute("count", allWishList);
+            request.setAttribute("endPage", endPage);
             request.setAttribute("listWLByAcc", ListWishListProductByAccount);
             request.setAttribute("listWL", ListWishLishProduct);
+
+            request.setAttribute("listAllCategory", listAllCategory);
+            request.setAttribute("listAllColors", listAllColors);
+            request.setAttribute("listAllSeasons", listAllSeasons);
             request.getRequestDispatcher("WishList.jsp").forward(request, response);
         }
     }
@@ -83,6 +105,11 @@ public class ManageWishListController extends HttpServlet {
         ProductDAO productDAO = new ProductDAO();
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
+        String index = request.getParameter("index");
+        if (index == null || index.isEmpty()) {
+            index = "1";
+        }
+        int indexPage = Integer.parseInt(index);
         if (a == null) {
             request.setAttribute("mess", "Bạn cần đăng nhập");
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -90,7 +117,7 @@ public class ManageWishListController extends HttpServlet {
             String WishListID_raw = request.getParameter("wlid");
             int wlId = Integer.parseInt(WishListID_raw);
             productDAO.deleteWishList(wlId);
-            List<Product> ListWishLishProduct = productDAO.getListWishListProduct(a.getAccountID());
+            List<Product> ListWishLishProduct = productDAO.getListWishListProduct(a.getAccountID(), indexPage);
             int count = productDAO.countProductWishLish(a.getAccountID());
             List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
             System.out.println(ListWishLishProduct);

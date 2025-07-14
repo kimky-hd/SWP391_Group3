@@ -1,16 +1,16 @@
 <%-- 
-    Document   : FilterUserView
-    Created on : Jul 5, 2025, 2:40:13 AM
+    Document   : FilterProductForUser
+    Created on : Jul 15, 2025, 2:36:06 AM
     Author     : Duccon
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
+       <meta charset="utf-8">
         <title>Flower Shop - Product List</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -29,18 +29,6 @@
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
         <style>
-            .product-img {
-                height: 250px; /* Hoặc chiều cao mong muốn */
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .product-img img {
-                height: 100%;
-                width: auto;
-                object-fit: contain;
-            }
             .sidebar-pink {
                 background-color: #fce4ec;
                 border-radius: 8px;
@@ -49,59 +37,6 @@
             .black-link {
                 color: black;
                 text-decoration: none; /* nếu không muốn gạch chân */
-            }
-            .icon-search-button {
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-            }
-            .icon-search-button .icon {
-                font-size: 20px; /* Điều chỉnh kích thước icon */
-                color: #333; /* Màu của icon */
-            }
-            .sticky-navbar {
-                position: sticky;
-                top: 0;
-                z-index: 1020;
-                background-color: var(--primary);
-            }
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
-
-            .dropdown-button {
-                background-color: #f8f9fa;
-                border: 1px solid #ccc;
-                padding: 8px 16px;
-                cursor: pointer;
-                font-weight: bold;
-            }
-
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                right: 0;
-                background-color: white;
-                min-width: 180px;
-                box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-                z-index: 1;
-                border: 1px solid #ddd;
-            }
-
-            .dropdown-content a {
-                color: black;
-                padding: 10px 14px;
-                text-decoration: none;
-                display: block;
-            }
-
-            .dropdown-content a:hover {
-                background-color: #f1f1f1;
-            }
-
-            .dropdown:hover .dropdown-content {
-                display: block;
             }
         </style>
     </head>

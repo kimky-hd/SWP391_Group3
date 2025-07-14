@@ -102,6 +102,7 @@
             .dropdown:hover .dropdown-content {
                 display: block;
             }
+            
         </style>
         <style>
             #message-popup {
@@ -117,15 +118,6 @@
                 z-index: 9999;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
                 animation: fadeOut 0.5s ease-in-out 2.5s forwards;
-            }
-            body {
-                background-color: #fff;
-                font-family: 'Montserrat', sans-serif;
-                color: #555;
-                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
-                background-size: cover;
-                background-attachment: fixed;
-                background-position: center;
             }
 
             /* Ẩn sau 3s bằng animation */
@@ -159,7 +151,7 @@
 
         <!-- Products Start -->
 
-        <jsp:include page="FilterUserView.jsp" />
+        <jsp:include page="FilterProductForUser.jsp" />
 
                 <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
                 <c:set var="sortOrder" value="${sortOrder != null ? sortOrder : 'asc'}" />
@@ -243,12 +235,12 @@
 
                                         <c:choose>
                                             <c:when test="${isLiked}">
-                                                <a href="AddWishlistController?pid=${product.productID}" class="btn btn-sm text-danger p-0 font-weight-bold">
+                                                <a href="AddWishlistController?pid=${product.productID}&index=${tag}" class="btn btn-sm text-danger p-0 font-weight-bold">
                                                     <i class="fas fa-heart mr-1"></i>Đã yêu thích
                                                 </a>
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="AddWishlistController?pid=${product.productID}" class="btn btn-sm text-dark p-0">
+                                                <a href="AddWishlistController?pid=${product.productID}&index=${tag}" class="btn btn-sm text-dark p-0">
                                                     <i class="far fa-heart text-primary mr-1"></i>Yêu Thích
                                                 </a>
                                             </c:otherwise>

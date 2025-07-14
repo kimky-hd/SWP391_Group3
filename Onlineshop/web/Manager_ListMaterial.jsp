@@ -28,11 +28,13 @@
                 z-index: auto; /* hoặc xóa dòng này */
             }
             .dropdown-button {
-                background-color: #f8f9fa;
-                border: 1px solid #ccc;
+                background-color: #1a73e8; /* xanh Google-like */
+                color: white;              /* chữ trắng */
+                border: none;
                 padding: 8px 16px;
                 cursor: pointer;
                 font-weight: bold;
+                border-radius: 4px;
             }
             .dropdown-content {
                 display: none;
@@ -104,20 +106,20 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div class="d-flex align-items-center flex-wrap gap-2">
-                        <form action="searchmaterialname" method="get" class="d-flex" style="max-width: 300px;">
-                            <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm nguyên liệu..." />
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
-                        <div class="dropdown">
-                            <div class="dropdown-button">${sortLabel} ⏷</div>
-                            <div class="dropdown-content">
-                                <a href="managermateriallist">Sắp xếp theo thứ tự</a>
-                                <a href="sortmaterial?sortOrder=asc">Giá: Thấp đến cao</a>
-                                <a href="sortmaterial?sortOrder=desc">Giá: Cao đến thấp</a>
+                            <form action="searchmaterialname" method="get" class="d-flex" style="max-width: 300px;">
+                                <input type="text" name="txt" class="form-control me-2" placeholder="Tìm kiếm nguyên liệu..." />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                            <div class="dropdown">
+                                <div class="dropdown-button">${sortLabel} ⏷</div>
+                                <div class="dropdown-content">
+                                    <a href="managermateriallist">Sắp xếp theo thứ tự</a>
+                                    <a href="sortmaterial?sortOrder=asc">Giá: Thấp đến cao</a>
+                                    <a href="sortmaterial?sortOrder=desc">Giá: Cao đến thấp</a>
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                         <a href="Manager_CreateMaterial.jsp" class="btn btn-success btn-icon-split">

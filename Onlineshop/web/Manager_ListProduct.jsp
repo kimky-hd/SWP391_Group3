@@ -22,11 +22,13 @@
                 z-index: auto; /* hoặc xóa dòng này */
             }
             .dropdown-button {
-                background-color: #f8f9fa;
-                border: 1px solid #ccc;
+                background-color: #1a73e8; /* xanh Google-like */
+                color: white;              /* chữ trắng */
+                border: none;
                 padding: 8px 16px;
                 cursor: pointer;
                 font-weight: bold;
+                border-radius: 4px;
             }
             .dropdown-content {
                 display: none;

@@ -150,15 +150,30 @@
                 background-color: #198754;
                 color: #fff !important;
             }
-            
-            body {
-                background-color: #fff;
-                font-family: 'Montserrat', sans-serif;
-                color: #555;
-                background-image: url('img/Pink Watercolor Abstract Linktree Background.png');
-                background-size: cover;
-                background-attachment: fixed;
-                background-position: center;
+
+        </style>
+        <style>
+            #message-popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #28a745; /* Màu xanh thông báo thành công */
+                color: white;
+                padding: 16px 32px;
+                border-radius: 8px;
+                font-size: 18px;
+                z-index: 9999;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                animation: fadeOut 0.5s ease-in-out 2.5s forwards;
+            }
+
+            /* Ẩn sau 3s bằng animation */
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    visibility: hidden;
+                }
             }
         </style>
 
@@ -167,15 +182,19 @@
 
 
     <body>
+        <c:if test="${not empty mess}">
+            <div id="message-popup">${mess}</div>
+        </c:if>
 
         <!-- Topbar Start -->
         <jsp:include page="header.jsp" />
         <!-- Topbar End -->
 
-        <jsp:include page="FilterUserView.jsp" />
+
 
 
         <!-- Product Start -->
+        <jsp:include page="FilterProductForUser.jsp" />
 
         <section class="product-detail-section py-5">
             <div class="container">
@@ -291,60 +310,59 @@
                                     </c:otherwise>
                                 </c:choose>
                             </form>
+                            <c:set var="wishlist" value="${requestScope.wishlistProductIDs}" />
+                            <c:set var="isLiked" value="false" />
+                            <c:forEach var="item" items="${wishlist}">
+                                <c:if test="${item.productID == detail.productID}">
+                                    <c:set var="isLiked" value="true" />
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${isLiked}">
+                                    <a href="AddWishlistController?pid=${detail.getProductID()}&from=detail" class="btn btn-danger btn-lg font-weight-bold">
+                                        <i class="fas fa-heart mr-1"></i> Đã yêu thích
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="AddWishlistController?pid=${detail.getProductID()}&from=detail" class="btn btn-outline-danger btn-lg">
+                                        <i class="far fa-heart mr-1"></i> Yêu thích
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
 
-                            <a href="AddWishlistController?pid=${detail.getProductID()}" class="btn btn-outline-danger btn-lg">
-                                <i class="far fa-heart mr-1"></i> Yêu thích
-                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-                                <section class="comment-section py-5 bg-light">
-            <div class="container">
-                <h4 class="mb-4">Bình luận (${totalFeedback})</h4>
+            <section class="comment-section py-5 bg-light">
+                <div class="container">
+                    <h4 class="mb-4">Bình luận (${totalFeedback})</h4>
 
-                <!-- Danh sách bình luận -->
-                <ul class="list-unstyled mb-5">
-                    <c:forEach items="${listFeedback}" var="feedback">
-                        <c:forEach items="${listAccountProfile}" var="profile">
-                            <c:if test="${feedback.getAccount_ID() == profile.getAccount_ID()}">
-                                <li class="mb-3 p-3 border rounded bg-white shadow-sm">
-                                    <strong>${profile.getFullName()}</strong> 
-                                    <span class="text-warning">${feedback.getRate()} ★</span><br>
-                                    <span>${feedback.getComment()}</span>
-                                </li>
-                            </c:if>
+                    <!-- Danh sách bình luận -->
+                    <ul class="list-unstyled mb-5">
+                        <c:forEach items="${listFeedback}" var="feedback">
+                            <c:forEach items="${listAccountProfile}" var="profile">
+                                <c:if test="${feedback.getAccount_ID() == profile.getAccount_ID()}">
+                                    <li class="mb-3 p-3 border rounded bg-white shadow-sm">
+                                        <strong>${profile.getFullName()}</strong> 
+                                        <span class="text-warning">${feedback.getRate()} ★</span><br>
+                                        <span>${feedback.getComment()}</span>
+                                    </li>
+                                </c:if>
+                            </c:forEach>
                         </c:forEach>
-                    </c:forEach>
-                    <ul class="pagination">
-                        <c:if test="${tag > 1}">
-                            <li class="page-item">
-                                <a class="page-link" href="ViewProductDetail?productid=${detail.getProductID()}&index=${tag - 1}">Previous</a>
-                            </li>
-                        </c:if>
-                        <c:forEach begin="1" end="${endPage}" var="i">
-                            <li class="page-item ${tag == i ? 'active' : ''}">
-                                <a class="page-link" href="ViewProductDetail?productid=${detail.getProductID()}&index=${i}">
-                                    ${i}
-                                </a>
-                            </li>
-                        </c:forEach>
-                        <c:if test="${tag < endPage}">
-                            <li class="page-item">
-                                <a class="page-link" href="ViewProductDetail?productid=${detail.getProductID()}&index=${tag + 1}">Next</a>
-                            </li>
-                        </c:if>
                     </ul>
 
-                </ul>
-            </div>
-        </section>
+
+
+                </div>
+            </section> 
         </section>
         <!-- Product End -->
 
         <!<!-- Rate and Comment -->
 
-        
+
 
 
 
