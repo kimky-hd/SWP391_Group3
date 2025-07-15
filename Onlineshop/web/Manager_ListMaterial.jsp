@@ -121,12 +121,15 @@
                                 </div>
                             </div>
                         </div>
-
-                        <a href="Manager_CreateMaterial.jsp" class="btn btn-success btn-icon-split">
-                            <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
-                            <span  class="text">Thêm nguyên liệu mới</span>
-                        </a>
-
+                        <div class="d-flex gap-2">
+                            <a href="materialbatchhistory" class="btn btn-outline-primary">
+                                <i class="fas fa-clock-rotate-left"></i> Lịch sử nhập lô hàng
+                            </a>        
+                            <a href="Manager_CreateMaterial.jsp" class="btn btn-success btn-icon-split">
+                                <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
+                                <span  class="text">Thêm nguyên liệu mới</span>
+                            </a>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -200,19 +203,24 @@
                                                     <c:when test="${m.isActive}">
                                                         <form action="inactive" method="post" style="display:inline;">
                                                             <input type="hidden" name="materialID" value="${m.materialID}" />
+                                                            <input type="hidden" name="index" value="${param.index}" />
+                                                            <input type="hidden" name="sortOrder" value="${param.sortOrder}" />
                                                             <button type="button" class="btn btn-warning btn-sm" onclick="openHideModal(${m.materialID}, '${m.name}')" style="min-width: 100px;">
                                                                 <i class="fas fa-eye-slash"></i> Ẩn
                                                             </button>
                                                         </form>
+
                                                     </c:when>
                                                     <c:otherwise>
                                                         <form action="active" method="post" style="display:inline;">
                                                             <input type="hidden" name="materialID" value="${m.materialID}" />
+                                                            <input type="hidden" name="index" value="${param.index}" />
+                                                            <input type="hidden" name="sortOrder" value="${param.sortOrder}" />
                                                             <button type="submit" class="btn btn-success btn-sm" style="min-width: 100px;">
                                                                 <i class="fas fa-eye"></i> Hiện
                                                             </button>
-
                                                         </form>
+
                                                     </c:otherwise>
                                                 </c:choose>
                                                 <button type="button" class="btn btn-info btn-sm rounded-circle" 
@@ -284,18 +292,20 @@
                     <form method="post" action="inactive">
                         <div class="modal-header">
                             <h5 class="modal-title" id="confirmHideLabel">Xác nhận ẩn nguyên liệu</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             Bạn có chắc chắn muốn ẩn nguyên liệu <strong id="materialName"></strong>?
                             <input type="hidden" name="materialID" id="materialIDHidden" />
+                            <input type="hidden" name="index" value="${param.index}" />
+                            <input type="hidden" name="sortOrder" value="${param.sortOrder}" />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                             <button type="submit" class="btn btn-warning">Xác nhận</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -316,7 +326,7 @@
 
                             <div class="form-group mb-2">
                                 <label>Giá nhập (VNĐ): <span class="text-danger">*</span></label>
-                                <input type="number" name="importPrice" value="${importPrice}" class="form-control" />
+                                <input type="text" name="importPrice" value="${importPrice}" class="form-control" id="importPriceInput" oninput="formatPrice(this)" />
                                 <c:if test="${not empty errorPrice}">
                                     <small class="text-danger">${errorPrice}</small>
                                 </c:if>
@@ -391,6 +401,29 @@
                 return true;
             }
         </script>
+        <script>
+            function formatPrice(input) {
+                // Lưu vị trí con trỏ chuột
+                const cursorPosition = input.selectionStart;
+                const originalLength = input.value.length;
+
+                // Loại bỏ mọi ký tự không phải số
+                let rawValue = input.value.replace(/[^0-9]/g, '');
+                if (rawValue === '') {
+                    input.value = '';
+                    return;
+                }
+
+                // Định dạng theo dấu phẩy ngăn cách hàng nghìn
+                let formattedValue = Number(rawValue).toLocaleString('vi-VN');
+                input.value = formattedValue;
+
+                // Khôi phục lại vị trí con trỏ (gần đúng)
+                const newLength = input.value.length;
+                input.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
+            }
+        </script>
+
 
         <script>
             function validateForm() {

@@ -236,6 +236,8 @@
                                                     <c:when test="${p.isActive}">
                                                         <form action="inactiveproduct" method="post" style="display:inline;">
                                                             <input type="hidden" name="productID" value="${p.productID}" />
+                                                            <input type="hidden" name="index" value="${param.index}" />
+                                                            <input type="hidden" name="sortOrder" value="${param.sortOrder}" />
                                                             <button type="submit" class="btn btn-warning btn-sm" style="min-width: 100px;">
                                                                 <i class="fas fa-eye-slash"></i> Vô hiệu hóa
                                                             </button>
@@ -244,6 +246,8 @@
                                                     <c:otherwise>
                                                         <form action="activeproduct" method="post" style="display:inline;">
                                                             <input type="hidden" name="productID" value="${p.productID}" />
+                                                            <input type="hidden" name="index" value="${param.index}" />
+                                                            <input type="hidden" name="sortOrder" value="${param.sortOrder}" />
                                                             <button type="submit" class="btn btn-success btn-sm" style="min-width: 100px;">
                                                                 <i class="fas fa-eye"></i> Sử dụng
                                                             </button>
@@ -325,7 +329,7 @@
                             <!-- Giá nhập -->
                             <div class="mb-3">
                                 <label class="form-label">Giá nhập (mỗi sản phẩm) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="importPrice" value="${importPriceVal}">
+                                <input type="text" name="importPrice" value="${importPrice}" class="form-control" id="importPriceInput" oninput="formatPrice(this)" />
                                 <c:if test="${not empty priceError}">
                                     <div class="text-danger mt-1">${priceError}</div>
                                 </c:if>
@@ -358,30 +362,53 @@
                 </div>
             </div>
         </div>
+        <script>
+                                                            function formatPrice(input) {
+// Lưu vị trí con trỏ chuột
+                                                                const cursorPosition = input.selectionStart;
+                                                                const originalLength = input.value.length;
+
+// Loại bỏ mọi ký tự không phải số
+                                                                let rawValue = input.value.replace(/[^0-9]/g, '');
+                                                                if (rawValue === '') {
+                                                                    input.value = '';
+                                                                    return;
+                                                                }
+
+// Định dạng theo dấu phẩy ngăn cách hàng nghìn
+                                                                let formattedValue = Number(rawValue).toLocaleString('vi-VN');
+                                                                input.value = formattedValue;
+
+// Khôi phục lại vị trí con trỏ (gần đúng)
+                                                                const newLength = input.value.length;
+                                                                input.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
+                                                            }
+        </script>
+
 
         <!-- Script xử lý tự động mở modal nếu có lỗi -->
         <script>
-                                                            window.addEventListener('load', () => {
-                                                                const errorFlag = '${errorFlag}';
-                                                                const productID = '${productID}';
-                                                                if (errorFlag === 'true' || errorFlag === true) {
-                                                                    openAddProductQuantityModal(productID);
-                                                                }
-                                                            });
+            window.addEventListener('load', () => {
+                const errorFlag = '${errorFlag}';
+                const productID = '${productID}';
+                if (errorFlag === 'true' || errorFlag === true) {
+                    openAddProductQuantityModal(productID);
+                }
+            });
 
-                                                            function openAddProductQuantityModal(productID) {
-                                                                document.getElementById("modalProductID").value = productID;
-                                                                const modal = new bootstrap.Modal(document.getElementById("addProductQuantityModal"));
-                                                                modal.show();
-                                                            }
+            function openAddProductQuantityModal(productID) {
+                document.getElementById("modalProductID").value = productID;
+                const modal = new bootstrap.Modal(document.getElementById("addProductQuantityModal"));
+                modal.show();
+            }
 
-                                                            document.addEventListener('DOMContentLoaded', function () {
-                                                                const dateInput = document.getElementById('dateImportInput');
-                                                                if (!dateInput.value) {
-                                                                    const today = new Date().toISOString().split('T')[0];
-                                                                    dateInput.value = today;
-                                                                }
-                                                            });
+            document.addEventListener('DOMContentLoaded', function () {
+                const dateInput = document.getElementById('dateImportInput');
+                if (!dateInput.value) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.value = today;
+                }
+            });
         </script>
         <script>
             function updateStatuses() {

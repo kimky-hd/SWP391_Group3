@@ -102,7 +102,7 @@
             .dropdown:hover .dropdown-content {
                 display: block;
             }
-            
+
         </style>
         <style>
             #message-popup {
@@ -153,37 +153,44 @@
 
         <jsp:include page="FilterProductForUser.jsp" />
 
-                <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
-                <c:set var="sortOrder" value="${sortOrder != null ? sortOrder : 'asc'}" />
+        <!-- DANH SÁCH SẢN PHẨM BÊN PHẢI -->
+        <c:set var="sortOrder" value="${sortOrder != null ? sortOrder : 'asc'}" />
+        <c:choose>
+            <c:when test="${sortOrder == 'desc'}">
+                <c:set var="sortLabel" value="Giá: Cao đến thấp" />
+            </c:when>
+            <c:otherwise>
+                <c:set var="sortLabel" value="Giá: Thấp đến cao" />
+            </c:otherwise>
+        </c:choose>
+
+        <div class="col-lg-9">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 style="margin: 0;">Danh sách sản phẩm</h2>
+
+                <div class="dropdown">
+                    <div class="dropdown-button">
+                        <c:choose>
+                            <c:when test="${param.sortOrder == 'asc'}">Giá: Thấp đến cao ⏷</c:when>
+                            <c:when test="${param.sortOrder == 'desc'}">Giá: Cao đến thấp ⏷</c:when>
+                            <c:otherwise>Sắp xếp theo thứ tự ⏷</c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="ViewListProductController">Sắp xếp theo thứ tự</a>
+                        <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
+                        <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <c:choose>
-                    <c:when test="${sortOrder == 'desc'}">
-                        <c:set var="sortLabel" value="Giá: Cao đến thấp" />
+                    <c:when test="${empty productList}">
+                        <div class="col-12 text-center mt-4">
+                            <h5>Không tìm thấy sản phẩm nào phù hợp.</h5>
+                        </div>
                     </c:when>
                     <c:otherwise>
-                        <c:set var="sortLabel" value="Giá: Thấp đến cao" />
-                    </c:otherwise>
-                </c:choose>
-
-                <div class="col-lg-9">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h2 style="margin: 0;">Danh sách sản phẩm</h2>
-
-                        <div class="dropdown">
-                            <div class="dropdown-button">
-                                <c:choose>
-                                    <c:when test="${param.sortOrder == 'asc'}">Giá: Thấp đến cao ⏷</c:when>
-                                    <c:when test="${param.sortOrder == 'desc'}">Giá: Cao đến thấp ⏷</c:when>
-                                    <c:otherwise>Sắp xếp theo thứ tự ⏷</c:otherwise>
-                                </c:choose>
-                            </div>
-                            <div class="dropdown-content">
-                                <a href="ViewListProductController">Sắp xếp theo thứ tự</a>
-                                <a href="SearchSortProduct?sortOrder=asc">Giá: Thấp đến cao</a>
-                                <a href="SearchSortProduct?sortOrder=desc">Giá: Cao đến thấp</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <c:forEach items="${productList}" var="product" varStatus="status">
                             <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
                                 <div class="card product-item border-0 mb-4">
@@ -250,97 +257,99 @@
                                 </div>
                             </div>
                         </c:forEach>
-                    </div>
-                    <c:if test="${tag != null}">
-                        <ul class="pagination">
-                            <c:if test="${tag != 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
-                                </li>
-                            </c:if>
-                            <c:forEach begin="1" end="${endPage}" var="i">
-                                <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
-                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                </li>
-                            </c:forEach>
-                            <c:if test="${tag != endPage}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </c:if>
-                </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
+            <c:if test="${tag != null}">
+                <ul class="pagination">
+                    <c:if test="${tag != 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
+                        </li>
+                    </c:if>
+                    <c:forEach begin="1" end="${endPage}" var="i">
+                        <li class="page-item ${tag == i ? 'active' : ''}">
+                            <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
+                               style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                        </li>
+                    </c:forEach>
+                    <c:if test="${tag != endPage}">
+                        <li class="page-item">
+                            <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
+                        </li>
+                    </c:if>
+                </ul>
+            </c:if>
         </div>
+    </div>
+</div>
 
 
 
-        <!-- Products End -->
+<!-- Products End -->
 
-        <jsp:include page="footer.jsp" />
+<jsp:include page="footer.jsp" />
 
 
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <!-- Template Javascript -->
-        <script src="js/main.js"></script>
-        <!-- Sticky Button for Custom Order -->
-        <div class="flower-fixed-btn">
-            <a href="CustomOrder.jsp" title="Đặt hoa theo yêu cầu">
-                <i class="fas fa-seedling"></i> <!-- Bạn có thể thay bằng: fa-pencil-alt, fa-heart, fa-rose -->
-            </a>
-        </div>
-        <!-- Sticky Button for Custom Order End -->
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+<!-- Sticky Button for Custom Order -->
+<div class="flower-fixed-btn">
+    <a href="CustomOrder.jsp" title="Đặt hoa theo yêu cầu">
+        <i class="fas fa-seedling"></i> <!-- Bạn có thể thay bằng: fa-pencil-alt, fa-heart, fa-rose -->
+    </a>
+</div>
+<!-- Sticky Button for Custom Order End -->
 
-        <!-- Toast Message Container -->
-        <style>
-            .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            }
+<!-- Toast Message Container -->
+<style>
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-            .toast {
-            padding: 15px 25px;
-            margin-bottom: 12px;
-            border-radius: 12px;
-            color: #5f375f;
-            background-color: #fce4ec;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.4s ease-in-out;
-            border-left: 6px solid #f48fb1;
-            }
+    .toast {
+        padding: 15px 25px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        color: #5f375f;
+        background-color: #fce4ec;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.4s ease-in-out;
+        border-left: 6px solid #f48fb1;
+    }
 
-            .toast.show {
-            opacity: 1;
-            transform: translateX(0);
-            }
+    .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
 
-            .toast.success {
-            background-color: #f8bbd0;
-            border-left-color: #40ec46;
-            }
+    .toast.success {
+        background-color: #f8bbd0;
+        border-left-color: #40ec46;
+    }
 
-            .toast.error {
-            background-color: #fce4ec;
-            border-left-color: #d81b60;
-            }
-        </style>
+    .toast.error {
+        background-color: #fce4ec;
+        border-left-color: #d81b60;
+    }
+</style>
 
-        <div class="toast-container"></div>
+<div class="toast-container"></div>
 
-        <script>
+<script>
                                                     function showToast(message, type) {
                                                         const container = document.querySelector('.toast-container');
                                                         const toast = document.createElement('div');
@@ -371,75 +380,75 @@
                                                     if (message && messageType) {
                                                         showToast(message, messageType);
                                                     }
-        </script>
-        <script>
-            setTimeout(function () {
-                var msg = document.getElementById("message-popup");
-                if (msg) {
-                    msg.remove(); // hoặc msg.style.display = "none";
-                }
-            }, 3000);
-        </script>
+</script>
+<script>
+    setTimeout(function () {
+        var msg = document.getElementById("message-popup");
+        if (msg) {
+            msg.remove(); // hoặc msg.style.display = "none";
+        }
+    }, 3000);
+</script>
 
-        <script>
-            function showOutOfStockAlert() {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Hết hàng!',
-                    text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Đóng'
-                });
-            }
-        </script>
+<script>
+    function showOutOfStockAlert() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hết hàng!',
+            text: 'Sản phẩm này hiện đã hết hàng. Vui lòng chọn sản phẩm khác.',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Đóng'
+        });
+    }
+</script>
 
-        <!-- JavaScript validation -->
-        <script>
-            function validatePriceRange() {
-                const minInput = document.getElementById('priceMin');
-                const maxInput = document.getElementById('priceMax');
-                const errorBox = document.getElementById('priceError');
+<!-- JavaScript validation -->
+<script>
+    function validatePriceRange() {
+        const minInput = document.getElementById('priceMin');
+        const maxInput = document.getElementById('priceMax');
+        const errorBox = document.getElementById('priceError');
 
-                const min = parseFloat(minInput.value);
-                const max = parseFloat(maxInput.value);
+        const min = parseFloat(minInput.value);
+        const max = parseFloat(maxInput.value);
 
-                // Xóa thông báo cũ
-                errorBox.textContent = "";
-                errorBox.style.display = "none";
+        // Xóa thông báo cũ
+        errorBox.textContent = "";
+        errorBox.style.display = "none";
 
-                // Kiểm tra giá âm
-                if (!isNaN(min) && min < 0) {
-                    errorBox.textContent = "⚠️ Giá thấp nhất không thể là số âm.";
-                    errorBox.style.display = "block";
-                    minInput.focus();
-                    return false;
-                }
+        // Kiểm tra giá âm
+        if (!isNaN(min) && min < 0) {
+            errorBox.textContent = "⚠️ Giá thấp nhất không thể là số âm.";
+            errorBox.style.display = "block";
+            minInput.focus();
+            return false;
+        }
 
-                if (!isNaN(max) && max < 0) {
-                    errorBox.textContent = "⚠️ Giá cao nhất không thể là số âm.";
-                    errorBox.style.display = "block";
-                    maxInput.focus();
-                    return false;
-                }
+        if (!isNaN(max) && max < 0) {
+            errorBox.textContent = "⚠️ Giá cao nhất không thể là số âm.";
+            errorBox.style.display = "block";
+            maxInput.focus();
+            return false;
+        }
 
-                // Kiểm tra max < min
-                if (!isNaN(min) && !isNaN(max) && max < min) {
-                    errorBox.textContent = "⚠️ Giá cao nhất không thể nhỏ hơn giá thấp nhất.";
-                    errorBox.style.display = "block";
-                    maxInput.focus();
-                    return false;
-                }
+        // Kiểm tra max < min
+        if (!isNaN(min) && !isNaN(max) && max < min) {
+            errorBox.textContent = "⚠️ Giá cao nhất không thể nhỏ hơn giá thấp nhất.";
+            errorBox.style.display = "block";
+            maxInput.focus();
+            return false;
+        }
 
-                return true;
-            }
-        </script>
+        return true;
+    }
+</script>
 
 
 
-        <%
-            // Xoá session sau khi hiển thị
-            session.removeAttribute("message");
-            session.removeAttribute("messageType");
-        %>
-    </body>
+<%
+    // Xoá session sau khi hiển thị
+    session.removeAttribute("message");
+    session.removeAttribute("messageType");
+%>
+</body>
 </html>

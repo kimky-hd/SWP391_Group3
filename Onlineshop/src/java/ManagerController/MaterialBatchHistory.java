@@ -5,22 +5,21 @@
 
 package ManagerController;
 
-import DAO.ProductDAO;
-import Model.Account;
-import Model.Product;
+import DAO.MaterialDAO;
+import Model.MaterialBatch;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
  * @author Duccon
  */
-public class InActiveProduct extends HttpServlet {
+public class MaterialBatchHistory extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,18 +31,27 @@ public class InActiveProduct extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet InActiveProduct</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet InActiveProduct at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        MaterialDAO mateDAO = new MaterialDAO();
+        String index = request.getParameter("index");
+        if (index == null || index.isEmpty()) {
+            index = "1";
         }
+        int indexPage = Integer.parseInt(index);
+        List<MaterialBatch> list = mateDAO.getMaterialBatchByIndex(indexPage);
+        
+        int allMaterialBatch = mateDAO.countAllMaterialBatch();
+        int endPage = allMaterialBatch / 10;
+        if (allMaterialBatch % 10 != 0) {
+            endPage++;
+        }
+        
+        System.out.println(list);
+        
+        request.setAttribute("tag", indexPage);
+        request.setAttribute("count", allMaterialBatch);
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("materialBatchList", list);
+        request.getRequestDispatcher("Manager_MaterialBatchHistory.jsp").forward(request, response);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -57,7 +65,7 @@ public class InActiveProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-       processRequest(request, response);
+        processRequest(request, response);
     } 
 
     /** 
@@ -69,31 +77,10 @@ public class InActiveProduct extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-
-    int productID = Integer.parseInt(request.getParameter("productID"));
-    String index = request.getParameter("index");
-    String sortOrder = request.getParameter("sortOrder");
-
-    ProductDAO productDAO = new ProductDAO();
-    Product p = productDAO.getProductById(productID);
-    HttpSession session = request.getSession();
-    Account a = (Account) session.getAttribute("account");
-
-    if (a == null) {
-        request.setAttribute("mess", "Bạn cần đăng nhập");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
-        return;
+    throws ServletException, IOException {
+        processRequest(request, response);
     }
 
-    productDAO.updateProductIsActive(productID, false);
-    session.setAttribute("isactive", "Đã ẩn sản phẩm: " + p.getTitle());
-
-    if (index == null || index.isEmpty()) index = "1";
-    if (sortOrder == null) sortOrder = "";
-
-    response.sendRedirect("managerproductlist?index=" + index + "&sortOrder=" + sortOrder);
-}
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description
