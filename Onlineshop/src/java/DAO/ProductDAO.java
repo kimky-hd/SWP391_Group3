@@ -727,7 +727,7 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public List<Product> getListWishListProduct(int accountID) {
+    public List<Product> getListWishListProduct(int accountID, int indexPage) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT    \n"
                 + "    p.productID,\n"
@@ -740,10 +740,11 @@ public class ProductDAO extends DBContext {
                 + "    p.isActive \n"
                 + " FROM Product p \n"
                 + " JOIN Wishlist wl ON p.productID = wl.productID \n"
-                + " WHERE wl.AccountID = ?";
+                + " WHERE wl.AccountID = ? ORDER BY wl.wishlistID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, accountID);
+            ps.setInt(2, (indexPage - 1) * 8);
             rs = ps.executeQuery();
             while (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
@@ -1040,5 +1041,6 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
+    
 
 }

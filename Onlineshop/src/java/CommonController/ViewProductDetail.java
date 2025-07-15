@@ -6,6 +6,7 @@ package CommonController;
 
 import DAO.CategoryDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.AccountProfile;
 import Model.Category;
 import Model.Color;
@@ -13,12 +14,14 @@ import Model.Feedback;
 import Model.Product;
 import Model.ProductComponent;
 import Model.Season;
+import Model.WishList;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -48,19 +51,29 @@ public class ViewProductDetail extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sản phẩm không tồn tại");
             return;
         }
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        int count;
+        if (a == null) {
+            count = 0;
+        } else {
+            count = productDAO.countProductWishLish(a.getAccountID());
+            List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
+            request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
 
+        }
+        
         List<ProductComponent> cpList = productDAO.getProductComponentsByProductID(id);
         List<Feedback> listAllFeedback = productDAO.getAllReviewByProductID(id);
         int countAllFeedback = listAllFeedback.size();
         float rate = productDAO.getRateByProductID(id);
         List<AccountProfile> listAllAccountprofile = productDAO.getAllAccountProfile();
         List<Category> cateList = cateDAO.getCategoryByProductID(id);
-        
-        System.out.println(rate);
-        System.out.println(p);
-        System.out.println(listAllAccountprofile);
-        System.out.println(listAllFeedback);
-        System.out.println(countAllFeedback);
+        List<Category> listAllCategory = productDAO.getAllCategory();
+        List<Color> listAllColors = productDAO.getAllColor();
+        List<Season> listAllSeasons = productDAO.getAllSeason();
+
+        request.setAttribute("countWL", count);
         request.setAttribute("componentList", cpList);
         request.setAttribute("categoryList", cateList);
         request.setAttribute("listFeedback", listAllFeedback);
@@ -68,6 +81,10 @@ public class ViewProductDetail extends HttpServlet {
         request.setAttribute("totalFeedback", countAllFeedback);
         request.setAttribute("listAccountProfile", listAllAccountprofile);
         request.setAttribute("rate", rate);
+        
+        request.setAttribute("listAllCategory", listAllCategory);
+        request.setAttribute("listAllColors", listAllColors);
+        request.setAttribute("listAllSeasons", listAllSeasons);
 
         request.getRequestDispatcher("ProductDetail.jsp").forward(request, response);
 

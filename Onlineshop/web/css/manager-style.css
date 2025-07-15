@@ -1,0 +1,589 @@
+/* ===== MANAGER ROLE STYLES ===== */
+/* Primary Color: Blue - Force Override */
+:root {
+    --manager-primary: #1e40af !important;
+    --manager-secondary: #3b82f6 !important;
+    --manager-accent: #60a5fa !important;
+    --manager-light: #dbeafe !important;
+    --manager-dark: #1e3a8a !important;
+}
+
+/* ===== ENHANCED MANAGER TOPBAR STYLES ===== */
+body[data-role="1"] .topbar {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border-bottom: 3px solid var(--manager-primary) !important;
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.15) !important;
+    height: 70px !important;
+    padding: 0 30px !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+body[data-role="1"] .topbar .container-fluid {
+    padding: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+body[data-role="1"] .topbar-brand {
+    color: var(--manager-primary) !important;
+    font-weight: 800 !important;
+    font-size: 28px !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    transition: all 0.3s ease !important;
+    padding: 10px 20px !important;
+    border-radius: 15px !important;
+    background: rgba(30, 64, 175, 0.05) !important;
+}
+
+body[data-role="1"] .topbar-brand:hover {
+    color: var(--manager-secondary) !important;
+    transform: translateY(-2px) !important;
+    background: rgba(30, 64, 175, 0.1) !important;
+    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2) !important;
+}
+
+body[data-role="1"] .topbar-brand .brand-icon {
+    background: linear-gradient(135deg, var(--manager-primary), var(--manager-secondary)) !important;
+    color: white !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    font-size: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="1"] .topbar-brand:hover .brand-icon {
+    transform: rotate(360deg) scale(1.1) !important;
+    box-shadow: 0 8px 30px rgba(30, 64, 175, 0.6) !important;
+}
+
+/* Enhanced topbar actions for manager */
+body[data-role="1"] .topbar-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+}
+
+body[data-role="1"] .topbar-actions .nav-link {
+    color: var(--manager-primary) !important;
+    font-size: 18px !important;
+    padding: 12px !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    background: rgba(30, 64, 175, 0.05) !important;
+    border: 2px solid transparent !important;
+}
+
+body[data-role="1"] .topbar-actions .nav-link:hover {
+    color: white !important;
+    background: var(--manager-primary) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3) !important;
+    border: 2px solid var(--manager-accent) !important;
+}
+
+/* Notification badge styling */
+body[data-role="1"] .topbar-actions .badge {
+    background: #ef4444 !important;
+    color: white !important;
+    font-size: 10px !important;
+    padding: 4px 6px !important;
+    border-radius: 10px !important;
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    animation: pulse 2s infinite !important;
+}
+
+/* User dropdown enhanced styling */
+body[data-role="1"] .user-dropdown {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 8px 15px !important;
+    border-radius: 25px !important;
+    background: rgba(30, 64, 175, 0.1) !important;
+    border: 2px solid transparent !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="1"] .user-dropdown:hover {
+    background: var(--manager-primary) !important;
+    color: white !important;
+    border: 2px solid var(--manager-accent) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3) !important;
+}
+
+body[data-role="1"] .user-dropdown img {
+    border: 3px solid var(--manager-accent) !important;
+    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="1"] .user-dropdown:hover img {
+    border: 3px solid white !important;
+    transform: scale(1.1) !important;
+}
+
+body[data-role="1"] .user-dropdown .badge {
+    background: var(--manager-secondary) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Pulse animation for notifications */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Logo with Blue Theme */
+.manager-logo {
+    color: var(--manager-primary) !important;
+    font-weight: bold !important;
+}
+
+/* ===== SIDEBAR STYLES ===== */
+.sidebar {
+    background: linear-gradient(180deg, var(--manager-primary) 0%, var(--manager-secondary) 100%) !important;
+    border-right: 3px solid var(--manager-accent) !important;
+    width: 260px !important;
+}
+
+/* Sidebar Menu Items */
+.sidebar-menu {
+    padding: 20px 0 !important;
+}
+
+.sidebar-menu .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 15px 25px !important;
+    margin: 5px 15px !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+    border-left: 4px solid transparent !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.sidebar-menu .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    transform: translateX(5px) !important;
+    border-left: 4px solid #ffffff !important;
+    text-decoration: none !important;
+}
+
+.sidebar-menu .nav-link.active {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-left: 4px solid #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.sidebar-menu .nav-link i {
+    width: 20px !important;
+    margin-right: 12px !important;
+    text-align: center !important;
+    font-size: 16px !important;
+}
+
+/* Manager specific menu styling */
+.manager-menu-item {
+    color: #ffffff !important;
+}
+
+.manager-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.manager-menu-item.active {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary,
+.manager-btn-primary {
+    background: var(--manager-primary) !important;
+    border-color: var(--manager-primary) !important;
+    color: white !important;
+}
+
+.btn-primary:hover,
+.manager-btn-primary:hover {
+    background: var(--manager-secondary) !important;
+    border-color: var(--manager-secondary) !important;
+    color: white !important;
+}
+
+/* Override any pink/other colors */
+.btn-outline-primary {
+    color: var(--manager-primary) !important;
+    border-color: var(--manager-primary) !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--manager-primary) !important;
+    border-color: var(--manager-primary) !important;
+    color: white !important;
+}
+
+/* ===== ENHANCED MAIN CONTENT FOR MANAGER ===== */
+body[data-role="1"] .main-content {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    padding: 25px !important;
+    margin-left: 260px !important;
+    margin-top: 70px !important;
+    min-height: calc(100vh - 70px) !important;
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    box-shadow: inset 0 4px 10px rgba(30, 64, 175, 0.05) !important;
+}
+
+/* ===== CARDS ===== */
+.card {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--manager-primary), var(--manager-secondary)) !important;
+    color: white !important;
+    border-radius: 12px 12px 0 0 !important;
+    border: none !important;
+}
+
+/* ===== TABLES ===== */
+.table {
+    background: white !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+.table thead th {
+    background: var(--manager-light) !important;
+    color: var(--manager-dark) !important;
+    border: none !important;
+    font-weight: 600 !important;
+}
+
+/* ===== BADGES ===== */
+.badge-primary {
+    background: var(--manager-primary) !important;
+}
+
+.badge-success {
+    background: #10b981 !important;
+}
+
+.badge-danger {
+    background: #ef4444 !important;
+}
+
+/* Force override any pink/rose colors */
+.bg-pink, .bg-rose, .text-pink, .text-rose {
+    background: var(--manager-primary) !important;
+    color: white !important;
+}
+
+/* Override dropdown styles */
+.dropdown-menu {
+    border: none !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 12px !important;
+}
+
+.dropdown-item:hover {
+    background: rgba(30, 64, 175, 0.1) !important;
+    color: var(--manager-primary) !important;
+}
+
+/* ===== FORCE OVERRIDE ALL PINK/ROSE COLORS FOR MANAGER ===== */
+/* This ensures Manager always displays in BLUE theme */
+
+/* Override any existing pink/rose/red colors */
+body[data-role="1"] .bg-pink,
+body[data-role="1"] .bg-rose,
+body[data-role="1"] .bg-red,
+body[data-role="1"] .text-pink,
+body[data-role="1"] .text-rose,
+body[data-role="1"] .text-red {
+    background: var(--manager-primary) !important;
+    color: white !important;
+}
+
+/* Force search bar and form elements to use blue theme */
+body[data-role="1"] .form-control:focus {
+    border-color: var(--manager-accent) !important;
+    box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25) !important;
+}
+
+/* Force buttons to use blue theme */
+body[data-role="1"] .btn:not(.btn-secondary):not(.btn-danger):not(.btn-warning) {
+    background: var(--manager-primary) !important;
+    border-color: var(--manager-primary) !important;
+    color: white !important;
+}
+
+/* Force table headers */
+body[data-role="1"] .table thead th {
+    background: var(--manager-light) !important;
+    color: var(--manager-dark) !important;
+}
+
+/* Force status badges */
+body[data-role="1"] .badge:not(.bg-success):not(.bg-danger):not(.bg-warning) {
+    background: var(--manager-primary) !important;
+    color: white !important;
+}
+
+/* Force links */
+body[data-role="1"] a:not(.btn):not(.nav-link) {
+    color: var(--manager-primary) !important;
+}
+
+body[data-role="1"] a:not(.btn):not(.nav-link):hover {
+    color: var(--manager-secondary) !important;
+}
+
+/* Force specific elements that might have pink/rose */
+body[data-role="1"] .bg-gradient-primary {
+    background: linear-gradient(135deg, var(--manager-primary), var(--manager-secondary)) !important;
+}
+
+/* Force pagination */
+body[data-role="1"] .pagination .page-link {
+    color: var(--manager-primary) !important;
+}
+
+body[data-role="1"] .pagination .page-item.active .page-link {
+    background: var(--manager-primary) !important;
+    border-color: var(--manager-primary) !important;
+}
+
+/* Force modal headers */
+body[data-role="1"] .modal-header {
+    background: linear-gradient(135deg, var(--manager-primary), var(--manager-secondary)) !important;
+    color: white !important;
+}
+
+/* ===== ADDITIONAL MANAGER SPECIFIC OVERRIDES ===== */
+/* Ensure manager theme is always applied correctly */
+
+.manager-theme,
+[data-role="1"] {
+    --primary-color: var(--manager-primary) !important;
+    --secondary-color: var(--manager-secondary) !important;
+    --accent-color: var(--manager-accent) !important;
+}
+
+/* Force override any CSS that might come after this */
+html [data-role="1"] .sidebar {
+    background: linear-gradient(180deg, var(--manager-primary) 0%, var(--manager-secondary) 100%) !important;
+}
+
+html [data-role="1"] .topbar-brand {
+    color: var(--manager-primary) !important;
+}
+
+html [data-role="1"] .btn-primary {
+    background: var(--manager-primary) !important;
+    border-color: var(--manager-primary) !important;
+}
+
+/* ===== RESPONSIVE ENHANCEMENTS FOR MANAGER ===== */
+@media (max-width: 768px) {
+    body[data-role="1"] .sidebar {
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease !important;
+    }
+    
+    body[data-role="1"] .sidebar.show {
+        transform: translateX(0) !important;
+    }
+    
+    body[data-role="1"] .main-content {
+        margin-left: 0 !important;
+        padding: 15px !important;
+        margin-top: 70px !important;
+    }
+    
+    body[data-role="1"] .topbar {
+        padding: 0 20px !important;
+        height: 65px !important;
+    }
+    
+    body[data-role="1"] .topbar-brand {
+        font-size: 20px !important;
+        margin-left: 50px !important;
+        padding: 8px 15px !important;
+    }
+    
+    body[data-role="1"] .topbar-brand .brand-icon {
+        padding: 8px !important;
+        font-size: 18px !important;
+    }
+    
+    body[data-role="1"] .topbar-actions {
+        gap: 10px !important;
+    }
+    
+    body[data-role="1"] .topbar-actions .nav-link {
+        font-size: 16px !important;
+        padding: 8px !important;
+    }
+    
+    body[data-role="1"] .user-dropdown {
+        padding: 6px 10px !important;
+        gap: 8px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    body[data-role="1"] .topbar {
+        height: 60px !important;
+        padding: 0 15px !important;
+    }
+    
+    body[data-role="1"] .topbar-brand {
+        font-size: 18px !important;
+        margin-left: 45px !important;
+    }
+    
+    body[data-role="1"] .topbar-brand .brand-icon {
+        padding: 6px !important;
+        font-size: 16px !important;
+    }
+    
+    body[data-role="1"] .main-content {
+        margin-top: 60px !important;
+    }
+    
+    body[data-role="1"] .user-dropdown .badge {
+        display: none !important;
+    }
+}
+
+/* ===== ENHANCED DROPDOWN STYLES FOR MANAGER ===== */
+body[data-role="1"] .dropdown-menu {
+    border: none !important;
+    box-shadow: 0 10px 40px rgba(30, 64, 175, 0.2) !important;
+    border-radius: 15px !important;
+    padding: 15px 0 !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(30, 64, 175, 0.1) !important;
+}
+
+body[data-role="1"] .dropdown-item {
+    padding: 12px 25px !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    transition: all 0.3s ease !important;
+    border-radius: 10px !important;
+    margin: 3px 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+body[data-role="1"] .dropdown-item:hover {
+    background: linear-gradient(135deg, var(--manager-primary), var(--manager-secondary)) !important;
+    color: white !important;
+    transform: translateX(5px) !important;
+    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3) !important;
+}
+
+body[data-role="1"] .dropdown-item i {
+    width: 18px !important;
+    text-align: center !important;
+    font-size: 16px !important;
+}
+
+body[data-role="1"] .dropdown-divider {
+    border-color: rgba(30, 64, 175, 0.2) !important;
+    margin: 10px 15px !important;
+}
+
+/* Special styling for logout button */
+body[data-role="1"] .logout-btn {
+    color: #ef4444 !important;
+}
+
+body[data-role="1"] .logout-btn:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+}
+
+/* Enhanced search styling in header */
+body[data-role="1"] .search-container {
+    position: relative !important;
+    margin: 0 20px !important;
+}
+
+body[data-role="1"] .search-input {
+    border: 2px solid rgba(30, 64, 175, 0.2) !important;
+    border-radius: 25px !important;
+    padding: 12px 20px 12px 45px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all 0.3s ease !important;
+}
+
+body[data-role="1"] .search-input:focus {
+    border-color: var(--manager-primary) !important;
+    box-shadow: 0 0 0 0.3rem rgba(30, 64, 175, 0.2) !important;
+    background: white !important;
+}
+
+body[data-role="1"] .search-icon {
+    position: absolute !important;
+    left: 15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--manager-primary) !important;
+    font-size: 16px !important;
+}
+
+/* Enhanced manager layout for better visual hierarchy */
+body[data-role="1"] .page-header {
+    background: white !important;
+    padding: 25px 30px !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.1) !important;
+    margin-bottom: 25px !important;
+    border-left: 5px solid var(--manager-primary) !important;
+}
+
+body[data-role="1"] .page-title {
+    color: var(--manager-primary) !important;
+    font-weight: 700 !important;
+    font-size: 28px !important;
+    margin: 0 !important;
+}
+
+body[data-role="1"] .page-subtitle {
+    color: #6b7280 !important;
+    font-size: 16px !important;
+    margin-top: 5px !important;
+}
