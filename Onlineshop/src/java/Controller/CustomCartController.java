@@ -148,21 +148,40 @@ public class CustomCartController extends HttpServlet {
         customOrderCart.setQuantity(quantity);
         
         // Xử lý tải lên hình ảnh mới (nếu có)
-        Part filePart = request.getPart("imageUpload");
+        processImageUpload(request, "imageUpload", customOrderCart, 1);
+        processImageUpload(request, "imageUpload2", customOrderCart, 2);
+        processImageUpload(request, "imageUpload3", customOrderCart, 3);
+        processImageUpload(request, "imageUpload4", customOrderCart, 4);
+        processImageUpload(request, "imageUpload5", customOrderCart, 5);
+        
+        // Lưu thay đổi vào cơ sở dữ liệu
+        boolean success = customOrderCartDAO.updateCustomOrderCart(customOrderCart);
+        
+        if (success) {
+            response.sendRedirect("custom-cart");
+        } else {
+            sendJsonResponse(response, false, "Không thể cập nhật đơn hàng. Vui lòng thử lại sau.");
+        }
+    }
+    
+    /**
+     * Xử lý tải lên hình ảnh và cập nhật đường dẫn tương ứng trong đối tượng CustomOrderCart
+     */
+    private void processImageUpload(HttpServletRequest request, String inputName, CustomOrderCart customOrderCart, int imageNumber) 
+            throws ServletException, IOException {
+        Part filePart = request.getPart(inputName);
         if (filePart != null && filePart.getSize() > 0) {
             // Kiểm tra kích thước và định dạng file
             if (filePart.getSize() > 5 * 1024 * 1024) { // 5MB
-                sendJsonResponse(response, false, "Kích thước file quá lớn. Vui lòng chọn file nhỏ hơn 5MB.");
-                return;
+                return; // Bỏ qua file quá lớn
             }
             
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileName = filePart.getSubmittedFileName();
             String fileExtension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
             
             if (!fileExtension.equals(".jpg") && !fileExtension.equals(".jpeg") && 
                 !fileExtension.equals(".png") && !fileExtension.equals(".gif")) {
-                sendJsonResponse(response, false, "Chỉ chấp nhận file hình ảnh (JPG, JPEG, PNG, GIF).");
-                return;
+                return; // Bỏ qua file không phải hình ảnh
             }
             
             // Tạo tên file duy nhất
@@ -176,21 +195,26 @@ public class CustomCartController extends HttpServlet {
             // Lưu file
             filePart.write(uploadPath + File.separator + uniqueFileName);
             
-            // Cập nhật đường dẫn hình ảnh
-            // Thay đổi từ
-            customOrderCart.setReferenceImage("uploads/" + uniqueFileName);
+            // Cập nhật đường dẫn hình ảnh tương ứng
+            String imagePath = "img/uploads/" + uniqueFileName;
             
-            // Thành
-            customOrderCart.setReferenceImage("img/uploads/" + uniqueFileName);
-        }
-        
-        // Lưu thay đổi vào cơ sở dữ liệu
-        boolean success = customOrderCartDAO.updateCustomOrderCart(customOrderCart);
-        
-        if (success) {
-            response.sendRedirect("custom-cart");
-        } else {
-            sendJsonResponse(response, false, "Không thể cập nhật đơn hàng. Vui lòng thử lại sau.");
+            switch (imageNumber) {
+                case 1:
+                    customOrderCart.setReferenceImage(imagePath);
+                    break;
+                case 2:
+                    customOrderCart.setReferenceImage2(imagePath);
+                    break;
+                case 3:
+                    customOrderCart.setReferenceImage3(imagePath);
+                    break;
+                case 4:
+                    customOrderCart.setReferenceImage4(imagePath);
+                    break;
+                case 5:
+                    customOrderCart.setReferenceImage5(imagePath);
+                    break;
+            }
         }
     }
     

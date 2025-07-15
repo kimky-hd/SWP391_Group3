@@ -344,16 +344,50 @@
                                 <i class="fas fa-image me-2"></i>Hình ảnh tham khảo
                             </div>
                             <div class="card-body text-center">
-                                <div class="reference-image-container">
+                                <!-- Hình ảnh chính -->
+                                <div class="reference-image-container mb-3">
                                     <c:choose>
                                         <c:when test="${empty customOrder.referenceImage}">
                                             <img src="${pageContext.request.contextPath}/img/user.jpg" alt="Hình ảnh mặc định" class="reference-image">
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="reference-image" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
+                                            <img src="${pageContext.request.contextPath}/${customOrder.referenceImage}" alt="Hình ảnh tham khảo chính" class="reference-image" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
+                                
+                                <!-- Hình ảnh bổ sung -->
+                                <div class="additional-images row">
+                                    <c:if test="${not empty customOrder.referenceImage2}">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="reference-image-container">
+                                                <img src="${pageContext.request.contextPath}/${customOrder.referenceImage2}" alt="Hình ảnh tham khảo 2" class="reference-image" onerror="this.style.display='none'">
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${not empty customOrder.referenceImage3}">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="reference-image-container">
+                                                <img src="${pageContext.request.contextPath}/${customOrder.referenceImage3}" alt="Hình ảnh tham khảo 3" class="reference-image" onerror="this.style.display='none'">
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${not empty customOrder.referenceImage4}">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="reference-image-container">
+                                                <img src="${pageContext.request.contextPath}/${customOrder.referenceImage4}" alt="Hình ảnh tham khảo 4" class="reference-image" onerror="this.style.display='none'">
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${not empty customOrder.referenceImage5}">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="reference-image-container">
+                                                <img src="${pageContext.request.contextPath}/${customOrder.referenceImage5}" alt="Hình ảnh tham khảo 5" class="reference-image" onerror="this.style.display='none'">
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </div>
+                                
                                 <div class="mt-3">
                                     <a href="${pageContext.request.contextPath}/${customOrder.referenceImage}" class="btn btn-outline-primary" target="_blank">
                                         <i class="fas fa-external-link-alt me-1"></i>Xem ảnh đầy đủ
