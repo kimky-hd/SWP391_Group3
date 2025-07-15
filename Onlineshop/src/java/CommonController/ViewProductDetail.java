@@ -68,6 +68,7 @@ public class ViewProductDetail extends HttpServlet {
         int countAllFeedback = listAllFeedback.size();
         float rate = productDAO.getRateByProductID(id);
         List<AccountProfile> listAllAccountprofile = productDAO.getAllAccountProfile();
+        
         List<Category> cateList = cateDAO.getCategoryByProductID(id);
         List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();

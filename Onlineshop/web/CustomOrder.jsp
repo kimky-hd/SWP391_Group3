@@ -54,11 +54,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="imageUpload" class="form-label">Hình ảnh mẫu</label>
-                                    <input type="file" class="form-control" id="imageUpload" name="imageUpload" accept="image/*">
-                                    <small class="text-muted"><i class="fas fa-info-circle"></i> Tải lên hình ảnh mẫu để chúng tôi hiểu rõ hơn về yêu cầu của bạn</small>
+                                    <label for="imageUpload" class="form-label">Hình ảnh mẫu (tối đa 5 hình ảnh)</label>
+                                    <input type="file" class="form-control mb-2" id="imageUpload" name="imageUpload" accept="image/*" multiple>
+                                    <small class="text-muted"><i class="fas fa-info-circle"></i> Tải lên tối đa 5 hình ảnh mẫu để chúng tôi hiểu rõ hơn về yêu cầu của bạn. Bạn có thể chọn nhiều ảnh cùng lúc.</small>
+                                    <div class="image-preview-container mt-3 d-flex flex-wrap" id="imagePreviewContainer">
+                                        <!-- Các ảnh xem trước sẽ được thêm vào đây bằng JavaScript -->
+                                    </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="description" class="form-label">Mô tả chi tiết</label>
                                     <textarea class="form-control" id="description" name="description" rows="5"placeholder="Mô tả chi tiết về sản phẩm bạn muốn đặt hàng (loại hoa, màu sắc, kích thước, dịp sử dụng, ngân sách dự kiến...)"><c:out value="${sessionScope.savedDescription}"/></textarea>
@@ -155,6 +157,55 @@
             }
         </style>
         <script>
+            // Hàm xử lý xem trước nhiều hình ảnh
+            document.getElementById('imageUpload').addEventListener('change', function(event) {
+                const files = event.target.files;
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                
+                // Xóa tất cả các preview hiện tại
+                previewContainer.innerHTML = '';
+                
+                // Giới hạn số lượng file được chọn
+                const maxFiles = 5;
+                const numFiles = Math.min(files.length, maxFiles);
+                
+                if (files.length > maxFiles) {
+                    showToast('Chỉ có thể tải lên tối đa 5 hình ảnh. Chỉ 5 ảnh đầu tiên sẽ được sử dụng.', 'error');
+                }
+                
+                // Tạo preview cho mỗi file
+                for (let i = 0; i < numFiles; i++) {
+                    const file = files[i];
+                    
+                    // Kiểm tra loại file
+                    if (!file.type.match('image.*')) {
+                        continue;
+                    }
+                    
+                    const reader = new FileReader();
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item me-2 mb-2';
+                    
+                    const img = document.createElement('img');
+                    img.style.maxWidth = '150px';
+                    img.style.maxHeight = '150px';
+                    img.style.border = '1px dashed #ccc';
+                    img.style.padding = '5px';
+                    
+                    previewItem.appendChild(img);
+                    previewContainer.appendChild(previewItem);
+                    
+                    reader.onload = (function(aImg) {
+                        return function(e) {
+                            aImg.src = e.target.result;
+                        };
+                    })(img);
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Các hàm khác giữ nguyên
             function showToast(message, type) {
                 const container = document.querySelector('.toast-container');
                 const toast = document.createElement('div');
@@ -189,24 +240,35 @@
             }
         </script>
         <script>
-            document.getElementById("imageUpload").addEventListener("change", function (event) {
-                const file = event.target.files[0];
-                const preview = document.getElementById("previewImage");
+            // Hàm xử lý xem trước hình ảnh
+            function handleImagePreview(inputId, previewId) {
+                document.getElementById(inputId).addEventListener("change", function (event) {
+                    const file = event.target.files[0];
+                    const preview = document.getElementById(previewId);
+                    const previewContainer = preview.parentElement;
 
-                if (file) {
-                    const reader = new FileReader();
+                    if (file) {
+                        const reader = new FileReader();
 
-                    reader.onload = function (e) {
-                        preview.src = e.target.result;
-                        preview.style.display = "block";
-                    };
+                        reader.onload = function (e) {
+                            preview.src = e.target.result;
+                            previewContainer.style.display = "block";
+                        };
 
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.src = "#";
-                    preview.style.display = "none";
-                }
-            });
+                        reader.readAsDataURL(file);
+                    } else {
+                        preview.src = "#";
+                        previewContainer.style.display = "none";
+                    }
+                });
+            }
+
+            // Áp dụng cho tất cả các input file
+            handleImagePreview("imageUpload", "previewImage");
+            handleImagePreview("imageUpload2", "previewImage2");
+            handleImagePreview("imageUpload3", "previewImage3");
+            handleImagePreview("imageUpload4", "previewImage4");
+            handleImagePreview("imageUpload5", "previewImage5");
         </script>
 
     </body>
