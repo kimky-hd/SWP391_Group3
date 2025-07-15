@@ -7,6 +7,10 @@ public class CustomOrderCart {
     private int customCartID;
     private int accountID;
     private String referenceImage;
+    private String referenceImage2;
+    private String referenceImage3;
+    private String referenceImage4;
+    private String referenceImage5;
     private String description;
     private int quantity;
     private String status;
@@ -17,10 +21,14 @@ public class CustomOrderCart {
     public CustomOrderCart() {
     }
 
-    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String description, int quantity, String status, Timestamp createdAt, int statusID) {
+    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, Timestamp createdAt, int statusID) {
         this.customCartID = customCartID;
         this.accountID = accountID;
         this.referenceImage = referenceImage;
+        this.referenceImage2 = referenceImage2;
+        this.referenceImage3 = referenceImage3;
+        this.referenceImage4 = referenceImage4;
+        this.referenceImage5 = referenceImage5;
         this.description = description;
         this.quantity = quantity;
         this.status = status;
@@ -28,9 +36,13 @@ public class CustomOrderCart {
         this.statusID = statusID;
     }
 
-    public CustomOrderCart(int accountID, String referenceImage, String description, int quantity, String status) {
+    public CustomOrderCart(int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status) {
         this.accountID = accountID;
         this.referenceImage = referenceImage;
+        this.referenceImage2 = referenceImage2;
+        this.referenceImage3 = referenceImage3;
+        this.referenceImage4 = referenceImage4;
+        this.referenceImage5 = referenceImage5;
         this.description = description;
         this.quantity = quantity;
         this.status = status;
@@ -59,6 +71,38 @@ public class CustomOrderCart {
 
     public void setReferenceImage(String referenceImage) {
         this.referenceImage = referenceImage;
+    }
+    
+    public String getReferenceImage2() {
+        return referenceImage2;
+    }
+
+    public void setReferenceImage2(String referenceImage2) {
+        this.referenceImage2 = referenceImage2;
+    }
+    
+    public String getReferenceImage3() {
+        return referenceImage3;
+    }
+
+    public void setReferenceImage3(String referenceImage3) {
+        this.referenceImage3 = referenceImage3;
+    }
+    
+    public String getReferenceImage4() {
+        return referenceImage4;
+    }
+
+    public void setReferenceImage4(String referenceImage4) {
+        this.referenceImage4 = referenceImage4;
+    }
+    
+    public String getReferenceImage5() {
+        return referenceImage5;
+    }
+
+    public void setReferenceImage5(String referenceImage5) {
+        this.referenceImage5 = referenceImage5;
     }
 
     public String getDescription() {
@@ -107,6 +151,10 @@ public class CustomOrderCart {
                 + "customCartID=" + customCartID
                 + ", accountID=" + accountID
                 + ", referenceImage='" + referenceImage + '\''
+                + ", referenceImage2='" + referenceImage2 + '\''
+                + ", referenceImage3='" + referenceImage3 + '\''
+                + ", referenceImage4='" + referenceImage4 + '\''
+                + ", referenceImage5='" + referenceImage5 + '\''
                 + ", description='" + description + '\''
                 + ", quantity=" + quantity
                 + ", status='" + status + '\''

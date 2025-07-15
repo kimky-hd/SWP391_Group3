@@ -38,10 +38,10 @@ public class CategoryDAO extends DBContext {
     
     public List<Category> getCategoryByIndex(int indexPage) {
         List<Category> list = new ArrayList<>();
-        String sql = "Select * from Category ORDER BY categoryID LIMIT ?, 5";
+        String sql = "Select * from Category ORDER BY categoryID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, (indexPage - 1) * 5);
+            ps.setInt(1, (indexPage - 1) * 8);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Category(rs.getInt(1),

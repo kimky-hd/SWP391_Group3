@@ -2,6 +2,8 @@
 <%@ page import="Model.Account" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,21 +27,12 @@
             if (baseUrl == null) baseUrl = "viewcategorylist";
             if (extraParams == null) extraParams = "";
         %>
-        
+
         <jsp:include page="manager_topbarsidebar.jsp" />
 
         <!-- Main Content -->
         <main class="main-content">
-            <c:if test="${not empty success}">
-                <div id="successMessage" class="alert-box">
-                    ${success}
-                </div>
-            </c:if>
-            <c:if test="${not empty msg}">
-                <div id="errorMessage" class="alert-box" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">
-                    ${msg}
-                </div>
-            </c:if>
+
             <div class="container-fluid">
 
                 <!-- Page Heading -->
@@ -96,14 +89,12 @@
                                                     </button>
                                                 </form>    
 
-                                                <form action="deletecategory" method="post" style="display:inline;">
-                                                    <input type="hidden" name="categoryID" value="${list.categoryID}" />
-                                                    <button type="submit" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                                                        <span class="icon text-white-50">
-                                                            <i class="fas fa-trash"></i>
-                                                        </span>
-                                                    </button>
-                                                </form>                            
+                                                <button type="button"
+                                                        class="btn btn-danger btn-icon-split btn-sm"
+                                                        onclick="confirmDeleteCategory(${list.categoryID}, '${fn:escapeXml(list.categoryName)}')">
+                                                    <span class="icon text-white-50"><i class="fas fa-trash"></i></span>
+                                                </button>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -116,26 +107,26 @@
                         </div>
                     </div>
                 </div>
-            <c:if test="${tag != null}">
-                        <ul class="pagination">
-                            <c:if test="${tag != 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
-                                </li>
-                            </c:if>
-                            <c:forEach begin="1" end="${endPage}" var="i">
-                                <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
-                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                </li>
-                            </c:forEach>
-                            <c:if test="${tag != endPage}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </c:if>
+                <c:if test="${tag != null}">
+                    <ul class="pagination">
+                        <c:if test="${tag != 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${endPage}" var="i">
+                            <li class="page-item ${tag == i ? 'active' : ''}">
+                                <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
+                                   style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${tag != endPage}">
+                            <li class="page-item">
+                                <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </c:if>
 
             </div>
             <!-- /.container-fluid -->
@@ -153,5 +144,44 @@
 
         <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            /**
+             * Hiển thị popup xác nhận xoá
+             * @param {number} id   - categoryID
+             * @param {string} name - categoryName
+             */
+            function confirmDeleteCategory(id, name) {
+                Swal.fire({
+                    title: 'Xác nhận xoá',
+                    text: 'Bạn có chắc chắn muốn xoá danh mục "' + name + '"?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Xoá',
+                    cancelButtonText: 'Huỷ'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Tạo form ẩn và submit
+                        const form = document.createElement('form');
+                        form.method = 'post';
+                        form.action = 'deletecategory';
+
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'categoryID';
+                        input.value = id;
+                        form.appendChild(input);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            }
+        </script>
+
     </body>
 </html>

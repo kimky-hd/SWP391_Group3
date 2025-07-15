@@ -364,6 +364,9 @@
                                                 <td>${order.customCartID}</td>
                                                 <td>
                                                     <img src="${pageContext.request.contextPath}/${order.referenceImage}" alt="Hình ảnh tham khảo" class="custom-order-image">
+                                                    <c:if test="${not empty order.referenceImage2 or not empty order.referenceImage3 or not empty order.referenceImage4 or not empty order.referenceImage5}">
+                                                        <span class="badge bg-info ms-1">+${(not empty order.referenceImage2 ? 1 : 0) + (not empty order.referenceImage3 ? 1 : 0) + (not empty order.referenceImage4 ? 1 : 0) + (not empty order.referenceImage5 ? 1 : 0)}</span>
+                                                    </c:if>
                                                 </td>
                                                 <td>${order.accountID}</td>
                                                 <td>
