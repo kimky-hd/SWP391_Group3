@@ -211,9 +211,9 @@
 </head>
 <body>
     <%
-        // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 2)
+        // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 1)
         Model.Account account = (Model.Account) session.getAttribute("account");
-        if (account == null || account.getRole() != 2) {
+        if (account == null || account.getRole() != 1) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }

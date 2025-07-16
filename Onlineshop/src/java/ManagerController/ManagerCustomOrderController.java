@@ -102,7 +102,7 @@ public class ManagerCustomOrderController extends HttpServlet {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
         
-        if (account == null || account.getRole() != 2) {
+        if (account == null || account.getRole() != 1) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return false;
         }
