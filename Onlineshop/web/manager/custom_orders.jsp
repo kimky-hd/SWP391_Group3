@@ -8,21 +8,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý đơn hàng tự thiết kế</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
         <style>
-            /* Thiết lập chung */
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f8f9fa;
-                color: #333;
-            }
-
-            /* Topbar và sidebar */
-            .topbar {
-                background-color: #1F2937;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
 
             /* Card styling */
             .card {
@@ -265,9 +256,9 @@
     </head>
     <body>
         <%
-            // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 2)
+            // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 1)
             Model.Account account = (Model.Account) session.getAttribute("account");
-            if (account == null || account.getRole() != 2) {
+            if (account == null || account.getRole() != 1) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
