@@ -40,6 +40,22 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
+        
+        /* Thêm CSS mới cho container nút */
+        .fixed-button-container {
+            position: fixed;
+            top: 80px; /* Điều chỉnh khoảng cách từ trên xuống */
+            right: 30px;
+            z-index: 9999;
+        }
+        .add-button {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -50,13 +66,15 @@
             
             <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Nút thêm mới với vị trí cố định -->
+                <div class="fixed-button-container">
+                    <a href="${pageContext.request.contextPath}/manager/shipper/add" class="btn btn-primary add-button">
+                        <i class="fas fa-plus"></i> Thêm Shipper mới
+                    </a>
+                </div>
+
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Quản lý Shipper</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <a href="${pageContext.request.contextPath}/manager/shipper/add" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Thêm Shipper mới
-                        </a>
-                    </div>
                 </div>
                 
                 <!-- Thống kê -->

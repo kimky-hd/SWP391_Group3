@@ -97,100 +97,102 @@ public class AddMaterialBatchController extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
 
-        if (importPriceRaw == null || importPriceRaw.trim().isEmpty()) {
-            request.setAttribute("errorPrice", "Vui lòng nhập giá nhập.");
-            hasError = true;
-        } else {
-            try {
-                importPrice = Double.parseDouble(importPriceRaw);
-                if (importPrice <= 0) {
-                    request.setAttribute("errorPrice", "Giá nhập phải lớn hơn 0.");
+            if (importPriceRaw == null || importPriceRaw.trim().isEmpty()) {
+                request.setAttribute("errorPrice", "Vui lòng nhập giá nhập.");
+                hasError = true;
+            } else {
+                try {
+                    importPriceRaw = importPriceRaw.replace(",", "").trim(); // loại bỏ dấu phẩy
+                    importPrice = Double.parseDouble(importPriceRaw);
+                    if (importPrice <= 0) {
+                        request.setAttribute("errorPrice", "Giá nhập phải lớn hơn 0.");
+                        hasError = true;
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errorPrice", "Giá nhập phải là số.");
                     hasError = true;
                 }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorPrice", "Giá nhập phải là số.");
-                hasError = true;
             }
-        }
 
-        if (quantityRaw == null || quantityRaw.trim().isEmpty()) {
-            request.setAttribute("errorQuantity", "Vui lòng nhập số lượng.");
-            hasError = true;
-        } else {
-            try {
-                quantity = Integer.parseInt(quantityRaw);
-                if (quantity <= 0) {
-                    request.setAttribute("errorQuantity", "Số lượng phải lớn hơn 0.");
+            if (quantityRaw == null || quantityRaw.trim().isEmpty()) {
+                request.setAttribute("errorQuantity", "Vui lòng nhập số lượng.");
+                hasError = true;
+            } else {
+                try {
+                    quantity = Integer.parseInt(quantityRaw);
+                    if (quantity <= 0) {
+                        request.setAttribute("errorQuantity", "Số lượng phải lớn hơn 0.");
+                        hasError = true;
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errorQuantity", "Số lượng phải là số nguyên.");
                     hasError = true;
                 }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorQuantity", "Số lượng phải là số nguyên.");
+            }
+
+            if (dateImportRaw == null || dateImportRaw.isEmpty()) {
+                request.setAttribute("errorDateImport", "Vui lòng chọn ngày nhập.");
+                hasError = true;
+            } else {
+                dateImport = Date.valueOf(dateImportRaw);
+            }
+
+            if (dateExpireRaw == null || dateExpireRaw.isEmpty()) {
+                request.setAttribute("errorDateExpire", "Vui lòng chọn ngày hết hạn.");
+                hasError = true;
+            } else {
+                dateExpire = Date.valueOf(dateExpireRaw);
+            }
+
+            if (dateImport != null && dateExpire != null && dateExpire.before(dateImport)) {
+                request.setAttribute("errorDateExpire", "Ngày hết hạn không được trước ngày nhập.");
                 hasError = true;
             }
-        }
 
-        if (dateImportRaw == null || dateImportRaw.isEmpty()) {
-            request.setAttribute("errorDateImport", "Vui lòng chọn ngày nhập.");
-            hasError = true;
-        } else {
-            dateImport = Date.valueOf(dateImportRaw);
-        }
+            if (hasError) {
 
-        if (dateExpireRaw == null || dateExpireRaw.isEmpty()) {
-            request.setAttribute("errorDateExpire", "Vui lòng chọn ngày hết hạn.");
-            hasError = true;
-        } else {
-            dateExpire = Date.valueOf(dateExpireRaw);
-        }
+                request.setAttribute("importPrice", importPriceRaw);
+                request.setAttribute("quantity", quantityRaw);
+                request.setAttribute("dateImport", dateImportRaw);
+                request.setAttribute("dateExpire", dateExpireRaw);
+                request.setAttribute("showModal", true);
 
-        if (dateImport != null && dateExpire != null && dateExpire.before(dateImport)) {
-            request.setAttribute("errorDateExpire", "Ngày hết hạn không được trước ngày nhập.");
-            hasError = true;
-        }
+                String index = request.getParameter("index");
+                if (index == null || index.isEmpty()) {
+                    index = "1";
+                }
+                int indexPage = Integer.parseInt(index);
 
-        if (hasError) {
+                List<Material> listMaterialByIndex = mateDAO.getMaterialByIndex(indexPage);
+                for (Material p : listMaterialByIndex) {
+                    p.setBatches(mateDAO.getBatchesByMaterialID(p.getMaterialID()));
+                }
 
-            request.setAttribute("importPrice", importPriceRaw);
-            request.setAttribute("quantity", quantityRaw);
-            request.setAttribute("dateImport", dateImportRaw);
-            request.setAttribute("dateExpire", dateExpireRaw);
-            request.setAttribute("showModal", true);
+                int allMaterial = mateDAO.countAllMaterial();
+                int endPage = allMaterial / 10;
+                if (allMaterial % 10 != 0) {
+                    endPage++;
+                }
 
-            String index = request.getParameter("index");
-            if (index == null || index.isEmpty()) {
-                index = "1";
-            }
-            int indexPage = Integer.parseInt(index);
+                System.out.println(listMaterialByIndex);
+                request.setAttribute("tag", indexPage);
+                request.setAttribute("count", allMaterial);
+                request.setAttribute("endPage", endPage);
+                request.setAttribute("materialList", listMaterialByIndex);
 
-            List<Material> listMaterialByIndex = mateDAO.getMaterialByIndex(indexPage);
-            for (Material p : listMaterialByIndex) {
-                p.setBatches(mateDAO.getBatchesByMaterialID(p.getMaterialID()));
+                request.getRequestDispatcher("Manager_ListMaterial.jsp").forward(request, response);
+                return;
             }
 
-            int allMaterial = mateDAO.countAllMaterial();
-            int endPage = allMaterial / 10;
-            if (allMaterial % 10 != 0) {
-                endPage++;
-            }
+            int materialID = Integer.parseInt(materialIDRaw);
 
-            System.out.println(listMaterialByIndex);
-            request.setAttribute("tag", indexPage);
-            request.setAttribute("count", allMaterial);
-            request.setAttribute("endPage", endPage);
-            request.setAttribute("materialList", listMaterialByIndex);
+            mateDAO.addNewBatchToMaterial(materialID, quantity, importPrice, dateImport, dateExpire);
 
-            request.getRequestDispatcher("Manager_ListMaterial.jsp").forward(request, response);
-            return;
+            request.getSession().setAttribute("isactive", "Bổ sung nguyên liệu thành công!");
+            response.sendRedirect("managermateriallist");
         }
-
-        int materialID = Integer.parseInt(materialIDRaw);
-
-        mateDAO.addNewBatchToMaterial(materialID, quantity, importPrice, dateImport, dateExpire);
-
-        request.getSession().setAttribute("isactive", "Bổ sung nguyên liệu thành công!");
-        response.sendRedirect("managermateriallist");
     }
-    }
+
     /**
      * Returns a short description of the servlet.
      *
