@@ -16,7 +16,6 @@ public class Material {
         private int materialID;
         private String name;
         private String unit;
-        private double pricePerUnit;
         private boolean isActive;
         
         private List<MaterialBatch> batches;
@@ -24,11 +23,10 @@ public class Material {
     public Material() {
     }
 
-    public Material(int materialID, String name, String unit, double pricePerUnit, boolean isActive, List<MaterialBatch> batches) {
+    public Material(int materialID, String name, String unit, boolean isActive, List<MaterialBatch> batches) {
         this.materialID = materialID;
         this.name = name;
         this.unit = unit;
-        this.pricePerUnit = pricePerUnit;
         this.isActive = isActive;
         this.batches = batches;
     }
@@ -57,14 +55,6 @@ public class Material {
 
     public void setUnit(String unit) {
         this.unit = unit;
-    }
-
-    public double getPricePerUnit() {
-        return pricePerUnit;
-    }
-
-    public void setPricePerUnit(double pricePerUnit) {
-        this.pricePerUnit = pricePerUnit;
     }
 
     public boolean isIsActive() {
@@ -124,7 +114,7 @@ public String getStatus() {
 
     @Override
     public String toString() {
-        return "Material{" + "materialID=" + materialID + ", name=" + name + ", unit=" + unit + ", pricePerUnit=" + pricePerUnit + ", isActive=" + isActive + ", batches=" + batches + '}';
+        return "Material{" + "materialID=" + materialID + ", name=" + name + ", unit=" + unit + ", isActive=" + isActive + ", batches=" + batches + '}';
     }
 
     

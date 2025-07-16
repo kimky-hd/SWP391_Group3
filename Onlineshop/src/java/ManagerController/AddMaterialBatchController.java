@@ -7,6 +7,7 @@ package ManagerController;
 import DAO.MaterialDAO;
 import Model.Account;
 import Model.Material;
+import Model.Supplier;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -81,6 +82,7 @@ public class AddMaterialBatchController extends HttpServlet {
         String dateImportRaw = request.getParameter("dateImport");
         String dateExpireRaw = request.getParameter("dateExpire");
         String materialIDRaw = request.getParameter("materialID");
+        String supplierIDRaw = request.getParameter("supplierID");
 
         boolean hasError = false;
 
@@ -88,6 +90,7 @@ public class AddMaterialBatchController extends HttpServlet {
         Integer quantity = null;
         Date dateImport = null;
         Date dateExpire = null;
+        Integer supplierID = null;
 
         MaterialDAO mateDAO = new MaterialDAO();
         HttpSession session = request.getSession();
@@ -148,6 +151,18 @@ public class AddMaterialBatchController extends HttpServlet {
                 request.setAttribute("errorDateExpire", "Ngày hết hạn không được trước ngày nhập.");
                 hasError = true;
             }
+            
+            if (supplierIDRaw == null || supplierIDRaw.trim().isEmpty()) {
+            request.setAttribute("errorSupplier", "Vui lòng chọn nhà cung cấp.");
+            hasError = true;
+        } else {
+            try {
+                supplierID = Integer.parseInt(supplierIDRaw);
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorSupplier", "Nhà cung cấp không hợp lệ.");
+                hasError = true;
+            }
+        }
 
             if (hasError) {
 
@@ -155,6 +170,7 @@ public class AddMaterialBatchController extends HttpServlet {
                 request.setAttribute("quantity", quantityRaw);
                 request.setAttribute("dateImport", dateImportRaw);
                 request.setAttribute("dateExpire", dateExpireRaw);
+                request.setAttribute("supplierID", supplierIDRaw);
                 request.setAttribute("showModal", true);
 
                 String index = request.getParameter("index");
@@ -173,12 +189,15 @@ public class AddMaterialBatchController extends HttpServlet {
                 if (allMaterial % 10 != 0) {
                     endPage++;
                 }
+                
+                List<Supplier> supplierList = mateDAO.getSupplierActive();
 
                 System.out.println(listMaterialByIndex);
                 request.setAttribute("tag", indexPage);
                 request.setAttribute("count", allMaterial);
                 request.setAttribute("endPage", endPage);
                 request.setAttribute("materialList", listMaterialByIndex);
+                request.setAttribute("supplierList", supplierList);
 
                 request.getRequestDispatcher("Manager_ListMaterial.jsp").forward(request, response);
                 return;
@@ -186,7 +205,7 @@ public class AddMaterialBatchController extends HttpServlet {
 
             int materialID = Integer.parseInt(materialIDRaw);
 
-            mateDAO.addNewBatchToMaterial(materialID, quantity, importPrice, dateImport, dateExpire);
+            mateDAO.addNewBatchToMaterial(materialID, quantity, importPrice, dateImport, dateExpire, supplierID);
 
             request.getSession().setAttribute("isactive", "Bổ sung nguyên liệu thành công!");
             response.sendRedirect("managermateriallist");

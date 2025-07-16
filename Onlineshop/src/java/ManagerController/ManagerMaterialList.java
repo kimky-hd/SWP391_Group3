@@ -8,6 +8,7 @@ package ManagerController;
 import DAO.MaterialDAO;
 import Model.Account;
 import Model.Material;
+import Model.Supplier;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -55,6 +56,8 @@ public class ManagerMaterialList extends HttpServlet {
         for (Material p : listMaterialByIndex) {
             p.setBatches(materialDAO.getBatchesByMaterialID(p.getMaterialID()));
         }
+        
+        List<Supplier> supplierList = materialDAO.getSupplierActive();
 
         int allMaterial = materialDAO.countAllMaterial();
         int endPage = allMaterial / 8;
@@ -67,6 +70,7 @@ public class ManagerMaterialList extends HttpServlet {
         request.setAttribute("count", allMaterial);
         request.setAttribute("endPage", endPage);
         request.setAttribute("materialList", listMaterialByIndex);
+        request.setAttribute("supplierList", supplierList);
         request.getRequestDispatcher("Manager_ListMaterial.jsp").forward(request, response);
 
     } 
