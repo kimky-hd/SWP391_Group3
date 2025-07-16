@@ -6,6 +6,7 @@ package DAO;
 
 import Model.Material;
 import Model.MaterialBatch;
+import Model.Supplier;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -20,10 +21,10 @@ import java.util.Map;
  * @author Duccon
  */
 public class MaterialDAO extends DBContext {
-
+    
     PreparedStatement ps;
     ResultSet rs;
-
+    
     public List<MaterialBatch> getBatchesByMaterialID(int materialID) {
         List<MaterialBatch> list = new ArrayList<>();
         String sql = "SELECT * FROM MaterialBatch WHERE materialID = ?";
@@ -45,7 +46,7 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-
+    
     public List<Material> getMaterialByIndex(int indexPage) {
         List<Material> list = new ArrayList<>();
         String sql = "SELECT * FROM Material ORDER BY materialID LIMIT ?, 8";
@@ -58,8 +59,7 @@ public class MaterialDAO extends DBContext {
                 list.add(new Material(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getBoolean(5),
+                        rs.getBoolean(4),
                         batches
                 ));
             }
@@ -68,10 +68,10 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-
+    
     public List<Material> getAllMaterial() {
         List<Material> list = new ArrayList<>();
-        String sql = "SELECT * FROM Material";
+        String sql = "SELECT * FROM Material WHERE isActive = 1";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -80,8 +80,7 @@ public class MaterialDAO extends DBContext {
                 list.add(new Material(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getBoolean(5),
+                        rs.getBoolean(4),
                         batches
                 ));
             }
@@ -90,7 +89,7 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-
+    
     public int countAllMaterial() {
         String sql = "select count(*) from Material";
         try {
@@ -104,7 +103,7 @@ public class MaterialDAO extends DBContext {
         }
         return 0;
     }
-
+    
     public void updateMaterialBatchStatus() {
         String sql = "UPDATE MaterialBatch SET status = "
                 + "CASE "
@@ -114,12 +113,12 @@ public class MaterialDAO extends DBContext {
         try {
             ps = connection.prepareStatement(sql);
             ps.executeUpdate();
-
+            
         } catch (SQLException e) {
             System.out.println("updateMaterialBatchStatus() " + e.getMessage());
         }
     }
-
+    
     public Material getMaterialByID(int materialID) {
         List<Material> list = new ArrayList<>();
         String sql = "Select * from Material WHERE materialID = ? ";
@@ -132,8 +131,7 @@ public class MaterialDAO extends DBContext {
                 return new Material(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getBoolean(5),
+                        rs.getBoolean(4),
                         batches
                 );
             }
@@ -142,7 +140,7 @@ public class MaterialDAO extends DBContext {
         }
         return null;
     }
-
+    
     public List<Material> getMaterialByName(String txt) {
         List<Material> list = new ArrayList<>();
         String sql = "Select * from Material WHERE name LIKE CONCAT('%" + txt + "%') ";
@@ -154,8 +152,7 @@ public class MaterialDAO extends DBContext {
                 list.add(new Material(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getBoolean(5),
+                        rs.getBoolean(4),
                         batches
                 ));
             }
@@ -164,9 +161,9 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-
-    public void addNewBatchToMaterial(int materialID, int quantity, double importPrice, Date dateImpport, Date dateExpire) {
-        String sql = "INSERT INTO MaterialBatch (materialID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
+    
+    public void addNewBatchToMaterial(int materialID, int quantity, double importPrice, Date dateImpport, Date dateExpire, int supplierID) {
+        String sql = "INSERT INTO MaterialBatch (materialID, quantity, importPrice, dateImport, dateExpire, supplierID) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, materialID);
@@ -174,29 +171,28 @@ public class MaterialDAO extends DBContext {
             ps.setDouble(3, importPrice);
             ps.setDate(4, new java.sql.Date(dateImpport.getTime()));
             ps.setDate(5, new java.sql.Date(dateExpire.getTime()));
+            ps.setInt(6, supplierID);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("addNewBatchToMaterial" + e.getMessage());
         }
     }
-
-    public int CreateMaterial(String name, double pricePerUnit) {
+    
+    public int CreateMaterial(String name) {
         String sql = "INSERT INTO Material (\n"
                 + "     name,\n"
-                + "     unit,\n "
-                + "     pricePerUnit) \n"
+                + "     unit) \n"
                 + "     VALUES (?,'cành', ?)";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, name);
-            ps.setDouble(2, pricePerUnit);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("CreateMaterial : " + e.getMessage());
         }
         return 0;
     }
-
+    
     public boolean CheckDuplicateMaterial(String name) {
         MaterialDAO mateDAO = new MaterialDAO();
         List<Material> listmate = mateDAO.getAllMaterial();
@@ -207,7 +203,7 @@ public class MaterialDAO extends DBContext {
         }
         return false;
     }
-
+    
     public void updateMaterialIsActive(int materialID, boolean isActive) {
         String sql = "UPDATE Material SET isActive = ? WHERE materialID = ?";
         try {
@@ -219,7 +215,7 @@ public class MaterialDAO extends DBContext {
             System.out.println("updateMaterialIsActive : " + e.getMessage());
         }
     }
-
+    
     public int getAvailableMaterial(int materialID) {
         String sql = "SELECT SUM(quantity) FROM MaterialBatch"
                 + "   WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
@@ -235,11 +231,11 @@ public class MaterialDAO extends DBContext {
         }
         return 0;
     }
-
+    
     public void consumeMaterialFIFO(int materialID, int quantity) throws SQLException {
         boolean originalAutoCommit = connection.getAutoCommit();
         connection.setAutoCommit(false);
-
+        
         try {
             String sql = "SELECT materialBatchID, quantity "
                     + "FROM MaterialBatch WHERE materialID = ? AND quantity > 0 "
@@ -247,27 +243,27 @@ public class MaterialDAO extends DBContext {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, materialID);
             rs = ps.executeQuery();
-
+            
             while (rs.next() && quantity > 0) {
                 int batchID = rs.getInt("materialBatchID");
                 int available = rs.getInt("quantity");
                 int consume = Math.min(quantity, available);
-
+                
                 try (PreparedStatement update = connection.prepareStatement(
                         "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?")) {
                     update.setInt(1, consume);
                     update.setInt(2, batchID);
                     update.executeUpdate();
                 }
-
+                
                 quantity -= consume;
             }
-
+            
             if (quantity > 0) {
                 connection.rollback();
                 throw new SQLException("Không đủ nguyên liệu để tiêu thụ.");
             }
-
+            
             connection.commit();
         } catch (Exception ex) {
             connection.rollback();
@@ -299,9 +295,9 @@ public class MaterialDAO extends DBContext {
                 list.add(new Material(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getBoolean(5),
-                        batches));
+                        rs.getBoolean(4),
+                        batches
+                ));
             }
         } catch (SQLException e) {
             System.out.println("getSortMaterial: " + e.getMessage());
@@ -311,8 +307,12 @@ public class MaterialDAO extends DBContext {
     
     public List<MaterialBatch> getMaterialBatchByIndex(int indexPage) {
         List<MaterialBatch> list = new ArrayList<>();
-        String sql = "SELECT mb.*, m.name AS materialName FROM MaterialBatch mb " +
-                 "JOIN Material m ON mb.materialID = m.materialID ORDER BY materialbatchID LIMIT ?, 10";
+        String sql = "SELECT mb.*, m.name AS materialName, s.supplierName AS supplierName\n"
+                + "FROM MaterialBatch mb\n"
+                + "JOIN Material m ON mb.materialID = m.materialID\n"
+                + "JOIN Supplier s ON mb.supplierID = s.supplierID\n"
+                + "ORDER BY mb.materialBatchID\n"
+                + "LIMIT ?, 10";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, (indexPage - 1) * 10);
@@ -320,11 +320,13 @@ public class MaterialDAO extends DBContext {
             while (rs.next()) {
                 list.add(new MaterialBatch(rs.getInt(1),
                         rs.getInt(2),
-                        rs.getString(7),
+                        rs.getString(8),
                         rs.getInt(3),
                         rs.getDouble(4),
                         rs.getDate(5),
-                        rs.getDate(6))
+                        rs.getDate(6),
+                        rs.getInt(7),
+                        rs.getString(9))
                 );
             }
         } catch (SQLException e) {
@@ -345,5 +347,26 @@ public class MaterialDAO extends DBContext {
             System.out.println("countAllMaterialBatch" + e.getMessage());
         }
         return 0;
+    }
+    
+    public List<Supplier> getSupplierActive() {
+        List<Supplier> list = new ArrayList<>();
+        String sql = "SELECT * FROM Supplier WHERE isActive = TRUE";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Supplier(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getBoolean(6)
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("getSupplierActive " + e.getMessage());
+        }
+        return list;
     }
 }
