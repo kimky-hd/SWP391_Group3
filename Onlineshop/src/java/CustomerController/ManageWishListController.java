@@ -120,7 +120,12 @@ public class ManageWishListController extends HttpServlet {
             List<Product> ListWishLishProduct = productDAO.getListWishListProduct(a.getAccountID(), indexPage);
             int count = productDAO.countProductWishLish(a.getAccountID());
             List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
-            System.out.println(ListWishLishProduct);
+            List<Category> listAllCategory = productDAO.getAllCategory();
+            List<Color> listAllColors = productDAO.getAllColor();
+            List<Season> listAllSeasons = productDAO.getAllSeason();
+            request.setAttribute("listAllCategory", listAllCategory);
+            request.setAttribute("listAllColors", listAllColors);
+            request.setAttribute("listAllSeasons", listAllSeasons);
             request.setAttribute("countWL", count);
             request.setAttribute("listWLByAcc", ListWishListProductByAccount);
             request.setAttribute("listWL", ListWishLishProduct);
