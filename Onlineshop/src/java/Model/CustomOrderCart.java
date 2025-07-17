@@ -16,12 +16,16 @@ public class CustomOrderCart {
     private String status;
     private Timestamp createdAt;
     private int statusID;
+    // Thêm các trường thông tin liên hệ
+    private String fullName;
+    private String phone;
+    private String email;
 
     // Constructors
     public CustomOrderCart() {
     }
 
-    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, Timestamp createdAt, int statusID) {
+    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, Timestamp createdAt, int statusID, String fullName, String phone, String email) {
         this.customCartID = customCartID;
         this.accountID = accountID;
         this.referenceImage = referenceImage;
@@ -34,9 +38,12 @@ public class CustomOrderCart {
         this.status = status;
         this.createdAt = createdAt;
         this.statusID = statusID;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.email = email;
     }
 
-    public CustomOrderCart(int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status) {
+    public CustomOrderCart(int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, String fullName, String phone, String email) {
         this.accountID = accountID;
         this.referenceImage = referenceImage;
         this.referenceImage2 = referenceImage2;
@@ -46,6 +53,9 @@ public class CustomOrderCart {
         this.description = description;
         this.quantity = quantity;
         this.status = status;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.email = email;
     }
 
     // Getters and Setters
@@ -145,6 +155,31 @@ public class CustomOrderCart {
         this.statusID = statusID;
     }
 
+    // Thêm getters và setters cho các trường mới
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "CustomOrderCart{"
@@ -160,6 +195,9 @@ public class CustomOrderCart {
                 + ", status='" + status + '\''
                 + ", createdAt=" + createdAt
                 + ", statusID=" + statusID
+                + ", fullName='" + fullName + '\''
+                + ", phone='" + phone + '\''
+                + ", email='" + email + '\''
                 + '}';
     }
 }

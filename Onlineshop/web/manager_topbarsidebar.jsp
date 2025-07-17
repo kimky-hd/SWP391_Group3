@@ -183,7 +183,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/custom-orders" class="nav-link">
                         <i class="fas fa-palette"></i>
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
