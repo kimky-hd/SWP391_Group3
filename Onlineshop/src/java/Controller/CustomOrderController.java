@@ -70,15 +70,31 @@ public class CustomOrderController extends HttpServlet {
             // Lấy thông tin từ form
             String description = request.getParameter("description");
             String quantityStr = request.getParameter("quantity");
+            String desiredPriceStr = request.getParameter("desiredPrice");
             // Lấy thông tin liên hệ từ form
             String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
             String email = request.getParameter("email");
             int quantity;
+            double desiredPrice = 0.0; // Khởi tạo giá trị mặc định
+            
+            // Chuyển đổi giá mong muốn từ chuỗi sang số
+            if (desiredPriceStr != null && !desiredPriceStr.trim().isEmpty()) {
+                try {
+                    desiredPrice = Double.parseDouble(desiredPriceStr);
+                    if (desiredPrice < 0) {
+                        desiredPrice = 0.0; // Đặt về 0 nếu giá âm
+                    }
+                } catch (NumberFormatException e) {
+                    // Nếu không thể chuyển đổi, giữ giá trị mặc định là 0
+                    System.out.println("Error parsing desired price: " + e.getMessage());
+                }
+            }
 
             // Lưu thông tin vào session để giữ lại khi có lỗi
             session.setAttribute("savedDescription", description);
             session.setAttribute("savedQuantity", quantityStr);
+            session.setAttribute("savedDesiredPrice", desiredPriceStr);
             session.setAttribute("savedFullName", fullName);
             session.setAttribute("savedPhone", phone);
             session.setAttribute("savedEmail", email);
@@ -260,7 +276,7 @@ public class CustomOrderController extends HttpServlet {
 
             // Thêm đơn hàng tùy chỉnh với nhiều hình ảnh và thông tin liên hệ
             quantity = Integer.parseInt(quantityStr);
-            int customOrderID = addCustomOrderToCart(account.getAccountID(), relativePath, relativePath2, relativePath3, relativePath4, relativePath5, description, quantity, fullName, phone, email);
+            int customOrderID = addCustomOrderToCart(account.getAccountID(), relativePath, relativePath2, relativePath3, relativePath4, relativePath5, description, quantity, fullName, phone, email, desiredPrice);
 
             if (customOrderID > 0) {
                 session.setAttribute("message", "Yêu cầu đặt hàng tùy chỉnh của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất!");
@@ -268,6 +284,7 @@ public class CustomOrderController extends HttpServlet {
                 // Xóa các giá trị đã lưu khi gửi thành công
                 session.removeAttribute("savedDescription");
                 session.removeAttribute("savedQuantity");
+                session.removeAttribute("savedDesiredPrice");
                 session.removeAttribute("savedFullName");
                 session.removeAttribute("savedPhone");
                 session.removeAttribute("savedEmail");
@@ -367,9 +384,9 @@ public class CustomOrderController extends HttpServlet {
      * @param email Email khách hàng
      * @return ID của đơn hàng tùy chỉnh mới được tạo
      */
-    private int addCustomOrderToCart(int accountID, String imagePath, String imagePath2, String imagePath3, String imagePath4, String imagePath5, String description, int quantity, String fullName, String phone, String email) {
-        String sql = "INSERT INTO customordercart (accountID, referenceImage, referenceImage2, referenceImage3, referenceImage4, referenceImage5, description, quantity, statusID, fullName, phone, email) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)";  // Sử dụng statusID = 1 (tương ứng với trạng thái 'pending')
+    private int addCustomOrderToCart(int accountID, String imagePath, String imagePath2, String imagePath3, String imagePath4, String imagePath5, String description, int quantity, String fullName, String phone, String email, double desiredPrice) {
+        String sql = "INSERT INTO customordercart (accountID, referenceImage, referenceImage2, referenceImage3, referenceImage4, referenceImage5, description, quantity, statusID, fullName, phone, email, desired_price) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?)";  // Sử dụng statusID = 1 (tương ứng với trạng thái 'pending')
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, accountID);
             ps.setString(2, imagePath);
@@ -382,6 +399,7 @@ public class CustomOrderController extends HttpServlet {
             ps.setString(9, fullName);
             ps.setString(10, phone);
             ps.setString(11, email);
+            ps.setDouble(12, desiredPrice);
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {

@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/LogoutServlet">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                 </a>
                             </li>
@@ -183,7 +183,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/custom-orders" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
                         <i class="fas fa-palette"></i>
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
@@ -213,6 +213,7 @@
                         <span>Khuyến mãi</span>
                     </a>
                 </li>
+               
                 <li>
                     <a href="${pageContext.request.contextPath}/manager/blogs" class="nav-link">
                         <i class="fas fa-blog"></i>
@@ -220,7 +221,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
                         <i class="fas fa-chart-bar"></i>
                         <span>Báo cáo & Thống kê</span>
                     </a>

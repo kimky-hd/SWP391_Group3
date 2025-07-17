@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewpocrt" content="width=device-width, initial-scale=1.0">
         <title>Đặt hàng tùy chỉnh</title>
         <!-- Favicon -->
         <link href="img/favicon.ico" rel="icon">
@@ -55,7 +55,7 @@
 
                                 <div class="form-group">
                                     <label for="imageUpload" class="form-label">Hình ảnh mẫu (tối đa 5 hình ảnh)</label>
-                                    
+
                                     <!-- Khu vực kéo thả -->
                                     <div class="image-drop-area" id="imageDropArea">
                                         <div class="drop-message text-center p-4">
@@ -65,25 +65,25 @@
                                         </div>
                                         <input type="file" id="fileInput" name="imageUpload" accept="image/*" multiple style="display: none;" required>
                                     </div>
-                                    
+
                                     <!-- Khu vực xem trước hình ảnh -->
                                     <div class="image-preview-container mt-3" id="imagePreviewContainer">
                                         <!-- Hình ảnh sẽ được hiển thị ở đây -->
                                     </div>
-                                    
+
                                     <!-- Input ẩn để lưu trữ các file đã chọn -->
                                     <input type="file" id="imageUpload" name="imageUpload" accept="image/*" style="display: none;" required>
                                     <input type="file" id="imageUpload2" name="imageUpload2" accept="image/*" style="display: none;">
                                     <input type="file" id="imageUpload3" name="imageUpload3" accept="image/*" style="display: none;">
                                     <input type="file" id="imageUpload4" name="imageUpload4" accept="image/*" style="display: none;">
                                     <input type="file" id="imageUpload5" name="imageUpload5" accept="image/*" style="display: none;">
-                                    
+
                                     <small class="text-muted"><i class="fas fa-info-circle"></i> Tải lên tối đa 5 hình ảnh mẫu để chúng tôi hiểu rõ hơn về yêu cầu của bạn.</small>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="description" class="form-label">Mô tả chi tiết</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5"placeholder="Mô tả chi tiết về sản phẩm bạn muốn đặt hàng (loại hoa, màu sắc, kích thước, dịp sử dụng, ngân sách dự kiến...)"><c:out value="${sessionScope.savedDescription}"/></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="5"placeholder="Vui lòng cung cấp thông tin chi tiết về sản phẩm bạn muốn đặt (loại hoa, màu sắc, kích thước, dịp tặng, ngân sách và các yêu cầu riêng nếu có) để chúng tôi tư vấn phù hợp."><c:out value="${sessionScope.savedDescription}"/></textarea>
                                     <small class="text-muted"><i class="fas fa-lightbulb"></i> Càng chi tiết càng giúp chúng tôi hiểu rõ nhu cầu của bạn</small>
                                 </div>
 
@@ -91,6 +91,11 @@
                                     <label for="quantity" class="form-label">Số lượng</label>
                                     <input type="number" class="form-control" id="quantity" name="quantity" value="${not empty sessionScope.savedQuantity ? sessionScope.savedQuantity : '1'}">
                                     <small class="text-muted"><i class="fas fa-box"></i> Nhập số lượng sản phẩm bạn muốn đặt</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editDesiredPrice">Giá mong muốn (VNĐ)</label>
+                                    <input type="number" class="form-control" placeholder="giá mong muốn gợi ý: 100000, 200000" id="editDesiredPrice" name="desiredPrice" min="0" step="1000" required>
+                                    <small class="text-muted"><i class="fas fa-tag"></i>Nhập giá mong muốn cho sản phẩm (VNĐ)</small>
                                 </div>
                             </div>
 
@@ -172,7 +177,7 @@
                 background-color: #fce4ec;
                 border-left-color: #d81b60;
             }
-            
+
             /* Khu vực kéo thả */
             .image-drop-area {
                 border: 2px dashed #f8bbd0;
@@ -183,12 +188,12 @@
                 transition: all 0.3s ease;
                 cursor: pointer;
             }
-            
+
             .image-drop-area:hover, .image-drop-area.dragover {
                 background-color: #fce4ec;
                 border-color: #f48fb1;
             }
-            
+
             /* Khu vực xem trước hình ảnh */
             .image-preview-container {
                 display: flex;
@@ -196,7 +201,7 @@
                 gap: 10px;
                 margin-top: 15px;
             }
-            
+
             .image-preview-item {
                 position: relative;
                 width: 120px;
@@ -206,13 +211,13 @@
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 border: 1px solid #f8bbd0;
             }
-            
+
             .image-preview-item img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
             }
-            
+
             .image-preview-item .remove-btn {
                 position: absolute;
                 top: 5px;
@@ -228,12 +233,12 @@
                 color: #d81b60;
                 transition: all 0.2s;
             }
-            
+
             .image-preview-item .remove-btn:hover {
                 background-color: #d81b60;
                 color: white;
             }
-            
+
             .image-preview-item .main-badge {
                 position: absolute;
                 bottom: 5px;
@@ -249,7 +254,7 @@
             // Biến lưu trữ các file đã chọn
             let selectedFiles = [];
             const maxFiles = 5;
-            
+
             // Lấy các phần tử DOM
             const dropArea = document.getElementById('imageDropArea');
             const fileInput = document.getElementById('fileInput');
@@ -261,88 +266,88 @@
                 document.getElementById('imageUpload4'),
                 document.getElementById('imageUpload5')
             ];
-            
+
             // Sự kiện click vào khu vực kéo thả
             dropArea.addEventListener('click', () => {
                 fileInput.click();
             });
-            
+
             // Ngăn chặn hành vi mặc định của trình duyệt khi kéo thả
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 dropArea.addEventListener(eventName, preventDefaults, false);
             });
-            
+
             function preventDefaults(e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
-            
+
             // Thêm hiệu ứng khi kéo file vào khu vực
             ['dragenter', 'dragover'].forEach(eventName => {
                 dropArea.addEventListener(eventName, () => {
                     dropArea.classList.add('dragover');
                 });
             });
-            
+
             ['dragleave', 'drop'].forEach(eventName => {
                 dropArea.addEventListener(eventName, () => {
                     dropArea.classList.remove('dragover');
                 });
             });
-            
+
             // Xử lý khi thả file
             dropArea.addEventListener('drop', (e) => {
                 const dt = e.dataTransfer;
                 const files = dt.files;
                 handleFiles(files);
             });
-            
+
             // Xử lý khi chọn file qua input
             fileInput.addEventListener('change', (e) => {
                 const files = e.target.files;
                 handleFiles(files);
             });
-            
+
             // Xử lý các file được chọn
             function handleFiles(files) {
                 const filesArray = Array.from(files);
-                
+
                 // Kiểm tra số lượng file
                 if (selectedFiles.length + filesArray.length > maxFiles) {
-                    showToast(`Chỉ có thể tải lên tối đa ${maxFiles} hình ảnh. Chỉ ${Math.max(0, maxFiles - selectedFiles.length)} ảnh đầu tiên sẽ được thêm vào.`, 'error');
+                    showToast(`Chỉ có thể tải lên tối đa ${maxFiles} hình ảnh. Chỉ 5 ảnh đầu tiên sẽ được thêm vào.`, 'error');
                     filesArray.splice(Math.max(0, maxFiles - selectedFiles.length));
                 }
-                
+
                 // Lọc chỉ lấy file hình ảnh
                 const imageFiles = filesArray.filter(file => file.type.match('image.*'));
-                
+
                 if (filesArray.length !== imageFiles.length) {
                     showToast('Chỉ chấp nhận file hình ảnh', 'error');
                 }
-                
+
                 // Thêm vào danh sách file đã chọn
                 selectedFiles = [...selectedFiles, ...imageFiles].slice(0, maxFiles);
-                
+
                 // Cập nhật giao diện
                 updatePreview();
                 updateHiddenInputs();
             }
-            
+
             // Cập nhật giao diện xem trước
             function updatePreview() {
                 // Xóa tất cả các preview hiện tại
                 previewContainer.innerHTML = '';
-                
+
                 // Tạo preview cho mỗi file
                 selectedFiles.forEach((file, index) => {
                     const reader = new FileReader();
                     const previewItem = document.createElement('div');
                     previewItem.className = 'image-preview-item';
-                    
+
                     // Tạo thẻ img
                     const img = document.createElement('img');
                     previewItem.appendChild(img);
-                    
+
                     // Tạo nút xóa
                     const removeBtn = document.createElement('div');
                     removeBtn.className = 'remove-btn';
@@ -352,7 +357,7 @@
                         removeFile(index);
                     });
                     previewItem.appendChild(removeBtn);
-                    
+
                     // Thêm badge cho ảnh chính
                     if (index === 0) {
                         const mainBadge = document.createElement('div');
@@ -360,17 +365,17 @@
                         mainBadge.textContent = 'Ảnh chính';
                         previewItem.appendChild(mainBadge);
                     }
-                    
+
                     // Đọc file và hiển thị
                     reader.onload = (e) => {
                         img.src = e.target.result;
                     };
                     reader.readAsDataURL(file);
-                    
+
                     previewContainer.appendChild(previewItem);
                 });
             }
-            
+
             // Cập nhật các input ẩn để gửi lên server
             function updateHiddenInputs() {
                 // Reset tất cả các input ẩn
@@ -378,7 +383,7 @@
                     const dataTransfer = new DataTransfer();
                     input.files = dataTransfer.files;
                 });
-                
+
                 // Gán file cho từng input ẩn
                 selectedFiles.forEach((file, index) => {
                     if (index < hiddenInputs.length) {
@@ -388,14 +393,14 @@
                     }
                 });
             }
-            
+
             // Xóa file khỏi danh sách
             function removeFile(index) {
                 selectedFiles.splice(index, 1);
                 updatePreview();
                 updateHiddenInputs();
             }
-            
+
             // Kiểm tra form trước khi submit
             document.getElementById('customOrderForm').addEventListener('submit', (e) => {
                 if (selectedFiles.length === 0) {
@@ -403,7 +408,7 @@
                     showToast('Vui lòng tải lên ít nhất 1 hình ảnh', 'error');
                 }
             });
-            
+
             // Hàm hiển thị thông báo
             function showToast(message, type) {
                 const container = document.querySelector('.toast-container');
@@ -438,7 +443,7 @@
             <% session.removeAttribute("messageType"); %>
             }
         </script>
-        
+
         <!-- Contact Information Modal -->
         <div class="modal fade" id="contactInfoModal" tabindex="-1" aria-labelledby="contactInfoModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -473,62 +478,62 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
             // Xử lý form đặt hàng tùy chỉnh
-            document.getElementById('customOrderForm').addEventListener('submit', function(e) {
+            document.getElementById('customOrderForm').addEventListener('submit', function (e) {
                 e.preventDefault(); // Ngăn form submit mặc định
-                
+
                 // Kiểm tra xem đã chọn ít nhất 1 hình ảnh chưa
                 if (selectedFiles.length === 0) {
                     showToast('Vui lòng tải lên ít nhất 1 hình ảnh', 'error');
                     return;
                 }
-                
+
                 // Hiển thị modal thông tin liên hệ
                 $('#contactInfoModal').modal('show');
             });
-            
+
             // Xử lý form thông tin liên hệ
-            document.getElementById('contactInfoForm').addEventListener('submit', function(e) {
+            document.getElementById('contactInfoForm').addEventListener('submit', function (e) {
                 e.preventDefault(); // Ngăn form submit mặc định
-                
+
                 // Lấy thông tin từ form liên hệ
                 const fullName = document.getElementById('fullName').value;
                 const phone = document.getElementById('phone').value;
                 const email = document.getElementById('email').value;
-                
+
                 // Kiểm tra thông tin
                 if (!fullName || !phone || !email) {
                     showToast('Vui lòng điền đầy đủ thông tin liên hệ', 'error');
                     return;
                 }
-                
+
                 // Tạo các input ẩn để gửi thông tin liên hệ
                 const fullNameInput = document.createElement('input');
                 fullNameInput.type = 'hidden';
                 fullNameInput.name = 'fullName';
                 fullNameInput.value = fullName;
-                
+
                 const phoneInput = document.createElement('input');
                 phoneInput.type = 'hidden';
                 phoneInput.name = 'phone';
                 phoneInput.value = phone;
-                
+
                 const emailInput = document.createElement('input');
                 emailInput.type = 'hidden';
                 emailInput.name = 'email';
                 emailInput.value = email;
-                
+
                 // Thêm các input vào form chính
                 const mainForm = document.getElementById('customOrderForm');
                 mainForm.appendChild(fullNameInput);
                 mainForm.appendChild(phoneInput);
                 mainForm.appendChild(emailInput);
-                
+
                 // Đóng modal
                 $('#contactInfoModal').modal('hide');
-                
+
                 // Submit form chính
                 mainForm.submit();
             });
