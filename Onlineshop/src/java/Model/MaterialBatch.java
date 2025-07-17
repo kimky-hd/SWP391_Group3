@@ -19,6 +19,8 @@ public class MaterialBatch {
     private double importPrice;
     private Date dateImport;
     private Date dateExpire;
+    private int supplierID;
+    private String supplierName;
 
     public MaterialBatch() {
     }
@@ -38,7 +40,7 @@ public class MaterialBatch {
         this.dateExpire = dateExpire;
     }
 
-    public MaterialBatch(int materialBatchID, int materialID, String materialName, int quantity, double importPrice, Date dateImport, Date dateExpire) {
+    public MaterialBatch(int materialBatchID, int materialID, String materialName, int quantity, double importPrice, Date dateImport, Date dateExpire, int supplierID, String supplierName) {
         this.materialBatchID = materialBatchID;
         this.materialID = materialID;
         this.materialName = materialName;
@@ -46,6 +48,8 @@ public class MaterialBatch {
         this.importPrice = importPrice;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
+        this.supplierID = supplierID;
+        this.supplierName = supplierName;
     }
 
     public int getMaterialBatchID() {
@@ -104,11 +108,25 @@ public class MaterialBatch {
         this.dateExpire = dateExpire;
     }
 
-    @Override
-    public String toString() {
-        return "MaterialBatch{" + "materialBatchID=" + materialBatchID + ", materialID=" + materialID + ", materialName=" + materialName + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire +'}';
+    public int getSupplierID() {
+        return supplierID;
     }
 
-    
+    public void setSupplierID(int supplierID) {
+        this.supplierID = supplierID;
+    }
 
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    @Override
+    public String toString() {
+        return "MaterialBatch{" + "materialBatchID=" + materialBatchID + ", materialID=" + materialID + ", materialName=" + materialName + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", supplierID=" + supplierID + ", supplierName=" + supplierName + '}';
+    }
+    
 }

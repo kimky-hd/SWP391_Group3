@@ -104,6 +104,7 @@
                                         <th>Giá nhập</th>
                                         <th>Ngày nhập</th>
                                         <th>Hạn sử dụng</th>
+                                        <th>Nhà cung cấp</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,7 +116,7 @@
                                             <td><fmt:formatNumber value="${b.importPrice}" pattern="#,##0"/> VND</td>
                                             <td><fmt:formatDate value="${b.dateImport}" pattern="dd-MM-yyyy"/></td>
                                             <td><fmt:formatDate value="${b.dateExpire}" pattern="dd-MM-yyyy"/></td>
-
+                                            <td class="text-start">${b.supplierName}</td>
                                         </tr>
                                     </c:forEach>
                                     <c:if test="${empty materialBatchList}">

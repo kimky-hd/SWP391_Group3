@@ -449,134 +449,8 @@
     </head>
 
     <body>
-        <div class="container-fluid">
-            <div class="row bg-secondary py-1 px-xl-5">
-                <div class="col-lg-6 d-none d-lg-block">
-                    <div class="d-inline-flex align-items-center h-100">
-                        <a class="text-body mr-3" href="">About</a>
-                        <a class="text-body mr-3" href="">Contact</a>
-                        <a class="text-body mr-3" href="">Help</a>
-                        <a class="text-body mr-3" href="">FAQs</a>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <% if(session.getAttribute("account") != null) { 
-                                Account acc = (Account)session.getAttribute("account");
-                        %>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                                <%= acc.getUsername() %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
-                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
-                            </div>
-                        </div>
-                        <% } else { %>
-                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
-                        <% } %>
-                    </div>
-                    <div class="d-inline-flex align-items-center d-block d-lg-none">
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-heart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-shopping-cart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
-                <div class="col-lg-4">
-                    <a href="" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Bán</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-6 text-left">
-                    <form action="">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for products">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4 col-6 text-right">
-                    <p class="m-0">Customer Service</p>
-                    <h5 class="m-0">+012 345 6789</h5>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
-            <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
-
-                        <a href="#" class="text-decoration-none d-block d-lg-none">
-                            <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
-                            <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                        </a>
-
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-
-
-
-                                <a href="Homepage" class="nav-item nav-link">Trang chủ</a>
-                                <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
-                                <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
-                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
-
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-
-                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
-
-                                    </div>
-                                </div>
-                                <a href="contact.jsp" class="nav-item nav-link">Liên hệ</a>
-                            </div>
-                        </div>
-
-                        <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                            </a>
-                            <a href="Cart.jsp" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                                </span>
-                            </a>
-                            <a href="order?action=view" class="btn px-0 ml-3">
-                                <i class="fas fa-clipboard-list text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar End -->
+        <jsp:include page="header.jsp" />
+        
         <div class="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row px-xl-5">
@@ -935,25 +809,7 @@
 
         </script>
 
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">Xác nhận đăng xuất</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Bạn có chắc chắn muốn đăng xuất không?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                        <a href="LogoutController" class="btn btn-primary">Đăng xuất</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<jsp:include page="footer.jsp" />
     </body>
     <!-- Sticky Button for Custom Order -->
     <div class="flower-fixed-btn">
