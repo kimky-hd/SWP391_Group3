@@ -146,6 +146,17 @@
                 color: #f8bbd0;
                 margin-bottom: 20px;
             }
+            .manager-comment-footer {
+                width: 100%;
+                margin-top: 10px;
+                padding: 0 15px 15px 15px;
+                background-color: #fef5f9;
+                display: block;
+            }
+
+            .manager-comment-footer .border {
+                border-color: #f8bbd0 !important;
+            }
         </style>
     </head>
     <body>
@@ -189,9 +200,35 @@
                                                 <div class="custom-order-body">
                                                     <div class="row">
                                                         <div class="col-md-4 text-center">
-                                                            <img src="${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="custom-order-image mb-3">
+                                                            <!-- Hình ảnh chính -->
+                                                            <img src="${pageContext.request.contextPath}/${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="custom-order-image mb-3" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
+
+                                                            <!-- Hình ảnh bổ sung -->
+                                                            <div class="row mt-2">
+                                                                <c:if test="${not empty customOrder.referenceImage2}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage2}" alt="Hình ảnh tham khảo 2" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${not empty customOrder.referenceImage3}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage3}" alt="Hình ảnh tham khảo 3" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${not empty customOrder.referenceImage4}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage4}" alt="Hình ảnh tham khảo 4" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${not empty customOrder.referenceImage5}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage5}" alt="Hình ảnh tham khảo 5" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-8">
+                                                            <!-- Nội dung mô tả và thông tin khác giữ nguyên -->
                                                             <div class="mb-3">
                                                                 <h6>Mô tả:</h6>
                                                                 <div class="description-text">${customOrder.description}</div>
@@ -202,10 +239,22 @@
                                                                     <p>${customOrder.quantity}</p>
                                                                 </div>
                                                                 <div>
+                                                                    <h6>Giá mong muốn:</h6>
+                                                                    <p><fmt:formatNumber value="${customOrder.desiredPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</p>
+                                                                </div>
+                                                                <div>
                                                                     <h6>Ngày tạo:</h6>
                                                                     <p><fmt:formatDate value="${customOrder.createdAt}" pattern="dd/MM/yyyy HH:mm" /></p>
                                                                 </div>
                                                             </div>
+
+                                                            <!-- Hiển thị comment của manager nếu có -->
+                                                            <c:if test="${not empty customOrder.managerComment}">
+                                                                <div class="mt-3 manager-comment">
+                                                                    <h6><i class="fas fa-comment-dots mr-1"></i>Lời nhắn từ quản lý:</h6>
+                                                                    <div class="p-2 border rounded bg-light">${customOrder.managerComment}</div>
+                                                                </div>
+                                                            </c:if>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,9 +267,12 @@
                                                             </button>
                                                         </form>
                                                     </c:if>
-                                                    <button class="btn btn-sm btn-outline-secondary mr-2" onclick="openEditModal(${customOrder.customCartID})">
-                                                        <i class="fas fa-edit mr-1"></i>Sửa
-                                                    </button>
+                                                    <!-- Chỉ hiển thị nút sửa khi trạng thái không phải là 7 (đã duyệt) -->
+                                                    <c:if test="${customOrder.statusID != 7}">
+                                                        <button class="btn btn-sm btn-outline-gray-dark" onclick="openEditModal(${customOrder.customCartID})">
+                                                            <i class="fas fa-edit mr-1"></i>Sửa
+                                                        </button>
+                                                    </c:if>
                                                     <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${customOrder.customCartID})">
                                                         <i class="fas fa-trash-alt mr-1"></i>Xóa
                                                     </button>
@@ -250,6 +302,16 @@
                         <div class="modal-body">
                             <input type="hidden" id="editCustomCartId" name="customCartId">
                             <input type="hidden" name="action" value="update">
+                            <input type="hidden" id="currentStatusId" name="currentStatusId">
+                            <!-- resetStatus sẽ được thêm bằng JavaScript khi cần -->
+
+                            <!-- Hiển thị comment của manager nếu có -->
+                            <div id="managerCommentSection" class="form-group" style="display: none;">
+                                <div class="manager-comment mb-3">
+                                    <h6><i class="fas fa-comment-dots mr-1"></i>Nhận xét từ quản lý:</h6>
+                                    <div id="managerCommentText" class="p-2 border rounded bg-light"></div>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label for="editDescription">Mô tả chi tiết</label>
@@ -262,15 +324,42 @@
                                 <input type="number" class="form-control" id="editQuantity" name="quantity" min="1" max="100" required>
                                 <small class="text-muted"><i class="fas fa-box"></i>Nhập số lượng sản phẩm bạn muốn đặt</small>
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="editDesiredPrice">Giá mong muốn (VNĐ)</label>
+                                <input type="number" class="form-control" id="editDesiredPrice" name="desiredPrice" min="0" step="1000" required>
+                                <small class="text-muted"><i class="fas fa-tag"></i>Nhập giá mong muốn cho sản phẩm (VNĐ)</small>
+                            </div>
 
                             <div class="form-group">
                                 <label>Hình ảnh hiện tại</label>
-                                <div class="text-center mb-3">
-                                    <img id="currentImage" src="" alt="Hình ảnh tham khảo" class="img-fluid" style="max-height: 200px;">
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage" src="" alt="Hình ảnh tham khảo" class="img-fluid" style="max-height: 150px;" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
+                                        <label for="editImageUpload">Hình ảnh chính</label>
+                                        <input type="file" class="form-control" id="editImageUpload" name="imageUpload" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage2" src="" alt="Hình ảnh tham khảo 2" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload2">Hình ảnh 2</label>
+                                        <input type="file" class="form-control" id="editImageUpload2" name="imageUpload2" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage3" src="" alt="Hình ảnh tham khảo 3" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload3">Hình ảnh 3</label>
+                                        <input type="file" class="form-control" id="editImageUpload3" name="imageUpload3" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage4" src="" alt="Hình ảnh tham khảo 4" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload4">Hình ảnh 4</label>
+                                        <input type="file" class="form-control" id="editImageUpload4" name="imageUpload4" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage5" src="" alt="Hình ảnh tham khảo 5" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload5">Hình ảnh 5</label>
+                                        <input type="file" class="form-control" id="editImageUpload5" name="imageUpload5" accept="image/*">
+                                    </div>
                                 </div>
-
-                                <label for="editImageUpload">Tải lên hình ảnh mới</label>
-                                <input type="file" class="form-control" id="editImageUpload" name="imageUpload" accept="image/*">
                                 <small class="text-muted"><i class="fas fa-info-circle"></i>Thêm hình ảnh mẫu giúp chúng tôi hiểu rõ yêu cầu của bạn về sản phẩm</small>
                             </div>
                         </div>
@@ -309,7 +398,73 @@
                                                                         $('#editCustomCartId').val(customOrder.customCartID);
                                                                         $('#editDescription').val(customOrder.description);
                                                                         $('#editQuantity').val(customOrder.quantity);
-                                                                        $('#currentImage').attr('src', customOrder.referenceImage);
+                                                                        $('#editDesiredPrice').val(customOrder.desiredPrice);
+
+                                                                        // Lưu trạng thái hiện tại để sử dụng khi cập nhật
+                                                                        $('#currentStatusId').val(customOrder.statusID);
+
+                                                                        // Nếu trạng thái là 8 (không duyệt), khi lưu sẽ chuyển thành 1 (chờ duyệt)
+                                                                        if (customOrder.statusID == 8) {
+                                                                            // Thêm hidden input để đánh dấu cần reset trạng thái
+                                                                            if ($('#resetStatus').length === 0) {
+                                                                                $('#editForm').append('<input type="hidden" id="resetStatus" name="resetStatus" value="1">');
+                                                                            }
+                                                                        } else {
+                                                                            // Xóa input nếu đã tồn tại từ lần trước
+                                                                            $('#resetStatus').remove();
+                                                                        }
+
+                                                                        // Hiển thị comment của manager nếu có
+                                                                        if (customOrder.managerComment && (customOrder.statusID == 7 || customOrder.statusID == 8)) {
+                                                                            $('#managerCommentText').text(customOrder.managerComment);
+                                                                            $('#managerCommentSection').show();
+                                                                        } else {
+                                                                            $('#managerCommentSection').hide();
+                                                                        }
+
+                                                                        // Vô hiệu hóa form nếu trạng thái là 7 (đã duyệt)
+                                                                        if (customOrder.statusID == 7) {
+                                                                            $('#editDescription').prop('readonly', true);
+                                                                            $('#editQuantity').prop('readonly', true);
+                                                                            $('#editImageUpload, #editImageUpload2, #editImageUpload3, #editImageUpload4, #editImageUpload5').prop('disabled', true);
+                                                                            $('.modal-footer button[type="submit"]').hide();
+                                                                        } else {
+                                                                            $('#editDescription').prop('readonly', false);
+                                                                            $('#editQuantity').prop('readonly', false);
+                                                                            $('#editImageUpload, #editImageUpload2, #editImageUpload3, #editImageUpload4, #editImageUpload5').prop('disabled', false);
+                                                                            $('.modal-footer button[type="submit"]').show();
+                                                                        }
+
+                                                                        $('#currentImage').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage);
+
+                                                                        // Hiển thị các hình ảnh bổ sung nếu có
+                                                                        if (customOrder.referenceImage2) {
+                                                                            $('#currentImage2').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage2);
+                                                                            $('#currentImage2').show();
+                                                                        } else {
+                                                                            $('#currentImage2').hide();
+                                                                        }
+
+                                                                        if (customOrder.referenceImage3) {
+                                                                            $('#currentImage3').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage3);
+                                                                            $('#currentImage3').show();
+                                                                        } else {
+                                                                            $('#currentImage3').hide();
+                                                                        }
+
+                                                                        if (customOrder.referenceImage4) {
+                                                                            $('#currentImage4').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage4);
+                                                                            $('#currentImage4').show();
+                                                                        } else {
+                                                                            $('#currentImage4').hide();
+                                                                        }
+
+                                                                        if (customOrder.referenceImage5) {
+                                                                            $('#currentImage5').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage5);
+                                                                            $('#currentImage5').show();
+                                                                        } else {
+                                                                            $('#currentImage5').hide();
+                                                                        }
 
                                                                         $('#editModal').modal('show');
                                                                     } else {
@@ -356,6 +511,52 @@
                                                                     var reader = new FileReader();
                                                                     reader.onload = function (e) {
                                                                         $('#currentImage').attr('src', e.target.result);
+                                                                        $('#currentImage').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+
+                                                            // Thêm xử lý cho các ảnh bổ sung
+                                                            $('#editImageUpload2').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage2').attr('src', e.target.result);
+                                                                        $('#currentImage2').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+
+                                                            $('#editImageUpload3').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage3').attr('src', e.target.result);
+                                                                        $('#currentImage3').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+
+                                                            $('#editImageUpload4').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage4').attr('src', e.target.result);
+                                                                        $('#currentImage4').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+
+                                                            $('#editImageUpload5').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage5').attr('src', e.target.result);
+                                                                        $('#currentImage5').show();
                                                                     }
                                                                     reader.readAsDataURL(this.files[0]);
                                                                 }
