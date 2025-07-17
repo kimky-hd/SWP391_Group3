@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Servlet xử lý các yêu cầu liên quan đến quản lý đơn hàng tự thiết kế từ phía manager.
  */
-@WebServlet(name = "ManagerCustomOrderController", urlPatterns = {"/manager/custom-orders"})
+@WebServlet(name = "ManagerCustomOrderController", urlPatterns = {"/custom-orders"})
 public class ManagerCustomOrderController extends HttpServlet {
 
     private CustomOrderCartDAO customOrderCartDAO;
@@ -89,7 +89,7 @@ public class ManagerCustomOrderController extends HttpServlet {
                 updateCustomOrderStatus(request, response);
                 break;
             default:
-                response.sendRedirect(request.getContextPath() + "/manager/custom-orders");
+                response.sendRedirect(request.getContextPath() + "/custom-orders");
                 break;
         }
     }
@@ -158,7 +158,7 @@ public class ManagerCustomOrderController extends HttpServlet {
         
         if (customOrder == null) {
             request.setAttribute("errorMessage", "Không tìm thấy đơn hàng tự thiết kế!");
-            request.getRequestDispatcher("/manager/custom_orders.jsp").forward(request, response);
+            request.getRequestDispatcher("manager/custom_orders.jsp").forward(request, response);
             return;
         }
         
