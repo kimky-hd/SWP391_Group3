@@ -20,12 +20,16 @@ public class CustomOrderCart {
     private String fullName;
     private String phone;
     private String email;
-
+    // Thêm trường nhận xét của manager
+    private String managerComment;
+    // Thêm trường giá mong muốn
+    private double desiredPrice;
+    
     // Constructors
     public CustomOrderCart() {
     }
 
-    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, Timestamp createdAt, int statusID, String fullName, String phone, String email) {
+    public CustomOrderCart(int customCartID, int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, Timestamp createdAt, int statusID, String fullName, String phone, String email, double desiredPrice) {
         this.customCartID = customCartID;
         this.accountID = accountID;
         this.referenceImage = referenceImage;
@@ -41,9 +45,10 @@ public class CustomOrderCart {
         this.fullName = fullName;
         this.phone = phone;
         this.email = email;
+        this.desiredPrice = desiredPrice;
     }
 
-    public CustomOrderCart(int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, String fullName, String phone, String email) {
+    public CustomOrderCart(int accountID, String referenceImage, String referenceImage2, String referenceImage3, String referenceImage4, String referenceImage5, String description, int quantity, String status, String fullName, String phone, String email, double desiredPrice) {
         this.accountID = accountID;
         this.referenceImage = referenceImage;
         this.referenceImage2 = referenceImage2;
@@ -56,6 +61,7 @@ public class CustomOrderCart {
         this.fullName = fullName;
         this.phone = phone;
         this.email = email;
+        this.desiredPrice = desiredPrice;
     }
 
     // Getters and Setters
@@ -180,24 +186,44 @@ public class CustomOrderCart {
         this.email = email;
     }
 
+    // Thêm getter và setter cho trường mới
+    public String getManagerComment() {
+        return managerComment;
+    }
+
+    public void setManagerComment(String managerComment) {
+        this.managerComment = managerComment;
+    }
+
+    // Thêm getter và setter cho trường giá mong muốn
+    public double getDesiredPrice() {
+        return desiredPrice;
+    }
+
+    public void setDesiredPrice(double desiredPrice) {
+        this.desiredPrice = desiredPrice;
+    }
+
     @Override
     public String toString() {
         return "CustomOrderCart{"
                 + "customCartID=" + customCartID
                 + ", accountID=" + accountID
-                + ", referenceImage='" + referenceImage + '\''
-                + ", referenceImage2='" + referenceImage2 + '\''
-                + ", referenceImage3='" + referenceImage3 + '\''
-                + ", referenceImage4='" + referenceImage4 + '\''
-                + ", referenceImage5='" + referenceImage5 + '\''
-                + ", description='" + description + '\''
-                + ", quantity=" + quantity
-                + ", status='" + status + '\''
-                + ", createdAt=" + createdAt
-                + ", statusID=" + statusID
-                + ", fullName='" + fullName + '\''
-                + ", phone='" + phone + '\''
-                + ", email='" + email + '\''
+                + ", referenceImage='" + referenceImage + '\'' 
+                + ", referenceImage2='" + referenceImage2 + '\'' 
+                + ", referenceImage3='" + referenceImage3 + '\'' 
+                + ", referenceImage4='" + referenceImage4 + '\'' 
+                + ", referenceImage5='" + referenceImage5 + '\'' 
+                + ", description='" + description + '\'' 
+                + ", quantity=" + quantity 
+                + ", status='" + status + '\'' 
+                + ", createdAt=" + createdAt 
+                + ", statusID=" + statusID 
+                + ", fullName='" + fullName + '\'' 
+                + ", phone='" + phone + '\'' 
+                + ", email='" + email + '\'' 
+                + ", managerComment='" + managerComment + '\'' 
+                + ", desiredPrice=" + desiredPrice
                 + '}';
     }
 }

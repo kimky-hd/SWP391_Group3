@@ -450,7 +450,7 @@
 
     <body>
         <jsp:include page="header.jsp" />
-        
+
         <div class="page-content-wrapper">
             <div class="container-fluid">
                 <div class="row px-xl-5">
@@ -576,72 +576,6 @@
             </div>
             <div class="toast-container"></div>
         </div>
-        <div class="container-fluid bg-pink text-secondary mt-5 pt-5">
-            <div class="row px-xl-5 pt-5">
-                <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                    <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
-                    <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                    <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
-                </div>
-                <div class="col-lg-8 col-md-12">
-                    <div class="row">
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
-                            <div class="d-flex flex-column justify-content-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
-                            <div class="d-flex flex-column justify-content-start">
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                                <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-5">
-                            <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-                            <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
-                            <form action="">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Your Email Address">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary">Sign Up</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
-                            <div class="d-flex">
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                                <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
-                <div class="col-md-6 px-xl-0">
-                    <p class="mb-md-0 text-center text-md-left text-secondary">
-                        &copy; <a class="text-primary" href="#">Domain</a>. All Rights Reserved.
-                    </p>
-                </div>
-                <div class="col-md-6 px-xl-0 text-center text-md-right">
-                    <img class="img-fluid" src="img/payments.png" alt="">
-                </div>
-            </div>
-        </div>
         <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
@@ -761,55 +695,107 @@
                                                                 });
                                                             }
                                                         }
-        </script>
+                                                        // Hàm hiển thị thông báo dạng toast
+                                                        function showToast(message, type) {
+                                                            // Lấy phần tử container để chứa toast (ví dụ: <div class="toast-container"></div>)
+                                                            const container = document.querySelector('.toast-container');
 
-        <script>
-// Hàm hiển thị thông báo dạng toast
-            function showToast(message, type) {
-                // Lấy phần tử container để chứa toast (ví dụ: <div class="toast-container"></div>)
-                const container = document.querySelector('.toast-container');
+                                                            // Tạo một div mới để hiển thị thông báo
+                                                            const toast = document.createElement('div');
+                                                            toast.className = `toast ${type}`;  // Gán class tùy theo kiểu (success, error, info,...)
+                                                            toast.textContent = message;        // Gán nội dung thông báo
 
-                // Tạo một div mới để hiển thị thông báo
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;  // Gán class tùy theo kiểu (success, error, info,...)
-                toast.textContent = message;        // Gán nội dung thông báo
+                                                            // Thêm toast vào container
+                                                            container.appendChild(toast);
 
-                // Thêm toast vào container
-                container.appendChild(toast);
+                                                            // Kích hoạt reflow để đảm bảo transition được áp dụng
+                                                            toast.offsetHeight;
 
-                // Kích hoạt reflow để đảm bảo transition được áp dụng
-                toast.offsetHeight;
+                                                            // Thêm class 'show' để hiển thị toast với hiệu ứng CSS
+                                                            toast.classList.add('show');
 
-                // Thêm class 'show' để hiển thị toast với hiệu ứng CSS
-                toast.classList.add('show');
-
-                // Tự động ẩn toast sau 3 giây
-                setTimeout(() => {
-                    toast.classList.remove('show'); // Bắt đầu ẩn toast
-                    setTimeout(() => {
-                        container.removeChild(toast); // Xóa khỏi DOM sau khi ẩn hoàn tất
-                    }, 400); // Đợi 400ms cho hiệu ứng ẩn hoàn tất
-                }, 3000); // Thời gian hiển thị 3 giây
-            }
+                                                            // Tự động ẩn toast sau 3 giây
+                                                            setTimeout(() => {
+                                                                toast.classList.remove('show'); // Bắt đầu ẩn toast
+                                                                setTimeout(() => {
+                                                                    container.removeChild(toast); // Xóa khỏi DOM sau khi ẩn hoàn tất
+                                                                }, 400); // Đợi 400ms cho hiệu ứng ẩn hoàn tất
+                                                            }, 3000); // Thời gian hiển thị 3 giây
+                                                        }
 
 // Kiểm tra xem có thông báo từ session gửi xuống không
-            const message = '${sessionScope.message}';
-            const messageType = '${sessionScope.messageType}';
+                                                        const message = '${sessionScope.message}';
+                                                        const messageType = '${sessionScope.messageType}';
 
-            if (message && messageType) {
-                // Nếu có, hiển thị thông báo toast
-                showToast(message, messageType);
+                                                        if (message && messageType) {
+                                                            // Nếu có, hiển thị thông báo toast
+                                                            showToast(message, messageType);
 
-                // Xóa thông báo khỏi session sau khi hiển thị để không hiện lại sau khi reload
+                                                            // Xóa thông báo khỏi session sau khi hiển thị để không hiện lại sau khi reload
             <% 
     session.removeAttribute("message");
     session.removeAttribute("messageType");
             %>
-            }
+                                                        }
+// Thêm xử lý cho các nút tăng/giảm số lượng sau khi trang được tải xong
+                                                        document.addEventListener('DOMContentLoaded', function () {
+                                                            // Lấy tất cả các nút "tăng số lượng"
+                                                            const plusButtons = document.querySelectorAll('.btn-plus');
+
+                                                            plusButtons.forEach(button => {
+                                                                button.addEventListener('click', function (e) {
+                                                                    // Lấy input chứa số lượng (nằm trước nút hiện tại trong HTML)
+                                                                    const input = this.parentElement.previousElementSibling;
+                                                                    const currentValue = parseInt(input.value);           // Giá trị hiện tại
+                                                                    const maxValue = parseInt(input.getAttribute('max')); // Số lượng tối đa trong kho
+
+                                                                    // Nếu người dùng muốn vượt quá số lượng tồn kho
+                                                                    if (currentValue >= maxValue) {
+                                                                        e.preventDefault();      // Ngăn hành vi mặc định của button
+                                                                        e.stopPropagation();     // Ngăn sự kiện lan ra phần tử cha
+                                                                        showToast('Số lượng yêu cầu vượt quá số lượng có sẵn trong kho', 'error');
+                                                                        return false;            // Dừng tiếp tục thực hiện
+                                                                    }
+
+                                                                    // Nếu hợp lệ, gọi hàm cập nhật số lượng (tăng thêm 1)
+                                                                    updateQuantity(input.getAttribute('data-product-id'), currentValue + 1);
+
+                                                                    // Ngăn sự kiện mặc định để tránh việc sự kiện bị gọi nhiều lần
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                });
+                                                            });
+
+                                                            // Tương tự: xử lý cho các nút "giảm số lượng"
+                                                            const minusButtons = document.querySelectorAll('.btn-minus');
+
+                                                            minusButtons.forEach(button => {
+                                                                button.addEventListener('click', function (e) {
+                                                                    // Lấy input chứa số lượng (nằm sau nút hiện tại trong HTML)
+                                                                    const input = this.parentElement.nextElementSibling;
+                                                                    const currentValue = parseInt(input.value); // Giá trị hiện tại
+
+                                                                    // Nếu số lượng nhỏ hơn hoặc bằng 1 thì không được giảm nữa
+                                                                    if (currentValue <= 1) {
+                                                                        e.preventDefault();
+                                                                        e.stopPropagation();
+                                                                        showToast('Số lượng phải lớn hơn 0', 'error');
+                                                                        return false;
+                                                                    }
+
+                                                                    // Nếu hợp lệ, cập nhật số lượng (giảm đi 1)
+                                                                    updateQuantity(input.getAttribute('data-product-id'), currentValue - 1);
+
+                                                                    // Ngăn sự kiện mặc định và lan truyền
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                });
+                                                            });
+                                                        });
 
         </script>
 
-<jsp:include page="footer.jsp" />
+        <jsp:include page="footer.jsp" />
     </body>
     <!-- Sticky Button for Custom Order -->
     <div class="flower-fixed-btn">
@@ -819,61 +805,3 @@
     </div>
     <!-- Sticky Button for Custom Order End -->
 </html>
-<script>
-// Thêm xử lý cho các nút tăng/giảm số lượng sau khi trang được tải xong
-    document.addEventListener('DOMContentLoaded', function () {
-        // Lấy tất cả các nút "tăng số lượng"
-        const plusButtons = document.querySelectorAll('.btn-plus');
-
-        plusButtons.forEach(button => {
-            button.addEventListener('click', function (e) {
-                // Lấy input chứa số lượng (nằm trước nút hiện tại trong HTML)
-                const input = this.parentElement.previousElementSibling;
-                const currentValue = parseInt(input.value);           // Giá trị hiện tại
-                const maxValue = parseInt(input.getAttribute('max')); // Số lượng tối đa trong kho
-
-                // Nếu người dùng muốn vượt quá số lượng tồn kho
-                if (currentValue >= maxValue) {
-                    e.preventDefault();      // Ngăn hành vi mặc định của button
-                    e.stopPropagation();     // Ngăn sự kiện lan ra phần tử cha
-                    showToast('Số lượng yêu cầu vượt quá số lượng có sẵn trong kho', 'error');
-                    return false;            // Dừng tiếp tục thực hiện
-                }
-
-                // Nếu hợp lệ, gọi hàm cập nhật số lượng (tăng thêm 1)
-                updateQuantity(input.getAttribute('data-product-id'), currentValue + 1);
-
-                // Ngăn sự kiện mặc định để tránh việc sự kiện bị gọi nhiều lần
-                e.preventDefault();
-                e.stopPropagation();
-            });
-        });
-
-        // Tương tự: xử lý cho các nút "giảm số lượng"
-        const minusButtons = document.querySelectorAll('.btn-minus');
-
-        minusButtons.forEach(button => {
-            button.addEventListener('click', function (e) {
-                // Lấy input chứa số lượng (nằm sau nút hiện tại trong HTML)
-                const input = this.parentElement.nextElementSibling;
-                const currentValue = parseInt(input.value); // Giá trị hiện tại
-
-                // Nếu số lượng nhỏ hơn hoặc bằng 1 thì không được giảm nữa
-                if (currentValue <= 1) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    showToast('Số lượng phải lớn hơn 0', 'error');
-                    return false;
-                }
-
-                // Nếu hợp lệ, cập nhật số lượng (giảm đi 1)
-                updateQuantity(input.getAttribute('data-product-id'), currentValue - 1);
-
-                // Ngăn sự kiện mặc định và lan truyền
-                e.preventDefault();
-                e.stopPropagation();
-            });
-        });
-    });
-
-</script>

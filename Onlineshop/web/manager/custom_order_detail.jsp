@@ -471,6 +471,36 @@
         <!-- Toast Container -->
         <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 
+        <!-- Modal Nhận xét -->
+        <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="commentModalLabel"><i class="fas fa-comment me-2"></i>Nhận xét cho khách hàng</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="commentForm">
+                            <input type="hidden" id="modalCustomCartId" name="customCartId">
+                            <input type="hidden" id="modalStatusId" name="statusId">
+                            <input type="hidden" name="action" value="updateStatus">
+                            
+                            <div class="mb-3">
+                                <label for="managerComment" class="form-label">Nhận xét của bạn:</label>
+                                <textarea class="form-control" id="managerComment" name="managerComment" rows="4" placeholder="Nhập nhận xét của bạn cho khách hàng..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="submitCommentBtn">
+                            <i class="fas fa-paper-plane me-1"></i>Gửi nhận xét
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -517,8 +547,24 @@
 
                 // Xử lý cập nhật trạng thái
                 $("#updateStatusBtn").click(function () {
-                    var formData = $("#updateStatusForm").serialize();
-
+                    // Lấy giá trị từ form
+                    var customCartId = $("input[name='customCartId']").val();
+                    var statusId = $("#statusId").val();
+                    
+                    // Hiển thị modal nhận xét
+                    $("#modalCustomCartId").val(customCartId);
+                    $("#modalStatusId").val(statusId);
+                    $("#commentModal").modal('show');
+                });
+                
+                // Xử lý gửi nhận xét
+                $("#submitCommentBtn").click(function() {
+                    var formData = $("#commentForm").serialize();
+                    
+                    // Hiển thị trạng thái đang xử lý
+                    $("#submitCommentBtn").html('<i class="fas fa-spinner fa-spin me-1"></i>Đang gửi...');
+                    $("#submitCommentBtn").prop('disabled', true);
+                    
                     $.ajax({
                         type: "POST",
                         url: "${pageContext.request.contextPath}/custom-orders",
@@ -526,16 +572,24 @@
                         dataType: "json",
                         success: function (response) {
                             if (response.success) {
+                                // Đóng modal
+                                $("#commentModal").modal('hide');
                                 showToast("Thành công", response.message, "success");
                                 // Reload trang sau khi cập nhật thành công
                                 reloadPageWithNotification();
                             } else {
                                 showToast("Lỗi", response.message, "danger");
+                                // Reset trạng thái nút
+                                $("#submitCommentBtn").html('<i class="fas fa-paper-plane me-1"></i>Gửi nhận xét');
+                                $("#submitCommentBtn").prop('disabled', false);
                             }
                         },
                         error: function (xhr, status, error) {
                             showToast("Lỗi", "Đã xảy ra lỗi khi cập nhật trạng thái. Vui lòng thử lại sau.", "danger");
                             console.error("Ajax error:", status, error);
+                            // Reset trạng thái nút
+                            $("#submitCommentBtn").html('<i class="fas fa-paper-plane me-1"></i>Gửi nhận xét');
+                            $("#submitCommentBtn").prop('disabled', false);
                         }
                     });
                 });

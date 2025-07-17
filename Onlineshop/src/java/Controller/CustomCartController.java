@@ -134,6 +134,13 @@ public class CustomCartController extends HttpServlet {
         int customCartId = Integer.parseInt(request.getParameter("customCartId"));
         String description = request.getParameter("description");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        double desiredPrice = Double.parseDouble(request.getParameter("desiredPrice"));
+        String currentStatusIdParam = request.getParameter("currentStatusId");
+        int currentStatusId = 0;
+        
+        if (currentStatusIdParam != null && !currentStatusIdParam.isEmpty()) {
+            currentStatusId = Integer.parseInt(currentStatusIdParam);
+        }
         
         // Kiểm tra xem đơn hàng có tồn tại và thuộc về người dùng hiện tại không
         CustomOrderCart customOrderCart = customOrderCartDAO.getCustomOrderCartById(customCartId);
@@ -143,9 +150,22 @@ public class CustomCartController extends HttpServlet {
             return;
         }
         
+        // Kiểm tra nếu đơn hàng đã được duyệt (trạng thái 7), không cho phép chỉnh sửa
+        if (customOrderCart.getStatusID() == 7) {
+            sendJsonResponse(response, false, "Đơn hàng đã được duyệt, không thể chỉnh sửa.");
+            return;
+        }
+        
         // Cập nhật thông tin
         customOrderCart.setDescription(description);
         customOrderCart.setQuantity(quantity);
+        customOrderCart.setDesiredPrice(desiredPrice);
+        
+        // Nếu trạng thái hiện tại là 8 (từ chối), chuyển về trạng thái 1 (chờ duyệt) khi cập nhật
+        if (currentStatusId == 8) {
+            customOrderCart.setStatusID(1);
+            customOrderCart.setStatus("Chờ duyệt");
+        }
         
         // Xử lý tải lên hình ảnh mới (nếu có)
         processImageUpload(request, "imageUpload", customOrderCart, 1);
