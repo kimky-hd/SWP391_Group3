@@ -294,7 +294,7 @@
                             <i class="fas fa-filter me-2"></i>Bộ lọc
                         </div>
                         <div class="card-body">
-                            <form action="${pageContext.request.contextPath}/manager/custom-orders" method="get" class="row g-3">
+                            <form action="${pageContext.request.contextPath}/custom-orders" method="get" class="row g-3">
                                 <div class="col-md-4">
                                     <label for="customerName" class="form-label">
                                         <i class="fas fa-user me-1"></i>Tên khách hàng
@@ -321,7 +321,7 @@
                                     <button type="submit" class="btn btn-primary me-2">
                                         <i class="fas fa-search me-1"></i>Lọc
                                     </button>
-                                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="btn btn-secondary">
+                                    <a href="${pageContext.request.contextPath}/custom-orders" class="btn btn-secondary">
                                         <i class="fas fa-redo me-1"></i>Đặt lại
                                     </a>
                                 </div>
@@ -342,8 +342,9 @@
                                             <th>ID</th>
                                             <th>Hình ảnh</th>
                                             <th>Khách hàng</th>
-                                            <th>Mô tả</th>
+                                            <th>Liên hệ</th>
                                             <th>Số lượng</th>
+                                            <th>Mô tả</th>
                                             <th>Ngày tạo</th>
                                             <th>Trạng thái</th>
                                             <th>Thao tác</th>
@@ -359,6 +360,24 @@
                                                         <span class="badge bg-info ms-1">+${(not empty order.referenceImage2 ? 1 : 0) + (not empty order.referenceImage3 ? 1 : 0) + (not empty order.referenceImage4 ? 1 : 0) + (not empty order.referenceImage5 ? 1 : 0)}</span>
                                                     </c:if>
                                                 </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${not empty order.fullName}">
+                                                            ${order.fullName}
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-muted">ID: ${order.accountID}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <c:if test="${not empty order.phone}">
+                                                        <div><i class="fas fa-phone-alt me-1 text-primary"></i>${order.phone}</div>
+                                                    </c:if>
+                                                    <c:if test="${not empty order.email}">
+                                                        <div><i class="fas fa-envelope me-1 text-primary"></i>${order.email}</div>
+                                                    </c:if>
+                                                </td>
                                                 <td>${order.accountID}</td>
                                                 <td>
                                                     <c:choose>
@@ -370,7 +389,6 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
-                                                <td>${order.quantity}</td>
                                                 <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm" /></td>
                                                 <td>
                                                     <span class="status-badge status-${order.statusID}">
@@ -399,7 +417,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="${pageContext.request.contextPath}/manager/custom-orders?action=detail&id=${order.customCartID}" class="btn btn-sm btn-info" title="Chi tiết">
+                                                        <a href="${pageContext.request.contextPath}/custom-orders?action=detail&id=${order.customCartID}" class="btn btn-sm btn-info" title="Chi tiết">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </div>
@@ -428,17 +446,17 @@
                         <nav aria-label="Page navigation" class="mt-4">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/manager/custom-orders?page=${currentPage - 1}&customerName=${customerName}&status=${status}" aria-label="Previous">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/custom-orders?page=${currentPage - 1}&customerName=${customerName}&status=${status}" aria-label="Previous">
                                         <span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
                                     </a>
                                 </li>
 
                                 <c:forEach begin="1" end="${totalPages}" var="i">
-                                    <li class="page-item ${currentPage == i ? 'active' : ''}"><a class="page-link" href="${pageContext.request.contextPath}/manager/custom-orders?page=${i}&customerName=${customerName}&status=${status}">${i}</a></li>
+                                    <li class="page-item ${currentPage == i ? 'active' : ''}"><a class="page-link" href="${pageContext.request.contextPath}/custom-orders?page=${i}&customerName=${customerName}&status=${status}">${i}</a></li>
                                     </c:forEach>
 
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/manager/custom-orders?page=${currentPage + 1}&customerName=${customerName}&status=${status}" aria-label="Next">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/custom-orders?page=${currentPage + 1}&customerName=${customerName}&status=${status}" aria-label="Next">
                                         <span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
                                     </a>
                                 </li>

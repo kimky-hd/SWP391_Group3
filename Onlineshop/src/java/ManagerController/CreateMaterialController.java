@@ -75,7 +75,6 @@ public class CreateMaterialController extends HttpServlet {
             throws ServletException, IOException {
 
         String name = request.getParameter("name");
-        String priceRaw = request.getParameter("price");
 
         boolean hasError = false;
 
@@ -99,31 +98,12 @@ public class CreateMaterialController extends HttpServlet {
         }
 
         
-        Double price = null;
-        if (priceRaw == null || priceRaw.trim().isEmpty()) {
-            request.setAttribute("errorPrice", "Vui lòng nhập giá.");
-            hasError = true;
-        } else {
-            try {
-                price = Double.valueOf(priceRaw);
-                if (price <= 0) {
-                    request.setAttribute("errorPrice", "Giá phải lớn hơn 0.");
-                    hasError = true;
-                }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorPrice", "Giá phải là số.");
-                hasError = true;
-            }
-        }
-
-        
         if (hasError) {
             request.setAttribute("name", name);
-            request.setAttribute("price", priceRaw);
             request.getRequestDispatcher("Manager_CreateMaterial.jsp").forward(request, response);
             return;
         }
-        mateDAO.CreateMaterial(name, price);
+        mateDAO.CreateMaterial(name);
         
         request.getSession().setAttribute("isactive", "Thêm nguyên liệu thành công!");
         response.sendRedirect("managermateriallist");

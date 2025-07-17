@@ -189,9 +189,35 @@
                                                 <div class="custom-order-body">
                                                     <div class="row">
                                                         <div class="col-md-4 text-center">
-                                                            <img src="${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="custom-order-image mb-3">
+                                                            <!-- Hình ảnh chính -->
+                                                            <img src="${pageContext.request.contextPath}/${customOrder.referenceImage}" alt="Hình ảnh tham khảo" class="custom-order-image mb-3" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
+                                                            
+                                                            <!-- Hình ảnh bổ sung -->
+                                                            <div class="row mt-2">
+                                                                <c:if test="${not empty customOrder.referenceImage2}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage2}" alt="Hình ảnh tham khảo 2" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${not empty customOrder.referenceImage3}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage3}" alt="Hình ảnh tham khảo 3" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${not empty customOrder.referenceImage4}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage4}" alt="Hình ảnh tham khảo 4" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                                <c:if test="${not empty customOrder.referenceImage5}">
+                                                                    <div class="col-6 mb-2">
+                                                                        <img src="${pageContext.request.contextPath}/${customOrder.referenceImage5}" alt="Hình ảnh tham khảo 5" class="custom-order-image" onerror="this.style.display='none'">
+                                                                    </div>
+                                                                </c:if>
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-8">
+                                                            <!-- Nội dung mô tả và thông tin khác giữ nguyên -->
                                                             <div class="mb-3">
                                                                 <h6>Mô tả:</h6>
                                                                 <div class="description-text">${customOrder.description}</div>
@@ -265,12 +291,33 @@
 
                             <div class="form-group">
                                 <label>Hình ảnh hiện tại</label>
-                                <div class="text-center mb-3">
-                                    <img id="currentImage" src="" alt="Hình ảnh tham khảo" class="img-fluid" style="max-height: 200px;">
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage" src="" alt="Hình ảnh tham khảo" class="img-fluid" style="max-height: 150px;" onerror="this.src='${pageContext.request.contextPath}/img/user.jpg'">
+                                        <label for="editImageUpload">Hình ảnh chính</label>
+                                        <input type="file" class="form-control" id="editImageUpload" name="imageUpload" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage2" src="" alt="Hình ảnh tham khảo 2" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload2">Hình ảnh 2</label>
+                                        <input type="file" class="form-control" id="editImageUpload2" name="imageUpload2" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage3" src="" alt="Hình ảnh tham khảo 3" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload3">Hình ảnh 3</label>
+                                        <input type="file" class="form-control" id="editImageUpload3" name="imageUpload3" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage4" src="" alt="Hình ảnh tham khảo 4" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload4">Hình ảnh 4</label>
+                                        <input type="file" class="form-control" id="editImageUpload4" name="imageUpload4" accept="image/*">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <img id="currentImage5" src="" alt="Hình ảnh tham khảo 5" class="img-fluid" style="max-height: 150px;" onerror="this.style.display='none'">
+                                        <label for="editImageUpload5">Hình ảnh 5</label>
+                                        <input type="file" class="form-control" id="editImageUpload5" name="imageUpload5" accept="image/*">
+                                    </div>
                                 </div>
-
-                                <label for="editImageUpload">Tải lên hình ảnh mới</label>
-                                <input type="file" class="form-control" id="editImageUpload" name="imageUpload" accept="image/*">
                                 <small class="text-muted"><i class="fas fa-info-circle"></i>Thêm hình ảnh mẫu giúp chúng tôi hiểu rõ yêu cầu của bạn về sản phẩm</small>
                             </div>
                         </div>
@@ -309,8 +356,37 @@
                                                                         $('#editCustomCartId').val(customOrder.customCartID);
                                                                         $('#editDescription').val(customOrder.description);
                                                                         $('#editQuantity').val(customOrder.quantity);
-                                                                        $('#currentImage').attr('src', customOrder.referenceImage);
-
+                                                                        $('#currentImage').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage);
+                                                                        
+                                                                        // Hiển thị các hình ảnh bổ sung nếu có
+                                                                        if (customOrder.referenceImage2) {
+                                                                            $('#currentImage2').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage2);
+                                                                            $('#currentImage2').show();
+                                                                        } else {
+                                                                            $('#currentImage2').hide();
+                                                                        }
+                                                                        
+                                                                        if (customOrder.referenceImage3) {
+                                                                            $('#currentImage3').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage3);
+                                                                            $('#currentImage3').show();
+                                                                        } else {
+                                                                            $('#currentImage3').hide();
+                                                                        }
+                                                                        
+                                                                        if (customOrder.referenceImage4) {
+                                                                            $('#currentImage4').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage4);
+                                                                            $('#currentImage4').show();
+                                                                        } else {
+                                                                            $('#currentImage4').hide();
+                                                                        }
+                                                                        
+                                                                        if (customOrder.referenceImage5) {
+                                                                            $('#currentImage5').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage5);
+                                                                            $('#currentImage5').show();
+                                                                        } else {
+                                                                            $('#currentImage5').hide();
+                                                                        }
+                                                                        
                                                                         $('#editModal').modal('show');
                                                                     } else {
                                                                         alert('Không thể lấy thông tin đơn hàng. Vui lòng thử lại sau.');
@@ -356,6 +432,52 @@
                                                                     var reader = new FileReader();
                                                                     reader.onload = function (e) {
                                                                         $('#currentImage').attr('src', e.target.result);
+                                                                        $('#currentImage').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+                                                            
+                                                            // Thêm xử lý cho các ảnh bổ sung
+                                                            $('#editImageUpload2').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage2').attr('src', e.target.result);
+                                                                        $('#currentImage2').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+                                                            
+                                                            $('#editImageUpload3').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage3').attr('src', e.target.result);
+                                                                        $('#currentImage3').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+                                                            
+                                                            $('#editImageUpload4').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage4').attr('src', e.target.result);
+                                                                        $('#currentImage4').show();
+                                                                    }
+                                                                    reader.readAsDataURL(this.files[0]);
+                                                                }
+                                                            });
+                                                            
+                                                            $('#editImageUpload5').change(function () {
+                                                                if (this.files && this.files[0]) {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function (e) {
+                                                                        $('#currentImage5').attr('src', e.target.result);
+                                                                        $('#currentImage5').show();
                                                                     }
                                                                     reader.readAsDataURL(this.files[0]);
                                                                 }
