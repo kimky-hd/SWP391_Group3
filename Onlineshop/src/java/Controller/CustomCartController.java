@@ -35,8 +35,8 @@ public class CustomCartController extends HttpServlet {
     public void init() {
         customOrderCartDAO = new CustomOrderCartDAO();
         
-        // Tạo thư mục uploads nếu chưa tồn tại
-        String uploadPath = getServletContext().getRealPath("/uploads/");
+        // Tạo thư mục img/uploads nếu chưa tồn tại
+        String uploadPath = getServletContext().getRealPath("/img/uploads/");
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
@@ -134,6 +134,13 @@ public class CustomCartController extends HttpServlet {
         int customCartId = Integer.parseInt(request.getParameter("customCartId"));
         String description = request.getParameter("description");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        double desiredPrice = Double.parseDouble(request.getParameter("desiredPrice"));
+        String currentStatusIdParam = request.getParameter("currentStatusId");
+        int currentStatusId = 0;
+        
+        if (currentStatusIdParam != null && !currentStatusIdParam.isEmpty()) {
+            currentStatusId = Integer.parseInt(currentStatusIdParam);
+        }
         
         // Kiểm tra xem đơn hàng có tồn tại và thuộc về người dùng hiện tại không
         CustomOrderCart customOrderCart = customOrderCartDAO.getCustomOrderCartById(customCartId);
@@ -143,9 +150,22 @@ public class CustomCartController extends HttpServlet {
             return;
         }
         
+        // Kiểm tra nếu đơn hàng đã được duyệt (trạng thái 7), không cho phép chỉnh sửa
+        if (customOrderCart.getStatusID() == 7) {
+            sendJsonResponse(response, false, "Đơn hàng đã được duyệt, không thể chỉnh sửa.");
+            return;
+        }
+        
         // Cập nhật thông tin
         customOrderCart.setDescription(description);
         customOrderCart.setQuantity(quantity);
+        customOrderCart.setDesiredPrice(desiredPrice);
+        
+        // Nếu trạng thái hiện tại là 8 (từ chối), chuyển về trạng thái 1 (chờ duyệt) khi cập nhật
+        if (currentStatusId == 8) {
+            customOrderCart.setStatusID(1);
+            customOrderCart.setStatus("Chờ duyệt");
+        }
         
         // Xử lý tải lên hình ảnh mới (nếu có)
         processImageUpload(request, "imageUpload", customOrderCart, 1);
@@ -186,7 +206,7 @@ public class CustomCartController extends HttpServlet {
             
             // Tạo tên file duy nhất
             String uniqueFileName = UUID.randomUUID().toString() + "_" + UUID.randomUUID().toString() + fileExtension;
-            String uploadPath = getServletContext().getRealPath("/uploads/");
+            String uploadPath = getServletContext().getRealPath("/img/uploads/");
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
@@ -195,7 +215,7 @@ public class CustomCartController extends HttpServlet {
             // Lưu file
             filePart.write(uploadPath + File.separator + uniqueFileName);
             
-            // Cập nhật đường dẫn hình ảnh tương ứng
+            // Đường dẫn hình ảnh giữ nguyên
             String imagePath = "img/uploads/" + uniqueFileName;
             
             switch (imageNumber) {

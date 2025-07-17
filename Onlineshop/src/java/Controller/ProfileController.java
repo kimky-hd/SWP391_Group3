@@ -263,16 +263,20 @@ public class ProfileController extends HttpServlet {
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
                 String newFileName = "profile_" + account.getAccountID() + fileExtension;
 
-                // Đường dẫn lưu file
-                String uploadPath = getServletContext().getRealPath("") + File.separator + "img" + File.separator + "profiles";
+                // Tạo thư mục img/uploads/profiles nếu chưa tồn tại
+                String uploadPath = getServletContext().getRealPath("/img/uploads/profiles");
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdirs();
                 }
 
+                // Lưu file vào thư mục img/uploads/profiles
                 String filePath = uploadPath + File.separator + newFileName;
                 filePart.write(filePath);
-
+                
+                // Đường dẫn tương đối để lưu vào database
+                String imageUrl = "img/uploads/profiles/" + newFileName;
+                
                 // Cập nhật đường dẫn ảnh trong profile
                 Profile profile = (Profile) session.getAttribute("profile");
                 if (profile == null) {
@@ -282,7 +286,6 @@ public class ProfileController extends HttpServlet {
                     profile.setPhoneNumber(account.getPhone());
                 }
 
-                String imageUrl = "img/profiles/" + newFileName;
                 profile.setImg(imageUrl);
                 session.setAttribute("profile", profile);
 

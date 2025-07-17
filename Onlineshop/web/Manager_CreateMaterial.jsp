@@ -41,14 +41,6 @@
                         <input type="hidden" name="unit" value="cành" />
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="price">Giá mỗi đơn vị (VNĐ):</label>
-                        <input type="text" id="price" name="price" class="form-control" value="${price != null ? price : ''}" />
-                        <c:if test="${not empty errorPrice}">
-                            <small class="text-danger">${errorPrice}</small>
-                        </c:if>
-                    </div>
-
                     <button type="submit" class="btn btn-primary">Thêm nguyên liệu</button>
                 </form>
             </div>
