@@ -169,31 +169,31 @@ public class ManagerCustomOrderController extends HttpServlet {
     /**
      * Cập nhật trạng thái đơn hàng tự thiết kế.
      */
-    private void updateCustomOrderStatus(HttpServletRequest request, HttpServletResponse response)
+    private void updateCustomOrderStatus(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         int customCartId = Integer.parseInt(request.getParameter("customCartId"));
         int statusId = Integer.parseInt(request.getParameter("statusId"));
+        String managerComment = request.getParameter("managerComment");
         
         CustomOrderCart customOrder = customOrderCartDAO.getCustomOrderCartById(customCartId);
-        
         if (customOrder == null) {
-            sendJsonResponse(response, false, "Không tìm thấy đơn hàng tự thiết kế!");
+            sendJsonResponse(response, false, "Không tìm thấy đơn hàng!");
             return;
         }
         
-        // Cập nhật trạng thái
         customOrder.setStatusID(statusId);
+        customOrder.setManagerComment(managerComment);
         
-        // Cập nhật trạng thái dựa vào statusId
+        // Cập nhật trạng thái dựa trên statusId
         switch (statusId) {
             case 1: // Chờ duyệt
                 customOrder.setStatus("Chờ duyệt");
                 break;
-            case 2: // Đơn hàng đã được duyệt và tiến hành đóng gói
-                customOrder.setStatus("Đơn hàng đã được duyệt và tiến hành đóng gói");
+            case 2: // Đã duyệt và đóng gói
+                customOrder.setStatus("Đã duyệt và đóng gói");
                 break;
-            case 3: // Đơn hàng đang được vận chuyển
-                customOrder.setStatus("Đơn hàng đang được vận chuyển");
+            case 3: // Đang vận chuyển
+                customOrder.setStatus("Đang vận chuyển");
                 break;
             case 4: // Đã giao hàng thành công
                 customOrder.setStatus("Đã giao hàng thành công");
@@ -218,8 +218,11 @@ public class ManagerCustomOrderController extends HttpServlet {
         boolean success = customOrderCartDAO.updateCustomOrderCart(customOrder);
         
         if (success) {
-            // Gửi email thông báo cho khách hàng (nếu cần)
-            // sendStatusUpdateEmail(customOrder);
+            // Gửi email thông báo cho khách hàng nếu có nhận xét
+            if (customOrder.getEmail() != null && !customOrder.getEmail().isEmpty() 
+                    && managerComment != null && !managerComment.isEmpty()) {
+                sendStatusUpdateEmail(customOrder);
+            }
             
             sendJsonResponse(response, true, "Cập nhật trạng thái đơn hàng thành công!");
         } else {
@@ -242,5 +245,40 @@ public class ManagerCustomOrderController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.print(jsonResponse.toString());
         }
+    }
+    
+    /**
+     * Gửi email thông báo cập nhật trạng thái cho khách hàng.
+     */
+    private void sendStatusUpdateEmail(CustomOrderCart customOrder) {
+        String subject = "[Cập nhật] Đơn hàng thiết kế riêng #" + customOrder.getCustomCartID();
+        
+        String statusText = "";
+        switch (customOrder.getStatusID()) {
+            case 7:
+                statusText = "đã được duyệt: hãy tiến hành đặt hàng và thanh toán";
+                break;
+            case 8:
+                statusText = "đã bị từ chối: vui lòng sửa lại đơn hàng để có thể duyệt lại!";
+                break;
+            default:
+                statusText = "đã được cập nhật sang trạng thái: " + customOrder.getStatus();
+                break;
+        }
+        
+        String content = "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;'>"
+                + "<h2 style='color: #4CAF50;'>Cập nhật đơn hàng thiết kế riêng</h2>"
+                + "<p>Xin chào " + customOrder.getFullName() + ",</p>"
+                + "<p>Đơn hàng thiết kế riêng #" + customOrder.getCustomCartID() + " của bạn " + statusText + ".</p>"
+                + "<p><strong>Nhận xét từ quản lý:</strong></p>"
+                + "<div style='background-color: #f9f9f9; padding: 15px; border-left: 4px solid #4CAF50; margin: 10px 0;'>"
+                + "<p>" + customOrder.getManagerComment() + "</p>"
+                + "</div>"
+                + "<p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>"
+                + "<p>Trân trọng,<br>Đội ngũ hỗ trợ khách hàng</p>"
+                + "</div>";
+        
+        // Gửi email sử dụng lớp EmailSender
+        Utility.EmailSender.sendNotificationEmail(customOrder.getEmail(), subject, content);
     }
 }

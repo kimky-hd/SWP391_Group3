@@ -40,6 +40,10 @@ public class CustomOrderCartDAO extends DBContext {
                     customOrderCart.setCustomCartID(rs.getInt("customCartID"));
                     customOrderCart.setAccountID(rs.getInt("accountID"));
                     customOrderCart.setReferenceImage(rs.getString("referenceImage"));
+                    customOrderCart.setReferenceImage2(rs.getString("referenceImage2"));
+                    customOrderCart.setReferenceImage3(rs.getString("referenceImage3"));
+                    customOrderCart.setReferenceImage4(rs.getString("referenceImage4"));
+                    customOrderCart.setReferenceImage5(rs.getString("referenceImage5"));
                     customOrderCart.setDescription(rs.getString("description"));
                     customOrderCart.setQuantity(rs.getInt("quantity"));
                     customOrderCart.setStatusID(rs.getInt("statusID")); 
@@ -50,6 +54,12 @@ public class CustomOrderCartDAO extends DBContext {
                     customOrderCart.setFullName(rs.getString("fullName"));
                     customOrderCart.setPhone(rs.getString("phone"));
                     customOrderCart.setEmail(rs.getString("email"));
+                    
+                    // Thêm dòng này để lấy manager_comment
+                    customOrderCart.setManagerComment(rs.getString("manager_comment"));
+                    
+                    // Thêm dòng này để lấy desired_price
+                    customOrderCart.setDesiredPrice(rs.getDouble("desired_price"));
                     
                     customOrderCarts.add(customOrderCart);
                 }
@@ -100,6 +110,12 @@ public class CustomOrderCartDAO extends DBContext {
                     customOrderCart.setPhone(rs.getString("phone"));
                     customOrderCart.setEmail(rs.getString("email"));
                     
+                    // Thêm dòng này để lấy manager_comment
+                    customOrderCart.setManagerComment(rs.getString("manager_comment"));
+                    
+                    // Thêm dòng này để lấy desired_price
+                    customOrderCart.setDesiredPrice(rs.getDouble("desired_price"));
+                    
                     return customOrderCart;
                 }
             }
@@ -118,7 +134,7 @@ public class CustomOrderCartDAO extends DBContext {
      * @return true nếu thêm thành công, ngược lại là false.
      */
     public boolean addCustomOrderCart(CustomOrderCart customOrderCart) {
-        String sql = "INSERT INTO customordercart (accountID, referenceImage, description, quantity, statusID, fullName, phone, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";  
+        String sql = "INSERT INTO customordercart (accountID, referenceImage, description, quantity, statusID, fullName, phone, email, desired_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";  
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -131,6 +147,7 @@ public class CustomOrderCartDAO extends DBContext {
             ps.setString(6, customOrderCart.getFullName());
             ps.setString(7, customOrderCart.getPhone());
             ps.setString(8, customOrderCart.getEmail());
+            ps.setDouble(9, customOrderCart.getDesiredPrice());
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -147,7 +164,7 @@ public class CustomOrderCartDAO extends DBContext {
      * @return true nếu cập nhật thành công, ngược lại là false.
      */
     public boolean updateCustomOrderCart(CustomOrderCart customOrderCart) {
-        String sql = "UPDATE customordercart SET referenceImage = ?, referenceImage2 = ?, referenceImage3 = ?, referenceImage4 = ?, referenceImage5 = ?, description = ?, quantity = ?, statusID = ? WHERE customCartID = ?";
+        String sql = "UPDATE customordercart SET referenceImage = ?, referenceImage2 = ?, referenceImage3 = ?, referenceImage4 = ?, referenceImage5 = ?, description = ?, quantity = ?, statusID = ?, manager_comment = ?, desired_price = ? WHERE customCartID = ?";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -160,7 +177,9 @@ public class CustomOrderCartDAO extends DBContext {
             ps.setString(6, customOrderCart.getDescription());
             ps.setInt(7, customOrderCart.getQuantity());
             ps.setInt(8, customOrderCart.getStatusID());
-            ps.setInt(9, customOrderCart.getCustomCartID());
+            ps.setString(9, customOrderCart.getManagerComment());
+            ps.setDouble(10, customOrderCart.getDesiredPrice());
+            ps.setInt(11, customOrderCart.getCustomCartID());
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -240,6 +259,10 @@ public class CustomOrderCartDAO extends DBContext {
                 customOrderCart.setCustomCartID(rs.getInt("customCartID"));
                 customOrderCart.setAccountID(rs.getInt("accountID"));
                 customOrderCart.setReferenceImage(rs.getString("referenceImage"));
+                customOrderCart.setReferenceImage2(rs.getString("referenceImage2"));
+                customOrderCart.setReferenceImage3(rs.getString("referenceImage3"));
+                customOrderCart.setReferenceImage4(rs.getString("referenceImage4"));
+                customOrderCart.setReferenceImage5(rs.getString("referenceImage5"));
                 customOrderCart.setDescription(rs.getString("description"));
                 customOrderCart.setQuantity(rs.getInt("quantity"));
                 customOrderCart.setStatusID(rs.getInt("statusID"));
@@ -250,6 +273,12 @@ public class CustomOrderCartDAO extends DBContext {
                 customOrderCart.setFullName(rs.getString("fullName"));
                 customOrderCart.setPhone(rs.getString("phone"));
                 customOrderCart.setEmail(rs.getString("email"));
+                
+                // Thêm dòng này để lấy manager_comment
+                customOrderCart.setManagerComment(rs.getString("manager_comment"));
+                
+                // Thêm dòng này để lấy desired_price
+                customOrderCart.setDesiredPrice(rs.getDouble("desired_price"));
                 
                 customOrderCarts.add(customOrderCart);
             }

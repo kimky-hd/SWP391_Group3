@@ -10,7 +10,7 @@
 %>
 <!<!-- Subiz Chat -->
 <script>
-      window._sbzaccid = 'acsirodfsqyjgvlqvoad'
+      window._sbzaccid = 'acsjohqbflsylnzfqogm'
       window.subiz = function () {
             window.subiz.q.push(arguments)
       }
