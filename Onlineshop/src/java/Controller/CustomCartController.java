@@ -35,8 +35,8 @@ public class CustomCartController extends HttpServlet {
     public void init() {
         customOrderCartDAO = new CustomOrderCartDAO();
         
-        // Tạo thư mục uploads nếu chưa tồn tại
-        String uploadPath = getServletContext().getRealPath("/uploads/");
+        // Tạo thư mục img/uploads nếu chưa tồn tại
+        String uploadPath = getServletContext().getRealPath("/img/uploads/");
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
@@ -186,7 +186,7 @@ public class CustomCartController extends HttpServlet {
             
             // Tạo tên file duy nhất
             String uniqueFileName = UUID.randomUUID().toString() + "_" + UUID.randomUUID().toString() + fileExtension;
-            String uploadPath = getServletContext().getRealPath("/uploads/");
+            String uploadPath = getServletContext().getRealPath("/img/uploads/");
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
@@ -195,7 +195,7 @@ public class CustomCartController extends HttpServlet {
             // Lưu file
             filePart.write(uploadPath + File.separator + uniqueFileName);
             
-            // Cập nhật đường dẫn hình ảnh tương ứng
+            // Đường dẫn hình ảnh giữ nguyên
             String imagePath = "img/uploads/" + uniqueFileName;
             
             switch (imageNumber) {

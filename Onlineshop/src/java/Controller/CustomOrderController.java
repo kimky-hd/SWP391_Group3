@@ -33,7 +33,17 @@ import jakarta.servlet.http.Part;
 public class CustomOrderController extends HttpServlet {
 
     private final CartDAO cartDAO = new CartDAO();
-
+    
+    @Override
+    public void init() {
+        // Tạo thư mục img/uploads/Custome_img nếu chưa tồn tại
+        String uploadPath = getServletContext().getRealPath("/img/uploads/Custome_img");
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+    }
+    
     /**
      * Xử lý yêu cầu POST từ form đặt hàng tùy chỉnh
      *
@@ -60,11 +70,18 @@ public class CustomOrderController extends HttpServlet {
             // Lấy thông tin từ form
             String description = request.getParameter("description");
             String quantityStr = request.getParameter("quantity");
+            // Lấy thông tin liên hệ từ form
+            String fullName = request.getParameter("fullName");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
             int quantity;
 
             // Lưu thông tin vào session để giữ lại khi có lỗi
             session.setAttribute("savedDescription", description);
             session.setAttribute("savedQuantity", quantityStr);
+            session.setAttribute("savedFullName", fullName);
+            session.setAttribute("savedPhone", phone);
+            session.setAttribute("savedEmail", email);
 
             // Xác thực mô tả
             if (description == null || description.trim().isEmpty()) {
@@ -110,6 +127,28 @@ public class CustomOrderController extends HttpServlet {
                 response.sendRedirect("CustomOrder.jsp");
                 return;
             }
+            
+            // Xác thực thông tin liên hệ
+            if (fullName == null || fullName.trim().isEmpty()) {
+                session.setAttribute("message", "Vui lòng nhập họ tên");
+                session.setAttribute("messageType", "error");
+                response.sendRedirect("CustomOrder.jsp");
+                return;
+            }
+            
+            if (phone == null || phone.trim().isEmpty()) {
+                session.setAttribute("message", "Vui lòng nhập số điện thoại");
+                session.setAttribute("messageType", "error");
+                response.sendRedirect("CustomOrder.jsp");
+                return;
+            }
+            
+            if (email == null || email.trim().isEmpty()) {
+                session.setAttribute("message", "Vui lòng nhập email");
+                session.setAttribute("messageType", "error");
+                response.sendRedirect("CustomOrder.jsp");
+                return;
+            }
 
             // Xử lý upload file chính
             Part filePart = request.getPart("imageUpload");
@@ -136,18 +175,18 @@ public class CustomOrderController extends HttpServlet {
             // Tạo tên file duy nhất để tránh trùng lặp
             String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
 
-            // Lưu file vào thư mục uploads
-            String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+            // Lưu file vào thư mục img/uploads/Custome_img
+            String uploadPath = getServletContext().getRealPath("/img/uploads/Custome_img");
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+                uploadDir.mkdirs();
             }
 
             String filePath = uploadPath + File.separator + uniqueFileName;
             filePart.write(filePath);
 
             // Đường dẫn tương đối để lưu vào database
-            String relativePath = "uploads/" + uniqueFileName;
+            String relativePath = "img/uploads/Custome_img/" + uniqueFileName;
 
             // Xử lý các file ảnh bổ sung
             String relativePath2 = null;
@@ -166,7 +205,7 @@ public class CustomOrderController extends HttpServlet {
                         String uniqueFileName2 = UUID.randomUUID().toString() + "_" + fileName2;
                         String filePath2 = uploadPath + File.separator + uniqueFileName2;
                         filePart2.write(filePath2);
-                        relativePath2 = "uploads/" + uniqueFileName2;
+                        relativePath2 = "img/uploads/Custome_img/" + uniqueFileName2;
                     }
                 }
             }
@@ -182,7 +221,7 @@ public class CustomOrderController extends HttpServlet {
                         String uniqueFileName3 = UUID.randomUUID().toString() + "_" + fileName3;
                         String filePath3 = uploadPath + File.separator + uniqueFileName3;
                         filePart3.write(filePath3);
-                        relativePath3 = "uploads/" + uniqueFileName3;
+                        relativePath3 = "img/uploads/Custome_img/" + uniqueFileName3;
                     }
                 }
             }
@@ -198,7 +237,7 @@ public class CustomOrderController extends HttpServlet {
                         String uniqueFileName4 = UUID.randomUUID().toString() + "_" + fileName4;
                         String filePath4 = uploadPath + File.separator + uniqueFileName4;
                         filePart4.write(filePath4);
-                        relativePath4 = "uploads/" + uniqueFileName4;
+                        relativePath4 = "img/uploads/Custome_img/" + uniqueFileName4;
                     }
                 }
             }
@@ -214,14 +253,14 @@ public class CustomOrderController extends HttpServlet {
                         String uniqueFileName5 = UUID.randomUUID().toString() + "_" + fileName5;
                         String filePath5 = uploadPath + File.separator + uniqueFileName5;
                         filePart5.write(filePath5);
-                        relativePath5 = "uploads/" + uniqueFileName5;
+                        relativePath5 = "img/uploads/Custome_img/" + uniqueFileName5;
                     }
                 }
             }
 
-            // Thêm đơn hàng tùy chỉnh với nhiều hình ảnh
+            // Thêm đơn hàng tùy chỉnh với nhiều hình ảnh và thông tin liên hệ
             quantity = Integer.parseInt(quantityStr);
-            int customOrderID = addCustomOrderToCart(account.getAccountID(), relativePath, relativePath2, relativePath3, relativePath4, relativePath5, description, quantity);
+            int customOrderID = addCustomOrderToCart(account.getAccountID(), relativePath, relativePath2, relativePath3, relativePath4, relativePath5, description, quantity, fullName, phone, email);
 
             if (customOrderID > 0) {
                 session.setAttribute("message", "Yêu cầu đặt hàng tùy chỉnh của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất!");
@@ -229,6 +268,9 @@ public class CustomOrderController extends HttpServlet {
                 // Xóa các giá trị đã lưu khi gửi thành công
                 session.removeAttribute("savedDescription");
                 session.removeAttribute("savedQuantity");
+                session.removeAttribute("savedFullName");
+                session.removeAttribute("savedPhone");
+                session.removeAttribute("savedEmail");
             } else {
                 session.setAttribute("message", "Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau!");
                 session.setAttribute("messageType", "error");
@@ -320,11 +362,14 @@ public class CustomOrderController extends HttpServlet {
      * @param imagePath5 Đường dẫn đến hình ảnh mẫu thứ 5
      * @param description Mô tả chi tiết
      * @param quantity Số lượng
+     * @param fullName Họ tên khách hàng
+     * @param phone Số điện thoại khách hàng
+     * @param email Email khách hàng
      * @return ID của đơn hàng tùy chỉnh mới được tạo
      */
-    private int addCustomOrderToCart(int accountID, String imagePath, String imagePath2, String imagePath3, String imagePath4, String imagePath5, String description, int quantity) {
-        String sql = "INSERT INTO customordercart (accountID, referenceImage, referenceImage2, referenceImage3, referenceImage4, referenceImage5, description, quantity, statusID) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";  // Sử dụng statusID = 1 (tương ứng với trạng thái 'pending')
+    private int addCustomOrderToCart(int accountID, String imagePath, String imagePath2, String imagePath3, String imagePath4, String imagePath5, String description, int quantity, String fullName, String phone, String email) {
+        String sql = "INSERT INTO customordercart (accountID, referenceImage, referenceImage2, referenceImage3, referenceImage4, referenceImage5, description, quantity, statusID, fullName, phone, email) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)";  // Sử dụng statusID = 1 (tương ứng với trạng thái 'pending')
         try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, accountID);
             ps.setString(2, imagePath);
@@ -334,6 +379,9 @@ public class CustomOrderController extends HttpServlet {
             ps.setString(6, imagePath5);
             ps.setString(7, description);
             ps.setInt(8, quantity);
+            ps.setString(9, fullName);
+            ps.setString(10, phone);
+            ps.setString(11, email);
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
