@@ -69,24 +69,31 @@ public class ActiveProduct extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        int productID = Integer.parseInt(request.getParameter("productID"));
-        
-        ProductDAO productDAO = new ProductDAO();
-        Product p = productDAO.getProductById(productID);
-        HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
-        if (a == null) {
-            request.setAttribute("mess", "Bạn cần đăng nhập");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-        
-        productDAO.updateProductIsActive(productID, true);
-        request.getSession().setAttribute("isactive", "Đã kích hoạt sản phẩm: " + p.getTitle());
-        
-        response.sendRedirect("managerproductlist");
+        throws ServletException, IOException {
+
+    int productID = Integer.parseInt(request.getParameter("productID"));
+    String index = request.getParameter("index");
+    String sortOrder = request.getParameter("sortOrder");
+
+    ProductDAO productDAO = new ProductDAO();
+    Product p = productDAO.getProductById(productID);
+    HttpSession session = request.getSession();
+    Account a = (Account) session.getAttribute("account");
+
+    if (a == null) {
+        request.setAttribute("mess", "Bạn cần đăng nhập");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+        return;
     }
-    }
+
+    productDAO.updateProductIsActive(productID, true);
+    session.setAttribute("isactive", "Đã kích hoạt sản phẩm: " + p.getTitle());
+
+    if (index == null || index.isEmpty()) index = "1";
+    if (sortOrder == null) sortOrder = "";
+
+    response.sendRedirect("managerproductlist?index=" + index + "&sortOrder=" + sortOrder);
+}
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description

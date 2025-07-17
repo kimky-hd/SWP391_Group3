@@ -99,7 +99,19 @@ public class AddProductBatchController extends HttpServlet {
             if (quantityStr == null || quantityStr.isEmpty()) {
                 request.setAttribute("quantityError", "Vui lòng nhập số lượng.");
                 hasError = true;
-            } else if (Integer.parseInt(quantityStr) <= 0) {
+            } else {
+                try {
+                    importPriceStr = importPriceStr.replace(",", "").trim();  // << THÊM DÒNG NÀY
+                    if (Double.parseDouble(importPriceStr) < 0) {
+                        request.setAttribute("priceError", "Giá nhập không được âm.");
+                        hasError = true;
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("priceError", "Giá nhập không hợp lệ.");
+                    hasError = true;
+                }
+            }
+            if (Integer.parseInt(quantityStr) <= 0) {
                 request.setAttribute("quantityError", "Số lượng phải lớn hơn 0.");
                 hasError = true;
             }

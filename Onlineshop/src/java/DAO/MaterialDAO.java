@@ -37,8 +37,7 @@ public class MaterialDAO extends DBContext {
                         result.getInt(3),
                         result.getDouble(4),
                         result.getDate(5),
-                        result.getDate(6),
-                        result.getString(7)
+                        result.getDate(6)
                 ));
             }
         } catch (SQLException e) {
@@ -309,5 +308,42 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-
+    
+    public List<MaterialBatch> getMaterialBatchByIndex(int indexPage) {
+        List<MaterialBatch> list = new ArrayList<>();
+        String sql = "SELECT mb.*, m.name AS materialName FROM MaterialBatch mb " +
+                 "JOIN Material m ON mb.materialID = m.materialID ORDER BY materialbatchID LIMIT ?, 10";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, (indexPage - 1) * 10);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new MaterialBatch(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getString(7),
+                        rs.getInt(3),
+                        rs.getDouble(4),
+                        rs.getDate(5),
+                        rs.getDate(6))
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("getMaterialBatchByIndex : " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public int countAllMaterialBatch() {
+        String sql = "select count(*) from MaterialBatch";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("countAllMaterialBatch" + e.getMessage());
+        }
+        return 0;
+    }
 }

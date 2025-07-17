@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/LogoutServlet">
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                 </a>
                             </li>

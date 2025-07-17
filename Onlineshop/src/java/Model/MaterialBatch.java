@@ -11,31 +11,41 @@ import java.util.Date;
  * @author Duccon
  */
 public class MaterialBatch {
+
     private int materialBatchID;
     private int materialID;
+    private String materialName;
     private int quantity;
     private double importPrice;
     private Date dateImport;
     private Date dateExpire;
-    private String status;
 
     public MaterialBatch() {
     }
-    
-    public MaterialBatch(int id, String materialId, int quantity) {
-    this.materialBatchID = materialBatchID;
-    this.materialID = materialID;
-    this.quantity = quantity;
-}
 
-    public MaterialBatch(int materialBatchID, int materialID, int quantity, double importPrice, Date dateImport, Date dateExpire, String status) {
+    public MaterialBatch(int id, String materialId, int quantity) {
+        this.materialBatchID = materialBatchID;
+        this.materialID = materialID;
+        this.quantity = quantity;
+    }
+    
+    public MaterialBatch(int materialBatchID, int materialID, int quantity, double importPrice, Date dateImport, Date dateExpire) {
         this.materialBatchID = materialBatchID;
         this.materialID = materialID;
         this.quantity = quantity;
         this.importPrice = importPrice;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
-        this.status = status;
+    }
+
+    public MaterialBatch(int materialBatchID, int materialID, String materialName, int quantity, double importPrice, Date dateImport, Date dateExpire) {
+        this.materialBatchID = materialBatchID;
+        this.materialID = materialID;
+        this.materialName = materialName;
+        this.quantity = quantity;
+        this.importPrice = importPrice;
+        this.dateImport = dateImport;
+        this.dateExpire = dateExpire;
     }
 
     public int getMaterialBatchID() {
@@ -52,6 +62,14 @@ public class MaterialBatch {
 
     public void setMaterialID(int materialID) {
         this.materialID = materialID;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
     public int getQuantity() {
@@ -86,18 +104,11 @@ public class MaterialBatch {
         this.dateExpire = dateExpire;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
-        return "MaterialBatch{" + "materialBatchID=" + materialBatchID + ", materialID=" + materialID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+        return "MaterialBatch{" + "materialBatchID=" + materialBatchID + ", materialID=" + materialID + ", materialName=" + materialName + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire +'}';
     }
+
     
-    
+
 }
