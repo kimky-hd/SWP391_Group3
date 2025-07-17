@@ -140,7 +140,6 @@
                                         <th>ID</th>
                                         <th>Tên nguyên liệu</th>
                                         <th>Đơn vị</th>
-                                        <th>Giá</th>
                                         <th>Số lượng</th>
                                         <th>Tình Trạng</th>
                                         <th>Trạng thái</th>
@@ -153,7 +152,6 @@
                                             <td>${m.materialID}</td>
                                             <td>${m.name}</td>
                                             <td>${m.unit}</td>
-                                            <td><fmt:formatNumber value="${m.pricePerUnit}" pattern="#,##0" /> VND</td>
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${m.quantity == 0}">
@@ -360,6 +358,22 @@
                                 </c:if>
                             </div>
 
+                            <div class="form-group mb-2">
+                                <label>Nhà cung cấp: <span class="text-danger">*</span></label>
+                                <select name="supplierID" class="form-control">
+                                    <option value="">-- Chọn nhà cung cấp --</option>
+                                    <c:forEach var="s" items="${supplierList}">
+                                        <option value="${s.supplierID}"
+                                                <c:if test="${s.supplierID == supplierID}">selected</c:if>>
+                                            ${s.supplierName}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                                <c:if test="${not empty errorSupplier}">
+                                    <small class="text-danger">${errorSupplier}</small>
+                                </c:if>
+                            </div>
+
                             <p id="batchErrorMsg" class="text-danger"></p>
                         </div>
 
@@ -371,6 +385,7 @@
                 </div>
             </div>
         </div>
+
 
         <script>
             function openAddQuantityModal(materialID) {

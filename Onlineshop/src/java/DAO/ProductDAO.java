@@ -1021,7 +1021,6 @@ public class ProductDAO extends DBContext {
                 mate.setMaterialID(rs.getInt("materialID"));
                 mate.setName(rs.getString("name"));
                 mate.setUnit(rs.getString("unit"));
-                mate.setPricePerUnit(rs.getDouble("pricePerUnit"));
                 mate.setIsActive(rs.getBoolean("isActive"));
 
                 // Gán danh sách batch cho nguyên liệu
