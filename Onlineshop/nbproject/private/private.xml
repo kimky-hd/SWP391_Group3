@@ -34,6 +34,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/css/style.css</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/vouchers.jsp</file>
+            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/ProfileController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/admin/sidebar.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/revenueChart.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
@@ -62,6 +63,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/VoucherDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/manager/vouchers.jsp</file>
+            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/manager/StaffController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/BlogList.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/CustomVNPayReturnController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/manager/custom_orders.jsp</file>
@@ -87,6 +89,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/css/style.css</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/vouchers.jsp</file>
+            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/ProfileController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/admin/sidebar.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/revenueChart.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
