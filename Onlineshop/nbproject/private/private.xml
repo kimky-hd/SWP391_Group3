@@ -21,10 +21,6 @@
             <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
         </group>
         <group>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_MaterialBatchHistory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
-        </group>
-        <group>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/CustomOrderCartDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
@@ -129,6 +125,14 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/build/web/Homepage.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CustomCart.jsp</file>
+        </group>
+        <group>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddMaterialBatchController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/MaterialBatch.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/Supplier.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerMaterialList.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
         </group>
     </open-files>
 </project-private>
