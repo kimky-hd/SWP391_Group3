@@ -19,6 +19,13 @@
                     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css"
                         rel="stylesheet">
 
+                    <!-- Bootstrap CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="<c:url value='/css/admin.css'/>" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
                     <style>
                         :root {
                             --primary-color: #4e73df;

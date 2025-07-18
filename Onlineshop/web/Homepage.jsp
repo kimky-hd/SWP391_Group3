@@ -34,29 +34,323 @@
 
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
-        <style>
-            .product-item {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-            .product-img {
-                height: 250px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background: #fff;
-            }
-            .product-img img {
-                max-height: 100%;
-                max-width: 100%;
-                object-fit: contain;
-            }
-            .text-center.py-4 {
-                flex: 1 1 auto;
-            }
-        </style>
+       <style>
+    .product-item {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+.product-img {
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.product-item:hover .product-img img {
+    transform: scale(1.1);
+}
+
+/* Product Info Section */
+.text-center.py-4 {
+    padding: 20px 15px !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-item h6 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    height: 44px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-item h5 {
+    color: #e74c3c;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Enhanced Product Actions */
+.product-action {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin: 15px;
+    padding: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.product-item:hover .product-action {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s ease 0.1s;
+}
+
+.product-action .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 5px;
+    border: 2px solid #FFD333;
+    color: #FFD333;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.product-action .btn:hover {
+    background: #FFD333;
+    color: white;
+    transform: scale(1.1);
+}
+/* Enhanced Categories */
+.cat-item {
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.4s ease;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid #f1f1f1;
+}
+
+.cat-item:hover {
+    background: linear-gradient(135deg, #FFD333 0%, #ffed4e 100%);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 211, 51, 0.3);
+}
+
+.cat-item img {
+    border-radius: 8px;
+    transition: transform 0.4s ease;
+}
+
+.cat-item:hover img {
+    transform: scale(1.1) rotate(2deg);
+}
+
+.cat-item h6 {
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.cat-item:hover h6 {
+    color: #2c3e50;
+}
+/* Enhanced Carousel */
+#header-carousel {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.carousel-item {
+    position: relative;
+}
+
+.carousel-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+    z-index: 1;
+}
+
+.carousel-caption {
+    z-index: 2;
+    background: none;
+}
+
+.carousel-caption h1 {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-weight: 700;
+}
+
+.carousel-caption p {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    font-size: 18px;
+}
+
+/* Enhanced Carousel Indicators */
+.carousel-indicators li {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: 2px solid white;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators .active {
+    width: 30px;
+    border-radius: 15px;
+    background: #FFD333;
+}
+/* Enhanced Product Offers */
+.product-offer {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transition: transform 0.4s ease;
+}
+
+.product-offer:hover {
+    transform: scale(1.02);
+}
+
+.offer-text {
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+    backdrop-filter: blur(5px);
+}
+
+.offer-text h6 {
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.offer-text h3 {
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.offer-text .btn {
+    border-radius: 25px;
+    padding: 8px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+/* Enhanced Section Titles */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-title span {
+    background: linear-gradient(135deg, #FFD333 0%, #ffed4e 100%);
+    padding: 10px 30px;
+    border-radius: 25px;
+    color: #2c3e50;
+    box-shadow: 0 4px 15px rgba(255, 211, 51, 0.3);
+}
+
+.section-title::after {
+    border-top: 2px dashed #FFD333;
+    opacity: 0.6;
+}
+/* Enhanced Pagination */
+.pagination {
+    margin-top: 3rem;
+}
+
+.page-link {
+    border: 2px solid #f1f1f1;
+    color: #2c3e50;
+    padding: 10px 15px;
+    margin: 0 3px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background: #FFD333;
+    border-color: #FFD333;
+    color: #2c3e50;
+    transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+    background: #FFD333;
+    border-color: #FFD333;
+    color: #2c3e50;
+    box-shadow: 0 4px 15px rgba(255, 211, 51, 0.4);
+}
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+    .product-img {
+        height: 200px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-title span {
+        padding: 8px 20px;
+    }
+    
+    .cat-item {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .flower-fixed-btn {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .flower-fixed-btn a {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .product-item h6 {
+        font-size: 14px;
+        height: auto;
+    }
+    
+    .carousel-caption h1 {
+        font-size: 1.8rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 14px;
+    }
+}
+</style>
     </head>
 
     <body>
@@ -248,6 +542,157 @@
                 <i class="fas fa-seedling"></i> <!-- Bạn có thể thay bằng: fa-pencil-alt, fa-heart, fa-rose -->
             </a>
         </div>
+        <script>
+$(document).ready(function() {
+    // Animate elements on scroll
+    function animateOnScroll() {
+        $('.product-item, .cat-item').each(function() {
+            var elementTop = $(this).offset().top;
+            var elementBottom = elementTop + $(this).outerHeight();
+            var viewportTop = $(window).scrollTop();
+            var viewportBottom = viewportTop + $(window).height();
+            
+            if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                $(this).addClass('loaded');
+            }
+        });
+    }
+    
+    // Initial animation
+    setTimeout(animateOnScroll, 100);
+    
+    // Animate on scroll
+    $(window).scroll(animateOnScroll);
+    
+    // Smooth hover effects for product items
+    $('.product-item').hover(
+        function() {
+            $(this).find('.product-img img').css('transform', 'scale(1.08)');
+        },
+        function() {
+            $(this).find('.product-img img').css('transform', 'scale(1)');
+        }
+    );
+    
+    // Enhanced carousel auto-play
+    $('#header-carousel').carousel({
+        interval: 5000,
+        pause: 'hover'
+    });
+    
+    // Add loading effect to images
+    $('img').on('load', function() {
+        $(this).addClass('loaded');
+    });
+    
+    // Parallax effect for carousel
+    $(window).scroll(function() {
+        var scrolled = $(window).scrollTop();
+        var parallax = scrolled * 0.5;
+        $('#header-carousel .carousel-item img').css('transform', 'translateY(' + parallax + 'px)');
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    // Enhanced scroll animations
+    function animateOnScroll() {
+        $('.product-item, .cat-item').each(function(index) {
+            var elementTop = $(this).offset().top;
+            var elementBottom = elementTop + $(this).outerHeight();
+            var viewportTop = $(window).scrollTop();
+            var viewportBottom = viewportTop + $(window).height();
+            
+            if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                setTimeout(() => {
+                    $(this).addClass('loaded');
+                }, index * 100); // Staggered animation
+            }
+        });
+    }
+    
+    // Intersection Observer for better performance
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('loaded');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.product-item, .cat-item').forEach(el => {
+            observer.observe(el);
+        });
+    } else {
+        // Fallback for older browsers
+        animateOnScroll();
+        $(window).scroll(animateOnScroll);
+    }
+    
+    // Enhanced product hover effects
+    $('.product-item').hover(
+        function() {
+            $(this).find('.product-img img').css({
+                'transform': 'scale(1.1)',
+                'filter': 'brightness(1.1)'
+            });
+        },
+        function() {
+            $(this).find('.product-img img').css({
+                'transform': 'scale(1)',
+                'filter': 'brightness(1)'
+            });
+        }
+    );
+    
+    // Smooth page transitions
+    $('a[href^="Homepage"]').on('click', function(e) {
+        e.preventDefault();
+        const href = $(this).attr('href');
+        $('body').fadeOut(300, function() {
+            window.location.href = href;
+        });
+    });
+    
+    // Loading animation for images
+    $('img').each(function() {
+        if (this.complete) {
+            $(this).addClass('loaded');
+        } else {
+            $(this).on('load', function() {
+                $(this).addClass('loaded');
+            });
+        }
+    });
+    
+    // Enhanced carousel with touch support
+    $('#header-carousel').carousel({
+        interval: 6000,
+        pause: 'hover',
+        wrap: true,
+        touch: true
+    });
+    
+    // Parallax effect for hero section
+    $(window).scroll(function() {
+        const scrolled = $(window).scrollTop();
+        const parallax = scrolled * 0.3;
+        $('#header-carousel .carousel-item.active img').css('transform', `translateY(${parallax}px) scale(1.1)`);
+    });
+    
+    // Smooth scroll for anchor links
+    $('a[href^="#"]').on('click', function(e) {
+        e.preventDefault();
+        const target = $($(this).attr('href'));
+        if (target.length) {
+            $('html, body').animate({
+                scrollTop: target.offset().top - 100
+            }, 800);
+        }
+    });
+});
+</script>
         <!-- Sticky Button for Custom Order End -->
     </body>
 </html>
