@@ -314,31 +314,23 @@
                             <h5 class="modal-title" id="addProductQuantityLabel">Nhập hàng cho sản phẩm</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
+
                         <div class="modal-body">
                             <input type="hidden" name="productID" id="modalProductID" value="${productID}">
 
                             <!-- Số lượng -->
                             <div class="mb-3">
                                 <label class="form-label">Số lượng <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="quantity" value="${quantityVal}">
+                                <input type="number" class="form-control" name="quantity" value="${quantityVal}" min="1" required>
                                 <c:if test="${not empty quantityError}">
                                     <div class="text-danger mt-1">${quantityError}</div>
-                                </c:if>
-                            </div>
-
-                            <!-- Giá nhập -->
-                            <div class="mb-3">
-                                <label class="form-label">Giá nhập (mỗi sản phẩm) <span class="text-danger">*</span></label>
-                                <input type="text" name="importPrice" value="${importPrice}" class="form-control" id="importPriceInput" oninput="formatPrice(this)" />
-                                <c:if test="${not empty priceError}">
-                                    <div class="text-danger mt-1">${priceError}</div>
                                 </c:if>
                             </div>
 
                             <!-- Ngày nhập -->
                             <div class="mb-3">
                                 <label class="form-label">Ngày nhập <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="dateImport" id="dateImportInput" value="${dateImportVal}">
+                                <input type="date" class="form-control" name="dateImport" id="dateImportInput" value="${dateImportVal}" required>
                                 <c:if test="${not empty dateImportError}">
                                     <div class="text-danger mt-1">${dateImportError}</div>
                                 </c:if>
@@ -347,11 +339,24 @@
                             <!-- Ngày hết hạn -->
                             <div class="mb-3">
                                 <label class="form-label">Ngày hết hạn <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="dateExpire" value="${dateExpireVal}">
+                                <input type="date" class="form-control" name="dateExpire" value="${dateExpireVal}" required>
                                 <c:if test="${not empty dateExpireError}">
                                     <div class="text-danger mt-1">${dateExpireError}</div>
                                 </c:if>
                             </div>
+
+                            <!-- Giá nhập trung bình (hiển thị, không cho nhập) -->
+                            <c:if test="${not empty estimatedImportPrice}">
+                                <div class="mb-3">
+                                    <label class="form-label">Giá nhập trung bình (tự động tính)</label>
+                                    <input type="text" class="form-control" value="${estimatedImportPrice} đ" readonly>
+                                </div>
+                            </c:if>
+
+                            <!-- Lỗi nguyên liệu nếu không đủ -->
+                            <c:if test="${not empty materialError}">
+                                <div class="alert alert-danger mt-2">${materialError}</div>
+                            </c:if>
                         </div>
 
                         <div class="modal-footer">
@@ -362,6 +367,7 @@
                 </div>
             </div>
         </div>
+
         <script>
                                                             function formatPrice(input) {
 // Lưu vị trí con trỏ chuột

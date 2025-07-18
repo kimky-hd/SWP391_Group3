@@ -208,6 +208,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="${pageContext.request.contextPath}/manager/supplier" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Nhà cung cấp</span>
+                    </a>
+                </li>
+                <li>
                     <a href="${pageContext.request.contextPath}/vouchers" class="nav-link">
                         <i class="fas fa-percent"></i>
                         <span>Khuyến mãi</span>
@@ -221,7 +227,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/reports" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
                         <i class="fas fa-chart-bar"></i>
                         <span>Báo cáo & Thống kê</span>
                     </a>
@@ -244,6 +250,12 @@
                     <a href="${pageContext.request.contextPath}/staff/customers" class="nav-link">
                         <i class="fas fa-users"></i>
                         <span>Quản lý Khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/staff/complaints" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Khiếu Nại</span>
                     </a>
                 </li>
                 

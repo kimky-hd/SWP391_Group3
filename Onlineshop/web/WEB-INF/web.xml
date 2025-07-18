@@ -347,4 +347,28 @@
         <servlet-name>AddressController</servlet-name>
         <url-pattern>/address</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ShipperController</servlet-name>
+        <servlet-class>Controller.Shipper.ShipperController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ShipperController</servlet-name>
+        <url-pattern>/shipper/dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShipperController</servlet-name>
+        <url-pattern>/shipper/update-status</url-pattern>
+    </servlet-mapping>     
+    <servlet-mapping>
+        <servlet-name>ShipperController</servlet-name>
+        <url-pattern>/shipper/order-detail</url-pattern> <!-- Cần có dòng này -->
+    </servlet-mapping> 
+    <servlet>
+        <servlet-name>RevenueChartServlet</servlet-name>
+        <servlet-class>Controller.RevenueChartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RevenueChartServlet</servlet-name>
+        <url-pattern>/revenue-chart</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -86,7 +86,7 @@ public class HoaDonDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+        System.out.println(">>> Số đơn hàng load được: " + orders.size());
         return orders;
     }
     

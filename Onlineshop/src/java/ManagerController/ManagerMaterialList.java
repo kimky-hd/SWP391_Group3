@@ -5,6 +5,7 @@
 
 package ManagerController;
 
+import DAO.MaterialBatchDAO;
 import DAO.MaterialDAO;
 import Model.Account;
 import Model.Material;
@@ -44,7 +45,6 @@ public class ManagerMaterialList extends HttpServlet {
         } else {
         
          //Gọi cập nhật trạng thái các lô sản phẩm
-        materialDAO.updateMaterialBatchStatus();
         
         String index = request.getParameter("index");
         if (index == null || index.isEmpty()) {
@@ -57,7 +57,9 @@ public class ManagerMaterialList extends HttpServlet {
             p.setBatches(materialDAO.getBatchesByMaterialID(p.getMaterialID()));
         }
         
-        List<Supplier> supplierList = materialDAO.getSupplierActive();
+        MaterialBatchDAO matebDAO = new MaterialBatchDAO();
+                
+        List<Supplier> supplierList = matebDAO.getSupplierActive();
 
         int allMaterial = materialDAO.countAllMaterial();
         int endPage = allMaterial / 8;
