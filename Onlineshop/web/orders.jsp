@@ -322,154 +322,7 @@
         </style>
     </head>
     <body>
-        <div class="container-fluid">
-            <div class="row bg-secondary py-1 px-xl-5">
-                <div class="col-lg-6 d-none d-lg-block">
-                    <div class="d-inline-flex align-items-center h-100">
-                        <a class="text-body mr-3" href="#">About</a>
-                        <a class="text-body mr-3" href="#">Contact</a>
-                        <a class="text-body mr-3" href="#">Help</a>
-                        <a class="text-body mr-3" href="#">FAQs</a>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <% if(session.getAttribute("account") != null) { 
-                            Account acc = (Account)session.getAttribute("account");
-                        %>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <%= acc.getUsername() %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="profile" class="dropdown-item">Thông tin cá nhân</a>
-                                <a href="VoucherController" class="dropdown-item">Voucher của tôi</a>
-                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Đăng xuất</button>
-                            </div>
-                        </div>
-                        <% } else { %>
-                        <a href="login.jsp" class="btn btn-sm btn-light mr-2">Đăng nhập</a>
-                        <a href="register.jsp" class="btn btn-sm btn-light">Đăng ký</a>
-                        <% } %>
-                    </div>
-                    <div class="d-inline-flex align-items-center d-block d-lg-none">
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-heart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                        <a href="" class="btn px-0 ml-2">
-                            <i class="fas fa-shopping-cart text-dark"></i>
-                            <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
-                <div class="col-lg-4">
-                    <a href="" class="text-decoration-none">
-                        <span class="h1 text-uppercase text-light bg-pink px-2">Bán</span>
-                        <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-6 text-left">
-                    <form action="">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for products">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4 col-6 text-right">
-                    <p class="m-0">Customer Service</p>
-                    <h5 class="m-0">+012 345 6789</h5>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar Start -->
-        <div class="container-fluid bg-pink mb-30">
-            <div class="row px-xl-5">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg bg-pink navbar-dark py-3 py-lg-0 px-0 w-100">
-
-                        <a href="homepage" class="text-decoration-none d-block d-lg-none">
-                            <span class="h1 text-uppercase text-light bg-pink px-2">Shop</span>
-                            <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Hoa</span>
-                        </a>
-
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                            <div class="navbar-nav py-0">
-
-
-
-                                <a href="Homepage" class="nav-item nav-link active">Trang chủ</a>
-                                <a href="ViewListProductController" class="nav-item nav-link ">Sản phẩm</a>
-                                <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-
-                                <a href="VoucherController" class="nav-item nav-link">Mã giảm giá</a>
-                                <a href="blogs" class="nav-item nav-link">Bài viết</a>
-
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Trang<i class="fa fa-angle-down mt-1"></i></a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-
-                                        <a href="Cart.jsp" class="dropdown-item">Giỏ hàng</a>
-                                        <a href="CheckOut.jsp" class="dropdown-item">Thanh toán</a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-none d-lg-flex align-items-center ml-auto">
-                            <a href="#" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
-                            </a>
-                            <a href="Cart.jsp" class="btn px-0 ml-3">
-                                <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.cartItemCount != null ? sessionScope.cartItemCount : (sessionScope.cart != null ? sessionScope.cart.getTotalItems() : 0)}
-                                </span>
-                            </a>
-                            <a href="order?action=view" class="btn px-0 ml-3">
-                                <i class="fas fa-clipboard-list text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">
-                                    ${sessionScope.orderCount != null ? sessionScope.orderCount : 0}
-                                </span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar End -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">Xác nhận đăng xuất</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Bạn có chắc chắn muốn đăng xuất?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                        <a href="LogoutController" class="btn btn-primary">Đăng xuất</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <jsp:include page="header.jsp" />
 
         <div class="container-fluid py-5">
             <h2 class="text-center mb-4">Đơn hàng của bạn</h2>
@@ -579,6 +432,14 @@
                                                 </button>
                                             </div>
                                         </c:if>
+                                        <c:if test="${order.status eq 'Đã giao hàng thành công'}">
+                                            <div class="text-right mt-4">
+                                                <a href="complaint?action=showForm&maHD=${order.orderId}" class="btn btn-warning">
+                                                    <i class="fa fa-exclamation-triangle mr-2"></i> Gửi khiếu nại
+                                                </a>
+                                            </div>
+                                        </c:if>
+
                                     </div>
                                 </div>
                             </div>
@@ -664,94 +525,94 @@
 
             <script>
 // Hàm hiển thị thông báo dạng "toast"
-                                                    function showToast(message, type) {
-                                                        const container = document.querySelector('.toast-container');
+            function showToast(message, type) {
+                const container = document.querySelector('.toast-container');
 
-                                                        // Nếu chưa có container chứa toast, tạo mới và thêm vào DOM
-                                                        if (!container) {
-                                                            const newContainer = document.createElement('div');
-                                                            newContainer.className = 'toast-container';
-                                                            document.body.appendChild(newContainer);
-                                                        }
+                // Nếu chưa có container chứa toast, tạo mới và thêm vào DOM
+                if (!container) {
+                    const newContainer = document.createElement('div');
+                    newContainer.className = 'toast-container';
+                    document.body.appendChild(newContainer);
+                }
 
-                                                        // Tạo phần tử toast mới
-                                                        const toast = document.createElement('div');
-                                                        toast.className = `toast ${type}`; // Gán class theo loại thông báo: success, error, warning,...
-                                                        toast.textContent = message; // Nội dung thông báo
+                // Tạo phần tử toast mới
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`; // Gán class theo loại thông báo: success, error, warning,...
+                toast.textContent = message; // Nội dung thông báo
 
-                                                        // Thêm toast vào container
-                                                        document.querySelector('.toast-container').appendChild(toast);
+                // Thêm toast vào container
+                document.querySelector('.toast-container').appendChild(toast);
 
-                                                        // Kích hoạt reflow để áp dụng hiệu ứng transition
-                                                        toast.offsetHeight;
+                // Kích hoạt reflow để áp dụng hiệu ứng transition
+                toast.offsetHeight;
 
-                                                        // Thêm class hiển thị toast
-                                                        toast.classList.add('show');
+                // Thêm class hiển thị toast
+                toast.classList.add('show');
 
-                                                        // Sau 3 giây, ẩn toast đi và xóa khỏi DOM
-                                                        setTimeout(() => {
-                                                            toast.classList.remove('show');
-                                                            setTimeout(() => {
-                                                                if (toast.parentNode) { // Kiểm tra nếu toast vẫn còn trong DOM
-                                                                    toast.parentNode.removeChild(toast); // Xóa khỏi DOM
-                                                                }
-                                                            }, 400); // Thời gian khớp với transition CSS
-                                                        }, 3000);
-                                                    }
+                // Sau 3 giây, ẩn toast đi và xóa khỏi DOM
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) { // Kiểm tra nếu toast vẫn còn trong DOM
+                            toast.parentNode.removeChild(toast); // Xóa khỏi DOM
+                        }
+                    }, 400); // Thời gian khớp với transition CSS
+                }, 3000);
+            }
 
 // Hàm hủy đơn hàng theo ID
-                                                    function cancelOrder(orderId) {
-                                                        // Hỏi xác nhận người dùng trước khi hủy
-                                                        if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này? Việc này không thể hoàn tác.')) {
-                                                            $.ajax({
-                                                                url: 'order?action=cancel', // Đường dẫn xử lý hủy đơn hàng (Servlet)
-                                                                type: 'POST',
-                                                                data: {orderId: orderId}, // Gửi dữ liệu orderId
-                                                                success: function (response) {
-                                                                    // Thử chuyển đổi phản hồi thành JSON
-                                                                    try {
-                                                                        response = JSON.parse(response);
-                                                                    } catch (e) {
-                                                                        console.error("Không thể parse JSON response:", response);
-                                                                        // Nếu lỗi, vẫn hiển thị toast và reload vì có thể backend đã xử lý xong
-                                                                        showToast('Đơn hàng đã được hủy thành công!', 'warning');
-                                                                        setTimeout(function () {
-                                                                            location.reload();
-                                                                        }, 2000);
-                                                                        return;
-                                                                    }
+            function cancelOrder(orderId) {
+                // Hỏi xác nhận người dùng trước khi hủy
+                if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này? Việc này không thể hoàn tác.')) {
+                    $.ajax({
+                        url: 'order?action=cancel', // Đường dẫn xử lý hủy đơn hàng (Servlet)
+                        type: 'POST',
+                        data: {orderId: orderId}, // Gửi dữ liệu orderId
+                        success: function (response) {
+                            // Thử chuyển đổi phản hồi thành JSON
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                console.error("Không thể parse JSON response:", response);
+                                // Nếu lỗi, vẫn hiển thị toast và reload vì có thể backend đã xử lý xong
+                                showToast('Đơn hàng đã được hủy thành công!', 'warning');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                                return;
+                            }
 
-                                                                    // Nếu phản hồi thành công -> thông báo và reload
-                                                                    if (response.success) {
-                                                                        showToast('Đơn hàng đã được hủy thành công!', 'success');
-                                                                        setTimeout(function () {
-                                                                            location.reload(); // Tải lại trang để cập nhật trạng thái đơn hàng
-                                                                        }, 1500); // Đợi 1.5 giây cho người dùng đọc
-                                                                    } else {
-                                                                        // Nếu có lỗi từ backend -> hiển thị thông báo lỗi
-                                                                        showToast(response.message || 'Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.', 'error');
-                                                                    }
-                                                                },
-                                                                error: function (xhr, status, error) {
-                                                                    // Lỗi khi không thể kết nối server
-                                                                    console.error("Lỗi AJAX: ", status, error);
-                                                                    showToast('Không thể kết nối máy chủ. Vui lòng thử lại sau.', 'error');
-                                                                }
-                                                            });
-                                                        }
-                                                    }
+                            // Nếu phản hồi thành công -> thông báo và reload
+                            if (response.success) {
+                                showToast('Đơn hàng đã được hủy thành công!', 'success');
+                                setTimeout(function () {
+                                    location.reload(); // Tải lại trang để cập nhật trạng thái đơn hàng
+                                }, 1500); // Đợi 1.5 giây cho người dùng đọc
+                            } else {
+                                // Nếu có lỗi từ backend -> hiển thị thông báo lỗi
+                                showToast(response.message || 'Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.', 'error');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Lỗi khi không thể kết nối server
+                            console.error("Lỗi AJAX: ", status, error);
+                            showToast('Không thể kết nối máy chủ. Vui lòng thử lại sau.', 'error');
+                        }
+                    });
+                }
+            }
 
 // Sự kiện khi DOM đã sẵn sàng
-                                                    document.addEventListener('DOMContentLoaded', function () {
-                                                        // Lấy thông báo từ session (do server trả về)
-                                                        const message = '${sessionScope.message}';
-                                                        const messageType = '${sessionScope.messageType}';
+            document.addEventListener('DOMContentLoaded', function () {
+                // Lấy thông báo từ session (do server trả về)
+                const message = '${sessionScope.message}';
+                const messageType = '${sessionScope.messageType}';
 
-                                                        // Nếu có thông báo -> hiển thị bằng toast
-                                                        if (message && messageType) {
-                                                            showToast(message, messageType);
-                                                        }
-                                                    });
+                // Nếu có thông báo -> hiển thị bằng toast
+                if (message && messageType) {
+                    showToast(message, messageType);
+                }
+            });
 
 // Xóa thông báo khỏi session sau khi render để không hiển thị lại lần sau
                 <%
@@ -760,12 +621,12 @@ session.removeAttribute("messageType");
                 %>
 
 // Khi trang được tải, gọi API để cập nhật số lượng đơn hàng
-                                                    document.addEventListener('DOMContentLoaded', function () {
-                                                        // Chỉ gọi khi người dùng đã đăng nhập (kiểm tra session ở phía server)
+            document.addEventListener('DOMContentLoaded', function () {
+                // Chỉ gọi khi người dùng đã đăng nhập (kiểm tra session ở phía server)
                 <% if (session.getAttribute("account") != null) { %>
-                                                        fetch('ordercount'); // Gửi yêu cầu lấy số lượng đơn hàng
+                fetch('ordercount'); // Gửi yêu cầu lấy số lượng đơn hàng
                 <% } %>
-                                                    });
+            });
             </script>
         </body>
     </html>

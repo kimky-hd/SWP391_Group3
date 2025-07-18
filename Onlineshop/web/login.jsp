@@ -184,6 +184,7 @@
         <!-- Include header -->
         
         <jsp:include page="header.jsp"/>
+
         <!-- Login container -->
         <div class="login-container">
             <div class="container">

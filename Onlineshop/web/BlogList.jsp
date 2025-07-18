@@ -239,6 +239,8 @@ A<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 </head>
 <body>
     <jsp:include page="header.jsp" />
+    
+    
     <div class="blog-list-page">
         <div class="container">
             <h2>Danh sách tin tức</h2>
