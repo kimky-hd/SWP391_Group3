@@ -439,9 +439,9 @@
                         <button class="btn btn-success" onclick="updateStatus(${order.orderId}, 2)">
                             <i class="fas fa-check"></i> Xác nhận hoàn thành
                         </button>
-                        <button class="btn btn-warning" onclick="updateStatus(${order.orderId}, 3)">
-                            <i class="fas fa-times"></i> Hủy đơn hàng
-                        </button>
+                        <button class="btn btn-warning" onclick="updateStatus(${order.orderId}, 6)">
+    <i class="fas fa-times"></i> Hủy đơn hàng
+</button>
                     </c:if>
                     <button class="btn btn-danger" onclick="confirmDelete(${order.orderId})">
                         <i class="fas fa-trash"></i> Xóa đơn hàng
