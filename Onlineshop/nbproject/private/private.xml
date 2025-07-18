@@ -166,6 +166,7 @@
             <file>file:/D:/swp03/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
             <file>file:/D:/swp03/SWP391_Group3/Onlineshop/src/java/Controller/manager/ShipperController.java</file>
         </group>
+
         <group>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/CustomOrderCartDAO.java</file>
@@ -284,6 +285,7 @@
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerMaterialList.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
         </group>
+
         <group name="New Folder (2)"/>
     </open-files>
 </project-private>
