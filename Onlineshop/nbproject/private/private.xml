@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="New Folder (2)">
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/web/admin/order-print.jsp</file>
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/CommonController/AccountVerification.java</file>
-            <file>file:/D:/swp23/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
-        </group>
         <group>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/CustomOrderCartDAO.java</file>
@@ -246,5 +237,6 @@
             <file>file:/D:/swp1/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
             <file>file:/D:/swp1/SWP391_Group3/Onlineshop/web/forgotpassword.jsp</file>
         </group>
+        <group name="New Folder (2)"/>
     </open-files>
 </project-private>
