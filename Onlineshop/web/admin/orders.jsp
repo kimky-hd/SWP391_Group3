@@ -1256,15 +1256,11 @@
 </style>
 </head>
 <body>
-    <jsp:include page="sidebar.jsp">
-    <jsp:param name="currentPage" value="orders" />
-</jsp:include>
-    <!-- Include Manager Topbar -->
+    
+    <!-- Include Manager Topbar and Sidebar -->
     <jsp:include page="../manager_topbarsidebar.jsp" />
     
-    <jsp:include page="sidebar.jsp">
-    <jsp:param name="currentPage" value="orders" />
-</jsp:include>
+    
     <main class="main-content">
         <div class="container-fluid">
             <h1 class="page-title animate-fade-in">
@@ -1754,10 +1750,10 @@
                         </button>
                         
                         <button class="action-btn btn-edit" 
-                                onclick="updateStatus(${order.orderId}, 3)" 
-                                title="Hủy đơn hàng #${order.orderId}">
-                            <i class="fas fa-times"></i>
-                        </button>
+        onclick="updateStatus(${order.orderId}, 6)" 
+        title="Hủy đơn hàng #${order.orderId}">
+    <i class="fas fa-times"></i>
+</button>
                     </c:if>
                  
                     <button class="action-btn btn-notification" 

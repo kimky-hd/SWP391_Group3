@@ -220,7 +220,7 @@
     </head>
     <body>
         <!-- Include header -->
-        
+        <jsp:include page="header.jsp"/>
         <div class="container-fluid">
             <div class="d-inline-flex align-items-center d-block d-lg-none">
                 <a href="" class="btn px-0 ml-2">
@@ -233,32 +233,7 @@
                 </a>
             </div>
         </div>
-    </div>
-    <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
-        <div class="col-lg-4">
-            <a href="Homepage.jsp" class="text-decoration-none logo-container">
-                <span class="h1 text-uppercase text-light bg-pink px-2">Flower</span>
-                <span class="h1 text-uppercase text-pink bg-light px-2 ml-n1">Shop</span>
-            </a>
-        </div>
-        <div class="col-lg-4 col-6 text-left">
-            <form action="SearchProductByTitle" class="search-form">
-                <div class="input-group">
-                    <input type="text" name="txt" class="form-control search-input" placeholder="Tìm kiếm sản phẩm" value="${txt}">                    
-                    <div class="input-group-append">
-                        <button class="btn btn-pink">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-lg-4 col-6 text-end ms-auto">
-            <p class="m-0">Hỗ trợ khách hàng</p>
-            <h5 class="m-0 text-pink">+012 345 6789</h5>
-        </div>
-    </div>
-        
+   
         <!-- Register container -->
         <div class="register-container">
             <div class="container">
@@ -324,7 +299,7 @@
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
                                             <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
                                         </div>
-                                        <small class="form-text text-muted">Mật khẩu không được chứa khoảng trắng và phải có ít nhất một ký tự đặc biệt</small>
+                                        <small class="form-text text-muted">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số, không được chứa khoảng trắng</small>
                                         <span id="password-error" class="text-danger" style="display: none;"></span>
                                     </div>
                                     
@@ -718,12 +693,29 @@
                     return false;
                 }
                 
+                 // Kiểm tra mật khẩu phải chứa chữ hoa
+                if (!/[A-Z]/.test(password)) {
+                    alert("Mật khẩu phải chứa ít nhất một chữ cái viết hoa!");
+                    return false;
+                }
+                
+                 // Kiểm tra mật khẩu phải chứa chữ thường
+                if (!/[a-z]/.test(password)) {
+                    alert("Mật khẩu phải chứa ít nhất một chữ cái viết thường!");
+                    return false;
+                }
+                
                 // Kiểm tra mật khẩu xác nhận phải khớp với mật khẩu
                 if (password !== confirmPassword) {
                     alert("Mật khẩu xác nhận không khớp!");
                     return false;
                 }
                 
+                  // Kiểm tra mật khẩu phải chứa số
+                if (!/[0-9]/.test(password)) {
+                    alert("Mật khẩu phải chứa ít nhất một chữ số!");
+                    return false;
+                }
                 // Kiểm tra xem người dùng đã hoàn thành reCAPTCHA chưa
                 var recaptchaResponse = grecaptcha.getResponse();
                 if(recaptchaResponse.length === 0) {

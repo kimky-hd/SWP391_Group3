@@ -191,69 +191,66 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${listWL}" var="listWL">
-                            <tr>
-                                <td>
-                                    <img src="${pageContext.request.contextPath}/img/${listWL.getImage()}" 
-                                         style="width: 50px; height: auto;" />
-                                </td>
-                                <td><a href=ViewProductDetail?productid=${listWL.getProductID()}>${listWL.getTitle()}</a></td>
-                                <td>${listWL.getQuantity()}</td>
-                                <fmt:setLocale value="vi_VN" />
-                                <fmt:setBundle basename="path.to.your.resource.bundle" />
-                                <td><fmt:formatNumber value="${listWL.getPrice()}" /> VNĐ</td>
-
-                                <td>
-                                    <c:set var="isInWishlist" value="false" />
-                                    <c:forEach items="${listWLByAcc}" var="listWLByAcc">
-                                        <c:if test="${listWL.getProductID() == listWLByAcc.getProductID()}">
-                                            <c:set var="isInWishlist" value="true" />
-                                            <form action="ManageWishListController" method="post">
-                                                <input type="hidden" name="wlid" value="${listWLByAcc.getWishListID()}">
-                                                <button type="button" class="wishlist-btn" onclick="openDeleteModal('${listWLByAcc.getWishListID()}')">Xóa</button>
-
-                                            </form>
-                                        </c:if>
-                                    </c:forEach>
-                                    <div id="deleteModal" class="modal-overlay">
-                                        <div class="modal-box">
-                                            <h4>Bạn có chắc chắn muốn xóa sản phẩm này khỏi danh sách yêu thích?</h4>
-                                            <form id="deleteForm" action="ManageWishListController" method="post">
-                                                <input type="hidden" name="wlid" id="deleteWlid">
-                                                <div class="modal-buttons">
-                                                    <button type="submit" class="btn btn-danger">Xóa</button>
-                                                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-
-
-                            </tr>
-                        </c:forEach>
+                        <c:choose>
+                            <c:when test="${empty listWL}">
+                                <tr>
+                                    <td colspan="5" style="padding: 20px; text-align: center; font-style: italic; color: gray;">
+                                        Chưa có sản phẩm yêu thích nào.
+                                    </td>
+                                </tr>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach items="${listWL}" var="listWL">
+                                    <tr>
+                                        <td>
+                                            <img src="${pageContext.request.contextPath}/img/${listWL.getImage()}" 
+                                                 style="width: 50px; height: auto;" />
+                                        </td>
+                                        <td>
+                                            <a href="ViewProductDetail?productid=${listWL.getProductID()}">${listWL.getTitle()}</a>
+                                        </td>
+                                        <td>${listWL.getQuantity()}</td>
+                                        <fmt:setLocale value="vi_VN" />
+                                        <td><fmt:formatNumber value="${listWL.getPrice()}" /> VNĐ</td>
+                                        <td>
+                                            <c:set var="isInWishlist" value="false" />
+                                            <c:forEach items="${listWLByAcc}" var="listWLByAcc">
+                                                <c:if test="${listWL.getProductID() == listWLByAcc.getProductID()}">
+                                                    <c:set var="isInWishlist" value="true" />
+                                                    <form action="ManageWishListController" method="post">
+                                                        <input type="hidden" name="wlid" value="${listWLByAcc.getWishListID()}">
+                                                        <button type="button" class="wishlist-btn" onclick="openDeleteModal('${listWLByAcc.getWishListID()}')">Xóa</button>
+                                                    </form>
+                                                </c:if>
+                                            </c:forEach>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
                     </tbody>
+
                 </table>
-                <c:if test="${tag != null}">
-                        <ul class="pagination">
-                            <c:if test="${tag != 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
-                                </li>
-                            </c:if>
-                            <c:forEach begin="1" end="${endPage}" var="i">
-                                <li class="page-item ${tag == i ? 'active' : ''}">
-                                    <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
-                                       style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
-                                </li>
-                            </c:forEach>
-                            <c:if test="${tag != endPage}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </c:if>
+                <c:if test="${tag != null && not empty listWL}">
+                    <ul class="pagination">
+                        <c:if test="${tag != 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="${baseUrl}?index=${tag - 1}${extraParams}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${endPage}" var="i">
+                            <li class="page-item ${tag == i ? 'active' : ''}">
+                                <a class="page-link" href="${baseUrl}?index=${i}${extraParams}"
+                                   style="${tag == i ? 'text-decoration: underline;' : ''}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${tag != endPage}">
+                            <li class="page-item">
+                                <a class="page-link" href="${baseUrl}?index=${tag + 1}${extraParams}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </c:if>
             </div>
         </div>
 
@@ -261,27 +258,43 @@
 
         <jsp:include page="footer.jsp" />
 
-    </body>
-    <script>
-        window.onload = function () {
-            var messageBox = document.getElementById("message-box");
-            if (messageBox.innerHTML.trim() !== "") { // Only show if there's a message
-                messageBox.style.display = "block";
-                setTimeout(function () {
-                    messageBox.style.display = "none"; // Hide after 3 seconds
-                }, 3000);
-            }
-        };
-    </script>
-    <script>
-        function openDeleteModal(wlid) {
-            document.getElementById("deleteWlid").value = wlid;
-            document.getElementById("deleteModal").style.display = "flex";
-        }
+        <script>
+            window.onload = function () {
+                var messageBox = document.getElementById("message-box");
+                if (messageBox.innerHTML.trim() !== "") { // Only show if there's a message
+                    messageBox.style.display = "block";
+                    setTimeout(function () {
+                        messageBox.style.display = "none"; // Hide after 3 seconds
+                    }, 3000);
+                }
+            };
+        </script>
+        <!-- Modal Xác Nhận Xóa -->
+        <div id="deleteModal" class="modal-overlay">
+            <div class="modal-box">
+                <p>Bạn có chắc chắn muốn xóa sản phẩm này khỏi danh sách yêu thích?</p>
+                <form action="ManageWishListController" method="post">
+                    <input type="hidden" name="wlid" id="deleteWlid" />
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        function closeModal() {
-            document.getElementById("deleteModal").style.display = "none";
-        }
-    </script>
+        <script>
+            function openDeleteModal(wlid) {
+                document.getElementById("deleteWlid").value = wlid;
+                document.getElementById("deleteModal").style.display = "flex";
+            }
+
+            function closeModal() {
+                document.getElementById("deleteModal").style.display = "none";
+            }
+        </script>
+
+    </body>
+
 
 </html>

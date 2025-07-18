@@ -96,7 +96,7 @@ public class RevenueChartServlet extends HttpServlet {
         request.setAttribute("statusMap", statusMap);
 
         // 6. Forward sang JSP
-        request.getRequestDispatcher("revenueChart.jsp").forward(request, response);
+        request.getRequestDispatcher("/revenueChart.jsp").forward(request, response);
     }
 
     @Override

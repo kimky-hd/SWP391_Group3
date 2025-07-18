@@ -75,8 +75,6 @@ public class ViewListProductController extends HttpServlet {
         List<Category> listAllCategory = productDAO.getAllCategory();
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
-        
-        System.out.println(listProductByIndex);
 
         
         request.setAttribute("countWL", count);
