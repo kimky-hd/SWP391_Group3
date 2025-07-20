@@ -1,4 +1,3 @@
-
 package Controller;
 
 import DAO.CartDAO;
@@ -310,7 +309,7 @@ public class CartController extends HttpServlet {
             if (cart == null) {
                 cart = new Cart();
             }
-            
+
             // Cập nhật thông tin sản phẩm trong giỏ hàng với dữ liệu mới nhất
             for (CartItem item : cart.getItems()) {
                 // Lấy thông tin sản phẩm mới nhất từ database
@@ -318,7 +317,7 @@ public class CartController extends HttpServlet {
                 if (updatedProduct != null) {
                     // Cập nhật thông tin sản phẩm trong item
                     item.setProduct(updatedProduct);
-                    
+
                     // Kiểm tra nếu số lượng trong giỏ hàng vượt quá số lượng tồn kho
                     if (item.getQuantity() > updatedProduct.getQuantity()) {
                         // Điều chỉnh số lượng trong giỏ hàng xuống bằng số lượng tồn kho
@@ -328,9 +327,9 @@ public class CartController extends HttpServlet {
                     }
                 }
             }
-            
+
             session.setAttribute("cart", cart);
-            
+
             // Cập nhật số lượng sản phẩm trong giỏ hàng cho header
             int itemCount = cartDAO.getCartItemCount(accountId);
             session.setAttribute("cartItemCount", itemCount);
@@ -358,10 +357,10 @@ public class CartController extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
-        
+
         // Refresh giỏ hàng từ database để cập nhật thông tin mới nhất
         updateSessionCart(session, account.getAccountID());
-        
+
         request.getRequestDispatcher("Cart.jsp").forward(request, response);
     }
 
