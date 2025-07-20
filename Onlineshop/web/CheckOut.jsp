@@ -203,9 +203,9 @@
                                         <li>Phí ship 50.000đ (khu vực xa Hà Đông): Hai Bà Trưng, Hoàn Kiếm, Đống Đa, Ba Đình, Tây Hồ, Long Biên</li>
                                     </ul>
                                 </div>
-                                <h6 class="font-weight-medium">Phí vận chuyển</h6>
-                                <h6 class="font-weight-medium" id="shippingFeeDisplay">30.000đ</h6>
                             </div>
+                            <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                            <h6 class="font-weight-medium" id="shippingFeeDisplay">30.000đ</h6>
                         </div>
                         <div class="border-bottom pt-3 pb-3">
                             <div class="d-flex justify-content-between mb-3">
@@ -526,54 +526,54 @@
             <script>
                                     // Danh sách các quận gần Hà Đông (phí ship 30.000đ)
                                     const nearbyDistricts = ['Hà Đông', 'Thanh Xuân', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Hoàng Mai', 'Cầu Giấy'];
-                                    
+
                                     // Danh sách các quận xa Hà Đông (phí ship 50.000đ)
                                     const farDistricts = ['Hai Bà Trưng', 'Hoàn Kiếm', 'Đống Đa', 'Ba Đình', 'Tây Hồ', 'Long Biên'];
-                                    
+
                                     // Phí ship mặc định
                                     const defaultShippingFee = 30000;
                                     const farShippingFee = 50000;
-                                    
+
                                     // Hàm cập nhật phí ship và tổng thanh toán
                                     function updateShippingFee() {
                                         const selectedDistrict = $('#districtInput').val();
                                         let shippingFee = defaultShippingFee;
-                                        
+
                                         // Nếu quận được chọn thuộc danh sách quận xa
                                         if (farDistricts.includes(selectedDistrict)) {
                                             shippingFee = farShippingFee;
                                         }
-                                        
+
                                         // Cập nhật hiển thị phí ship
                                         $('#shippingFeeDisplay').text(shippingFee.toLocaleString('vi-VN') + 'đ');
-                                        
+
                                         // Cập nhật giá trị input ẩn
                                         $('#shippingFee').val(shippingFee);
-                                        
+
                                         // Tính lại tổng thanh toán
                                         const cartTotal = ${cart.total};
                                         const voucherDiscount = parseInt($('#selectedVoucherId').val() ? $('#discountAmount').text().replace(/[^0-9]/g, '') : 0) || 0;
-                                        
+
                                         // Tính tổng mới
                                         const newTotal = cartTotal + shippingFee - voucherDiscount;
-                                        
+
                                         // Cập nhật hiển thị tổng thanh toán
                                         $('#totalDisplay').text(newTotal.toLocaleString('vi-VN') + 'đ');
-                                        
+
                                         // Cập nhật giá trị input ẩn
                                         $('#originalTotal').val(cartTotal + shippingFee);
                                         $('#totalAfterDiscount').val(newTotal);
                                     }
-                                    
+
                                     // Gọi hàm cập nhật khi trang được tải
-                                    $(document).ready(function() {
+                                    $(document).ready(function () {
                                         // Cập nhật phí ship khi chọn quận
                                         $('#districtInput').change(updateShippingFee);
-                                        
+
                                         // Cập nhật phí ship khi trang được tải
                                         updateShippingFee();
                                     });
-                                    
+
                                     // Cập nhật lại hàm xử lý voucher
                                     document.querySelectorAll('.voucher-item').forEach(item => {
                                         item.addEventListener('click', function () {
@@ -590,13 +590,13 @@
                                             const shippingFee = parseInt(document.getElementById('shippingFee').value);
                                             const cartTotal = ${cart.total};
                                             const originalTotal = cartTotal + shippingFee;
-                                            
+
                                             // Tính tổng sau giảm
                                             const newTotal = Math.max(originalTotal - discount, 0);
-                                            
+
                                             // Format tiền VND
                                             const formatVND = (value) => value.toLocaleString('vi-VN') + 'đ';
-                                            
+
                                             // Hiển thị số tiền được giảm
                                             document.getElementById('discountAmount').textContent = '-' + formatVND(discount);
                                             document.getElementById('discountRow').style.display = 'flex';
