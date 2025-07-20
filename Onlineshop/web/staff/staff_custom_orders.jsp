@@ -6,7 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý đơn hàng tự thiết kế</title>
+        <title>Xem đơn hàng tự thiết kế</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +14,6 @@
         <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
         <style>
-
             /* Card styling */
             .card {
                 border: none;
@@ -29,8 +28,8 @@
             }
 
             .card-header {
-                background-color: #f8f9fa;
-                border-bottom: 1px solid #edf2f7;
+                background-color: #f0fdf4;
+                border-bottom: 1px solid #d1fae5;
                 font-weight: 600;
                 padding: 15px 20px;
             }
@@ -42,14 +41,14 @@
             }
 
             .table thead th {
-                background-color: #f8f9fa;
-                color: #4b5563;
+                background-color: #f0fdf4;
+                color: #064e3b;
                 font-weight: 600;
                 text-transform: uppercase;
                 font-size: 0.75rem;
                 letter-spacing: 0.05em;
                 padding: 12px;
-                border-bottom: 2px solid #e5e7eb;
+                border-bottom: 2px solid #d1fae5;
             }
 
             .table tbody tr {
@@ -77,38 +76,14 @@
                 gap: 5px;
             }
 
-            .status-1 {
-                background-color: #f8d7da;
-                color: #721c24;
-            } /* Chờ duyệt */
             .status-2 {
                 background-color: #d4edda;
                 color: #155724;
             } /* Đã duyệt và đóng gói */
-            .status-3 {
-                background-color: #fff3cd;
-                color: #856404;
-            } /* Đang vận chuyển */
-            .status-4 {
-                background-color: #cce5ff;
-                color: #004085;
-            } /* Đã giao hàng */
-            .status-5 {
-                background-color: #d1ecf1;
-                color: #0c5460;
-            } /* Đã thanh toán */
-            .status-6 {
-                background-color: #e2e3e5;
-                color: #383d41;
-            } /* Đã hủy */
             .status-7 {
                 background-color: #c3e6cb;
                 color: #155724;
             } /* Đã duyệt đơn thiết kế */
-            .status-8 {
-                background-color: #f5c6cb;
-                color: #721c24;
-            } /* Từ chối đơn thiết kế */
 
             /* Filter section */
             .filter-section {
@@ -117,11 +92,12 @@
                 border-radius: 10px;
                 margin-bottom: 25px;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                border-left: 4px solid #059669;
             }
 
             .filter-section .form-label {
                 font-weight: 500;
-                color: #4b5563;
+                color: #064e3b;
                 margin-bottom: 8px;
             }
 
@@ -256,9 +232,9 @@
     </head>
     <body>
         <%
-            // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 1)
+            // Kiểm tra quyền truy cập - chỉ cho phép staff (roleID = 2)
             Model.Account account = (Model.Account) session.getAttribute("account");
-            if (account == null || account.getRole() != 1) {
+            if (account == null || account.getRole() != 2) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
@@ -272,7 +248,7 @@
                     <div class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                             <h1 class="h2">
-                                <i class="fas fa-palette me-2"></i>Quản lý đơn hàng tự thiết kế
+                                <i class="fas fa-palette me-2"></i>Đơn hàng tự thiết kế đã duyệt
                             </h1>
                         </div>
 
@@ -294,34 +270,18 @@
                             <i class="fas fa-filter me-2"></i>Bộ lọc
                         </div>
                         <div class="card-body">
-                            <form action="${pageContext.request.contextPath}/custom-orders" method="get" class="row g-3">
-                                <div class="col-md-4">
+                            <form action="${pageContext.request.contextPath}/staff/custom-orders" method="get" class="row g-3">
+                                <div class="col-md-6">
                                     <label for="customerName" class="form-label">
                                         <i class="fas fa-user me-1"></i>Tên khách hàng
                                     </label>
                                     <input type="text" class="form-control" id="customerName" name="customerName" value="${customerName}">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="status" class="form-label">
-                                        <i class="fas fa-tag me-1"></i>Trạng thái
-                                    </label>
-                                    <select class="form-select" id="status" name="status">
-                                        <option value="" ${empty status ? 'selected' : ''}>Tất cả</option>
-                                        <option value="1" ${status == '1' ? 'selected' : ''}>Chờ duyệt</option>
-                                        <option value="2" ${status == '2' ? 'selected' : ''}>Đã duyệt và đóng gói</option>
-                                        <option value="3" ${status == '3' ? 'selected' : ''}>Đang vận chuyển</option>
-                                        <option value="4" ${status == '4' ? 'selected' : ''}>Đã giao hàng</option>
-                                        <option value="5" ${status == '5' ? 'selected' : ''}>Đã thanh toán</option>
-                                        <option value="6" ${status == '6' ? 'selected' : ''}>Đã hủy</option>
-                                        <option value="7" ${status == '7' ? 'selected' : ''}>Đã duyệt đơn thiết kế</option>
-                                        <option value="8" ${status == '8' ? 'selected' : ''}>Từ chối đơn thiết kế</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 d-flex align-items-end">
+                                <div class="col-md-6 d-flex align-items-end">
                                     <button type="submit" class="btn btn-primary me-2">
                                         <i class="fas fa-search me-1"></i>Lọc
                                     </button>
-                                    <a href="${pageContext.request.contextPath}/custom-orders" class="btn btn-secondary">
+                                    <a href="${pageContext.request.contextPath}/staff/custom-orders" class="btn btn-secondary">
                                         <i class="fas fa-redo me-1"></i>Đặt lại
                                     </a>
                                 </div>
@@ -332,7 +292,7 @@
                     <!-- Bảng đơn hàng -->
                     <div class="card">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-list me-2"></i>Danh sách đơn hàng tự thiết kế</span>
+                            <span><i class="fas fa-list me-2"></i>Danh sách đơn hàng tự thiết kế đã duyệt</span>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -378,7 +338,7 @@
                                                         <div><i class="fas fa-envelope me-1 text-primary"></i>${order.email}</div>
                                                         </c:if>
                                                 </td>
-                                                <td>${order.accountID}</td>
+                                                <td>${order.quantity}</td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${order.description.length() > 50}">
@@ -393,31 +353,18 @@
                                                 <td>
                                                     <span class="status-badge status-${order.statusID}">
                                                         <c:choose>
-                                                            <c:when test="${order.statusID == 1}">
-                                                                <i class="fas fa-clock me-1"></i>
+                                                            <c:when test="${order.statusID == 2}">
+                                                                <i class="fas fa-check me-1"></i>Đã duyệt và đóng gói
                                                             </c:when>
-                                                            <c:when test="${order.statusID == 2 || order.statusID == 7}">
-                                                                <i class="fas fa-check me-1"></i>
-                                                            </c:when>
-                                                            <c:when test="${order.statusID == 3}">
-                                                                <i class="fas fa-truck me-1"></i>
-                                                            </c:when>
-                                                            <c:when test="${order.statusID == 4}">
-                                                                <i class="fas fa-home me-1"></i>
-                                                            </c:when>
-                                                            <c:when test="${order.statusID == 5}">
-                                                                <i class="fas fa-money-bill-wave me-1"></i>
-                                                            </c:when>
-                                                            <c:when test="${order.statusID == 6 || order.statusID == 8}">
-                                                                <i class="fas fa-ban me-1"></i>
+                                                            <c:when test="${order.statusID == 7}">
+                                                                <i class="fas fa-check me-1"></i>Đã duyệt đơn thiết kế
                                                             </c:when>
                                                         </c:choose>
-                                                        ${order.status}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="${pageContext.request.contextPath}/custom-orders?action=detail&id=${order.customCartID}" class="btn btn-sm btn-info" title="Chi tiết">
+                                                        <a href="${pageContext.request.contextPath}/staff/staff_custom-orders?action=detail&id=${order.customCartID}" class="btn btn-sm btn-info" title="Chi tiết">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </div>
@@ -427,10 +374,10 @@
 
                                         <c:if test="${empty customOrders}">
                                             <tr>
-                                                <td colspan="8" class="text-center py-4">
+                                                <td colspan="9" class="text-center py-4">
                                                     <div class="empty-state">
                                                         <i class="fas fa-palette fa-3x text-muted mb-3"></i>
-                                                        <p class="text-muted mb-0">Không có đơn hàng tự thiết kế nào</p>
+                                                        <p class="text-muted mb-0">Không có đơn hàng tự thiết kế đã duyệt nào</p>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -446,17 +393,17 @@
                         <nav aria-label="Page navigation" class="mt-4">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/custom-orders?page=${currentPage - 1}&customerName=${customerName}&status=${status}" aria-label="Previous">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/staff/custom-orders?page=${currentPage - 1}&customerName=${customerName}" aria-label="Previous">
                                         <span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
                                     </a>
                                 </li>
 
                                 <c:forEach begin="1" end="${totalPages}" var="i">
-                                    <li class="page-item ${currentPage == i ? 'active' : ''}"><a class="page-link" href="${pageContext.request.contextPath}/custom-orders?page=${i}&customerName=${customerName}&status=${status}">${i}</a></li>
+                                    <li class="page-item ${currentPage == i ? 'active' : ''}"><a class="page-link" href="${pageContext.request.contextPath}/staff/custom-orders?page=${i}&customerName=${customerName}">${i}</a></li>
                                     </c:forEach>
 
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/custom-orders?page=${currentPage + 1}&customerName=${customerName}&status=${status}" aria-label="Next">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/staff/custom-orders?page=${currentPage + 1}&customerName=${customerName}" aria-label="Next">
                                         <span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
                                     </a>
                                 </li>

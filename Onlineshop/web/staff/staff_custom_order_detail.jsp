@@ -62,38 +62,14 @@
                 gap: 5px;
             }
 
-            .status-1 {
-                background-color: #f8d7da;
-                color: #721c24;
-            } /* Chờ duyệt */
             .status-2 {
                 background-color: #d4edda;
                 color: #155724;
             } /* Đã duyệt và đóng gói */
-            .status-3 {
-                background-color: #fff3cd;
-                color: #856404;
-            } /* Đang vận chuyển */
-            .status-4 {
-                background-color: #cce5ff;
-                color: #004085;
-            } /* Đã giao hàng */
-            .status-5 {
-                background-color: #d1ecf1;
-                color: #0c5460;
-            } /* Đã thanh toán */
-            .status-6 {
-                background-color: #e2e3e5;
-                color: #383d41;
-            } /* Đã hủy */
             .status-7 {
                 background-color: #c3e6cb;
                 color: #155724;
             } /* Đã duyệt đơn thiết kế */
-            .status-8 {
-                background-color: #f5c6cb;
-                color: #721c24;
-            } /* Từ chối đơn thiết kế */
 
             /* Reference image */
             .reference-image-container {
@@ -162,27 +138,6 @@
                 white-space: pre-line;
             }
 
-            /* Form controls */
-            .form-label {
-                font-weight: 500;
-                color: #4b5563;
-                margin-bottom: 8px;
-            }
-
-            .form-select,
-            .form-control {
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                padding: 10px 15px;
-                transition: all 0.15s ease-in-out;
-            }
-
-            .form-select:focus,
-            .form-control:focus {
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
-            }
-
             /* Buttons */
             .btn {
                 padding: 10px 20px;
@@ -194,16 +149,6 @@
             .btn:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-
-            .btn-primary {
-                background-color: #3b82f6;
-                border-color: #3b82f6;
-            }
-
-            .btn-primary:hover {
-                background-color: #2563eb;
-                border-color: #2563eb;
             }
 
             .btn-secondary {
@@ -238,9 +183,9 @@
     </head>
     <body>
         <%
-            // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 1)
+            // Kiểm tra quyền truy cập - chỉ cho phép staff (roleID = 2)
             Model.Account account = (Model.Account) session.getAttribute("account");
-            if (account == null || account.getRole() != 1) {
+            if (account == null || account.getRole() != 2) {
                 response.sendRedirect(request.getContextPath() + "/login.jsp");
                 return;
             }
@@ -256,7 +201,7 @@
                             <h1 class="h2">
                                 <i class="fas fa-palette me-2"></i>Chi tiết đơn hàng tự thiết kế #${customOrder.customCartID}
                         </h1>
-                        <a href="${pageContext.request.contextPath}/staff_custom-orders" class="btn btn-secondary">
+                        <a href="${pageContext.request.contextPath}/staff/custom-orders" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-1"></i>Quay lại
                         </a>
                     </div>
@@ -265,7 +210,7 @@
                     <div id="statusMessage" style="display: none;" class="alert" role="alert"></div>
 
                     <div class="row">
-                        <!-- Thông tin đơn hàng và Cập nhật trạng thái -->
+                        <!-- Thông tin đơn hàng -->
                         <div class="col-md-6">
                             <!-- Thông tin đơn hàng -->
                             <div class="card">
@@ -349,27 +294,27 @@
                                             <td>
                                                 <span class="status-badge status-${customOrder.statusID}">
                                                     <c:choose>
-                                                        <c:when test="${customOrder.statusID == 1}">
-                                                            <i class="fas fa-clock me-1"></i>
+                                                        <c:when test="${customOrder.statusID == 2}">
+                                                            <i class="fas fa-check me-1"></i>Đã duyệt và đóng gói
                                                         </c:when>
-                                                        <c:when test="${customOrder.statusID == 2 || customOrder.statusID == 7}">
-                                                            <i class="fas fa-check me-1"></i>
-                                                        </c:when>
-                                                        <c:when test="${customOrder.statusID == 3}">
-                                                            <i class="fas fa-truck me-1"></i>
-                                                        </c:when>
-                                                        <c:when test="${customOrder.statusID == 4}">
-                                                            <i class="fas fa-home me-1"></i>
-                                                        </c:when>
-                                                        <c:when test="${customOrder.statusID == 5}">
-                                                            <i class="fas fa-money-bill-wave me-1"></i>
-                                                        </c:when>
-                                                        <c:when test="${customOrder.statusID == 6 || customOrder.statusID == 8}">
-                                                            <i class="fas fa-ban me-1"></i>
+                                                        <c:when test="${customOrder.statusID == 7}">
+                                                            <i class="fas fa-check me-1"></i>Đã duyệt đơn thiết kế
                                                         </c:when>
                                                     </c:choose>
-                                                    ${customOrder.status}
                                                 </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-comment me-2"></i>Nhận xét của quản lý:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.managerComment}">
+                                                        <p class="mb-0">${customOrder.managerComment}</p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </table>
@@ -383,37 +328,6 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">${customOrder.description}</p>
-                                </div>
-                            </div>
-
-                            <!-- Cập nhật trạng thái -->
-                            <div class="card">
-                                <div class="card-header bg-warning text-dark">
-                                    <i class="fas fa-edit me-2"></i>Cập nhật trạng thái
-                                </div>
-                                <div class="card-body">
-                                    <form id="updateStatusForm">
-                                        <input type="hidden" name="customCartId" value="${customOrder.customCartID}">
-                                        <input type="hidden" name="action" value="updateStatus">
-
-                                        <div class="mb-3">
-                                            <label for="statusId" class="form-label">Trạng thái mới:</label>
-                                            <select class="form-select" id="statusId" name="statusId" required>
-                                                <option value="1" ${customOrder.statusID == 1 ? 'selected' : ''}>Chờ duyệt</option>
-                                                <!--<option value="2" ${customOrder.statusID == 2 ? 'selected' : ''}>Đã duyệt và đóng gói</option>
-                                                <option value="3" ${customOrder.statusID == 3 ? 'selected' : ''}>Đang vận chuyển</option>
-                                                <option value="4" ${customOrder.statusID == 4 ? 'selected' : ''}>Đã giao hàng thành công</option>
-                                                <option value="5" ${customOrder.statusID == 5 ? 'selected' : ''}>Đã thanh toán thành công</option>
-                                                <option value="6" ${customOrder.statusID == 6 ? 'selected' : ''}>Đã hủy</option>-->
-                                                <option value="7" ${customOrder.statusID == 7 ? 'selected' : ''}>Duyệt đơn hàng thiết kế riêng</option>
-                                                <option value="8" ${customOrder.statusID == 8 ? 'selected' : ''}>Từ Chối đơn hàng thiết kế riêng</option>
-                                            </select>
-                                        </div>
-
-                                        <button type="button" id="updateStatusBtn" class="btn btn-primary">
-                                            <i class="fas fa-save me-1"></i>Cập nhật trạng thái
-                                        </button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -482,132 +396,7 @@
             </div>
         </div>
 
-        <!-- Toast Container -->
-        <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
-
-        <!-- Modal Nhận xét -->
-        <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="commentModalLabel"><i class="fas fa-comment me-2"></i>Nhận xét cho khách hàng</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="commentForm">
-                            <input type="hidden" id="modalCustomCartId" name="customCartId">
-                            <input type="hidden" id="modalStatusId" name="statusId">
-                            <input type="hidden" name="action" value="updateStatus">
-
-                            <div class="mb-3">
-                                <label for="managerComment" class="form-label">Nhận xét của bạn:</label>
-                                <textarea class="form-control" id="managerComment" name="managerComment" rows="4" placeholder="Nhập nhận xét của bạn cho khách hàng..."></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="button" class="btn btn-primary" id="submitCommentBtn">
-                            <i class="fas fa-paper-plane me-1"></i>Gửi nhận xét
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                // Hiển thị thông báo ban đầu nếu có
-                if (${not empty successMessage}) {
-                    showToast("Thành công", "${successMessage}", "success");
-                }
-                if (${not empty errorMessage}) {
-                    showToast("Lỗi", "${errorMessage}", "danger");
-                }
-
-                // Hàm hiển thị toast
-                function showToast(title, message, type) {
-                    var toastHtml = `
-                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-                            <div class="toast-header bg-${type} text-white">
-                                <strong class="me-auto">${title}</strong>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                            <div class="toast-body">
-            ${message}
-                            </div>
-                        </div>
-                    `;
-
-                    $("#toast-container").append(toastHtml);
-                    var toastElement = document.querySelector('#toast-container .toast:last-child');
-                    var toast = new bootstrap.Toast(toastElement);
-                    toast.show();
-                }
-
-                // Hàm reload trang với thông báo
-                function reloadPageWithNotification() {
-                    // Hiển thị thông báo đang tải
-                    $("#updateStatusBtn").html('<i class="fas fa-spinner fa-spin me-1"></i>Đang cập nhật...');
-                    $("#updateStatusBtn").prop('disabled', true);
-
-                    // Đợi 1.5 giây rồi reload trang
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 1500);
-                }
-
-                // Xử lý cập nhật trạng thái
-                $("#updateStatusBtn").click(function () {
-                    // Lấy giá trị từ form
-                    var customCartId = $("input[name='customCartId']").val();
-                    var statusId = $("#statusId").val();
-
-                    // Hiển thị modal nhận xét
-                    $("#modalCustomCartId").val(customCartId);
-                    $("#modalStatusId").val(statusId);
-                    $("#commentModal").modal('show');
-                });
-
-                // Xử lý gửi nhận xét
-                $("#submitCommentBtn").click(function () {
-                    var formData = $("#commentForm").serialize();
-
-                    // Hiển thị trạng thái đang xử lý
-                    $("#submitCommentBtn").html('<i class="fas fa-spinner fa-spin me-1"></i>Đang gửi...');
-                    $("#submitCommentBtn").prop('disabled', true);
-
-                    $.ajax({
-                        type: "POST",
-                        url: "${pageContext.request.contextPath}/custom-orders",
-                        data: formData,
-                        dataType: "json",
-                        success: function (response) {
-                            if (response.success) {
-                                // Đóng modal
-                                $("#commentModal").modal('hide');
-                                showToast("Thành công", response.message, "success");
-                                // Reload trang sau khi cập nhật thành công
-                                reloadPageWithNotification();
-                            } else {
-                                showToast("Lỗi", response.message, "danger");
-                                // Reset trạng thái nút
-                                $("#submitCommentBtn").html('<i class="fas fa-paper-plane me-1"></i>Gửi nhận xét');
-                                $("#submitCommentBtn").prop('disabled', false);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            showToast("Lỗi", "Đã xảy ra lỗi khi cập nhật trạng thái. Vui lòng thử lại sau.", "danger");
-                            console.error("Ajax error:", status, error);
-                            // Reset trạng thái nút
-                            $("#submitCommentBtn").html('<i class="fas fa-paper-plane me-1"></i>Gửi nhận xét');
-                            $("#submitCommentBtn").prop('disabled', false);
-                        }
-                    });
-                });
-            });
-        </script>
     </body>
 </html>
