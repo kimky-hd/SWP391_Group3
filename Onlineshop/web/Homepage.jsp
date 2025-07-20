@@ -376,7 +376,7 @@
                                         <div class="p-3" style="max-width: 700px;">
                                             <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">${banner.title}</h1>
                                             <p class="mx-md-5 px-5 animate__animated animate__bounceIn">${banner.description}</p>
-                                            <a href="${banner.link}" class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp">Shop Now</a>
+                                            <a href="${banner.link}" class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp">Vào Ngay</a>
                                         </div>
                                     </div>
                                 </div>
@@ -388,17 +388,17 @@
                     <div class="product-offer mb-30" style="height: 200px;">
                         <img class="img-fluid" src="img/offer-1.jpg" alt="">
                         <div class="offer-text">
-                            <h6 class="text-white text-uppercase">Save 50%</h6>
+                            <h6 class="text-white text-uppercase">Sale 50%</h6>
                             <h3 class="text-white mb-3">Special Offer</h3>
-                            <a href="ViewListProductController" class="btn btn-primary">Shop Now</a>
+                            <a href="ViewListProductController" class="btn btn-primary">Vào Ngay</a>
                         </div>
                     </div>
                     <div class="product-offer mb-30" style="height: 200px;">
                         <img class="img-fluid" src="img/offer-2.jpg" alt="">
                         <div class="offer-text">
-                            <h6 class="text-white text-uppercase">Save 20%</h6>
+                            <h6 class="text-white text-uppercase">Sale 20%</h6>
                             <h3 class="text-white mb-3">Special Offer</h3>
-                            <a href="ViewListProductController" class="btn btn-primary">Shop Now</a>
+                            <a href="ViewListProductController" class="btn btn-primary">Vào Ngay</a>
                         </div>
                     </div>
                 </div>
@@ -412,26 +412,28 @@
 
 
         <!-- Categories Start -->
-        <div class="container-fluid pt-5">
-            <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
-            <div class="row px-xl-5 pb-3">
-                <c:forEach var="cat" items="${categories}">
-                    <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                        <a class="text-decoration-none" href="Homepage?category=${cat.categoryID}">
-                            <div class="cat-item d-flex align-items-center mb-4">
-                                <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                                    <img class="img-fluid" src="img/cat-${cat.categoryID}.jpg" alt="${cat.categoryName}">
-                                </div>
-                                <div class="flex-fill pl-3">
-                                    <h6>${cat.categoryName}</h6>
-                                </div>
-                            </div>
-                        </a>
+<div class="container-fluid pt-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Danh Mục Sản Phẩm</span></h2>
+    <div class="row px-xl-5 pb-3">
+        <c:forEach var="cat" items="${categories}" varStatus="status">
+    <c:if test="${status.index < 4}">
+        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+            <a class="text-decoration-none" href="ViewListProductController?category=${cat.categoryID}">
+                <div class="cat-item d-flex align-items-center mb-4">
+                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
+                        <img class="img-fluid" src="img/cat-${cat.categoryID}.jpg" alt="${cat.categoryName}">
                     </div>
-                </c:forEach>
-            </div>
+                    <div class="flex-fill pl-3">
+                        <h6>${cat.categoryName}</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <!-- Categories End -->
+    </c:if>
+</c:forEach>
+    </div>
+</div>
+<!-- Categories End -->
 
 
         <!--         Products Start -->

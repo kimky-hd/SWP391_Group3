@@ -37,29 +37,44 @@ public class ViewListProductController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        ProductDAO productDAO = new ProductDAO();
-        
-         //Gọi cập nhật trạng thái các lô sản phẩm
-        productDAO.updateProductBatchStatus();
-        
-        String index = request.getParameter("index");
-        if (index == null || index.isEmpty()) {
-            index = "1";
-        }
-        int indexPage = Integer.parseInt(index);
+        throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    ProductDAO productDAO = new ProductDAO();
+    
+    //Gọi cập nhật trạng thái các lô sản phẩm
+    productDAO.updateProductBatchStatus();
+    
+    String index = request.getParameter("index");
+    if (index == null || index.isEmpty()) {
+        index = "1";
+    }
+    int indexPage = Integer.parseInt(index);
+    
+    // Thêm xử lý tham số category
+    String categoryParam = request.getParameter("category");
+    List<Product> listProductByIndex;
+    int allProduct;
+    
+    if (categoryParam != null && !categoryParam.isEmpty()) {
+        int categoryID = Integer.parseInt(categoryParam);
+        // Lấy sản phẩm theo category và phân trang
+        listProductByIndex = productDAO.getProductByCategoryAndIndex(categoryID, indexPage);
+        allProduct = productDAO.countProductByCategory(categoryID);
+        request.setAttribute("selectedCategory", categoryID);
+    } else {
+        // Lấy tất cả sản phẩm như cũ
+        listProductByIndex = productDAO.getProductByIndex(indexPage);
+        allProduct = productDAO.countAllProduct();
+    }
+    
+    for (Product p : listProductByIndex) {
+        p.setBatches(productDAO.getBatchesByProductID(p.getProductID()));
+    }
 
-        List<Product> listProductByIndex = productDAO.getProductByIndex(indexPage);
-        for (Product p : listProductByIndex) {
-            p.setBatches(productDAO.getBatchesByProductID(p.getProductID()));
-        }
-
-        int allProduct = productDAO.countAllProduct();
-        int endPage = allProduct / 8;
-        if (allProduct % 8 != 0) {
-            endPage++;
-        }
+    int endPage = allProduct / 8;
+    if (allProduct % 8 != 0) {
+        endPage++;
+    }
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
         int count;
