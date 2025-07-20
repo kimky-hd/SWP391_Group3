@@ -197,7 +197,7 @@ public class OrderDAO extends DBContext {
     public Order getOrderById(int orderId) {
         String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, "
                 + "i.name, i.email, i.address, i.phoneNumber "
-                + "FROM hoadon h LEFT JOIN inforline i ON h.maHD = i.maHD "
+                + "FROM HoaDon h LEFT JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.maHD = ?";
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -212,7 +212,7 @@ public class OrderDAO extends DBContext {
                     order.setOrderDate(rs.getTimestamp("ngayXuat"));
                     order.setTotal(rs.getDouble("tongGia"));
 
-                    // Xử lý an toàn cho các trường có thể null từ bảng inforline
+                    // Xử lý an toàn cho các trường có thể null từ bảng InforLine
                     order.setFullName(rs.getString("name") != null ? rs.getString("name") : "Khách hàng");
                     order.setPhone(rs.getString("phoneNumber") != null ? rs.getString("phoneNumber") : "N/A");
                     order.setEmail(rs.getString("email") != null ? rs.getString("email") : "N/A");
@@ -836,8 +836,8 @@ public class OrderDAO extends DBContext {
 
     public Map<String, String> getOrderInfoForNotification(int orderId) {
         String sql = "SELECT h.maHD, h.tongGia, h.ngayXuat, h.statusID, s.name as statusName, i.name, i.email, i.address, i.phoneNumber "
-                + "FROM hoadon h "
-                + "LEFT JOIN inforline i ON h.maHD = i.maHD "
+                + "FROM HoaDon h "
+                + "LEFT JOIN InforLine i ON h.maHD = i.maHD "
                 + "LEFT JOIN status s ON h.statusID = s.statusID "
                 + "WHERE h.maHD = ?";
 
