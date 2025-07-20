@@ -188,7 +188,13 @@
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
                 </li>
-
+                <!-- Quản lý Banner -->
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/banner?action=list" class="nav-link">
+                        <i class="fas fa-images"></i>
+                        <span>Quản lý Banner</span>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
                         <i class="fas fa-user-tie"></i>
