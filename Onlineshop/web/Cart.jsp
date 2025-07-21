@@ -451,6 +451,8 @@
     <body>
         <jsp:include page="header.jsp" />
         
+        <jsp:include page="FilterProductForUser.jsp" />
+        
 
         <div class="page-content-wrapper">
             <div class="container-fluid">
@@ -489,7 +491,7 @@
                                         <c:forEach var="item" items="${sessionScope.cart.items}">
                                             <tr>
                                                 <td class="align-middle">
-                                                    <img src="${item.product.image}" alt="${item.product.title}" style="width: 50px;">
+                                                    <img src="img/${item.product.image}" alt="${item.product.title}" style="width: 50px;">
                                                     ${item.product.title}
                                                 </td>
                                                 <td class="align-middle">

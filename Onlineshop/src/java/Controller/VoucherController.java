@@ -1,8 +1,10 @@
 package Controller;
 
+import DAO.ProductDAO;
 import DAO.VoucherDAO;
 import Model.Account;
 import Model.Voucher;
+import Model.WishList;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,13 +18,14 @@ import org.json.JSONObject;
 
 @WebServlet(name = "VoucherController", urlPatterns = {"/VoucherController"})
 public class VoucherController extends HttpServlet {
+
     private VoucherDAO voucherDAO;
-    
+
     @Override
     public void init() {
         voucherDAO = new VoucherDAO();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,18 +37,23 @@ public class VoucherController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        ProductDAO productDAO = new ProductDAO();
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-        
+        int count;
         if (account == null) {
             response.sendRedirect("login.jsp");
             return;
         }
+        count = productDAO.countProductWishLish(account.getAccountID());
+        List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(account.getAccountID());
+        request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
         
+        request.setAttribute("countWL", count);
         if (action == null) {
             loadAllVouchers(request, response, account);
         } else if (action.equals("add")) {
@@ -56,7 +64,7 @@ public class VoucherController extends HttpServlet {
             loadMyVouchers(request, response, account);
         }
     }
-    
+
     // Load tất cả vouchers có sẵn
     private void loadAllVouchers(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
@@ -65,7 +73,7 @@ public class VoucherController extends HttpServlet {
         request.setAttribute("pageType", "all");
         request.getRequestDispatcher("vouchers.jsp").forward(request, response);
     }
-    
+
     // Load vouchers của user
     private void loadMyVouchers(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
@@ -74,17 +82,17 @@ public class VoucherController extends HttpServlet {
         request.setAttribute("pageType", "my");
         request.getRequestDispatcher("vouchers.jsp").forward(request, response);
     }
-    
+
     // Thêm voucher vào tài khoản
     private void addVoucherToAccount(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         JSONObject json = new JSONObject();
-        
+
         try {
             int voucherId = Integer.parseInt(request.getParameter("voucherId"));
-            
+
             // Kiểm tra voucher có tồn tại không
             Voucher voucher = voucherDAO.getVoucherById(voucherId);
             if (voucher == null) {
@@ -110,7 +118,7 @@ public class VoucherController extends HttpServlet {
                 json.put("success", false);
                 json.put("message", "Không thể thêm voucher");
             }
-            
+
         } catch (NumberFormatException e) {
             json.put("success", false);
             json.put("message", "Dữ liệu không hợp lệ");
@@ -118,20 +126,20 @@ public class VoucherController extends HttpServlet {
             json.put("success", false);
             json.put("message", "Có lỗi xảy ra: " + e.getMessage());
         }
-        
+
         out.print(json.toString());
     }
-    
+
     // Áp dụng voucher (sử dụng voucher)
     private void applyVoucher(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         JSONObject json = new JSONObject();
-        
+
         try {
             int voucherId = Integer.parseInt(request.getParameter("voucherId"));
-            
+
             // Kiểm tra voucher có tồn tại và hợp lệ không
             Voucher voucher = voucherDAO.getVoucherById(voucherId);
             if (voucher == null) {
@@ -152,10 +160,10 @@ public class VoucherController extends HttpServlet {
             // Lưu voucher vào session để sử dụng ở trang giỏ hàng
             HttpSession session = request.getSession();
             session.setAttribute("appliedVoucher", voucher);
-            
+
             json.put("success", true);
             json.put("message", "Áp dụng voucher thành công");
-            
+
         } catch (NumberFormatException e) {
             json.put("success", false);
             json.put("message", "Dữ liệu không hợp lệ");
@@ -163,7 +171,7 @@ public class VoucherController extends HttpServlet {
             json.put("success", false);
             json.put("message", "Có lỗi xảy ra: " + e.getMessage());
         }
-        
+
         out.print(json.toString());
     }
 }

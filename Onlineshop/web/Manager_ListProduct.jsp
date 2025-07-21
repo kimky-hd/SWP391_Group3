@@ -255,11 +255,11 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                                 <a href="updateproduct?productID=${p.productID}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                                                <button type="button" class="btn btn-info btn-sm rounded-circle" title="Bổ sung số lượng"
-                                                        style="width: 30px; height: 30px; padding: 4px 0; text-align: center;"
-                                                        onclick="openAddProductQuantityModal(${p.productID})">
+                                                <a href="addproductbatch?productID=${p.productID}" class="btn btn-info btn-sm rounded-circle" title="Bổ sung số lượng"
+                                                   style="width: 30px; height: 30px; padding: 4px 0; text-align: center;">
                                                     <i class="fas fa-plus"></i>
-                                                </button>
+                                                </a>
+
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -296,125 +296,11 @@
         <!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                                            setTimeout(() => {
-                                                                const a = document.querySelector('.alert');
-                                                                if (a)
-                                                                    a.remove();
-                                                            }, 5000);
-        </script>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- Modal Nhập hàng -->
-        <div class="modal fade" id="addProductQuantityModal" tabindex="-1" aria-labelledby="addProductQuantityLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="addproductbatch" method="post">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addProductQuantityLabel">Nhập hàng cho sản phẩm</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <input type="hidden" name="productID" id="modalProductID" value="${productID}">
-
-                            <!-- Số lượng -->
-                            <div class="mb-3">
-                                <label class="form-label">Số lượng <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="quantity" value="${quantityVal}" min="1" required>
-                                <c:if test="${not empty quantityError}">
-                                    <div class="text-danger mt-1">${quantityError}</div>
-                                </c:if>
-                            </div>
-
-                            <!-- Ngày nhập -->
-                            <div class="mb-3">
-                                <label class="form-label">Ngày nhập <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="dateImport" id="dateImportInput" value="${dateImportVal}" required>
-                                <c:if test="${not empty dateImportError}">
-                                    <div class="text-danger mt-1">${dateImportError}</div>
-                                </c:if>
-                            </div>
-
-                            <!-- Ngày hết hạn -->
-                            <div class="mb-3">
-                                <label class="form-label">Ngày hết hạn <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="dateExpire" value="${dateExpireVal}" required>
-                                <c:if test="${not empty dateExpireError}">
-                                    <div class="text-danger mt-1">${dateExpireError}</div>
-                                </c:if>
-                            </div>
-
-                            <!-- Giá nhập trung bình (hiển thị, không cho nhập) -->
-                            <c:if test="${not empty estimatedImportPrice}">
-                                <div class="mb-3">
-                                    <label class="form-label">Giá nhập trung bình (tự động tính)</label>
-                                    <input type="text" class="form-control" value="${estimatedImportPrice} đ" readonly>
-                                </div>
-                            </c:if>
-
-                            <!-- Lỗi nguyên liệu nếu không đủ -->
-                            <c:if test="${not empty materialError}">
-                                <div class="alert alert-danger mt-2">${materialError}</div>
-                            </c:if>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">Xác nhận nhập hàng</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <script>
-                                                            function formatPrice(input) {
-// Lưu vị trí con trỏ chuột
-                                                                const cursorPosition = input.selectionStart;
-                                                                const originalLength = input.value.length;
-
-// Loại bỏ mọi ký tự không phải số
-                                                                let rawValue = input.value.replace(/[^0-9]/g, '');
-                                                                if (rawValue === '') {
-                                                                    input.value = '';
-                                                                    return;
-                                                                }
-
-// Định dạng theo dấu phẩy ngăn cách hàng nghìn
-                                                                let formattedValue = Number(rawValue).toLocaleString('vi-VN');
-                                                                input.value = formattedValue;
-
-// Khôi phục lại vị trí con trỏ (gần đúng)
-                                                                const newLength = input.value.length;
-                                                                input.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
-                                                            }
-        </script>
-
-
-        <!-- Script xử lý tự động mở modal nếu có lỗi -->
-        <script>
-            window.addEventListener('load', () => {
-                const errorFlag = '${errorFlag}';
-                const productID = '${productID}';
-                if (errorFlag === 'true' || errorFlag === true) {
-                    openAddProductQuantityModal(productID);
-                }
-            });
-
-            function openAddProductQuantityModal(productID) {
-                document.getElementById("modalProductID").value = productID;
-                const modal = new bootstrap.Modal(document.getElementById("addProductQuantityModal"));
-                modal.show();
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const dateInput = document.getElementById('dateImportInput');
-                if (!dateInput.value) {
-                    const today = new Date().toISOString().split('T')[0];
-                    dateInput.value = today;
-                }
-            });
+            setTimeout(() => {
+                const a = document.querySelector('.alert');
+                if (a)
+                    a.remove();
+            }, 5000);
         </script>
         <script>
             function updateStatuses() {
