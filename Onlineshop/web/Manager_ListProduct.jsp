@@ -127,12 +127,16 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- BÊN PHẢI: nút thêm -->
-                        <a href="addproduct" class="btn btn-success btn-icon-split">
-                            <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
-                            <span class="text">Thêm sản phẩm mới</span>
-                        </a>
+                        <div class="d-flex gap-2">
+                            <a href="productbatchhistory" class="btn btn-outline-primary">
+                                <i class="fas fa-clock-rotate-left"></i> Lịch sử nhập lô hàng
+                            </a> 
+                            <!-- BÊN PHẢI: nút thêm -->
+                            <a href="addproduct" class="btn btn-success btn-icon-split">
+                                <span class="icon text-white-50"><i class="fa-solid fa-plus"></i></span>
+                                <span class="text">Thêm sản phẩm mới</span>
+                            </a>
+                        </div>
                     </div>
 
 
