@@ -73,7 +73,7 @@
             <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
                 <!-- Left: Brand -->
-                <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "managerproductlist" : (roleId == 2 ? "staffdashboard" : (roleId == 3 ? "shipperdashboard" : "#")) %>">
+                <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "managerproductlist" : (roleId == 2 ? "staffdashboard" : (roleId == 3 ? "dashboard" : "#")) %>">
                     <div class="brand-icon">
                         <% if (roleId == 1) { %>
                         <i class="fas fa-crown"></i>
@@ -152,12 +152,7 @@
         <nav class="sidebar">
             <ul class="sidebar-menu">
                 <% if (roleId == 1) { // Manager Menu %>
-                <li>
-                    <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                
                 <li>
                     <a href="managerproductlist" class="nav-link">
                         <i class="fas fa-boxes"></i>
