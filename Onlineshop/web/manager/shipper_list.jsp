@@ -67,11 +67,7 @@
             <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <!-- Nút thêm mới với vị trí cố định -->
-                <div class="fixed-button-container">
-                    <a href="${pageContext.request.contextPath}/manager/shipper/add" class="btn btn-primary add-button">
-                        <i class="fas fa-plus"></i> Thêm Shipper mới
-                    </a>
-                </div>
+                
 
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Quản lý Shipper</h1>
@@ -164,7 +160,11 @@
                         </div>
                     </div>
                 </div>
-                
+                 <div >
+                    <a href="${pageContext.request.contextPath}/manager/shipper/add" class="btn btn-primary add-button">
+                        <i class="fas fa-plus"></i> Thêm Shipper mới
+                    </a>
+                </div>
                 <!-- Bảng danh sách shipper -->
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
@@ -244,7 +244,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+               
                 <!-- Phân trang -->
                 <c:if test="${totalPages > 1}">
                     <nav aria-label="Page navigation">
