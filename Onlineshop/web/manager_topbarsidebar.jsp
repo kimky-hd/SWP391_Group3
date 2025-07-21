@@ -153,6 +153,12 @@
             <ul class="sidebar-menu">
                 <% if (roleId == 1) { // Manager Menu %>
                 
+                 <li>
+                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo & Thống kê</span>
+                    </a>
+                </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/managerproductlist" class="nav-link">
                         <i class="fas fa-boxes"></i>
@@ -213,13 +219,7 @@
                         <i class="fas fa-blog"></i>
                         <span>Quản lý Blog</span>
                     </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/reports" class="nav-link">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Báo cáo & Thống kê</span>
-                    </a>
-                </li>
+                </li>            
                 <li>
                     <a href="${pageContext.request.contextPath}/settings" class="nav-link">
                         <i class="fas fa-cog"></i>
