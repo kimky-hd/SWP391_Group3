@@ -6,6 +6,7 @@ package ManagerController;
 
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Material;
 import Model.MaterialBatch;
 import Model.MaterialBatchUsage;
@@ -96,79 +97,84 @@ public class PreviewProductBatchCostController extends HttpServlet {
 
             ProductDAO productDAO = new ProductDAO();
             MaterialDAO materialDAO = new MaterialDAO();
+            Account a = (Account) session.getAttribute("account");
+            if (a == null) {
+                request.setAttribute("mess", "Bạn cần đăng nhập");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            } else {
 
-            Product product = productDAO.getProductById(productID);
-            List<ProductComponent> components = productDAO.getProductComponentsByProductID(productID);
+                Product product = productDAO.getProductById(productID);
+                List<ProductComponent> components = productDAO.getProductComponentsByProductID(productID);
 
-            Map<Material, List<MaterialBatch>> materialBatches = new HashMap<>();
-            for (ProductComponent component : components) {
-                List<MaterialBatch> batches = materialDAO.getAvailableMaterialBatches(component.getMaterial().getMaterialID());
-                materialBatches.put(component.getMaterial(), batches);
-            }
+                Map<Material, List<MaterialBatch>> materialBatches = new HashMap<>();
+                for (ProductComponent component : components) {
+                    List<MaterialBatch> batches = materialDAO.getAvailableMaterialBatches(component.getMaterial().getMaterialID());
+                    materialBatches.put(component.getMaterial(), batches);
+                }
 
-            // ✅ Validate số lượng
-            int desiredQuantity = 0;
-            try {
-                desiredQuantity = Integer.parseInt(quantityStr);
-                if (desiredQuantity <= 0) {
-                    request.setAttribute("errorQuantity", "Số lượng phải là số nguyên dương.");
+                // ✅ Validate số lượng
+                int desiredQuantity = 0;
+                try {
+                    desiredQuantity = Integer.parseInt(quantityStr);
+                    if (desiredQuantity <= 0) {
+                        request.setAttribute("errorQuantity", "Số lượng phải là số nguyên dương.");
+                        forwardBackToForm(request, response, product, productID, quantityStr, components, materialBatches);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    request.setAttribute("errorQuantity", "Số lượng không hợp lệ.");
                     forwardBackToForm(request, response, product, productID, quantityStr, components, materialBatches);
                     return;
                 }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorQuantity", "Số lượng không hợp lệ.");
-                forwardBackToForm(request, response, product, productID, quantityStr, components, materialBatches);
-                return;
-            }
 
-            // ✅ Tính chi phí dựa trên các batch theo FIFO
-            Map<Material, List<MaterialBatchUsage>> materialUsageMap = new HashMap<>();
-            double totalCost = 0.0;
-            Date earliestExpire = null;
+                // ✅ Tính chi phí dựa trên các batch theo FIFO
+                Map<Material, List<MaterialBatchUsage>> materialUsageMap = new HashMap<>();
+                double totalCost = 0.0;
+                Date earliestExpire = null;
 
-            for (ProductComponent pc : components) {
-                Material material = pc.getMaterial();
-                int totalRequired = desiredQuantity * pc.getMaterialQuantity();
+                for (ProductComponent pc : components) {
+                    Material material = pc.getMaterial();
+                    int totalRequired = desiredQuantity * pc.getMaterialQuantity();
 
-                List<MaterialBatch> batches = materialDAO.getMaterialBatchesFIFO(material.getMaterialID());
-                List<MaterialBatchUsage> usedBatches = new ArrayList<>();
+                    List<MaterialBatch> batches = materialDAO.getMaterialBatchesFIFO(material.getMaterialID());
+                    List<MaterialBatchUsage> usedBatches = new ArrayList<>();
 
-                for (MaterialBatch batch : batches) {
-                    if (totalRequired <= 0) {
-                        break;
+                    for (MaterialBatch batch : batches) {
+                        if (totalRequired <= 0) {
+                            break;
+                        }
+
+                        int usedQty = Math.min(batch.getQuantity(), totalRequired);
+                        usedBatches.add(new MaterialBatchUsage(batch.getMaterialBatchID(), usedQty, batch.getImportPrice()));
+
+                        totalCost += usedQty * batch.getImportPrice();
+                        totalRequired -= usedQty;
+
+                        if (earliestExpire == null || batch.getDateExpire().before(earliestExpire)) {
+                            earliestExpire = batch.getDateExpire();
+                        }
                     }
 
-                    int usedQty = Math.min(batch.getQuantity(), totalRequired);
-                    usedBatches.add(new MaterialBatchUsage(batch.getMaterialBatchID(), usedQty, batch.getImportPrice()));
-
-                    totalCost += usedQty * batch.getImportPrice();
-                    totalRequired -= usedQty;
-
-                    if (earliestExpire == null || batch.getDateExpire().before(earliestExpire)) {
-                        earliestExpire = batch.getDateExpire();
-                    }
+                    materialUsageMap.put(material, usedBatches);
                 }
 
-                materialUsageMap.put(material, usedBatches);
+                double estimatedUnitCost = desiredQuantity > 0 ? totalCost / desiredQuantity : 0;
+
+                // ✅ Truyền kết quả đến view
+                request.setAttribute("product", product);
+                request.setAttribute("materialBatches", materialBatches);
+                request.setAttribute("productID", productID);
+                request.setAttribute("quantity", desiredQuantity);
+                request.setAttribute("productComponents", components);
+                request.setAttribute("materialUsageMap", materialUsageMap);
+                request.setAttribute("totalCost", totalCost);
+                request.setAttribute("estimatedUnitCost", estimatedUnitCost);
+                request.setAttribute("earliestExpireDate", earliestExpire);
+
+                // Nếu muốn lưu lại trên session để dùng sau, có thể dùng dòng này (nếu không thì xóa):
+                session.setAttribute("materialUsageMap", materialUsageMap);
+                request.getRequestDispatcher("Manager_AddProductBatch.jsp").forward(request, response);
             }
-
-            double estimatedUnitCost = desiredQuantity > 0 ? totalCost / desiredQuantity : 0;
-
-            // ✅ Truyền kết quả đến view
-            request.setAttribute("product", product);
-            request.setAttribute("materialBatches", materialBatches);
-            request.setAttribute("productID", productID);
-            request.setAttribute("quantity", desiredQuantity);
-            request.setAttribute("productComponents", components);
-            request.setAttribute("materialUsageMap", materialUsageMap);
-            request.setAttribute("totalCost", totalCost);
-            request.setAttribute("estimatedUnitCost", estimatedUnitCost);
-            request.setAttribute("earliestExpireDate", earliestExpire);
-
-            // Nếu muốn lưu lại trên session để dùng sau, có thể dùng dòng này (nếu không thì xóa):
-            session.setAttribute("materialUsageMap", materialUsageMap);
-            request.getRequestDispatcher("Manager_AddProductBatch.jsp").forward(request, response);
-
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Lỗi khi tính toán chi phí nhập lô sản phẩm: " + e.getMessage());

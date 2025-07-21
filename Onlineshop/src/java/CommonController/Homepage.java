@@ -2,20 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package CommonController;
 
-import DAO.ProductDAO;
-import Model.Account;
-import Model.WishList;
+import DAO.BannerDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import DAO.ProductDAO;
+import Model.Product;
 import java.util.List;
+import DAO.CategoryDAO;
+import Model.Banner;
+import Model.Category;
 
 /**
  * Servlet implementation for rendering the homepage.
@@ -26,66 +27,65 @@ public class Homepage extends HttpServlet {
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        ProductDAO productDAO = new ProductDAO();
-        HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
-        int count;
-        if (a == null) {
-            count = 0;
-        } else {
-            count = productDAO.countProductWishLish(a.getAccountID());
-            List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
-            request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
+        int page = 1;
+        int productsPerPage = 8;
+        if (request.getParameter("page") != null) {
+            try {
+                page = Integer.parseInt(request.getParameter("page"));
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
         }
-        
-        request.setAttribute("countWL", count);
-        
-        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
-    } 
+        BannerDAO bannerDAO = new BannerDAO();
+        List<Banner> banners = bannerDAO.getActiveBanners();
+        ProductDAO productDAO = new ProductDAO();
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> categories = categoryDAO.getAllCategory();
+        request.setAttribute("categories", categories);
+        String categoryId = request.getParameter("category");
+        List<Product> featuredProducts;
+        int totalProducts;
+        if (categoryId != null && !categoryId.isEmpty()) {
+            featuredProducts = productDAO.getProductByCategory(categoryId, page, productsPerPage);
+            totalProducts = productDAO.countProductByCategory(categoryId);
+            request.setAttribute("selectedCategory", categoryId);
+        } else {
+            featuredProducts = productDAO.getProductByIndex(page);
+            totalProducts = productDAO.countAllProduct();
+        }
+        int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
+        request.setAttribute("featuredProducts", featuredProducts);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("banners", banners);
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+        request.getRequestDispatcher("Homepage.jsp").forward(request, response);
+    }
+
     /**
      * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
     /**
      * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
      */
     @Override
     public String getServletInfo() {

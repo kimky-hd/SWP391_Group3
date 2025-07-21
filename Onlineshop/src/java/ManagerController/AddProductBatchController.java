@@ -6,6 +6,7 @@ package ManagerController;
 
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Material;
 import Model.MaterialBatch;
 import Model.MaterialBatchUsage;
@@ -70,9 +71,15 @@ public class AddProductBatchController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         int productID = Integer.parseInt(request.getParameter("productID"));
         ProductDAO productDAO = new ProductDAO();
         MaterialDAO materialDAO = new MaterialDAO();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
 
         Product product = productDAO.getProductById(productID);
         Map<Material, List<MaterialBatch>> materialBatches = new HashMap<>();
@@ -81,11 +88,13 @@ public class AddProductBatchController extends HttpServlet {
             Material material = component.getMaterial();
             List<MaterialBatch> batches = materialDAO.getAvailableMaterialBatches(material.getMaterialID());
             materialBatches.put(material, batches);
-        }
+        }   
+        session.removeAttribute("materialUsageMap");
 
         request.setAttribute("product", product);
         request.setAttribute("materialBatches", materialBatches);
         request.getRequestDispatcher("Manager_AddProductBatch.jsp").forward(request, response);
+    }
     }
 
     /**
