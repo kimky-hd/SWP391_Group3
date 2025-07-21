@@ -413,24 +413,128 @@
 
         <!-- Categories Start -->
 <div class="container-fluid pt-5">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Danh Mục Sản Phẩm</span></h2>
-    <div class="row px-xl-5 pb-3">
+    <div class="text-center mb-5">
+        
+        <h2 style="color: #e91e63; font-weight: 700; font-size: 32px; margin-bottom: 15px;">Danh Mục Bán Chạy</h2>
+        <p style="color: #666; font-size: 16px; max-width: 600px; margin: 0 auto;">Khám phá bộ sưu tập hoa tươi nhập khẩu với chất lượng hoàn hảo</p>
+    </div>
+    <div class="row px-xl-5 pb-3 justify-content-center">
         <c:forEach var="cat" items="${categories}" varStatus="status">
-    <c:if test="${status.index < 4}">
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <a class="text-decoration-none" href="ViewListProductController?category=${cat.categoryID}">
-                <div class="cat-item d-flex align-items-center mb-4">
-                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                        <img class="img-fluid" src="img/cat-${cat.categoryID}.jpg" alt="${cat.categoryName}">
-                    </div>
-                    <div class="flex-fill pl-3">
-                        <h6>${cat.categoryName}</h6>
-                    </div>
+            <c:if test="${status.index < 4}">
+                <div class="col-lg-3 col-md-6 col-sm-6 pb-4">
+                    <a class="text-decoration-none" href="ViewListProductController?category=${cat.categoryID}">
+                        <div style="
+                            background: white;
+                            border-radius: 20px;
+                            padding: 30px 20px;
+                            text-align: center;
+                            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+                            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                            border: 1px solid #f5f5f5;
+                            position: relative;
+                            overflow: hidden;
+                            height: 280px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                        " onmouseover="
+                            this.style.transform='translateY(-8px)';
+                            this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+                        " onmouseout="
+                            this.style.transform='';
+                            this.style.boxShadow='0 8px 25px rgba(0,0,0,0.08)';
+                        ">
+                            <!-- Top Border -->
+                            <div style="
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                height: 4px;
+                                background: ${status.index == 0 ? 'linear-gradient(90deg, #ff6b9d, #c44569)' : 
+                                           status.index == 1 ? 'linear-gradient(90deg, #a55eea, #8854d0)' :
+                                           status.index == 2 ? 'linear-gradient(90deg, #ffa726, #ff8f00)' :
+                                           'linear-gradient(90deg, #26de81, #20bf6b)'};
+                            "></div>
+                            
+                            <!-- Icon Container -->
+                            <div style="
+                                width: 120px;
+                                height: 120px;
+                                margin: 0 auto 15px;
+                                background: ${status.index == 0 ? 'linear-gradient(135deg, #ffe0e6, #ffb3c1)' : 
+                                           status.index == 1 ? 'linear-gradient(135deg, #e8d5ff, #d1b3ff)' :
+                                           status.index == 2 ? 'linear-gradient(135deg, #fff4e6, #ffe0b3)' :
+                                           'linear-gradient(135deg, #e6fff2, #b3ffcc)'};
+                                border-radius: 20px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 28px;
+                                border: 3px solid ${status.index == 0 ? '#ff6b9d' : 
+                                                   status.index == 1 ? '#a55eea' :
+                                                   status.index == 2 ? '#ffa726' :
+                                                   '#26de81'};
+                                box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+                                transition: all 0.3s ease;
+                                position: relative;
+                                overflow: hidden;
+                            " onmouseover="this.style.transform='scale(1.08)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.18)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)';">
+                                <c:choose>
+                                    <c:when test="${status.index == 0}">
+                                        <img src="img/bohoahongsinhnhat.jpg" alt="Hoa Hồng" style="width: 100px; height: 100px; object-fit: cover; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,0.15);" onerror="this.innerHTML='🌹'; this.style.fontSize='40px'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center'; this.style.boxShadow='none';">
+                                    </c:when>
+                                    <c:when test="${status.index == 1}">
+                                        <img src="img/langhoacuoitrangtinhkhoi.jpg" alt="Hoa Lily" style="width: 100px; height: 100px; object-fit: cover; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,0.15);" onerror="this.innerHTML='🌸'; this.style.fontSize='40px'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center'; this.style.boxShadow='none';">
+                                    </c:when>
+                                    <c:when test="${status.index == 2}">
+                                        <img src="img/bohoahuongduongtotnghiep.jpg" alt="Hoa Tulip" style="width: 100px; height: 100px; object-fit: cover; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,0.15);" onerror="this.innerHTML='🌷'; this.style.fontSize='40px'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center'; this.style.boxShadow='none';">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="img/langhoachiabuonthanhlich.jpg" alt="Hoa Cưới" style="width: 100px; height: 100px; object-fit: cover; border-radius: 16px; box-shadow: 0 3px 12px rgba(0,0,0,0.15);" onerror="this.innerHTML='💐'; this.style.fontSize='40px'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center'; this.style.boxShadow='none';">
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            
+                            <!-- Category Info -->
+                            <div style="text-align: center; padding: 0 10px;">
+                                <h5 style="
+                                    color: #2c3e50;
+                                    font-weight: 700;
+                                    margin-bottom: 8px;
+                                    font-size: 22px;
+                                    line-height: 1.2;
+                                    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                    letter-spacing: 0.5px;
+                                ">
+                                    <c:choose>
+                                        <c:when test="${status.index == 0}">Hoa Sinh Nhật</c:when>
+                                        <c:when test="${status.index == 1}">Hoa Cưới Sang Trọng</c:when>
+                                        <c:when test="${status.index == 2}">Hoa Khai Trương</c:when>
+                                        <c:otherwise>Hoa Chia Buồn</c:otherwise>
+                                    </c:choose>
+                                </h5>
+                                <p style="
+                                    color: #7f8c8d;
+                                    font-size: 16px;
+                                    margin-bottom: 0;
+                                    font-weight: 600;
+                                    opacity: 0.85;
+                                    letter-spacing: 0.3px;
+                                ">
+                                    <c:choose>
+                                        <c:when test="${status.index == 0}">Chúc mừng sinh nhật</c:when>
+                                        <c:when test="${status.index == 1}">Hạnh phúc viên mãn</c:when>
+                                        <c:when test="${status.index == 2}">Thành công rực rỡ</c:when>
+                                        <c:otherwise>Trang nghiêm lịch sự</c:otherwise>
+                                    </c:choose>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-    </c:if>
-</c:forEach>
+            </c:if>
+        </c:forEach>
     </div>
 </div>
 <!-- Categories End -->
@@ -438,27 +542,232 @@
 
         <!--         Products Start -->
         <div class="container-fluid pt-5 pb-3">
-            <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured Products</span></h2>
+            <div class="text-center mb-5">
+               
+                <h2 style="color: #e91e63; font-weight: 700; font-size: 32px; margin-bottom: 15px;">Sản Phẩm Đặc Biệt</h2>
+                <p style="color: #666; font-size: 16px; max-width: 600px; margin: 0 auto;">Những thiết kế hoa tươi độc đáo được tuyển chọn kỹ lưỡng</p>
+            </div>
             <div class="row px-xl-5">
                 <c:if test="${empty featuredProducts}">
                     <div class="alert alert-info w-100 text-center">Không có sản phẩm nào!</div>
                 </c:if>
-                <c:forEach var="product" items="${featuredProducts}">
-                    <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                        <div class="product-item bg-light mb-4">
-                            <div class="product-img position-relative overflow-hidden">
-                                <img class="img-fluid w-100" src="${pageContext.request.contextPath}/img/${product.image}" alt="${product.title}">
-                                <div class="product-action">
-                                    <a class="btn btn-outline-dark btn-square" href="cart?action=add&productId=${product.productID}&quantity=1"><i class="fa fa-shopping-cart"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href="AddWishlistController?pid=${product.productID}"><i class="far fa-heart"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href="ViewProductDetail?productid=${product.productID}"><i class="fa fa-search"></i></a>
+                <c:forEach var="product" items="${featuredProducts}" varStatus="status">
+                    <div class="col-lg-4 col-md-6 col-sm-6 pb-4">
+                        <div style="
+                            background: white;
+                            border-radius: 16px;
+                            overflow: hidden;
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                            transition: all 0.3s ease;
+                            position: relative;
+                            height: 420px;
+                            display: flex;
+                            flex-direction: column;
+                        " onmouseover="
+                            this.style.transform='translateY(-5px)';
+                            this.style.boxShadow='0 8px 30px rgba(0,0,0,0.12)';
+                        " onmouseout="
+                            this.style.transform='';
+                            this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';
+                        ">
+                            <!-- Discount Badges -->
+                            <div style="position: absolute; top: 12px; left: 12px; z-index: 10;">
+                                <c:choose>
+                                    <c:when test="${status.index % 6 == 0}">
+                                        <span style="background: #4CAF50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 4px;">✓ MỚI</span>
+                                        <span style="background: #FF9800; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">⚡ BÁN CHẠY</span>
+                                    </c:when>
+                                    <c:when test="${status.index % 6 == 1}">
+                                        <span style="background: #F44336; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">-17%</span>
+                                    </c:when>
+                                    <c:when test="${status.index % 6 == 2}">
+                                        <span style="background: #FF9800; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">⚡ BÁN CHẠY</span>
+                                    </c:when>
+                                    <c:when test="${status.index % 6 == 3}">
+                                        <span style="background: #F44336; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">-18%</span>
+                                    </c:when>
+                                    <c:when test="${status.index % 6 == 4}">
+                                        <span style="background: #4CAF50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ MỚI</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="background: #F44336; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">-12%</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            
+                            <!-- Product Image -->
+                            <div style="height: 240px; overflow: hidden; position: relative;">
+                                <img style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" 
+                                     src="${pageContext.request.contextPath}/img/${product.image}" 
+                                     alt="${product.title}"
+                                     onmouseover="this.style.transform='scale(1.05)'"
+                                     onmouseout="this.style.transform='scale(1)'">
+                                
+                                <!-- Quick View Icon -->
+                                <div style="
+                                    position: absolute;
+                                    bottom: 12px;
+                                    right: 12px;
+                                    width: 36px;
+                                    height: 36px;
+                                    background: white;
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+                                " onclick="window.location.href='ViewProductDetail?productid=${product.productID}'"
+                                   onmouseover="this.style.background='#e91e63'; this.style.color='white'"
+                                   onmouseout="this.style.background='white'; this.style.color='#333'">
+                                    <i class="fa fa-search" style="font-size: 14px;"></i>
                                 </div>
                             </div>
-                            <div class="text-center py-4">
-                                <a class="h6 text-decoration-none text-truncate" href="ViewProductDetail?productid=${product.productID}">${product.title}</a>
-                                <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5><fmt:formatNumber value="${product.price}" pattern="#,#00"/> VNĐ</h5>
+                            
+                            <!-- Product Info -->
+                            <div style="padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <!-- Category & Rating -->
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <span style="
+                                            background: #f8f9fa;
+                                            color: #6c757d;
+                                            padding: 2px 8px;
+                                            border-radius: 8px;
+                                            font-size: 11px;
+                                            font-weight: 500;
+                                        ">
+                                            <c:choose>
+                                                <c:when test="${status.index % 3 == 0}">Premium</c:when>
+                                                <c:when test="${status.index % 3 == 1}">Cao cấp</c:when>
+                                                <c:otherwise>Hà Lan</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                        <span style="
+                                            background: #f8f9fa;
+                                            color: #6c757d;
+                                            padding: 2px 8px;
+                                            border-radius: 8px;
+                                            font-size: 11px;
+                                            font-weight: 500;
+                                        ">
+                                            <c:choose>
+                                                <c:when test="${status.index % 3 == 0}">Nhập khẩu</c:when>
+                                                <c:when test="${status.index % 3 == 1}">Tình khôi</c:when>
+                                                <c:otherwise>Đa sắc</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Product Title -->
+                                    <h6 style="
+                                        color: #2c3e50;
+                                        font-weight: 600;
+                                        margin-bottom: 8px;
+                                        line-height: 1.4;
+                                        height: 40px;
+                                        overflow: hidden;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 2;
+                                        -webkit-box-orient: vertical;
+                                    ">
+                                        ${product.title}
+                                    </h6>
+                                    
+                                    <!-- Description -->
+                                    <p style="
+                                        color: #7f8c8d;
+                                        font-size: 12px;
+                                        margin-bottom: 12px;
+                                        line-height: 1.3;
+                                    ">
+                                        <c:choose>
+                                            <c:when test="${status.index % 3 == 0}">Nhập khẩu trực tiếp</c:when>
+                                            <c:when test="${status.index % 3 == 1}">Thiết kế sang trọng</c:when>
+                                            <c:otherwise>Màu sắc rực rỡ</c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    
+                                    <!-- Rating -->
+                                    <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                        <div style="color: #ffc107; font-size: 14px; margin-right: 6px;">
+                                            ★★★★<span style="color: #e9ecef;">★</span>
+                                        </div>
+                                        <span style="color: #6c757d; font-size: 12px;">
+                                            <c:choose>
+                                                <c:when test="${status.index % 3 == 0}">4.9 (127 đánh giá)</c:when>
+                                                <c:when test="${status.index % 3 == 1}">4.8 (89 đánh giá)</c:when>
+                                                <c:otherwise>4.7 (156 đánh giá)</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Price -->
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <div>
+                                        <span style="
+                                            color: #e91e63;
+                                            font-weight: 700;
+                                            font-size: 18px;
+                                        ">
+                                            <fmt:formatNumber value="${product.price}" pattern="#,##0"/> ₫
+                                        </span>
+                                        <span style="
+                                            color: #bdc3c7;
+                                            font-size: 14px;
+                                            text-decoration: line-through;
+                                            margin-left: 8px;
+                                        ">
+                                            <fmt:formatNumber value="${product.price * 1.2}" pattern="#,##0"/> ₫
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div style="display: flex; gap: 8px;">
+                                        <!-- Wishlist Button -->
+                                        <button style="
+                                            background: #ff6b6b;
+                                            color: white;
+                                            border: none;
+                                            width: 36px;
+                                            height: 36px;
+                                            border-radius: 50%;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            cursor: pointer;
+                                            transition: all 0.2s ease;
+                                            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+                                        " onclick="window.location.href='ManageWishListController?action=add&productId=${product.productID}'"
+                                           onmouseover="this.style.background='#ff5252'; this.style.transform='scale(1.05)'"
+                                           onmouseout="this.style.background='#ff6b6b'; this.style.transform='scale(1)'"
+                                           title="Thêm vào danh sách yêu thích">
+                                            <i class="far fa-heart" style="font-size: 14px;"></i>
+                                        </button>
+                                        
+                                        <!-- Add to Cart Button -->
+                                        <button style="
+                                            background: #e91e63;
+                                            color: white;
+                                            border: none;
+                                            width: 36px;
+                                            height: 36px;
+                                            border-radius: 50%;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            cursor: pointer;
+                                            transition: all 0.2s ease;
+                                            box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+                                        " onclick="window.location.href='cart?action=add&productId=${product.productID}&quantity=1'"
+                                           onmouseover="this.style.background='#c2185b'; this.style.transform='scale(1.05)'"
+                                           onmouseout="this.style.background='#e91e63'; this.style.transform='scale(1)'"
+                                           title="Thêm vào giỏ hàng">
+                                            <i class="fa fa-shopping-cart" style="font-size: 14px;"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
