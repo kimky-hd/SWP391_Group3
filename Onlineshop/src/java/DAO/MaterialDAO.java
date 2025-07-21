@@ -6,14 +6,18 @@ package DAO;
 
 import Model.Material;
 import Model.MaterialBatch;
+import Model.MaterialBatchUsage;
+import Model.ProductComponent;
 import Model.Supplier;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -21,10 +25,10 @@ import java.util.Map;
  * @author Duccon
  */
 public class MaterialDAO extends DBContext {
-    
+
     PreparedStatement ps;
     ResultSet rs;
-    
+
     public List<MaterialBatch> getBatchesByMaterialID(int materialID) {
         List<MaterialBatch> list = new ArrayList<>();
         String sql = "SELECT * FROM MaterialBatch WHERE materialID = ?";
@@ -46,7 +50,7 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Material> getMaterialByIndex(int indexPage) {
         List<Material> list = new ArrayList<>();
         String sql = "SELECT * FROM Material ORDER BY materialID LIMIT ?, 8";
@@ -68,7 +72,7 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Material> getAllMaterial() {
         List<Material> list = new ArrayList<>();
         String sql = "SELECT * FROM Material WHERE isActive = 1";
@@ -89,7 +93,7 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
+
     public int countAllMaterial() {
         String sql = "select count(*) from Material";
         try {
@@ -103,22 +107,21 @@ public class MaterialDAO extends DBContext {
         }
         return 0;
     }
-    
-    public void updateMaterialBatchStatus() {
-        String sql = "UPDATE MaterialBatch SET status = "
-                + "CASE "
-                + "WHEN CURDATE() <= DATE_ADD(dateImport, INTERVAL 3 DAY) THEN 'Tươi mới' "
-                + "WHEN CURDATE() <= dateExpire THEN 'Lão hóa' "
-                + "ELSE 'Đã Héo' END";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.executeUpdate();
-            
-        } catch (SQLException e) {
-            System.out.println("updateMaterialBatchStatus() " + e.getMessage());
-        }
-    }
-    
+
+//    public void updateMaterialBatchStatus() {
+//        String sql = "UPDATE MaterialBatch SET status = "
+//                + "CASE "
+//                + "WHEN CURDATE() <= DATE_ADD(dateImport, INTERVAL 3 DAY) THEN 'Tươi mới' "
+//                + "WHEN CURDATE() <= dateExpire THEN 'Lão hóa' "
+//                + "ELSE 'Đã Héo' END";
+//        try {
+//            ps = connection.prepareStatement(sql);
+//            ps.executeUpdate();
+//            
+//        } catch (SQLException e) {
+//            System.out.println("updateMaterialBatchStatus() " + e.getMessage());
+//        }
+//    }
     public Material getMaterialByID(int materialID) {
         List<Material> list = new ArrayList<>();
         String sql = "Select * from Material WHERE materialID = ? ";
@@ -140,7 +143,7 @@ public class MaterialDAO extends DBContext {
         }
         return null;
     }
-    
+
     public List<Material> getMaterialByName(String txt) {
         List<Material> list = new ArrayList<>();
         String sql = "Select * from Material WHERE name LIKE CONCAT('%" + txt + "%') ";
@@ -161,7 +164,7 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
+
     public void addNewBatchToMaterial(int materialID, int quantity, double importPrice, Date dateImpport, Date dateExpire, int supplierID) {
         String sql = "INSERT INTO MaterialBatch (materialID, quantity, importPrice, dateImport, dateExpire, supplierID) VALUES (?, ?, ?, ?, ?, ?)";
         try {
@@ -177,7 +180,7 @@ public class MaterialDAO extends DBContext {
             System.out.println("addNewBatchToMaterial" + e.getMessage());
         }
     }
-    
+
     public int CreateMaterial(String name) {
         String sql = "INSERT INTO Material (\n"
                 + "     name,\n"
@@ -192,7 +195,7 @@ public class MaterialDAO extends DBContext {
         }
         return 0;
     }
-    
+
     public boolean CheckDuplicateMaterial(String name) {
         MaterialDAO mateDAO = new MaterialDAO();
         List<Material> listmate = mateDAO.getAllMaterial();
@@ -203,7 +206,7 @@ public class MaterialDAO extends DBContext {
         }
         return false;
     }
-    
+
     public void updateMaterialIsActive(int materialID, boolean isActive) {
         String sql = "UPDATE Material SET isActive = ? WHERE materialID = ?";
         try {
@@ -215,7 +218,7 @@ public class MaterialDAO extends DBContext {
             System.out.println("updateMaterialIsActive : " + e.getMessage());
         }
     }
-    
+
     public int getAvailableMaterial(int materialID) {
         String sql = "SELECT SUM(quantity) FROM MaterialBatch"
                 + "   WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
@@ -231,54 +234,108 @@ public class MaterialDAO extends DBContext {
         }
         return 0;
     }
-    
-    public void consumeMaterialFIFO(int materialID, int quantity) throws SQLException {
-        boolean originalAutoCommit = connection.getAutoCommit();
-        connection.setAutoCommit(false);
-        
+
+    public List<MaterialBatch> getAvailableMaterialBatches(int materialID) {
+        List<MaterialBatch> list = new ArrayList<>();
+        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
         try {
-            String sql = "SELECT materialBatchID, quantity "
-                    + "FROM MaterialBatch WHERE materialID = ? AND quantity > 0 "
-                    + "ORDER BY dateImport ASC";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, materialID);
             rs = ps.executeQuery();
-            
-            while (rs.next() && quantity > 0) {
-                int batchID = rs.getInt("materialBatchID");
-                int available = rs.getInt("quantity");
-                int consume = Math.min(quantity, available);
-                
-                try (PreparedStatement update = connection.prepareStatement(
-                        "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?")) {
-                    update.setInt(1, consume);
-                    update.setInt(2, batchID);
-                    update.executeUpdate();
-                }
-                
-                quantity -= consume;
+            while (rs.next()) {
+                list.add(new MaterialBatch(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getDouble(4),
+                        rs.getDate(5),
+                        rs.getDate(6))
+                );
             }
-            
+        } catch (SQLException e) {
+            System.out.println("getAvailableMaterialBatches: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<MaterialBatchUsage> consumeMaterialFIFO(int materialID, int quantity, int productBatchID) throws SQLException {
+        List<MaterialBatchUsage> usageList = new ArrayList<>();
+        boolean originalAutoCommit = connection.getAutoCommit();
+        connection.setAutoCommit(false);
+
+        try {
+            String sql = "SELECT materialBatchID, quantity, importPrice, dateImport, dateExpire "
+                    + "FROM MaterialBatch "
+                    + "WHERE materialID = ? AND quantity > 0 "
+                    + "ORDER BY dateImport ASC";
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setInt(1, materialID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next() && quantity > 0) {
+                        int batchID = rs.getInt("materialBatchID");
+                        int available = rs.getInt("quantity");
+                        int consume = Math.min(quantity, available);
+                        double unitPrice = rs.getDouble("importPrice");
+                        Date dateImport = rs.getDate("dateImport");
+                        Date dateExpire = rs.getDate("dateExpire");
+
+                        // Trừ kho
+                        int rowsUpdated;
+                        try (PreparedStatement update = connection.prepareStatement(
+                                "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?")) {
+                            update.setInt(1, consume);
+                            update.setInt(2, batchID);
+                            rowsUpdated = update.executeUpdate();
+                        }
+                        if (rowsUpdated == 0) {
+                            throw new SQLException("Không thể cập nhật MaterialBatchID: " + batchID);
+                        }
+
+                        // Ghi vào MaterialBatchUsage
+                        int usageID = 0;
+                        try (PreparedStatement insert = connection.prepareStatement(
+                                "INSERT INTO MaterialBatchUsage (materialBatchID, productBatchID, materialID, quantityUsed, importPrice, dateImport, dateExpire) "
+                                + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                            insert.setInt(1, batchID);
+                            insert.setInt(2, productBatchID);
+                            insert.setInt(3, materialID);
+                            insert.setInt(4, consume);
+                            insert.setDouble(5, unitPrice);
+                            insert.setDate(6, dateImport);
+                            insert.setDate(7, dateExpire);
+                            insert.executeUpdate();
+
+                            try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
+                                if (generatedKeys.next()) {
+                                    usageID = generatedKeys.getInt(1);
+                                }
+                            }
+                        }
+
+                        // Thêm vào danh sách trả về
+                        usageList.add(new MaterialBatchUsage(
+                                usageID, batchID, materialID, consume, unitPrice, dateImport, dateExpire));
+
+                        quantity -= consume;
+                    }
+                }
+            }
+
             if (quantity > 0) {
                 connection.rollback();
                 throw new SQLException("Không đủ nguyên liệu để tiêu thụ.");
             }
-            
+
             connection.commit();
+            return usageList;
+
         } catch (Exception ex) {
             connection.rollback();
             throw ex;
         } finally {
             connection.setAutoCommit(originalAutoCommit);
-            if (rs != null) {
-                rs.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
         }
     }
-    
+
     public List<Material> getSortMaterial(String sortOrder, int pageIndex) {
         List<Material> list = new ArrayList<>();
         String order = "ASC";
@@ -304,69 +361,39 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
-    public List<MaterialBatch> getMaterialBatchByIndex(int indexPage) {
+
+    public List<MaterialBatch> getMaterialBatchesFIFO(int materialID) {
         List<MaterialBatch> list = new ArrayList<>();
-        String sql = "SELECT mb.*, m.name AS materialName, s.supplierName AS supplierName\n"
-                + "FROM MaterialBatch mb\n"
-                + "JOIN Material m ON mb.materialID = m.materialID\n"
-                + "JOIN Supplier s ON mb.supplierID = s.supplierID\n"
-                + "ORDER BY mb.materialBatchID\n"
-                + "LIMIT ?, 10";
+        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, (indexPage - 1) * 10);
+            ps.setInt(1, materialID);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new MaterialBatch(rs.getInt(1),
                         rs.getInt(2),
-                        rs.getString(8),
                         rs.getInt(3),
                         rs.getDouble(4),
                         rs.getDate(5),
-                        rs.getDate(6),
-                        rs.getInt(7),
-                        rs.getString(9))
+                        rs.getDate(6))
                 );
             }
         } catch (SQLException e) {
-            System.out.println("getMaterialBatchByIndex : " + e.getMessage());
+            System.out.println("getMaterialBatchesFIFO: " + e.getMessage());
         }
         return list;
     }
-    
-    public int countAllMaterialBatch() {
-        String sql = "select count(*) from MaterialBatch";
-        try {
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("countAllMaterialBatch" + e.getMessage());
-        }
-        return 0;
+
+    public void deductMaterialFromBatch(int materialBatchID, int usedQuantity){
+    String sql = "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?";
+    try {
+        ps = connection.prepareStatement(sql);
+        ps.setInt(1, usedQuantity);
+        ps.setInt(2, materialBatchID);
+        ps.executeUpdate();
+    }catch(SQLException e){
+        System.out.println("deductMaterialFromBatch : " + e.getMessage());
     }
-    
-    public List<Supplier> getSupplierActive() {
-        List<Supplier> list = new ArrayList<>();
-        String sql = "SELECT * FROM Supplier WHERE isActive = TRUE";
-        try {
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new Supplier(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getBoolean(6)
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("getSupplierActive " + e.getMessage());
-        }
-        return list;
-    }
+}
+
 }

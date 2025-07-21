@@ -40,9 +40,9 @@ public class Supplier {
         return supplierName;
     }
 
-    public void getSupplierName(String supplierName) {
-        this.supplierName = supplierName;
-    }
+    public void setSupplierName(String supplierName) {  
+    this.supplierName = supplierName;
+}
 
     public String getPhone() {
         return phone;

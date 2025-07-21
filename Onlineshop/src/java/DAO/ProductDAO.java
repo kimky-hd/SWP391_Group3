@@ -381,24 +381,24 @@ public class ProductDAO extends DBContext {
     public void updateCateForProduct(int productID, List<Integer> categoryID) {
         String deleteSQL = "DELETE FROM CategoryProduct WHERE productID = ?";
         String insertSQL = "INSERT INTO CategoryProduct (productID, categoryID) VALUES (?, ?)";
-        
-        try{
+
+        try {
             PreparedStatement delps = connection.prepareStatement(deleteSQL);
             delps.setInt(1, productID);
             delps.executeUpdate();
-        }catch(SQLException e){
-            System.out.println("delete cate : "  + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("delete cate : " + e.getMessage());
         }
-        
-        try{
+
+        try {
             PreparedStatement insps = connection.prepareStatement(insertSQL);
-            for(int cateID : categoryID){
+            for (int cateID : categoryID) {
                 insps.setInt(1, productID);
                 insps.setInt(2, cateID);
                 insps.addBatch();;
             }
             insps.executeBatch();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("insert new cate : " + e.getMessage());
         }
     }
@@ -829,7 +829,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Product> getSortProductManager(String sortOrder, int pageIndex) {
         List<Product> list = new ArrayList<>();
         String order = "ASC";
@@ -879,7 +879,7 @@ public class ProductDAO extends DBContext {
             if (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
 
-                return new Product(rs.getInt(1),
+                Product product = new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
@@ -889,6 +889,10 @@ public class ProductDAO extends DBContext {
                         rs.getBoolean(8),
                         batches
                 );
+                List<ProductComponent> components = getProductComponentsByProductID(productID);
+                product.setComponents(components);
+
+                return product;
             }
         } catch (SQLException e) {
             System.out.println("getProductById" + e.getMessage());
@@ -985,24 +989,18 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public void insertProductBatch(ProductBatch batch) {
-        String sql = "INSERT INTO ProductBatch "
-                + "   (productID,"
-                + "    quantity,"
-                + "    importPrice,"
-                + "    dateImport,"
-                + "    dateExpire)"
-                + "    VALUES (?, ?, ?, ?, ?)";
+    public void insertProductBatch(int productID, int quantity, double importPrice, Date dateImport, Date dateExpire){
+        String sql = "INSERT INTO ProductBatch (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, batch.getProductID());
-            ps.setInt(2, batch.getQuantity());
-            ps.setDouble(3, batch.getImportPrice());
-            ps.setDate(4, batch.getDateImport());
-            ps.setDate(5, batch.getDateExpire());
+            ps.setInt(1, productID);
+            ps.setInt(2, quantity);
+            ps.setDouble(3, importPrice);
+            ps.setDate(4, dateImport);
+            ps.setDate(5, dateExpire);
             ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("insertProductBatch" + e.getMessage());
+        }catch(SQLException e){
+            System.out.println("insertProductBatch : " + e.getMessage());
         }
     }
 
@@ -1040,6 +1038,109 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
-    
 
+    
+    // Lấy sản phẩm theo category có phân trang
+    public List<Product> getProductByCategory(String categoryId, int page, int pageSize) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT p.* FROM Product p JOIN CategoryProduct cb ON p.productID = cb.productID WHERE cb.categoryID = ? AND p.isActive = TRUE ORDER BY p.productID LIMIT ? OFFSET ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, categoryId);
+            ps.setInt(2, pageSize);
+            ps.setInt(3, (page - 1) * pageSize);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getBoolean(8),
+                        batches));
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductByCategory (paged): " + e.getMessage());
+        }
+        return list;
+    }
+
+    // Đếm số sản phẩm theo category
+    public int countProductByCategory(String categoryId) {
+        String sql = "SELECT COUNT(*) FROM Product p JOIN CategoryProduct cb ON p.productID = cb.productID WHERE cb.categoryID = ? AND p.isActive = TRUE";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, categoryId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("countProductByCategory: " + e.getMessage());
+        }
+        return 0;
+    }
+
+
+    public void updateImportPrice(int productBatchID, double avgImportPrice) {
+        String sql = "UPDATE ProductBatch SET importPrice = ? WHERE productBatchID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setDouble(1, avgImportPrice);
+            ps.setInt(2, productBatchID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateImportPrice" + e.getMessage());
+        }
+    }
+        // Lấy sản phẩm theo category với phân trang
+    public List<Product> getProductByCategoryAndIndex(int categoryID, int index) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT p.* FROM Product p " +
+                    "JOIN CategoryProduct cp ON p.productID = cp.productID " +
+                    "WHERE cp.categoryID = ? AND p.isActive = TRUE " +
+                    "ORDER BY p.productID LIMIT ?, 8";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, categoryID);
+            ps.setInt(2, (index - 1) * 8); // tính offset
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getBoolean(8),
+                        batches));
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductByCategoryAndIndex: " + e.getMessage());
+        }
+        return list;
+    }
+
+    // Đếm số sản phẩm theo category
+    public int countProductByCategory(int categoryID) {
+        String sql = "SELECT COUNT(*) FROM Product p " +
+                    "JOIN CategoryProduct cp ON p.productID = cp.productID " +
+                    "WHERE cp.categoryID = ? AND p.isActive = TRUE";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, categoryID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("countProductByCategory: " + e.getMessage());
+        }
+        return 0;
+    }
 }

@@ -101,7 +101,7 @@
                 <!-- Right: Actions -->
                 <ul class="navbar-nav topbar-actions d-flex align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="tooltip" title="Thông báo">
+                        <a class="nav-link" hloref="#" data-bs-toggle="tooltip" title="Thông báo">
                             <i class="fas fa-bell"></i>
                             <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">3</span>
                         </a>
@@ -178,12 +178,18 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/manager/custom-orders" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/custom-orders" class="nav-link">
                         <i class="fas fa-palette"></i>
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
                 </li>
-
+                <!-- Quản lý Banner -->
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/banner?action=list" class="nav-link">
+                        <i class="fas fa-images"></i>
+                        <span>Quản lý Banner</span>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
                         <i class="fas fa-user-tie"></i>
@@ -194,6 +200,12 @@
                     <a href="${pageContext.request.contextPath}/manager/shipper" class="nav-link">
                         <i class="fas fa-users"></i>
                         <span>Quản lý Shippers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/supplier" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Nhà cung cấp</span>
                     </a>
                 </li>
                 <li>
@@ -230,9 +242,21 @@
                     </a>
                 </li>
                 <li>
+                    <a href="${pageContext.request.contextPath}/staff/staff_custom-orders" class="nav-link">
+                        <i class="fas fa-palette"></i>
+                        <span>Đơn hàng tự thiết kế</span>
+                    </a>
+                </li>
+                <li>
                     <a href="${pageContext.request.contextPath}/staff/customers" class="nav-link">
                         <i class="fas fa-users"></i>
                         <span>Quản lý Khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/staff/complaints" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý Khiếu Nại</span>
                     </a>
                 </li>
                 

@@ -31,7 +31,7 @@ public class CartDAO extends DBContext {
      * false.
      */
     public boolean addToCart(int accountId, int productId, int quantity, boolean isUpdate) {
-        String checkSql = "SELECT Quantity FROM Cart WHERE AccountID = ? AND ProductID = ?";
+        String checkSql = "SELECT Quantity FROM cart WHERE AccountID = ? AND ProductID = ?";
         try (Connection conn = getConnection(); PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
     
             checkPs.setInt(1, accountId);
@@ -40,7 +40,7 @@ public class CartDAO extends DBContext {
             try (ResultSet rs = checkPs.executeQuery()) {
                 if (rs.next()) {
                     // Đã có sẵn trong giỏ
-                    String updateSql = "UPDATE Cart SET Quantity = ? WHERE AccountID = ? AND ProductID = ?";
+                    String updateSql = "UPDATE cart SET Quantity = ? WHERE AccountID = ? AND ProductID = ?";
                     int newQuantity = isUpdate ? quantity : rs.getInt("Quantity") + quantity;
     
                     try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
@@ -51,7 +51,7 @@ public class CartDAO extends DBContext {
                     }
                 } else {
                     // Chưa có → insert
-                    String insertSql = "INSERT INTO Cart (AccountID, ProductID, Quantity, status) VALUES (?, ?, ?, 1)";
+                    String insertSql = "INSERT INTO cart (AccountID, ProductID, Quantity, status) VALUES (?, ?, ?, 1)";
                     try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
                         insertPs.setInt(1, accountId);
                         insertPs.setInt(2, productId);
@@ -334,7 +334,7 @@ public class CartDAO extends DBContext {
      * @return true nếu sản phẩm được xóa thành công, ngược lại là false.
      */
     public boolean removeFromCart(int accountId, int productId) {
-        String sql = "DELETE FROM Cart WHERE AccountID = ? AND ProductID = ?"; // Câu lệnh SQL để xóa
+        String sql = "DELETE FROM cart WHERE AccountID = ? AND ProductID = ?"; // Câu lệnh SQL để xóa
         try (Connection conn = getConnection(); // Lấy kết nối
                  PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
             ps.setInt(1, accountId); // Thiết lập tham số AccountID
@@ -376,7 +376,7 @@ public class CartDAO extends DBContext {
      * hoặc có lỗi.
      */
     public int getCartItemCount(int accountId) {
-        String sql = "SELECT COUNT(*) FROM Cart WHERE AccountID = ?"; // Đếm số lượng dòng trong bảng Cart
+        String sql = "SELECT COUNT(*) FROM cart WHERE AccountID = ?"; // Đếm số lượng dòng trong bảng Cart
         try (Connection conn = getConnection(); // Lấy kết nối
                  PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
             ps.setInt(1, accountId); // Thiết lập tham số AccountID
@@ -402,7 +402,7 @@ public class CartDAO extends DBContext {
     public double getCartTotal(int accountId) {
         // Câu lệnh SQL JOIN giữa Cart và Product để lấy giá sản phẩm và tính tổng
         String sql = "SELECT SUM(c.Quantity * p.Price) as total "
-                + "FROM Cart c JOIN Product p ON c.ProductID = p.ProductID "
+                + "FROM cart c JOIN Product p ON c.ProductID = p.ProductID "
                 + "WHERE c.AccountID = ?";
         try (Connection conn = getConnection(); // Lấy kết nối
                  PreparedStatement ps = conn.prepareStatement(sql)) { // Chuẩn bị câu lệnh SQL
@@ -431,7 +431,7 @@ public class CartDAO extends DBContext {
         Cart cart = new Cart(); // Khởi tạo một đối tượng Cart mới
         // Câu lệnh SQL JOIN giữa Cart và Product để lấy tất cả thông tin cần thiết cho CartItem
         String sql = "SELECT c.ProductID, c.Quantity, p.title as Name, p.price as Price, p.description as Description, p.image as Image " +
-                "FROM Cart c JOIN Product p ON c.ProductID = p.productID " +
+                "FROM cart c JOIN Product p ON c.ProductID = p.productID " +
                 "WHERE c.AccountID = ?";
 
         try (Connection conn = getConnection(); // Lấy kết nối

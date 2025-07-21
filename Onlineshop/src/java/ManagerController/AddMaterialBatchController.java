@@ -4,6 +4,7 @@
  */
 package ManagerController;
 
+import DAO.MaterialBatchDAO;
 import DAO.MaterialDAO;
 import Model.Account;
 import Model.Material;
@@ -105,7 +106,7 @@ public class AddMaterialBatchController extends HttpServlet {
                 hasError = true;
             } else {
                 try {
-                    importPriceRaw = importPriceRaw.replace(",", "").trim(); // loại bỏ dấu phẩy
+                    importPriceRaw = importPriceRaw.replace(".", "").trim(); // loại bỏ dấu phẩy
                     importPrice = Double.parseDouble(importPriceRaw);
                     if (importPrice <= 0) {
                         request.setAttribute("errorPrice", "Giá nhập phải lớn hơn 0.");
@@ -190,7 +191,9 @@ public class AddMaterialBatchController extends HttpServlet {
                     endPage++;
                 }
                 
-                List<Supplier> supplierList = mateDAO.getSupplierActive();
+                MaterialBatchDAO matebDAO = new MaterialBatchDAO();
+                
+                List<Supplier> supplierList = matebDAO.getSupplierActive();
 
                 System.out.println(listMaterialByIndex);
                 request.setAttribute("tag", indexPage);

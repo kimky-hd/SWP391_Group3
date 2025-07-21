@@ -256,7 +256,7 @@
                             <h1 class="h2">
                                 <i class="fas fa-palette me-2"></i>Chi tiết đơn hàng tự thiết kế #${customOrder.customCartID}
                         </h1>
-                        <a href="${pageContext.request.contextPath}/custom-orders" class="btn btn-secondary">
+                        <a href="${pageContext.request.contextPath}/staff_custom-orders" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-1"></i>Quay lại
                         </a>
                     </div>
@@ -322,6 +322,20 @@
                                                 </c:choose>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <th><i class="fas fa-money-bill-wave me-2"></i>Giá mong muốn:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.desiredPrice}">
+                                                        <p><fmt:formatNumber value="${customOrder.desiredPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+
                                         <tr>
                                             <th><i class="fas fa-cubes me-2"></i>Số lượng:</th>
                                             <td>${customOrder.quantity}</td>
@@ -484,7 +498,7 @@
                             <input type="hidden" id="modalCustomCartId" name="customCartId">
                             <input type="hidden" id="modalStatusId" name="statusId">
                             <input type="hidden" name="action" value="updateStatus">
-                            
+
                             <div class="mb-3">
                                 <label for="managerComment" class="form-label">Nhận xét của bạn:</label>
                                 <textarea class="form-control" id="managerComment" name="managerComment" rows="4" placeholder="Nhập nhận xét của bạn cho khách hàng..."></textarea>
@@ -512,7 +526,7 @@
                 if (${not empty errorMessage}) {
                     showToast("Lỗi", "${errorMessage}", "danger");
                 }
-                
+
                 // Hàm hiển thị toast
                 function showToast(title, message, type) {
                     var toastHtml = `
@@ -522,25 +536,25 @@
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                             <div class="toast-body">
-                                ${message}
+            ${message}
                             </div>
                         </div>
                     `;
-                    
+
                     $("#toast-container").append(toastHtml);
                     var toastElement = document.querySelector('#toast-container .toast:last-child');
                     var toast = new bootstrap.Toast(toastElement);
                     toast.show();
                 }
-                
+
                 // Hàm reload trang với thông báo
                 function reloadPageWithNotification() {
                     // Hiển thị thông báo đang tải
                     $("#updateStatusBtn").html('<i class="fas fa-spinner fa-spin me-1"></i>Đang cập nhật...');
                     $("#updateStatusBtn").prop('disabled', true);
-                    
+
                     // Đợi 1.5 giây rồi reload trang
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.reload();
                     }, 1500);
                 }
@@ -550,21 +564,21 @@
                     // Lấy giá trị từ form
                     var customCartId = $("input[name='customCartId']").val();
                     var statusId = $("#statusId").val();
-                    
+
                     // Hiển thị modal nhận xét
                     $("#modalCustomCartId").val(customCartId);
                     $("#modalStatusId").val(statusId);
                     $("#commentModal").modal('show');
                 });
-                
+
                 // Xử lý gửi nhận xét
-                $("#submitCommentBtn").click(function() {
+                $("#submitCommentBtn").click(function () {
                     var formData = $("#commentForm").serialize();
-                    
+
                     // Hiển thị trạng thái đang xử lý
                     $("#submitCommentBtn").html('<i class="fas fa-spinner fa-spin me-1"></i>Đang gửi...');
                     $("#submitCommentBtn").prop('disabled', true);
-                    
+
                     $.ajax({
                         type: "POST",
                         url: "${pageContext.request.contextPath}/custom-orders",

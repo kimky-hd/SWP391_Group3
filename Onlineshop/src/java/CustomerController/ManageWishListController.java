@@ -39,14 +39,41 @@ public class ManageWishListController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ProductDAO productDAO = new ProductDAO();
+        
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        
+        // Xử lý action=add từ Homepage
+        String action = request.getParameter("action");
+        if ("add".equals(action)) {
+            if (a == null) {
+                request.setAttribute("mess", "Bạn cần đăng nhập");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+            
+            String productId = request.getParameter("productId");
+            if (productId != null && !productId.isEmpty()) {
+                int productID = Integer.parseInt(productId);
+                int accountID = a.getAccountID();
+                
+                WishList wishListExisted = productDAO.checkWishListExist(accountID, productID);
+                if (wishListExisted != null) {
+                    productDAO.removeWishList(accountID, productID);
+                    session.setAttribute("mess", "Đã xóa sản phẩm khỏi mục ưa thích");
+                } else {
+                    productDAO.insertWishList(accountID, productID);
+                    session.setAttribute("mess", "Đã thêm sản phẩm vào mục ưa thích");
+                }
+            }
+        }
+        
         String index = request.getParameter("index");
         if (index == null || index.isEmpty()) {
             index = "1";
         }
         int indexPage = Integer.parseInt(index);
 
-        HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
         if (a == null) {
             request.setAttribute("mess", "Bạn cần đăng nhập");
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -120,7 +147,12 @@ public class ManageWishListController extends HttpServlet {
             List<Product> ListWishLishProduct = productDAO.getListWishListProduct(a.getAccountID(), indexPage);
             int count = productDAO.countProductWishLish(a.getAccountID());
             List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
-            System.out.println(ListWishLishProduct);
+            List<Category> listAllCategory = productDAO.getAllCategory();
+            List<Color> listAllColors = productDAO.getAllColor();
+            List<Season> listAllSeasons = productDAO.getAllSeason();
+            request.setAttribute("listAllCategory", listAllCategory);
+            request.setAttribute("listAllColors", listAllColors);
+            request.setAttribute("listAllSeasons", listAllSeasons);
             request.setAttribute("countWL", count);
             request.setAttribute("listWLByAcc", ListWishListProductByAccount);
             request.setAttribute("listWL", ListWishLishProduct);

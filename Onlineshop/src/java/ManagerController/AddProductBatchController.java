@@ -6,6 +6,11 @@ package ManagerController;
 
 import DAO.MaterialDAO;
 import DAO.ProductDAO;
+import Model.Account;
+import Model.Material;
+import Model.MaterialBatch;
+import Model.MaterialBatchUsage;
+import Model.Product;
 import Model.ProductBatch;
 import Model.ProductComponent;
 import java.io.IOException;
@@ -14,10 +19,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.Map;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -64,8 +71,30 @@ public class AddProductBatchController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        int productID = Integer.parseInt(request.getParameter("productID"));
+        ProductDAO productDAO = new ProductDAO();
+        MaterialDAO materialDAO = new MaterialDAO();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
 
+        Product product = productDAO.getProductById(productID);
+        Map<Material, List<MaterialBatch>> materialBatches = new HashMap<>();
+
+        for (ProductComponent component : product.getComponents()) {
+            Material material = component.getMaterial();
+            List<MaterialBatch> batches = materialDAO.getAvailableMaterialBatches(material.getMaterialID());
+            materialBatches.put(material, batches);
+        }   
+        session.removeAttribute("materialUsageMap");
+
+        request.setAttribute("product", product);
+        request.setAttribute("materialBatches", materialBatches);
+        request.getRequestDispatcher("Manager_AddProductBatch.jsp").forward(request, response);
+    }
     }
 
     /**
@@ -80,108 +109,65 @@ public class AddProductBatchController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            HttpSession session = request.getSession();
             int productID = Integer.parseInt(request.getParameter("productID"));
-            String quantityStr = request.getParameter("quantity");
-            String importPriceStr = request.getParameter("importPrice");
-            String dateImportStr = request.getParameter("dateImport");
-            String dateExpireStr = request.getParameter("dateExpire");
-
-            // Trả lại dữ liệu nếu có lỗi
-            request.setAttribute("productID", productID);
-            request.setAttribute("quantityVal", quantityStr);
-            request.setAttribute("importPriceVal", importPriceStr);
-            request.setAttribute("dateImportVal", dateImportStr);
-            request.setAttribute("dateExpireVal", dateExpireStr);
-
-            boolean hasError = false;
-
-            // Validate
-            if (quantityStr == null || quantityStr.isEmpty()) {
-                request.setAttribute("quantityError", "Vui lòng nhập số lượng.");
-                hasError = true;
-            } else {
-                try {
-                    importPriceStr = importPriceStr.replace(",", "").trim();  // << THÊM DÒNG NÀY
-                    if (Double.parseDouble(importPriceStr) < 0) {
-                        request.setAttribute("priceError", "Giá nhập không được âm.");
-                        hasError = true;
-                    }
-                } catch (NumberFormatException e) {
-                    request.setAttribute("priceError", "Giá nhập không hợp lệ.");
-                    hasError = true;
-                }
-            }
-            if (Integer.parseInt(quantityStr) <= 0) {
-                request.setAttribute("quantityError", "Số lượng phải lớn hơn 0.");
-                hasError = true;
-            }
-
-            if (importPriceStr == null || importPriceStr.isEmpty()) {
-                request.setAttribute("priceError", "Vui lòng nhập giá nhập.");
-                hasError = true;
-            } else if (Double.parseDouble(importPriceStr) < 0) {
-                request.setAttribute("priceError", "Giá nhập không được âm.");
-                hasError = true;
-            }
-
-            if (dateImportStr == null || dateImportStr.isEmpty()) {
-                request.setAttribute("dateImportError", "Vui lòng chọn ngày nhập.");
-                hasError = true;
-            }
-
-            if (dateExpireStr == null || dateExpireStr.isEmpty()) {
-                request.setAttribute("dateExpireError", "Vui lòng chọn ngày hết hạn.");
-                hasError = true;
-            }
-
-            if (hasError) {
-                request.setAttribute("errorFlag", true);
-                request.getRequestDispatcher("managerproductlist").forward(request, response);
-                return;
-            }
-
-            int quantity = Integer.parseInt(quantityStr);
-            double importPrice = Double.parseDouble(importPriceStr);
-            Date dateImport = Date.valueOf(dateImportStr);
-            Date dateExpire = Date.valueOf(dateExpireStr);
-
-            if (dateExpire.before(dateImport)) {
-                request.setAttribute("dateExpireError", "Ngày hết hạn phải sau ngày nhập.");
-                request.setAttribute("errorFlag", true);
-                request.getRequestDispatcher("managerproductlist").forward(request, response);
-                return;
-            }
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            double importPrice = Double.parseDouble(request.getParameter("importPrice"));
+            Date dateImport = Date.valueOf(request.getParameter("dateImport"));
+            Date dateExpire = Date.valueOf(request.getParameter("dateExpire"));
 
             ProductDAO productDAO = new ProductDAO();
             MaterialDAO materialDAO = new MaterialDAO();
-            List<ProductComponent> components = productDAO.getProductComponentsByProductID(productID);
 
-            for (ProductComponent comp : components) {
-                int requiredQty = comp.getMaterialQuantity() * quantity;
-                int availableQty = materialDAO.getAvailableMaterial(comp.getMaterialID());
-                if (availableQty < requiredQty) {
-                    request.setAttribute("quantityError", "Không đủ nguyên liệu: " + comp.getMaterial().getName());
-                    request.setAttribute("errorFlag", true);
-                    request.getRequestDispatcher("managerproductlist").forward(request, response);
+            Product product = productDAO.getProductById(productID);
+            List<ProductComponent> components = product.getComponents();
+
+            Map<Material, List<MaterialBatch>> materialBatches = new HashMap<>();
+
+            // Kiểm tra đủ nguyên liệu
+            for (ProductComponent component : components) {
+                Material material = component.getMaterial();
+                int materialID = material.getMaterialID();
+                int requiredQty = component.getMaterialQuantity() * quantity;
+
+                List<MaterialBatch> availableBatches = materialDAO.getAvailableMaterialBatches(materialID);
+                int totalAvailable = availableBatches.stream().mapToInt(MaterialBatch::getQuantity).sum();
+
+                materialBatches.put(material, availableBatches);
+
+                if (totalAvailable < requiredQty) {
+                    request.setAttribute("errorMessage", "Không đủ nguyên liệu: " + material.getName());
+                    request.setAttribute("product", product);
+                    request.setAttribute("materialBatches", materialBatches);
+                    request.setAttribute("quantity", quantity);
+                    request.setAttribute("importPrice", importPrice);
+                    request.setAttribute("dateImport", dateImport.toString());
+                    request.setAttribute("dateExpire", dateExpire.toString());
+                    request.getRequestDispatcher("Manager_AddProductBatch.jsp").forward(request, response);
                     return;
                 }
             }
 
-            for (ProductComponent comp : components) {
-                int requiredQty = comp.getMaterialQuantity() * quantity;
-                materialDAO.consumeMaterialFIFO(comp.getMaterialID(), requiredQty);
+            // Đủ nguyên liệu => thêm batch sản phẩm
+            productDAO.insertProductBatch(productID, quantity, importPrice, dateImport, dateExpire);
+
+            Map<Material, List<MaterialBatchUsage>> materialUsageMap
+                    = (Map<Material, List<MaterialBatchUsage>>) session.getAttribute("materialUsageMap");
+
+            if (materialUsageMap != null) {
+                for (Map.Entry<Material, List<MaterialBatchUsage>> entry : materialUsageMap.entrySet()) {
+                    for (MaterialBatchUsage usage : entry.getValue()) {
+                        materialDAO.deductMaterialFromBatch(usage.getMaterialBatchID(), usage.getQuantityUsed());
+                    }
+                }
+                session.removeAttribute("materialUsageMap");
             }
+            session.setAttribute("isactive", "Nhập lô hàng sản phẩm thành công!");
 
-            ProductBatch batch = new ProductBatch(productID, quantity, importPrice, dateImport, dateExpire);
-            productDAO.insertProductBatch(batch);
-
-            request.getSession().setAttribute("isactive", "Nhập hàng thành công.");
             response.sendRedirect("managerproductlist");
-
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Đã xảy ra lỗi khi nhập hàng.");
-            request.setAttribute("errorFlag", true);
+            request.setAttribute("errorMessage", "Lỗi khi lưu lô hàng: " + e.getMessage());
             request.getRequestDispatcher("managerproductlist").forward(request, response);
         }
     }

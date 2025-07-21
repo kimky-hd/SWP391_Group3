@@ -373,10 +373,10 @@
                                                 <td>
                                                     <c:if test="${not empty order.phone}">
                                                         <div><i class="fas fa-phone-alt me-1 text-primary"></i>${order.phone}</div>
-                                                    </c:if>
-                                                    <c:if test="${not empty order.email}">
+                                                        </c:if>
+                                                        <c:if test="${not empty order.email}">
                                                         <div><i class="fas fa-envelope me-1 text-primary"></i>${order.email}</div>
-                                                    </c:if>
+                                                        </c:if>
                                                 </td>
                                                 <td>${order.accountID}</td>
                                                 <td>
