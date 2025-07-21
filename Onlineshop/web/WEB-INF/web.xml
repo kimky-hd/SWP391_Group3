@@ -172,6 +172,10 @@
         <servlet-name>MaterialBatchHistory</servlet-name>
         <servlet-class>ManagerController.MaterialBatchHistory</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PreviewProductBatchCostController</servlet-name>
+        <servlet-class>ManagerController.PreviewProductBatchCostController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
@@ -332,6 +336,10 @@
         <servlet-name>MaterialBatchHistory</servlet-name>
         <url-pattern>/materialbatchhistory</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PreviewProductBatchCostController</servlet-name>
+        <url-pattern>/previewproductbatchcost</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
         <welcome-file>Homepage.jsp</welcome-file>
@@ -358,11 +366,12 @@
     <servlet-mapping>
         <servlet-name>ShipperController</servlet-name>
         <url-pattern>/shipper/update-status</url-pattern>
-    </servlet-mapping>     
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ShipperController</servlet-name>
-        <url-pattern>/shipper/order-detail</url-pattern> <!-- Cần có dòng này -->
-    </servlet-mapping> 
+        <url-pattern>/shipper/order-detail</url-pattern>
+        <!-- Cần có dòng này -->
+    </servlet-mapping>
     <servlet>
         <servlet-name>RevenueChartServlet</servlet-name>
         <servlet-class>Controller.RevenueChartServlet</servlet-class>
