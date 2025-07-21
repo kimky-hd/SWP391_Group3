@@ -90,18 +90,7 @@
             </c:if>
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Danh sách nguyên liệu</h1>
-                <!-- === LABEL dropdown === -->
-                <c:choose>
-                    <c:when test="${param.sortOrder == 'asc'}">
-                        <c:set var="sortLabel" value="Giá: Thấp đến cao"/>
-                    </c:when>
-                    <c:when test="${param.sortOrder == 'desc'}">
-                        <c:set var="sortLabel" value="Giá: Cao đến thấp"/>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="sortLabel" value="Sắp xếp theo thứ tự"/>
-                    </c:otherwise>
-                </c:choose>
+                
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -112,14 +101,6 @@
                                     <i class="fas fa-search"></i>
                                 </button>
                             </form>
-                            <div class="dropdown">
-                                <div class="dropdown-button">${sortLabel} ⏷</div>
-                                <div class="dropdown-content">
-                                    <a href="managermateriallist">Sắp xếp theo thứ tự</a>
-                                    <a href="sortmaterial?sortOrder=asc">Giá: Thấp đến cao</a>
-                                    <a href="sortmaterial?sortOrder=desc">Giá: Cao đến thấp</a>
-                                </div>
-                            </div>
                         </div>
                         <div class="d-flex gap-2">
                             <a href="materialbatchhistory" class="btn btn-outline-primary">

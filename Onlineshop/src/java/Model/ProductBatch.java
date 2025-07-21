@@ -14,6 +14,7 @@ public class ProductBatch {
 
     private int productBatchID;
     private int productID;
+    private Product product;
     private int quantity;
     private double importPrice;
     private Date dateImport;
@@ -47,6 +48,14 @@ public class ProductBatch {
 
     public void setProductBatchID(int productBatchID) {
         this.productBatchID = productBatchID;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getProductID() {
