@@ -100,6 +100,10 @@ public class ViewListProductController extends HttpServlet {
         request.setAttribute("listAllCategory", listAllCategory);
         request.setAttribute("listAllColors", listAllColors);
         request.setAttribute("listAllSeasons", listAllSeasons);
+        
+        // Xóa thông báo từ session để không hiển thị khi chuyển từ trang khác sang
+        session.removeAttribute("mess");
+        
         request.getRequestDispatcher("ProductList.jsp").forward(request, response);
 
     }

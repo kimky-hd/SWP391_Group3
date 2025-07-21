@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
-@WebServlet(name = "ShipperController", urlPatterns = {"/manager/shipper", "/manager/shipper/*"})
-public class ShipperController extends HttpServlet {
+@WebServlet(name = "ManageShipperController", urlPatterns = {"/manager/shipper", "/manager/shipper/*"})
+public class ManageShipperController extends HttpServlet {
     private ShipperDAO shipperDAO;
     
     @Override
