@@ -101,7 +101,7 @@
                 <!-- Right: Actions -->
                 <ul class="navbar-nav topbar-actions d-flex align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="tooltip" title="Thông báo">
+                        <a class="nav-link" hloref="#" data-bs-toggle="tooltip" title="Thông báo">
                             <i class="fas fa-bell"></i>
                             <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">3</span>
                         </a>
@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/LogoutServlet">
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                 </a>
                             </li>

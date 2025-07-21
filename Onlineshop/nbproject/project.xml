@@ -27,7 +27,9 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+
                     <file>${file.reference.gson-2.10.1.jar-3}</file>
+
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
@@ -51,7 +53,9 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+
                     <file>${file.reference.mysql-connector-j-9.3.0.jar-3}</file>
+
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
