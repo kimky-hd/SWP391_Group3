@@ -7,6 +7,7 @@ package DAO;
 import Model.Material;
 import Model.MaterialBatch;
 import Model.MaterialBatchUsage;
+import Model.ProductComponent;
 import Model.Supplier;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -233,6 +235,28 @@ public class MaterialDAO extends DBContext {
         return 0;
     }
 
+    public List<MaterialBatch> getAvailableMaterialBatches(int materialID) {
+        List<MaterialBatch> list = new ArrayList<>();
+        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, materialID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new MaterialBatch(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getDouble(4),
+                        rs.getDate(5),
+                        rs.getDate(6))
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("getAvailableMaterialBatches: " + e.getMessage());
+        }
+        return list;
+    }
+
     public List<MaterialBatchUsage> consumeMaterialFIFO(int materialID, int quantity, int productBatchID) throws SQLException {
         List<MaterialBatchUsage> usageList = new ArrayList<>();
         boolean originalAutoCommit = connection.getAutoCommit();
@@ -243,60 +267,57 @@ public class MaterialDAO extends DBContext {
                     + "FROM MaterialBatch "
                     + "WHERE materialID = ? AND quantity > 0 "
                     + "ORDER BY dateImport ASC";
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, materialID);
-            rs = ps.executeQuery();
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setInt(1, materialID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next() && quantity > 0) {
+                        int batchID = rs.getInt("materialBatchID");
+                        int available = rs.getInt("quantity");
+                        int consume = Math.min(quantity, available);
+                        double unitPrice = rs.getDouble("importPrice");
+                        Date dateImport = rs.getDate("dateImport");
+                        Date dateExpire = rs.getDate("dateExpire");
 
-            while (rs.next() && quantity > 0) {
-                int batchID = rs.getInt("materialBatchID");
-                int available = rs.getInt("quantity");
-                int consume = Math.min(quantity, available);
-                double unitPrice = rs.getDouble("importPrice");
-                Date dateImport = rs.getDate("dateImport");
-                Date dateExpire = rs.getDate("dateExpire");
-
-                // Trừ lượng nguyên liệu trong MaterialBatch
-                try (PreparedStatement update = connection.prepareStatement(
-                        "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?")) {
-                    update.setInt(1, consume);
-                    update.setInt(2, batchID);
-                    update.executeUpdate();
-                }
-
-                // Chèn vào bảng MaterialBatchUsage
-                int usageID = 0;
-                try (PreparedStatement insert = connection.prepareStatement(
-                        "INSERT INTO MaterialBatchUsage (materialBatchID, productBatchID, materialID, quantityUsed, importPrice, dateImport, dateExpire) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-                    insert.setInt(1, batchID);
-                    insert.setInt(2, productBatchID);
-                    insert.setInt(3, materialID);
-                    insert.setInt(4, consume);
-                    insert.setDouble(5, unitPrice);
-                    insert.setDate(6, dateImport);
-                    insert.setDate(7, dateExpire);
-                    insert.executeUpdate();
-
-                    // Lấy usageID vừa insert
-                    try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            usageID = generatedKeys.getInt(1);
+                        // Trừ kho
+                        int rowsUpdated;
+                        try (PreparedStatement update = connection.prepareStatement(
+                                "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?")) {
+                            update.setInt(1, consume);
+                            update.setInt(2, batchID);
+                            rowsUpdated = update.executeUpdate();
                         }
+                        if (rowsUpdated == 0) {
+                            throw new SQLException("Không thể cập nhật MaterialBatchID: " + batchID);
+                        }
+
+                        // Ghi vào MaterialBatchUsage
+                        int usageID = 0;
+                        try (PreparedStatement insert = connection.prepareStatement(
+                                "INSERT INTO MaterialBatchUsage (materialBatchID, productBatchID, materialID, quantityUsed, importPrice, dateImport, dateExpire) "
+                                + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                            insert.setInt(1, batchID);
+                            insert.setInt(2, productBatchID);
+                            insert.setInt(3, materialID);
+                            insert.setInt(4, consume);
+                            insert.setDouble(5, unitPrice);
+                            insert.setDate(6, dateImport);
+                            insert.setDate(7, dateExpire);
+                            insert.executeUpdate();
+
+                            try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
+                                if (generatedKeys.next()) {
+                                    usageID = generatedKeys.getInt(1);
+                                }
+                            }
+                        }
+
+                        // Thêm vào danh sách trả về
+                        usageList.add(new MaterialBatchUsage(
+                                usageID, batchID, materialID, consume, unitPrice, dateImport, dateExpire));
+
+                        quantity -= consume;
                     }
                 }
-
-                // Thêm vào danh sách trả về
-                usageList.add(new MaterialBatchUsage(
-                        usageID,
-                        batchID,
-                        materialID,
-                        consume,
-                        unitPrice,
-                        dateImport,
-                        dateExpire
-                ));
-
-                quantity -= consume;
             }
 
             if (quantity > 0) {
@@ -312,12 +333,6 @@ public class MaterialDAO extends DBContext {
             throw ex;
         } finally {
             connection.setAutoCommit(originalAutoCommit);
-            if (rs != null) {
-                rs.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
         }
     }
 
@@ -368,7 +383,17 @@ public class MaterialDAO extends DBContext {
         }
         return list;
     }
-    
-    
+
+    public void deductMaterialFromBatch(int materialBatchID, int usedQuantity){
+    String sql = "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?";
+    try {
+        ps = connection.prepareStatement(sql);
+        ps.setInt(1, usedQuantity);
+        ps.setInt(2, materialBatchID);
+        ps.executeUpdate();
+    }catch(SQLException e){
+        System.out.println("deductMaterialFromBatch : " + e.getMessage());
+    }
+}
 
 }

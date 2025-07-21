@@ -2,15 +2,18 @@ package CommonController;
 
 import DAO.BlogDAO;
 import DAO.ProductDAO;
+import Model.Account;
 import Model.Blog;
 import Model.Category;
 import Model.Color;
 import Model.Season;
+import Model.WishList;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -60,6 +63,18 @@ public class BlogsControllers extends HttpServlet {
             // Get total number of approved blogs for pagination
             int totalBlogs = blogDAO.countBlogsByStatus("Approved");
             int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
+            HttpSession session = request.getSession();
+            Account a = (Account) session.getAttribute("account");
+            int count;
+            if (a == null) {
+                count = 0;
+            } else {
+                count = productDAO.countProductWishLish(a.getAccountID());
+                List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
+                request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
+            }
+
+            request.setAttribute("countWL", count);
 
             List<Category> listAllCategory = productDAO.getAllCategory();
             List<Color> listAllColors = productDAO.getAllColor();

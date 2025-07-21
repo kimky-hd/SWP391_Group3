@@ -879,7 +879,7 @@ public class ProductDAO extends DBContext {
             if (rs.next()) {
                 List<ProductBatch> batches = getBatchesByProductID(rs.getInt("productID"));
 
-                return new Product(rs.getInt(1),
+                Product product = new Product(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
@@ -889,6 +889,10 @@ public class ProductDAO extends DBContext {
                         rs.getBoolean(8),
                         batches
                 );
+                List<ProductComponent> components = getProductComponentsByProductID(productID);
+                product.setComponents(components);
+
+                return product;
             }
         } catch (SQLException e) {
             System.out.println("getProductById" + e.getMessage());
@@ -985,32 +989,19 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public int insertProductBatch(ProductBatch batch) {
-        int id = -1;
-        String sql = "INSERT INTO ProductBatch "
-                + "   (productID,"
-                + "    quantity,"
-                + "    importPrice,"
-                + "    dateImport,"
-                + "    dateExpire)"
-                + "    VALUES (?, ?, ?, ?, ?)";
+    public void insertProductBatch(int productID, int quantity, double importPrice, Date dateImport, Date dateExpire){
+        String sql = "INSERT INTO ProductBatch (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, batch.getProductID());
-            ps.setInt(2, batch.getQuantity());
-            ps.setDouble(3, batch.getImportPrice());
-            ps.setDate(4, batch.getDateImport());
-            ps.setDate(5, batch.getDateExpire());
+            ps.setInt(1, productID);
+            ps.setInt(2, quantity);
+            ps.setDouble(3, importPrice);
+            ps.setDate(4, dateImport);
+            ps.setDate(5, dateExpire);
             ps.executeUpdate();
-
-            rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                id = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("insertProductBatch" + e.getMessage());
+        }catch(SQLException e){
+            System.out.println("insertProductBatch : " + e.getMessage());
         }
-        return id;
     }
 
     public List<ProductComponent> getProductComponentsWithMaterial(int productID) {

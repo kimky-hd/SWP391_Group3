@@ -6,6 +6,7 @@ package ManagerController;
 
 import DAO.MaterialBatchDAO;
 import DAO.MaterialDAO;
+import Model.Account;
 import Model.Material;
 import Model.MaterialBatch;
 import Model.Supplier;
@@ -15,6 +16,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.util.List;
 
@@ -39,6 +41,12 @@ public class MaterialBatchHistory extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         MaterialBatchDAO matebatchDAO = new MaterialBatchDAO();
         MaterialDAO mateDAO = new MaterialDAO();
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        if (a == null) {
+            request.setAttribute("mess", "Bạn cần đăng nhập");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
 
         String materialName = request.getParameter("materialName");
         String supplierName = request.getParameter("supplierName");
@@ -98,6 +106,7 @@ public class MaterialBatchHistory extends HttpServlet {
         request.setAttribute("supplierList", supplierList);
 
         request.getRequestDispatcher("Manager_MaterialBatchHistory.jsp").forward(request, response);
+    }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

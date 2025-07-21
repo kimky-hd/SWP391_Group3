@@ -302,6 +302,15 @@ public class ShipperController extends HttpServlet {
             List<OrderDetail> orderDetails = orderDetailDAO.getOrderDetailsByOrderId(orderId);
             System.out.println("Found " + orderDetails.size() + " order details");
 
+            // Tính tổng giá đơn hàng tại đây:
+            double tongGia = 0;
+            for (OrderDetail detail : orderDetails) {
+                double total = detail.getPrice() * detail.getQuantity();
+                detail.setTotal(total); // <- DÒNG NÀY QUAN TRỌNG!
+                tongGia += total;
+
+            }
+
             // Set attributes
             request.setAttribute("order", order);
             request.setAttribute("orderDetails", orderDetails);

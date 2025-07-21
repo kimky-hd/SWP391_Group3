@@ -476,7 +476,7 @@ private String createOrderDetailsHtml(List<OrderDetail> orderDetails) {
 // Trong phần xử lý statusId = 6 (hủy đơn hàng)
 // Trong phần xử lý statusId = 6 (hủy đơn hàng)
 else if (statusId == 6 && currentOrder.getStatusId() != 6) {
-    orderDAO.cancelOrder(orderId);
+    success = orderDAO.cancelOrder(orderId);
     
     if (success) {
         // Hoàn trả số lượng sản phẩm về kho

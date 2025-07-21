@@ -106,7 +106,7 @@ public class AddMaterialBatchController extends HttpServlet {
                 hasError = true;
             } else {
                 try {
-                    importPriceRaw = importPriceRaw.replace(",", "").trim(); // loại bỏ dấu phẩy
+                    importPriceRaw = importPriceRaw.replace(".", "").trim(); // loại bỏ dấu phẩy
                     importPrice = Double.parseDouble(importPriceRaw);
                     if (importPrice <= 0) {
                         request.setAttribute("errorPrice", "Giá nhập phải lớn hơn 0.");
