@@ -46,8 +46,7 @@ public class ProductDAO extends DBContext {
                         result.getInt(3),
                         result.getDouble(4),
                         result.getDate(5),
-                        result.getDate(6),
-                        result.getString(7)
+                        result.getDate(6)
                 ));
             }
         } catch (SQLException e) {

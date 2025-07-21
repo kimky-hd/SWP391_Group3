@@ -41,7 +41,7 @@ public class ProductBatchDAO extends DBContext {
                 batch.setImportPrice(rs.getDouble("importPrice"));
                 batch.setDateImport(rs.getDate("dateImport"));
                 batch.setDateExpire(rs.getDate("dateExpire"));
-                batch.setStatus(rs.getString("status"));
+                //batch.setStatus(rs.getString("status"));
 
                 batches.add(batch);
             }
@@ -519,7 +519,7 @@ public class ProductBatchDAO extends DBContext {
                 pb.setImportPrice(rs.getDouble("importPrice"));
                 pb.setDateImport(rs.getDate("dateImport"));
                 pb.setDateExpire(rs.getDate("dateExpire"));
-                pb.setStatus(rs.getString("status"));
+                //pb.setStatus(rs.getString("status"));
 
                 list.add(pb);
             }
