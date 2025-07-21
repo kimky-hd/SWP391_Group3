@@ -115,7 +115,7 @@ public class CartDAO extends DBContext {
                                 batch.setImportPrice(batchRs.getDouble("importPrice"));
                                 batch.setDateImport(batchRs.getDate("dateImport"));
                                 batch.setDateExpire(batchRs.getDate("dateExpire"));
-                                batch.setStatus(batchRs.getString("status"));
+                                //batch.setStatus(batchRs.getString("status"));
                                 
                                 batches.add(batch);
                             }
@@ -189,7 +189,7 @@ public class CartDAO extends DBContext {
                                 batch.setImportPrice(batchRs.getDouble("importPrice"));
                                 batch.setDateImport(batchRs.getDate("dateImport"));
                                 batch.setDateExpire(batchRs.getDate("dateExpire"));
-                                batch.setStatus(batchRs.getString("status"));
+                                //batch.setStatus(batchRs.getString("status"));
                                 
                                 batches.add(batch);
                                 totalAvailableQuantity += batch.getQuantity();
@@ -463,7 +463,7 @@ public class CartDAO extends DBContext {
                                 batch.setImportPrice(batchRs.getDouble("importPrice"));
                                 batch.setDateImport(batchRs.getDate("dateImport"));
                                 batch.setDateExpire(batchRs.getDate("dateExpire"));
-                                batch.setStatus(batchRs.getString("status"));
+                                //batch.setStatus(batchRs.getString("status"));
                                 
                                 batches.add(batch);
                             }
