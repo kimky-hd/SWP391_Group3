@@ -83,6 +83,9 @@ public class Material {
                 .mapToInt(MaterialBatch::getQuantity)
                 .sum();
     }
+    public int getTotalQuantity() {
+    return getQuantity(); // hoặc đổi tên method cũ thành getTotalQuantity luôn
+}
     
 public String getStatus() {
         if (batches == null || batches.isEmpty()) {
@@ -116,11 +119,5 @@ public String getStatus() {
     public String toString() {
         return "Material{" + "materialID=" + materialID + ", name=" + name + ", unit=" + unit + ", isActive=" + isActive + ", batches=" + batches + '}';
     }
-
     
-
-
-
-
-        
 }

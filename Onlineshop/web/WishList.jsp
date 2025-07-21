@@ -258,16 +258,32 @@
 
         <jsp:include page="footer.jsp" />
 
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- Template Javascript -->
+        <script src="js/main.js"></script>
+        <!-- Sticky Button for Custom Order -->
+        <div class="flower-fixed-btn">
+            <a href="CustomOrder.jsp" title="Đặt hoa theo yêu cầu">
+                <i class="fas fa-seedling"></i> <!-- Bạn có thể thay bằng: fa-pencil-alt, fa-heart, fa-rose -->
+            </a>
+        </div>
+
         <script>
-            window.onload = function () {
-                var messageBox = document.getElementById("message-box");
-                if (messageBox.innerHTML.trim() !== "") { // Only show if there's a message
-                    messageBox.style.display = "block";
-                    setTimeout(function () {
-                        messageBox.style.display = "none"; // Hide after 3 seconds
-                    }, 3000);
-                }
-            };
+                                                            window.onload = function () {
+                                                                var messageBox = document.getElementById("message-box");
+                                                                if (messageBox.innerHTML.trim() !== "") { // Only show if there's a message
+                                                                    messageBox.style.display = "block";
+                                                                    setTimeout(function () {
+                                                                        messageBox.style.display = "none"; // Hide after 3 seconds
+                                                                    }, 3000);
+                                                                }
+                                                            };
         </script>
         <!-- Modal Xác Nhận Xóa -->
         <div id="deleteModal" class="modal-overlay">
