@@ -3,14 +3,16 @@ package Controller;
 import DAO.CartDAO;
 import DAO.OrderDAO;
 import DAO.ProductDAO; // Được thêm vào để lấy thông tin sản phẩm
-import DAO.VoucherDAO; // Không được sử dụng trong mã hiện tại nhưng có thể hữu ích
+import DAO.VoucherDAO; 
+import DAO.CardTemplateDAO; // Import CardTemplateDAO
 import Model.Cart;
 import Model.CartItem;
 import Model.Order;
 import Model.OrderDetail;
 import Model.Account;
 import Model.Product;
-import Model.Voucher; // Không được sử dụng trong mã hiện tại
+import Model.Voucher;
+import Model.CardTemplate; // Import CardTemplate
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -55,7 +57,7 @@ public class OrderController extends HttpServlet {
         String action = request.getParameter("action");
         // Lấy đối tượng HttpSession hiện tại
         HttpSession session = request.getSession();
-    
+
         // Kiểm tra và điều hướng dựa trên giá trị của 'action'
         if (action != null) {
             switch (action) {
@@ -67,9 +69,6 @@ public class OrderController extends HttpServlet {
                     break;
                 case "cancel": // Xử lý yêu cầu hủy một đơn hàng
                     cancelOrder(request, response, session);
-                    break;
-                case "confirm_received": // Xử lý yêu cầu xác nhận đã nhận hàng
-                    confirmReceived(request, response, session);
                     break;
                 default: // Mặc định hoặc nếu 'action' không hợp lệ, chuyển hướng về trang giỏ hàng
                     response.sendRedirect("cart.jsp");
@@ -129,6 +128,7 @@ public class OrderController extends HttpServlet {
             String paymentMethod = request.getParameter("paymentMethod");
             
             String selectedVoucherId = request.getParameter("selectedVoucherId");
+            String selectedCardId = request.getParameter("selectedCardId");
             double totalAfterDiscount = Double.parseDouble(request.getParameter("totalAfterDiscount"));
 
             // --- Bước 4: Kiểm tra thông tin bắt buộc ---
@@ -136,8 +136,27 @@ public class OrderController extends HttpServlet {
                 city == null || district == null || paymentMethod == null ||
                 fullName.trim().isEmpty() || phone.trim().isEmpty() || address.trim().isEmpty() ||
                 city.trim().isEmpty() || district.trim().isEmpty() || paymentMethod.trim().isEmpty()) {
-                sendJsonResponse(response, createErrorResponse("Vui lòng điền đầy đủ thông tin giao hàng"));
+                sendJsonResponse(response, createErrorResponse("Vui lòng điền đầy đủ thông tin giao hàng."));
                 return;
+            }
+            
+            // Validate card selection if included
+            Integer cardId = null;
+            Double cardFee = null;
+            if (selectedCardId != null && !selectedCardId.isEmpty()) {
+                try {
+                    cardId = Integer.parseInt(selectedCardId);
+                    CardTemplateDAO cardDAO = new CardTemplateDAO();
+                    CardTemplate card = cardDAO.getCardTemplateById(cardId);
+                    if (card == null || !card.isIsActive()) {
+                        sendJsonResponse(response, createErrorResponse("Mẫu thiệp không hợp lệ hoặc không có sẵn."));
+                        return;
+                    }
+                    cardFee = card.getPrice();
+                } catch (NumberFormatException e) {
+                    sendJsonResponse(response, createErrorResponse("Mã thiệp không hợp lệ."));
+                    return;
+                }
             }
 
             // --- Bước 5: Tạo đối tượng Order ---
@@ -156,6 +175,8 @@ public class OrderController extends HttpServlet {
             // Tính tổng tiền đơn hàng bao gồm phí vận chuyển (ví dụ: 30,000 VND)
             order.setTotal(totalAfterDiscount);
             order.setStatus("Pending"); // Đặt trạng thái ban đầu là "Pending"
+            order.setCardId(cardId);
+            order.setCardFee(cardFee);
 
             // --- Bước 6: Tạo danh sách OrderDetail từ CartItem ---
             List<OrderDetail> orderDetails = new ArrayList<>();
@@ -446,65 +467,4 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-/**
- * Xử lý logic để xác nhận đã nhận được hàng.
- * 1. Kiểm tra trạng thái đăng nhập.
- * 2. Lấy ID đơn hàng từ request và kiểm tra quyền sở hữu đơn hàng.
- * 3. Kiểm tra trạng thái hiện tại của đơn hàng (chỉ cho phép xác nhận nếu là "Đơn hàng đang được vận chuyển").
- * 4. Cập nhật trạng thái đơn hàng thành "Đã giao hàng thành công" trong database.
- * 5. Gửi phản hồi JSON về client (thành công hoặc lỗi).
- *
- * @param request  HttpServletRequest chứa orderId cần xác nhận.
- * @param response HttpServletResponse để gửi phản hồi JSON.
- * @param session  HttpSession hiện tại.
- * @throws ServletException
- * @throws IOException
- */
-private void confirmReceived(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-    throws ServletException, IOException {
-    try {
-        // --- Bước 1: Kiểm tra đăng nhập ---
-        Account account = (Account) session.getAttribute("account");
-        if (account == null) {
-            sendJsonResponse(response, createErrorResponse("Vui lòng đăng nhập để xác nhận đã nhận hàng"));
-            return;
-        }
-
-        // --- Bước 2: Lấy Order ID và kiểm tra quyền sở hữu ---
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
-        Order order = orderDAO.getOrderById(orderId); // Lấy thông tin đơn hàng từ DB
-
-        // Kiểm tra xem đơn hàng có tồn tại và có thuộc về tài khoản hiện tại không
-        if (order == null || order.getAccountId() != account.getAccountID()) {
-            sendJsonResponse(response, createErrorResponse("Không tìm thấy đơn hàng hoặc bạn không có quyền xác nhận đơn hàng này."));
-            return;
-        }
-
-        // --- Bước 3: Kiểm tra trạng thái đơn hàng (chỉ xác nhận đơn hàng đang "Đơn hàng đang được vận chuyển") ---
-        if (order.getStatusId() != 3) {
-            sendJsonResponse(response, createErrorResponse("Không thể xác nhận đơn hàng này vì trạng thái không phải là 'Đơn hàng đang được vận chuyển'."));
-            return;
-        }
-
-        // --- Bước 4: Cập nhật trạng thái đơn hàng thành "Đã giao hàng thành công" ---
-        if (orderDAO.updateOrderStatus(orderId, 4)) {
-
-            // --- Bước 6: Gửi phản hồi thành công ---
-            sendJsonResponse(response, createSuccessResponse("Xác nhận đã nhận hàng thành công. Cảm ơn bạn đã mua sắm!"));
-        } else {
-            // Nếu có lỗi khi cập nhật trạng thái đơn hàng trong DB
-            sendJsonResponse(response, createErrorResponse("Có lỗi xảy ra khi xác nhận đã nhận hàng. Vui lòng thử lại."));
-        }
-
-    } catch (NumberFormatException e) {
-        // Xử lý lỗi nếu orderId không phải là số hợp lệ
-        sendJsonResponse(response, createErrorResponse("Mã đơn hàng không hợp lệ."));
-        e.printStackTrace();
-    } catch (Exception e) {
-        // Xử lý các lỗi khác
-        sendJsonResponse(response, createErrorResponse("Có lỗi xảy ra: " + e.getMessage()));
-        e.printStackTrace();
-    }
-}
 }

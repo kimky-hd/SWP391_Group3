@@ -1,9 +1,11 @@
 package Controller;
 
 import DAO.VoucherDAO;
+import DAO.CardTemplateDAO; // Import CardTemplateDAO
 import Model.Account;
 import Model.Cart;
 import Model.Voucher;
+import Model.CardTemplate; // Import CardTemplate
 import com.google.gson.Gson; // Thư viện để chuyển đổi đối tượng Java sang JSON và ngược lại
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -70,6 +72,11 @@ public class CheckOutController extends HttpServlet {
         VoucherDAO vdao = new VoucherDAO();
         List<Voucher> vouchers = vdao.getValidVouchersByAccountId(account.getAccountID(), cart.getTotal());
         request.setAttribute("vouchers", vouchers);
+        
+        // Get all active card templates
+        CardTemplateDAO cardDAO = new CardTemplateDAO();
+        List<CardTemplate> cardTemplates = cardDAO.getAllActiveCardTemplates();
+        request.setAttribute("cardTemplates", cardTemplates);
 
         // Chuyển tiếp yêu cầu đến trang CheckOut.jsp để hiển thị giao diện thanh toán
         request.getRequestDispatcher("CheckOut.jsp").forward(request, response);
