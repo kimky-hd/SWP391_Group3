@@ -243,5 +243,27 @@
                                 modal.show();
                             }
         </script>
+         <script>
+            $(document).ready(function () {
+                // Xử lý sự kiện khi nhấn vào nút đăng xuất
+                $('.dropdown-item[data-toggle="modal"]').on('click', function (e) {
+                    e.preventDefault();
+                    $('#logoutModal').modal('show');
+                });
+            });
+        </script>
+
+        <script src="https://widget.subiz.net/sbz/app.js?account_id=acpzooihzhalzeskamky"></script>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+        <!-- Contact Javascript File -->
+        <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script>
+
     </body>
 </html>
