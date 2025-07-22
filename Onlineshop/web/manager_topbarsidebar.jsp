@@ -189,6 +189,18 @@
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
                 </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/banner?action=list" class="nav-link">
+                        <i class="fas fa-images"></i>
+                        <span>Quản lý Banner</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/cardtemplates" class="nav-link">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Quản lý Thiệp</span>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
@@ -218,12 +230,6 @@
                     <a href="${pageContext.request.contextPath}/manager/blogs" class="nav-link">
                         <i class="fas fa-blog"></i>
                         <span>Quản lý Blog</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Báo cáo & Thống kê</span>
                     </a>
                 </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
