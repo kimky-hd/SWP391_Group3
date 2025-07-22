@@ -156,13 +156,19 @@ public class CustomCartController extends HttpServlet {
             return;
         }
         
+        // Kiểm tra nếu đơn hàng không ở trạng thái chờ duyệt (1) hoặc bị từ chối (8), không cho phép chỉnh sửa
+        if (customOrderCart.getStatusID() != 1 && customOrderCart.getStatusID() != 8) {
+            sendJsonResponse(response, false, "Đơn hàng không thể chỉnh sửa ở trạng thái hiện tại.");
+            return;
+        }
+        
         // Cập nhật thông tin
         customOrderCart.setDescription(description);
         customOrderCart.setQuantity(quantity);
         customOrderCart.setDesiredPrice(desiredPrice);
         
         // Nếu trạng thái hiện tại là 8 (từ chối), chuyển về trạng thái 1 (chờ duyệt) khi cập nhật
-        if (currentStatusId == 8) {
+        if (customOrderCart.getStatusID() == 8) {
             customOrderCart.setStatusID(1);
             customOrderCart.setStatus("Chờ duyệt");
         }

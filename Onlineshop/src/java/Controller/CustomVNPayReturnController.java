@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.CustomOrderCartDAO;
+import DAO.VoucherDAO;
 import Model.Account;
 import Model.CustomOrderCart;
 import jakarta.servlet.ServletException;
@@ -76,11 +77,45 @@ public class CustomVNPayReturnController extends HttpServlet {
                     
                     if (customOrderCart != null && customOrderCart.getAccountID() == account.getAccountID()) {
                         // Cập nhật trạng thái đơn hàng thành "Đã thanh toán"
-                        customOrderCart.setStatusID(5); // Giả sử 8 là trạng thái "Đã thanh toán"
+                        customOrderCart.setStatusID(5); // 5 là trạng thái "Đã thanh toán"
+                        
+                        // Lấy thông tin địa chỉ giao hàng từ session
+                        String fullName = (String) session.getAttribute("custom_vnp_fullName");
+                        String phone = (String) session.getAttribute("custom_vnp_phone");
+                        String email = (String) session.getAttribute("custom_vnp_email");
+                        String address = (String) session.getAttribute("custom_vnp_address");
+                        String district = (String) session.getAttribute("custom_vnp_district");
+                        String city = (String) session.getAttribute("custom_vnp_city");
+                        double shippingFee = (double) session.getAttribute("custom_vnp_shippingFee");
+                        customOrderCart.setShippingFee(shippingFee);
+                        
+                        // Cập nhật thông tin giao hàng
+                        customOrderCart.setFullName(fullName);
+                        customOrderCart.setPhone(phone);
+                        customOrderCart.setEmail(email);
+                        
+                        // Cập nhật voucher nếu có
+                        String selectedVoucherId = (String) session.getAttribute("custom_vnp_selectedVoucherId");
+                        double totalAfterDiscount = (double) session.getAttribute("custom_vnp_totalAfterDiscount");
+                        
+                        if (selectedVoucherId != null && !selectedVoucherId.trim().equals("")) {
+                            VoucherDAO vdao = new VoucherDAO();
+                            int voucherId = Integer.parseInt(selectedVoucherId);
+                            vdao.updateVoucherUsage(voucherId);
+                            vdao.updateAccountVoucherStatus(account.getAccountID(), voucherId);
+                        }
                         
                         if (customOrderCartDAO.updateCustomOrderCart(customOrderCart)) {
                             // Xóa thông tin tạm thời
                             session.removeAttribute("custom_vnp_customCartId");
+                            session.removeAttribute("custom_vnp_fullName");
+                            session.removeAttribute("custom_vnp_phone");
+                            session.removeAttribute("custom_vnp_email");
+                            session.removeAttribute("custom_vnp_address");
+                            session.removeAttribute("custom_vnp_district");
+                            session.removeAttribute("custom_vnp_city");
+                            session.removeAttribute("custom_vnp_selectedVoucherId");
+                            session.removeAttribute("custom_vnp_totalAfterDiscount");
                             
                             // Đặt thông báo thành công
                             session.setAttribute("message", "Thanh toán thành công! Đơn hàng thiết kế riêng của bạn đang được xử lý.");

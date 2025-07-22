@@ -48,36 +48,127 @@ public class CustomVNPayController extends HttpServlet {
         String vnp_IpAddr = getIpAddress(request);
         String vnp_TmnCode = VNP_TMN_CODE;
 
-        // Lấy thông tin session và kiểm tra đăng nhập
+        // Lấy thông tin session
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-        
+
         if (account == null) {
             response.sendRedirect("login.jsp");
             return;
         }
+
+        // Lấy ID đơn hàng tùy chỉnh từ request
+        int customCartId;
+        try {
+            customCartId = Integer.parseInt(request.getParameter("customCartId"));
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "ID đơn hàng không hợp lệ");
+            session.setAttribute("messageType", "error");
+            response.sendRedirect("custom-checkout?customCartId=" + request.getParameter("customCartId"));
+            return;
+        }
         
-        // Lấy customCartId từ request
-        int customCartId = Integer.parseInt(request.getParameter("customCartId"));
-        
-        // Lấy thông tin đơn hàng thiết kế riêng
+        // Lấy thông tin đơn hàng tùy chỉnh từ database
         CustomOrderCart customOrderCart = customOrderCartDAO.getCustomOrderCartById(customCartId);
         
         // Kiểm tra đơn hàng có tồn tại và thuộc về người dùng hiện tại không
         if (customOrderCart == null || customOrderCart.getAccountID() != account.getAccountID()) {
+            session.setAttribute("message", "Không tìm thấy thông tin đơn hàng tùy chỉnh hoặc bạn không có quyền truy cập");
+            session.setAttribute("messageType", "error");
             response.sendRedirect("custom-cart");
             return;
         }
         
-        // Kiểm tra trạng thái đơn hàng có phải là "Đã duyệt đơn hàng thiết kế riêng" không
+        // Kiểm tra trạng thái đơn hàng (phải là đã duyệt - statusID = 7)
         if (customOrderCart.getStatusID() != 7) {
+            session.setAttribute("message", "Đơn hàng tùy chỉnh chưa được duyệt, không thể thanh toán");
+            session.setAttribute("messageType", "error");
             response.sendRedirect("custom-cart");
             return;
         }
 
-        // Lưu thông tin vào session để sử dụng sau khi thanh toán
-        session.setAttribute("custom_vnp_customCartId", customCartId);
+        // Lấy thông tin địa chỉ giao hàng từ request
+        String fullName = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String district = request.getParameter("district");
+        String city = request.getParameter("city");
+        
+        // Validate các trường thông tin
+        Map<String, String> errors = new HashMap<>();
+        
+        // Validate fullName
+        if (fullName == null || fullName.trim().isEmpty()) {
+            errors.put("fullName", "Vui lòng nhập họ tên");
+        } else if (fullName.trim().length() < 2 || fullName.trim().length() > 50) {
+            errors.put("fullName", "Họ tên phải từ 2-50 ký tự");
+        }
+        
+        // Validate phone (số điện thoại Việt Nam)
+        if (phone == null || phone.trim().isEmpty()) {
+            errors.put("phone", "Vui lòng nhập số điện thoại");
+        } else if (!phone.trim().matches("(84|0[3|5|7|8|9])+([0-9]{8})\\b")) {
+            errors.put("phone", "Số điện thoại không hợp lệ");
+        }
+        
+        // Validate email
+        if (email == null || email.trim().isEmpty()) {
+            errors.put("email", "Vui lòng nhập email");
+        } else if (!email.trim().matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            errors.put("email", "Email không hợp lệ");
+        }
+        
+        // Validate address
+        if (address == null || address.trim().isEmpty()) {
+            errors.put("address", "Vui lòng nhập địa chỉ");
+        } else if (address.trim().length() < 5 || address.trim().length() > 200) {
+            errors.put("address", "Địa chỉ phải từ 5-200 ký tự");
+        }
+        
+        // Validate district
+        if (district == null || district.trim().isEmpty()) {
+            errors.put("district", "Vui lòng chọn quận/huyện");
+        }
+        
+        // Nếu có lỗi, quay lại trang checkout và hiển thị thông báo
+        if (!errors.isEmpty()) {
+            // Lấy lỗi đầu tiên để hiển thị
+            String firstError = errors.values().iterator().next();
+            session.setAttribute("message", firstError);
+            session.setAttribute("messageType", "error");
+            response.sendRedirect("custom-checkout?customCartId=" + customCartId);
+            return;
+        }
+        
+        String selectedVoucherId = request.getParameter("selectedVoucherId");
+        double totalAfterDiscount;
+        double shippingFee;
+        
+        try {
+            totalAfterDiscount = Double.parseDouble(request.getParameter("totalAfterDiscount"));
+            shippingFee = Double.parseDouble(request.getParameter("shippingFee"));
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Giá trị đơn hàng không hợp lệ");
+            session.setAttribute("messageType", "error");
+            response.sendRedirect("custom-checkout?customCartId=" + customCartId);
+            return;
+        }
+        
+        session.setAttribute("custom_vnp_shippingFee", shippingFee);
 
+        // Lưu thông tin vào session để sử dụng sau khi thanh toán
+        session.setAttribute("custom_vnp_fullName", fullName);
+        session.setAttribute("custom_vnp_phone", phone);
+        session.setAttribute("custom_vnp_email", email);
+        session.setAttribute("custom_vnp_address", address);
+        session.setAttribute("custom_vnp_district", district);
+        session.setAttribute("custom_vnp_city", city);
+        session.setAttribute("custom_vnp_customCartId", customCartId);
+        session.setAttribute("custom_vnp_selectedVoucherId", selectedVoucherId);
+        session.setAttribute("custom_vnp_totalAfterDiscount", totalAfterDiscount);
+
+        // Tiếp tục xử lý thanh toán VNPay
         // Tạo các tham số cho VNPay
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -85,8 +176,7 @@ public class CustomVNPayController extends HttpServlet {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
 
         // Số tiền thanh toán (VNPay yêu cầu số tiền * 100)
-        // Giả sử giá mỗi sản phẩm thiết kế riêng là 500,000 VND
-        long amount = (long) (500000 * customOrderCart.getQuantity() * 100);
+        long amount = (long) (totalAfterDiscount * 100);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
 
         // Thông tin đơn hàng
