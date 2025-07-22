@@ -525,7 +525,7 @@
                                         <th>ID</th>
                                         <th>Thông tin nhân viên</th>
                                         <th>Số điện thoại</th>
-                                        <th>Lương/Tháng</th>
+                                        <th>Lương</th>
                                         <th>Thời gian hợp đồng</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
