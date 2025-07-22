@@ -37,10 +37,10 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-6 col-lg-5">
-            <div class="card" style="border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); overflow: hidden; background: rgba(255,255,255,0.95);">
+            <div class="card" style="border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); overflow: hidden; background: rgba(255, 255, 255, 0.95);"> <!-- Cập nhật màu nền giống register -->
               <!-- Header -->
-              <div class="card-header text-center" style="background: linear-gradient(135deg, #f472b6, #ec4899); color: white; padding: 2rem;">
-                <h3 style="font-size: 1.8rem; font-weight: bold; letter-spacing: 0.5px; margin-bottom: 0;">Đăng nhập</h3>
+              <div class="card-header text-center" style="background: linear-gradient(135deg, #FFB6C1, #FFA5B5); color: white; padding: 2rem;">
+                <h3 style="font-size: 1.8rem; font-weight: bold; letter-spacing: 0.5px; margin-bottom: 0;">Đăng Nhập</h3>
               </div>
 
               <!-- Body -->
@@ -95,8 +95,8 @@
                   transition: 0.3s ease;
                   text-decoration: none;
                 "
-                  onmouseover="this.style.background='linear-gradient(135deg, #ec4899, #db2777)'; this.style.transform='translateY(-2px)'"
-                  onmouseout="this.style.background='linear-gradient(135deg, #f472b6, #ec4899)'; this.style.transform='translateY(0)'">
+                  onmouseover="this.style.background='linear-gradient(135deg, #FFA5B5, #db2777)'; this.style.transform='translateY(-2px)'"
+                  onmouseout="this.style.background='linear-gradient(135deg, #FFA5B5, #ec4899)'; this.style.transform='translateY(0)'">
                   <i class="fab fa-google me-2" style="font-size: 1.1rem;"></i> Đăng nhập bằng Google
                 </a>
 

@@ -219,12 +219,6 @@
                         <i class="fas fa-blog"></i>
                         <span>Quản lý Blog</span>
                     </a>
-                </li>            
-                <li>
-                    <a href="${pageContext.request.contextPath}/settings" class="nav-link">
-                        <i class="fas fa-cog"></i>
-                        <span>Cài đặt Hệ thống</span>
-                    </a>
                 </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
 

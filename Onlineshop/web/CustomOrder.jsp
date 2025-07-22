@@ -88,13 +88,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="quantity" class="form-label">Số lượng</label>
+                                    <label for="quantity" class="form-label">Số lượng sản phẩm</label>
                                     <input type="number" class="form-control" id="quantity" name="quantity" value="${not empty sessionScope.savedQuantity ? sessionScope.savedQuantity : '1'}">
                                     <small class="text-muted"><i class="fas fa-box"></i> Nhập số lượng sản phẩm bạn muốn đặt</small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="editDesiredPrice">Giá mong muốn (VNĐ)</label>
-                                    <input type="number" class="form-control" placeholder="giá mong muốn gợi ý: 100000, 200000" id="editDesiredPrice" name="desiredPrice" min="0" step="1000" required>
+                                    <label for="editDesiredPrice">Giá mong muốn mỗi sản phẩm(VNĐ)</label>
+                                    <input type="number" class="form-control" placeholder="Tổng giá trị đơn hàng = [(Giá mong muốn mỗi sản phẩm) x Số lượng sản phẩm] + Phí ship" id="editDesiredPrice" name="desiredPrice" min="0" step="1000" required>
                                     <small class="text-muted"><i class="fas fa-tag"></i>Nhập giá mong muốn cho sản phẩm (VNĐ)</small>
                                 </div>
                             </div>
