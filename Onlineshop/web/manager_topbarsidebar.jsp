@@ -220,12 +220,6 @@
                         <span>Quản lý Blog</span>
                     </a>
                 </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Báo cáo & Thống kê</span>
-                    </a>
-                </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
 
                 <li>
