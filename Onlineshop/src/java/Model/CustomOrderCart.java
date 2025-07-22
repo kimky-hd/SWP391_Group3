@@ -24,7 +24,8 @@ public class CustomOrderCart {
     private String managerComment;
     // Thêm trường giá mong muốn
     private double desiredPrice;
-    
+    private double shippingFee;
+
     // Constructors
     public CustomOrderCart() {
     }
@@ -204,6 +205,15 @@ public class CustomOrderCart {
         this.desiredPrice = desiredPrice;
     }
 
+    // Thêm getter và setter cho trường phí ship
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
     @Override
     public String toString() {
         return "CustomOrderCart{"
@@ -224,6 +234,7 @@ public class CustomOrderCart {
                 + ", email='" + email + '\'' 
                 + ", managerComment='" + managerComment + '\'' 
                 + ", desiredPrice=" + desiredPrice
+                + ", shippingFee=" + shippingFee
                 + '}';
     }
 }

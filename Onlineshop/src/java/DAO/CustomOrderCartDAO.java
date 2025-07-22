@@ -61,6 +61,14 @@ public class CustomOrderCartDAO extends DBContext {
                     // Thêm dòng này để lấy desired_price
                     customOrderCart.setDesiredPrice(rs.getDouble("desired_price"));
                     
+                    // Thêm dòng này để lấy shipping_fee
+                    try {
+                        customOrderCart.setShippingFee(rs.getDouble("shipping_fee"));
+                    } catch (SQLException ex) {
+                        // Xử lý trường hợp cột chưa tồn tại
+                        customOrderCart.setShippingFee(0);
+                    }
+                    
                     customOrderCarts.add(customOrderCart);
                 }
             }
@@ -116,6 +124,14 @@ public class CustomOrderCartDAO extends DBContext {
                     // Thêm dòng này để lấy desired_price
                     customOrderCart.setDesiredPrice(rs.getDouble("desired_price"));
                     
+                    // Thêm dòng này để lấy shipping_fee
+                    try {
+                        customOrderCart.setShippingFee(rs.getDouble("shipping_fee"));
+                    } catch (SQLException ex) {
+                        // Xử lý trường hợp cột chưa tồn tại
+                        customOrderCart.setShippingFee(0);
+                    }
+                    
                     return customOrderCart;
                 }
             }
@@ -164,7 +180,8 @@ public class CustomOrderCartDAO extends DBContext {
      * @return true nếu cập nhật thành công, ngược lại là false.
      */
     public boolean updateCustomOrderCart(CustomOrderCart customOrderCart) {
-        String sql = "UPDATE customordercart SET referenceImage = ?, referenceImage2 = ?, referenceImage3 = ?, referenceImage4 = ?, referenceImage5 = ?, description = ?, quantity = ?, statusID = ?, manager_comment = ?, desired_price = ? WHERE customCartID = ?";
+        // Sửa câu lệnh SQL trong phương thức updateCustomOrderCart
+        String sql = "UPDATE customordercart SET referenceImage = ?, referenceImage2 = ?, referenceImage3 = ?, referenceImage4 = ?, referenceImage5 = ?, description = ?, quantity = ?, statusID = ?, manager_comment = ?, desired_price = ?, shipping_fee = ? WHERE customCartID = ?";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -179,7 +196,8 @@ public class CustomOrderCartDAO extends DBContext {
             ps.setInt(8, customOrderCart.getStatusID());
             ps.setString(9, customOrderCart.getManagerComment());
             ps.setDouble(10, customOrderCart.getDesiredPrice());
-            ps.setInt(11, customOrderCart.getCustomCartID());
+            ps.setDouble(11, customOrderCart.getShippingFee());
+            ps.setInt(12, customOrderCart.getCustomCartID());
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -279,6 +297,14 @@ public class CustomOrderCartDAO extends DBContext {
                 
                 // Thêm dòng này để lấy desired_price
                 customOrderCart.setDesiredPrice(rs.getDouble("desired_price"));
+                
+                // Thêm dòng này để lấy shipping_fee
+                try {
+                    customOrderCart.setShippingFee(rs.getDouble("shipping_fee"));
+                } catch (SQLException ex) {
+                    // Xử lý trường hợp cột chưa tồn tại
+                    customOrderCart.setShippingFee(0);
+                }
                 
                 customOrderCarts.add(customOrderCart);
             }

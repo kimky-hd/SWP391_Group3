@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/LogoutServlet">
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                 </a>
                             </li>
@@ -230,12 +230,6 @@
                     <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
                         <i class="fas fa-chart-bar"></i>
                         <span>Báo cáo & Thống kê</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/settings" class="nav-link">
-                        <i class="fas fa-cog"></i>
-                        <span>Cài đặt Hệ thống</span>
                     </a>
                 </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
