@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/DAO/CategoryDAO.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/DAO/MaterialDAO.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/DAO/ProductBatchDAO.java</file>
@@ -16,6 +16,14 @@
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductBatch.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductComponent.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/web/manager/Manager_AddProductBatch.jsp</file>
-
+        <group>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/ProductBatch.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Controller/Shipper/ShipperController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/Product.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/CartDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerProductList.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductBatchDAO.java</file>
+        </group>
     </open-files>
 </project-private>
