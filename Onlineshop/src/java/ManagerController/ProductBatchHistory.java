@@ -4,12 +4,11 @@
  */
 package ManagerController;
 
-import DAO.MaterialBatchDAO;
-import DAO.MaterialDAO;
+import DAO.ProductBatchDAO;
+import DAO.ProductDAO;
 import Model.Account;
-import Model.Material;
-import Model.MaterialBatch;
-import Model.Supplier;
+import Model.Product;
+import Model.ProductBatch;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -24,7 +23,7 @@ import java.util.List;
  *
  * @author Duccon
  */
-public class MaterialBatchHistory extends HttpServlet {
+public class ProductBatchHistory extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,23 +38,25 @@ public class MaterialBatchHistory extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        MaterialBatchDAO matebatchDAO = new MaterialBatchDAO();
-        MaterialDAO mateDAO = new MaterialDAO();
+
+        ProductBatchDAO batchDAO = new ProductBatchDAO();
+        ProductDAO productDAO = new ProductDAO();
         HttpSession session = request.getSession();
-        Account a = (Account) session.getAttribute("account");
-        if (a == null) {
+        Account account = (Account) session.getAttribute("account");
+
+        if (account == null) {
             request.setAttribute("mess", "Bạn cần đăng nhập");
             request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
+            return;
+        }
 
-        String materialName = request.getParameter("materialName");
-        String supplierName = request.getParameter("supplierName");
+        // Lọc
+        String productName = request.getParameter("productName");
         String dateFromStr = request.getParameter("dateFrom");
         String dateToStr = request.getParameter("dateTo");
 
         Date dateFrom = null;
         Date dateTo = null;
-
         try {
             if (dateFromStr != null && !dateFromStr.trim().isEmpty()) {
                 dateFrom = Date.valueOf(dateFromStr.trim());
@@ -67,46 +68,42 @@ public class MaterialBatchHistory extends HttpServlet {
             e.printStackTrace();
         }
 
-        boolean hasFilter = (materialName != null && !materialName.isEmpty())
-                || (supplierName != null && !supplierName.isEmpty())
-                || dateFrom != null || dateTo != null;
-        List<MaterialBatch> list;
-        int allMaterialBatch;
+        boolean hasFilter = (productName != null && !productName.isEmpty()) || dateFrom != null || dateTo != null;
+
+        List<ProductBatch> list;
+        int total;
         if (hasFilter) {
-            list = matebatchDAO.getMaterialBatchHistoryFiltered(materialName, dateFrom, dateTo, supplierName);
-            allMaterialBatch = list.size(); // lọc xong rồi, nên không phân trang trong DAO
+            list = batchDAO.getFilteredProductBatches(productName, dateFrom, dateTo);
+            total = list.size(); // đã lọc nên không phân trang
         } else {
             String index = request.getParameter("index");
             if (index == null || index.isEmpty()) {
                 index = "1";
             }
-            int indexPage = Integer.parseInt(index);
-            list = matebatchDAO.getMaterialBatchByIndex(indexPage);
-            allMaterialBatch = matebatchDAO.countAllMaterialBatch();
-            int endPage = allMaterialBatch / 10;
-            if (allMaterialBatch % 10 != 0) {
+            int pageIndex = Integer.parseInt(index);
+
+            list = batchDAO.getProductBatchesByIndex(pageIndex);
+            total = batchDAO.countAllProductBatch();
+
+            int endPage = total / 8;
+            if (total % 8 != 0) {
                 endPage++;
             }
-            request.setAttribute("tag", indexPage);
+            request.setAttribute("tag", pageIndex);
             request.setAttribute("endPage", endPage);
         }
 
-        List<Material> materialList = mateDAO.getAllMaterial();
-        List<Supplier> supplierList = matebatchDAO.getAllSupplier();
+        List<Product> productList = productDAO.getAllProduct();
 
-        request.setAttribute("materialName", materialName);
-        request.setAttribute("supplierName", supplierName);
+        // Set thuộc tính
+        request.setAttribute("productName", productName);
         request.setAttribute("dateFrom", dateFromStr);
         request.setAttribute("dateTo", dateToStr);
+        request.setAttribute("count", total);
+        request.setAttribute("productBatchList", list);
+        request.setAttribute("productList", productList);
 
-        request.setAttribute("count", allMaterialBatch);
-
-        request.setAttribute("materialBatchList", list);
-        request.setAttribute("materialList", materialList);
-        request.setAttribute("supplierList", supplierList);
-
-        request.getRequestDispatcher("Manager_MaterialBatchHistory.jsp").forward(request, response);
-    }
+        request.getRequestDispatcher("Manager_ProductBatchHistory.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

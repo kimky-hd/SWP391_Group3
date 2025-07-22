@@ -13,12 +13,13 @@ import java.sql.Date;
 public class ProductBatch {
 
     private int productBatchID;
+    private Product product;
     private int productID;
     private int quantity;
     private double importPrice;
     private Date dateImport;
     private Date dateExpire;
-    private String status;
+    //private String status;
 
     public ProductBatch() {
     }
@@ -31,14 +32,14 @@ public class ProductBatch {
         this.dateExpire = dateExpire;
     }
 
-    public ProductBatch(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire, String status) {
+    public ProductBatch(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire) {
         this.productBatchID = productBatchID;
         this.productID = productID;
         this.quantity = quantity;
         this.importPrice = price;
         this.dateImport = dateImport;
         this.dateExpire = dateExpire;
-        this.status = status;
+        //this.status = status;
     }
 
     public int getProductBatchID() {
@@ -47,6 +48,14 @@ public class ProductBatch {
 
     public void setProductBatchID(int productBatchID) {
         this.productBatchID = productBatchID;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getProductID() {
@@ -89,18 +98,18 @@ public class ProductBatch {
         this.dateExpire = dateExpire;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductBatch{" + "productBatchID=" + productBatchID + ", productID=" + productID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
-    }
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "ProductBatch{" + "productBatchID=" + productBatchID + ", productID=" + productID + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", status=" + status + '}';
+//    }
 
     
 
