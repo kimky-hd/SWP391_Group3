@@ -260,22 +260,20 @@
                                                 </div>
                                                 <div class="custom-order-footer d-flex justify-content-end">
                                                     <c:if test="${customOrder.statusID == 7}">
-                                                        <form action="custom-vnpay" method="post" class="mr-2">
-                                                            <input type="hidden" name="customCartId" value="${customOrder.customCartID}">
-                                                            <button type="submit" class="btn btn-sm btn-success">
-                                                                <i class="fas fa-credit-card mr-1"></i>Thanh toán
-                                                            </button>
-                                                        </form>
+                                                        <div class="d-flex">
+                                                            <a href="custom-checkout?customCartId=${customOrder.customCartID}" class="btn btn-sm btn-primary mr-2">
+                                                                <i class="fas fa-shopping-cart mr-1"></i>Thanh toán ngay
+                                                            </a>
+                                                            <!-- Nút thanh toán VNPay không cần thiết vì đã có trong trang checkout -->
+                                                        </div>
                                                     </c:if>
-                                                    <!-- Chỉ hiển thị nút sửa khi trạng thái không phải là 7 (đã duyệt) -->
-                                                    <c:if test="${customOrder.statusID != 7}">
+                                                    
+                                                    <!-- Chỉ hiển thị nút sửa khi trạng thái là 1 (chờ duyệt) hoặc 8 (bị từ chối) -->
+                                                    <c:if test="${customOrder.statusID == 1 || customOrder.statusID == 8}">
                                                         <button class="btn btn-sm btn-outline-gray-dark" onclick="openEditModal(${customOrder.customCartID})">
                                                             <i class="fas fa-edit mr-1"></i>Sửa
                                                         </button>
                                                     </c:if>
-                                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${customOrder.customCartID})">
-                                                        <i class="fas fa-trash-alt mr-1"></i>Xóa
-                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -324,7 +322,7 @@
                                 <input type="number" class="form-control" id="editQuantity" name="quantity" min="1" max="100" required>
                                 <small class="text-muted"><i class="fas fa-box"></i>Nhập số lượng sản phẩm bạn muốn đặt</small>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="editDesiredPrice">Giá mong muốn (VNĐ)</label>
                                 <input type="number" class="form-control" id="editDesiredPrice" name="desiredPrice" min="0" step="1000" required>

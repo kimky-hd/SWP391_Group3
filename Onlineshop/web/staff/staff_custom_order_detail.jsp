@@ -12,7 +12,7 @@
         <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet">
-        <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+
         <style>
             /* Thiết lập chung */
             body {
@@ -42,6 +42,7 @@
             }
 
             .card-header {
+                background-color: #c3e6cb;
                 border-radius: 10px 10px 0 0 !important;
                 font-weight: 600;
                 padding: 15px 20px;
@@ -201,7 +202,7 @@
                             <h1 class="h2">
                                 <i class="fas fa-palette me-2"></i>Chi tiết đơn hàng tự thiết kế #${customOrder.customCartID}
                         </h1>
-                        <a href="${pageContext.request.contextPath}/staff/custom-orders" class="btn btn-secondary">
+                        <a href="${pageContext.request.contextPath}/staff/staff_custom-orders" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-1"></i>Quay lại
                         </a>
                     </div>
@@ -214,7 +215,7 @@
                         <div class="col-md-6">
                             <!-- Thông tin đơn hàng -->
                             <div class="card">
-                                <div class="card-header bg-primary text-white">
+                                <div class="card-header">
                                     <i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng
                                 </div>
                                 <div class="card-body">
@@ -323,7 +324,7 @@
 
                             <!-- Mô tả đơn hàng -->
                             <div class="card">
-                                <div class="card-header bg-info text-white">
+                                <div class="card-header">
                                     <i class="fas fa-file-alt me-2"></i>Mô tả chi tiết
                                 </div>
                                 <div class="card-body">
@@ -335,7 +336,7 @@
                         <!-- Hình ảnh tham khảo -->
                         <div class="col-md-6">
                             <div class="card">
-                                <div class="card-header bg-info text-white">
+                                <div class="card-header">
                                     <i class="fas fa-image me-2"></i>Hình ảnh tham khảo
                                 </div>
                                 <div class="card-body text-center">

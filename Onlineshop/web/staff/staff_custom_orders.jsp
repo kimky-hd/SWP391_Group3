@@ -12,7 +12,6 @@
         <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet">
-        <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
         <style>
             /* Card styling */
             .card {
@@ -346,7 +345,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             ${order.description}
-                                                        </c:otherwise>
+                                    <img src="img/${item.product.image}" alt="${item.product.title}" style="width: 50px;"><img src="img/${item.product.image}" alt="${item.product.title}" style="width: 50px;"><img src="img/${item.product.image}" alt="${item.product.title}" style="width: 50px;">                    </c:otherwise>
                                                     </c:choose>
                                                 </td>
                                                 <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm" /></td>
