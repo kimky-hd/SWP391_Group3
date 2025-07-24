@@ -30,7 +30,7 @@ public class MaterialBatch {
         this.materialID = materialID;
         this.quantity = quantity;
     }
-    
+
     public MaterialBatch(int materialBatchID, int materialID, int quantity, double importPrice, Date dateImport, Date dateExpire) {
         this.materialBatchID = materialBatchID;
         this.materialID = materialID;
@@ -124,9 +124,31 @@ public class MaterialBatch {
         this.supplierName = supplierName;
     }
 
+    public String getStatus() {
+        if (dateExpire == null || dateImport == null) {
+            return "Không xác định";
+        }
+
+        Date today = new Date();
+
+        // Nếu đã hết hạn
+        if (dateExpire.before(today)) {
+            return "Đã Héo";
+        }
+
+        long threeDaysInMillis = 3L * 24 * 60 * 60 * 1000;
+        Date limit = new Date(dateImport.getTime() + threeDaysInMillis);
+
+        if (today.compareTo(limit) <= 0) {
+            return "Tươi mới";
+        } else {
+            return "Lão hóa";
+        }
+    }
+
     @Override
     public String toString() {
         return "MaterialBatch{" + "materialBatchID=" + materialBatchID + ", materialID=" + materialID + ", materialName=" + materialName + ", quantity=" + quantity + ", importPrice=" + importPrice + ", dateImport=" + dateImport + ", dateExpire=" + dateExpire + ", supplierID=" + supplierID + ", supplierName=" + supplierName + '}';
     }
-    
+
 }
