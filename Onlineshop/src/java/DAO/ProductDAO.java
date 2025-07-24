@@ -1002,6 +1002,21 @@ public class ProductDAO extends DBContext {
             System.out.println("insertProductBatch : " + e.getMessage());
         }
     }
+    
+    public void insertProductBatchHistory(int productID, int quantity, double importPrice, Date dateImport, Date dateExpire) {
+        String sql = "INSERT INTO ProductBatchHistory (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setInt(2, quantity);
+            ps.setDouble(3, importPrice);
+            ps.setDate(4, dateImport);
+            ps.setDate(5, dateExpire);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertProductBatchHistory : " + e.getMessage());
+        }
+    }
 
     public boolean deleteProductBatch(int productBatchID) {
         String deleteUsageSQL = "DELETE FROM MaterialBatchUsage WHERE productBatchID = ?";

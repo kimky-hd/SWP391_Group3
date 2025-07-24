@@ -293,9 +293,7 @@
             </div>
         </main>
 
-        <footer class="footer">
-            <div class="container-fluid"><h3>Đây là footer</h3></div>
-        </footer>
+        
 
         <!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

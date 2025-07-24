@@ -181,6 +181,22 @@ public class MaterialDAO extends DBContext {
             System.out.println("addNewBatchToMaterial" + e.getMessage());
         }
     }
+    
+    public void addNewBatchToMaterialBatchHistory(int materialID, int quantity, double importPrice, Date dateImpport, Date dateExpire, int supplierID) {
+        String sql = "INSERT INTO MaterialBatchHistory (materialID, quantity, importPrice, dateImport, dateExpire, supplierID) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, materialID);
+            ps.setInt(2, quantity);
+            ps.setDouble(3, importPrice);
+            ps.setDate(4, new java.sql.Date(dateImpport.getTime()));
+            ps.setDate(5, new java.sql.Date(dateExpire.getTime()));
+            ps.setInt(6, supplierID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("addNewBatchToMaterialHistory" + e.getMessage());
+        }
+    }
 
     public int CreateMaterial(String name) {
         String sql = "INSERT INTO Material (\n"
