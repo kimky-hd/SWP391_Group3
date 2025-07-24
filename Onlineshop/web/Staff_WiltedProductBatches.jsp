@@ -69,7 +69,7 @@
                                             <c:forEach var="b" items="${wiltedBatches}">
                                                 <tr class="align-middle">
                                                     <td>${b.productBatchID}</td>
-                                                    <td>${b.productID}</td>
+                                                    <td >${b.productTitle}</td>
                                                     <td>${b.quantity}</td>
                                                     <td><fmt:formatNumber value="${b.importPrice}" pattern="#,##0"/> VND</td>
                                                     <td><fmt:formatDate value="${b.dateImport}" pattern="dd-MM-yyyy"/></td>

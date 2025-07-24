@@ -149,6 +149,7 @@ public class AddProductBatchController extends HttpServlet {
             }
 
             // Đủ nguyên liệu => thêm batch sản phẩm
+            productDAO.insertProductBatchHistory(productID, quantity, importPrice, dateImport, dateExpire);
             productDAO.insertProductBatch(productID, quantity, importPrice, dateImport, dateExpire);
 
             Map<Material, List<MaterialBatchUsage>> materialUsageMap

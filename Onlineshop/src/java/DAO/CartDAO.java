@@ -101,7 +101,7 @@ public class CartDAO extends DBContext {
                     product.setSeasonID(rs.getInt("seasonID"));
                     
                     // Lấy danh sách các lô sản phẩm
-                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' ORDER BY dateExpire ASC";
+                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() ORDER BY dateExpire ASC";
                     try (PreparedStatement batchPs = conn.prepareStatement(batchSql)) {
                         batchPs.setInt(1, product.getProductID());
                         try (ResultSet batchRs = batchPs.executeQuery()) {
@@ -174,7 +174,7 @@ public class CartDAO extends DBContext {
                     product.setSeasonID(rs.getInt("seasonID"));
                     
                     // Lấy danh sách các lô sản phẩm
-                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' ORDER BY dateExpire ASC";
+                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() ORDER BY dateExpire ASC";
                     try (PreparedStatement batchPs = conn.prepareStatement(batchSql)) {
                         batchPs.setInt(1, product.getProductID());
                         try (ResultSet batchRs = batchPs.executeQuery()) {
@@ -241,7 +241,7 @@ public class CartDAO extends DBContext {
                 
                 // Lấy danh sách các lô còn hạn, sắp xếp theo ngày hết hạn tăng dần
                 String selectBatchesSql = "SELECT productBatchID, quantity FROM ProductBatch " +
-                                         "WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' " +
+                                         "WHERE productID = ? AND dateExpire > CURRENT_DATE() " +
                                          "ORDER BY dateExpire ASC";
                 
                 List<Integer> batchIds = new ArrayList<>();
@@ -449,7 +449,7 @@ public class CartDAO extends DBContext {
                     product.setImage(rs.getString("Image"));
                     
                     // Lấy danh sách các lô sản phẩm
-                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() AND status != 'Đã Héo' ORDER BY dateExpire ASC";
+                    String batchSql = "SELECT * FROM ProductBatch WHERE productID = ? AND dateExpire > CURRENT_DATE() ORDER BY dateExpire ASC";
                     try (PreparedStatement batchPs = conn.prepareStatement(batchSql)) {
                         batchPs.setInt(1, product.getProductID()); // Sửa: Sử dụng product.getProductID() thay vì productId
                         try (ResultSet batchRs = batchPs.executeQuery()) {

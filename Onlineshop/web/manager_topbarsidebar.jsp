@@ -152,8 +152,8 @@
         <nav class="sidebar">
             <ul class="sidebar-menu">
                 <% if (roleId == 1) { // Manager Menu %>
-                
-                 <li>
+
+                <li>
                     <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
                         <i class="fas fa-chart-bar"></i>
                         <span>Báo cáo & Thống kê</span>
@@ -175,12 +175,6 @@
                     <a href="${pageContext.request.contextPath}/managermateriallist" class="nav-link">
                         <i class="fas fa-seedling"></i>
                         <span>Quản lý nguyên liệu</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/orders" class="nav-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Quản lý Đơn hàng</span>
                     </a>
                 </li>
                 <li>
@@ -259,7 +253,13 @@
                         <span>Quản lý Khiếu Nại</span>
                     </a>
                 </li>
-                
+                <li>
+                    <a href="${pageContext.request.contextPath}/staff/staff_custom-orders" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Quản lý Đơn hàng tự thiết kế</span>
+                    </a>
+                </li>
+
                 <% } else if (roleId == 3) { // Shipper Menu %>
                 <li>
                     <a href="${pageContext.request.contextPath}/shipper/dashboard" class="nav-link">
@@ -267,7 +267,12 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-
+                <li>
+                    <a href="${pageContext.request.contextPath}/shipper/custom-orders" class="nav-link">
+                        <i class="fas fa-bars"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
 
                 <% } else { // Guest or Default Menu %>
                 <li>

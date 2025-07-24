@@ -267,11 +267,16 @@
                                                             <!-- Nút thanh toán VNPay không cần thiết vì đã có trong trang checkout -->
                                                         </div>
                                                     </c:if>
-                                                    
+
                                                     <!-- Chỉ hiển thị nút sửa khi trạng thái là 1 (chờ duyệt) hoặc 8 (bị từ chối) -->
                                                     <c:if test="${customOrder.statusID == 1 || customOrder.statusID == 8}">
                                                         <button class="btn btn-sm btn-outline-gray-dark" onclick="openEditModal(${customOrder.customCartID})">
                                                             <i class="fas fa-edit mr-1"></i>Sửa
+                                                        </button>
+                                                    </c:if>
+                                                    <c:if test="${customOrder.statusID == 3}">
+                                                        <button class="btn btn-sm btn-success" onclick="confirmReceived(${customOrder.customCartID})">
+                                                            <i class="fas fa-check-circle mr-1"></i>Đã nhận được sản phẩm
                                                         </button>
                                                     </c:if>
                                                 </div>
@@ -381,118 +386,92 @@
 
         <!-- Custom JavaScript -->
         <script>
-                                                        function openEditModal(customCartId) {
-                                                            $.ajax({
-                                                                url: 'custom-cart',
-                                                                type: 'GET',
-                                                                data: {
-                                                                    action: 'get',
-                                                                    customCartId: customCartId
-                                                                },
-                                                                dataType: 'json',
-                                                                success: function (response) {
-                                                                    if (response.success) {
-                                                                        var customOrder = response.customOrder;
-                                                                        $('#editCustomCartId').val(customOrder.customCartID);
-                                                                        $('#editDescription').val(customOrder.description);
-                                                                        $('#editQuantity').val(customOrder.quantity);
-                                                                        $('#editDesiredPrice').val(customOrder.desiredPrice);
-
-                                                                        // Lưu trạng thái hiện tại để sử dụng khi cập nhật
-                                                                        $('#currentStatusId').val(customOrder.statusID);
-
-                                                                        // Nếu trạng thái là 8 (không duyệt), khi lưu sẽ chuyển thành 1 (chờ duyệt)
-                                                                        if (customOrder.statusID == 8) {
-                                                                            // Thêm hidden input để đánh dấu cần reset trạng thái
-                                                                            if ($('#resetStatus').length === 0) {
-                                                                                $('#editForm').append('<input type="hidden" id="resetStatus" name="resetStatus" value="1">');
-                                                                            }
-                                                                        } else {
-                                                                            // Xóa input nếu đã tồn tại từ lần trước
-                                                                            $('#resetStatus').remove();
-                                                                        }
-
-                                                                        // Hiển thị comment của manager nếu có
-                                                                        if (customOrder.managerComment && (customOrder.statusID == 7 || customOrder.statusID == 8)) {
-                                                                            $('#managerCommentText').text(customOrder.managerComment);
-                                                                            $('#managerCommentSection').show();
-                                                                        } else {
-                                                                            $('#managerCommentSection').hide();
-                                                                        }
-
-                                                                        // Vô hiệu hóa form nếu trạng thái là 7 (đã duyệt)
-                                                                        if (customOrder.statusID == 7) {
-                                                                            $('#editDescription').prop('readonly', true);
-                                                                            $('#editQuantity').prop('readonly', true);
-                                                                            $('#editImageUpload, #editImageUpload2, #editImageUpload3, #editImageUpload4, #editImageUpload5').prop('disabled', true);
-                                                                            $('.modal-footer button[type="submit"]').hide();
-                                                                        } else {
-                                                                            $('#editDescription').prop('readonly', false);
-                                                                            $('#editQuantity').prop('readonly', false);
-                                                                            $('#editImageUpload, #editImageUpload2, #editImageUpload3, #editImageUpload4, #editImageUpload5').prop('disabled', false);
-                                                                            $('.modal-footer button[type="submit"]').show();
-                                                                        }
-
-                                                                        $('#currentImage').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage);
-
-                                                                        // Hiển thị các hình ảnh bổ sung nếu có
-                                                                        if (customOrder.referenceImage2) {
-                                                                            $('#currentImage2').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage2);
-                                                                            $('#currentImage2').show();
-                                                                        } else {
-                                                                            $('#currentImage2').hide();
-                                                                        }
-
-                                                                        if (customOrder.referenceImage3) {
-                                                                            $('#currentImage3').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage3);
-                                                                            $('#currentImage3').show();
-                                                                        } else {
-                                                                            $('#currentImage3').hide();
-                                                                        }
-
-                                                                        if (customOrder.referenceImage4) {
-                                                                            $('#currentImage4').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage4);
-                                                                            $('#currentImage4').show();
-                                                                        } else {
-                                                                            $('#currentImage4').hide();
-                                                                        }
-
-                                                                        if (customOrder.referenceImage5) {
-                                                                            $('#currentImage5').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage5);
-                                                                            $('#currentImage5').show();
-                                                                        } else {
-                                                                            $('#currentImage5').hide();
-                                                                        }
-
-                                                                        $('#editModal').modal('show');
-                                                                    } else {
-                                                                        alert('Không thể lấy thông tin đơn hàng. Vui lòng thử lại sau.');
-                                                                    }
-                                                                },
-                                                                error: function () {
-                                                                    alert('Đã xảy ra lỗi khi kết nối đến máy chủ. Vui lòng thử lại sau.');
-                                                                }
-                                                            });
-                                                        }
-
-
-                                                        function confirmDelete(customCartId) {
-                                                            if (confirm('Bạn có chắc chắn muốn xóa đơn hàng tùy chỉnh này?')) {
-                                                                // Gửi AJAX request để xóa đơn hàng
+                                                            function openEditModal(customCartId) {
                                                                 $.ajax({
                                                                     url: 'custom-cart',
-                                                                    type: 'POST',
+                                                                    type: 'GET',
                                                                     data: {
-                                                                        action: 'delete',
+                                                                        action: 'get',
                                                                         customCartId: customCartId
                                                                     },
                                                                     dataType: 'json',
                                                                     success: function (response) {
                                                                         if (response.success) {
-                                                                            // Reload trang sau khi xóa thành công
-                                                                            location.reload();
+                                                                            var customOrder = response.customOrder;
+                                                                            $('#editCustomCartId').val(customOrder.customCartID);
+                                                                            $('#editDescription').val(customOrder.description);
+                                                                            $('#editQuantity').val(customOrder.quantity);
+                                                                            $('#editDesiredPrice').val(customOrder.desiredPrice);
+
+                                                                            // Lưu trạng thái hiện tại để sử dụng khi cập nhật
+                                                                            $('#currentStatusId').val(customOrder.statusID);
+
+                                                                            // Nếu trạng thái là 8 (không duyệt), khi lưu sẽ chuyển thành 1 (chờ duyệt)
+                                                                            if (customOrder.statusID == 8) {
+                                                                                // Thêm hidden input để đánh dấu cần reset trạng thái
+                                                                                if ($('#resetStatus').length === 0) {
+                                                                                    $('#editForm').append('<input type="hidden" id="resetStatus" name="resetStatus" value="1">');
+                                                                                }
+                                                                            } else {
+                                                                                // Xóa input nếu đã tồn tại từ lần trước
+                                                                                $('#resetStatus').remove();
+                                                                            }
+
+                                                                            // Hiển thị comment của manager nếu có
+                                                                            if (customOrder.managerComment && (customOrder.statusID == 7 || customOrder.statusID == 8)) {
+                                                                                $('#managerCommentText').text(customOrder.managerComment);
+                                                                                $('#managerCommentSection').show();
+                                                                            } else {
+                                                                                $('#managerCommentSection').hide();
+                                                                            }
+
+                                                                            // Vô hiệu hóa form nếu trạng thái là 7 (đã duyệt)
+                                                                            if (customOrder.statusID == 7) {
+                                                                                $('#editDescription').prop('readonly', true);
+                                                                                $('#editQuantity').prop('readonly', true);
+                                                                                $('#editImageUpload, #editImageUpload2, #editImageUpload3, #editImageUpload4, #editImageUpload5').prop('disabled', true);
+                                                                                $('.modal-footer button[type="submit"]').hide();
+                                                                            } else {
+                                                                                $('#editDescription').prop('readonly', false);
+                                                                                $('#editQuantity').prop('readonly', false);
+                                                                                $('#editImageUpload, #editImageUpload2, #editImageUpload3, #editImageUpload4, #editImageUpload5').prop('disabled', false);
+                                                                                $('.modal-footer button[type="submit"]').show();
+                                                                            }
+
+                                                                            $('#currentImage').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage);
+
+                                                                            // Hiển thị các hình ảnh bổ sung nếu có
+                                                                            if (customOrder.referenceImage2) {
+                                                                                $('#currentImage2').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage2);
+                                                                                $('#currentImage2').show();
+                                                                            } else {
+                                                                                $('#currentImage2').hide();
+                                                                            }
+
+                                                                            if (customOrder.referenceImage3) {
+                                                                                $('#currentImage3').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage3);
+                                                                                $('#currentImage3').show();
+                                                                            } else {
+                                                                                $('#currentImage3').hide();
+                                                                            }
+
+                                                                            if (customOrder.referenceImage4) {
+                                                                                $('#currentImage4').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage4);
+                                                                                $('#currentImage4').show();
+                                                                            } else {
+                                                                                $('#currentImage4').hide();
+                                                                            }
+
+                                                                            if (customOrder.referenceImage5) {
+                                                                                $('#currentImage5').attr('src', '${pageContext.request.contextPath}/' + customOrder.referenceImage5);
+                                                                                $('#currentImage5').show();
+                                                                            } else {
+                                                                                $('#currentImage5').hide();
+                                                                            }
+
+                                                                            $('#editModal').modal('show');
                                                                         } else {
-                                                                            alert('Không thể xóa đơn hàng. Vui lòng thử lại sau.');
+                                                                            alert('Không thể lấy thông tin đơn hàng. Vui lòng thử lại sau.');
                                                                         }
                                                                     },
                                                                     error: function () {
@@ -500,66 +479,118 @@
                                                                     }
                                                                 });
                                                             }
-                                                        }
+
+
+                                                            function confirmDelete(customCartId) {
+                                                                if (confirm('Bạn có chắc chắn muốn xóa đơn hàng tùy chỉnh này?')) {
+                                                                    // Gửi AJAX request để xóa đơn hàng
+                                                                    $.ajax({
+                                                                        url: 'custom-cart',
+                                                                        type: 'POST',
+                                                                        data: {
+                                                                            action: 'delete',
+                                                                            customCartId: customCartId
+                                                                        },
+                                                                        dataType: 'json',
+                                                                        success: function (response) {
+                                                                            if (response.success) {
+                                                                                // Reload trang sau khi xóa thành công
+                                                                                location.reload();
+                                                                            } else {
+                                                                                alert('Không thể xóa đơn hàng. Vui lòng thử lại sau.');
+                                                                            }
+                                                                        },
+                                                                        error: function () {
+                                                                            alert('Đã xảy ra lỗi khi kết nối đến máy chủ. Vui lòng thử lại sau.');
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
 
 // Hiển thị hình ảnh đã chọn trước khi tải lên
-                                                        $(document).ready(function () {
-                                                            $('#editImageUpload').change(function () {
-                                                                if (this.files && this.files[0]) {
-                                                                    var reader = new FileReader();
-                                                                    reader.onload = function (e) {
-                                                                        $('#currentImage').attr('src', e.target.result);
-                                                                        $('#currentImage').show();
+                                                            $(document).ready(function () {
+                                                                $('#editImageUpload').change(function () {
+                                                                    if (this.files && this.files[0]) {
+                                                                        var reader = new FileReader();
+                                                                        reader.onload = function (e) {
+                                                                            $('#currentImage').attr('src', e.target.result);
+                                                                            $('#currentImage').show();
+                                                                        }
+                                                                        reader.readAsDataURL(this.files[0]);
                                                                     }
-                                                                    reader.readAsDataURL(this.files[0]);
-                                                                }
-                                                            });
+                                                                });
 
-                                                            // Thêm xử lý cho các ảnh bổ sung
-                                                            $('#editImageUpload2').change(function () {
-                                                                if (this.files && this.files[0]) {
-                                                                    var reader = new FileReader();
-                                                                    reader.onload = function (e) {
-                                                                        $('#currentImage2').attr('src', e.target.result);
-                                                                        $('#currentImage2').show();
+                                                                // Thêm xử lý cho các ảnh bổ sung
+                                                                $('#editImageUpload2').change(function () {
+                                                                    if (this.files && this.files[0]) {
+                                                                        var reader = new FileReader();
+                                                                        reader.onload = function (e) {
+                                                                            $('#currentImage2').attr('src', e.target.result);
+                                                                            $('#currentImage2').show();
+                                                                        }
+                                                                        reader.readAsDataURL(this.files[0]);
                                                                     }
-                                                                    reader.readAsDataURL(this.files[0]);
-                                                                }
-                                                            });
+                                                                });
 
-                                                            $('#editImageUpload3').change(function () {
-                                                                if (this.files && this.files[0]) {
-                                                                    var reader = new FileReader();
-                                                                    reader.onload = function (e) {
-                                                                        $('#currentImage3').attr('src', e.target.result);
-                                                                        $('#currentImage3').show();
+                                                                $('#editImageUpload3').change(function () {
+                                                                    if (this.files && this.files[0]) {
+                                                                        var reader = new FileReader();
+                                                                        reader.onload = function (e) {
+                                                                            $('#currentImage3').attr('src', e.target.result);
+                                                                            $('#currentImage3').show();
+                                                                        }
+                                                                        reader.readAsDataURL(this.files[0]);
                                                                     }
-                                                                    reader.readAsDataURL(this.files[0]);
-                                                                }
-                                                            });
+                                                                });
 
-                                                            $('#editImageUpload4').change(function () {
-                                                                if (this.files && this.files[0]) {
-                                                                    var reader = new FileReader();
-                                                                    reader.onload = function (e) {
-                                                                        $('#currentImage4').attr('src', e.target.result);
-                                                                        $('#currentImage4').show();
+                                                                $('#editImageUpload4').change(function () {
+                                                                    if (this.files && this.files[0]) {
+                                                                        var reader = new FileReader();
+                                                                        reader.onload = function (e) {
+                                                                            $('#currentImage4').attr('src', e.target.result);
+                                                                            $('#currentImage4').show();
+                                                                        }
+                                                                        reader.readAsDataURL(this.files[0]);
                                                                     }
-                                                                    reader.readAsDataURL(this.files[0]);
-                                                                }
-                                                            });
+                                                                });
 
-                                                            $('#editImageUpload5').change(function () {
-                                                                if (this.files && this.files[0]) {
-                                                                    var reader = new FileReader();
-                                                                    reader.onload = function (e) {
-                                                                        $('#currentImage5').attr('src', e.target.result);
-                                                                        $('#currentImage5').show();
+                                                                $('#editImageUpload5').change(function () {
+                                                                    if (this.files && this.files[0]) {
+                                                                        var reader = new FileReader();
+                                                                        reader.onload = function (e) {
+                                                                            $('#currentImage5').attr('src', e.target.result);
+                                                                            $('#currentImage5').show();
+                                                                        }
+                                                                        reader.readAsDataURL(this.files[0]);
                                                                     }
-                                                                    reader.readAsDataURL(this.files[0]);
-                                                                }
+                                                                });
                                                             });
-                                                        });
+                                                            function confirmReceived(customCartId) {
+                                                                if (confirm('Bạn xác nhận đã nhận được sản phẩm?')) {
+                                                                    // Gửi AJAX request để cập nhật trạng thái
+                                                                    $.ajax({
+                                                                        url: 'custom-cart',
+                                                                        type: 'POST',
+                                                                        data: {
+                                                                            action: 'updateStatus',
+                                                                            customCartId: customCartId,
+                                                                            statusId: 4
+                                                                        },
+                                                                        dataType: 'json',
+                                                                        success: function (response) {
+                                                                            if (response.success) {
+                                                                                // Reload trang sau khi cập nhật thành công
+                                                                                location.reload();
+                                                                            } else {
+                                                                                alert('Không thể cập nhật trạng thái đơn hàng. ' + response.message);
+                                                                            }
+                                                                        },
+                                                                        error: function () {
+                                                                            alert('Đã xảy ra lỗi khi kết nối đến máy chủ. Vui lòng thử lại sau.');
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
 
         </script>
     </body>
