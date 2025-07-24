@@ -189,6 +189,18 @@
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
                 </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/banner?action=list" class="nav-link">
+                        <i class="fas fa-images"></i>
+                        <span>Quản lý Banner</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/cardtemplates" class="nav-link">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Quản lý Thiệp</span>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
@@ -224,7 +236,7 @@
                 
                 <li>
                     <a href="${pageContext.request.contextPath}/listwiltedbatches" class="nav-link">
-                        <i class="fas fa-blog"></i>
+                        <i class="fas fa-boxes"></i>
                         <span>Danh sách sản phẩm héo</span>
                     </a>
                 </li>

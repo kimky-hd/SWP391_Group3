@@ -89,7 +89,7 @@ public class LoginServlet extends HttpServlet {
                 return;
             // Staff
             } else if (account.getRole() == 2) {
-                response.sendRedirect(request.getContextPath() + "/staff/blogs");
+                response.sendRedirect("listwiltedbatches");
                 return;
             }
             // Shiper

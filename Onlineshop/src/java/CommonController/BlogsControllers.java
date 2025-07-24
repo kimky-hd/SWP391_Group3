@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author dungb
  */
-@WebServlet(name = "BlogsControllers", urlPatterns = {"/blogs"})
+@WebServlet(name = "BlogsControllers", urlPatterns = {"/blogs-list"})
 public class BlogsControllers extends HttpServlet {
 
     /**

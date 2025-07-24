@@ -24,5 +24,20 @@
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductBatchDAO.java</file>
         </group>
+        <group name="New Folder (2)">
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/header.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/CommonController/Homepage.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/ManagerController/CardTemplateManagementController.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/CardTemplateDAO.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/Homepage.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/register.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Model/CardTemplate.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/HoaDonDAO.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/CommonController/BlogsControllers.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/OrderController.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/CheckOutController.java</file>
+        </group>
     </open-files>
 </project-private>
