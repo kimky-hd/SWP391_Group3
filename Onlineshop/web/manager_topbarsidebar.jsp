@@ -221,6 +221,13 @@
                     </a>
                 </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
+                
+                <li>
+                    <a href="${pageContext.request.contextPath}/listwiltedbatches" class="nav-link">
+                        <i class="fas fa-blog"></i>
+                        <span>Danh sách sản phẩm héo</span>
+                    </a>
+                </li>
 
                 <li>
                     <a href="${pageContext.request.contextPath}/staff/blogs" class="nav-link">

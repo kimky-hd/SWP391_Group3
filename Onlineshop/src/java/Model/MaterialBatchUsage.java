@@ -13,8 +13,8 @@ import java.util.Date;
 public class MaterialBatchUsage {
 
     private int usageID;
+    private int productBatchID;
     private int materialBatchID;
-    private int materialID;
     private int quantityUsed;
     private double importPrice;
     private Date dateImport;
@@ -22,11 +22,10 @@ public class MaterialBatchUsage {
 
     public MaterialBatchUsage() {
     }
-
-    public MaterialBatchUsage(int usageID, int materialBatchID, int materialID, int quantityUsed, double importPrice, Date dateImport, Date dateExpire) {
+    
+    public MaterialBatchUsage(int usageID, int materialBatchID, int quantityUsed, double importPrice, Date dateImport, Date dateExpire) {
         this.usageID = usageID;
         this.materialBatchID = materialBatchID;
-        this.materialID = materialID;
         this.quantityUsed = quantityUsed;
         this.importPrice = importPrice;
         this.dateImport = dateImport;
@@ -35,7 +34,6 @@ public class MaterialBatchUsage {
 
     public MaterialBatchUsage(MaterialBatch batch, int quantityUsed) {
         this.materialBatchID = batch.getMaterialBatchID();
-        this.materialID = batch.getMaterialID();
         this.importPrice = batch.getImportPrice();
         this.dateImport = batch.getDateImport();
         this.dateExpire = batch.getDateExpire();
@@ -62,14 +60,6 @@ public class MaterialBatchUsage {
 
     public void setMaterialBatchID(int materialBatchID) {
         this.materialBatchID = materialBatchID;
-    }
-
-    public int getMaterialID() {
-        return materialID;
-    }
-
-    public void setMaterialID(int materialID) {
-        this.materialID = materialID;
     }
 
     public int getQuantityUsed() {
@@ -104,4 +94,12 @@ public class MaterialBatchUsage {
         this.dateExpire = dateExpire;
     }
 
+    public int getProductBatchID() {
+        return productBatchID;
+    }
+
+    public void setProductBatchID(int productBatchID) {
+        this.productBatchID = productBatchID;
+    }
+    
 }

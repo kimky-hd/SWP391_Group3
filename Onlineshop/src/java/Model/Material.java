@@ -13,12 +13,13 @@ import java.util.List;
  * @author Duccon
  */
 public class Material {
-        private int materialID;
-        private String name;
-        private String unit;
-        private boolean isActive;
-        
-        private List<MaterialBatch> batches;
+
+    private int materialID;
+    private String name;
+    private String unit;
+    private boolean isActive;
+
+    private List<MaterialBatch> batches;
 
     public Material() {
     }
@@ -30,8 +31,6 @@ public class Material {
         this.isActive = isActive;
         this.batches = batches;
     }
-
-    
 
     public int getMaterialID() {
         return materialID;
@@ -63,7 +62,7 @@ public class Material {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-    }  
+    }
 
     public List<MaterialBatch> getBatches() {
         return batches;
@@ -72,7 +71,7 @@ public class Material {
     public void setBatches(List<MaterialBatch> batches) {
         this.batches = batches;
     }
-        
+
     public int getQuantity() {
         if (batches == null || batches.isEmpty()) {
             return 0;
@@ -83,11 +82,12 @@ public class Material {
                 .mapToInt(MaterialBatch::getQuantity)
                 .sum();
     }
+
     public int getTotalQuantity() {
-    return getQuantity(); // hoặc đổi tên method cũ thành getTotalQuantity luôn
-}
-    
-public String getStatus() {
+        return getQuantity(); 
+    }
+
+    public String getStatus() {
         if (batches == null || batches.isEmpty()) {
             return "Không có lô";
         }
@@ -119,5 +119,5 @@ public String getStatus() {
     public String toString() {
         return "Material{" + "materialID=" + materialID + ", name=" + name + ", unit=" + unit + ", isActive=" + isActive + ", batches=" + batches + '}';
     }
-    
+
 }
