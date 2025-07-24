@@ -16,6 +16,16 @@
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductBatch.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductComponent.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/web/manager/Manager_AddProductBatch.jsp</file>
+
+        <group>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialBatchDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Controller/staff/ReplaceWiltedMaterialController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/MaterialBatchUsage.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/MaterialReplacement.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductBatchDAO.java</file>
+        </group>
+
         <group name="New Folder (2)">
             <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
             <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/header.jsp</file>

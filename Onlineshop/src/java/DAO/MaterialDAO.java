@@ -7,6 +7,7 @@ package DAO;
 import Model.Material;
 import Model.MaterialBatch;
 import Model.MaterialBatchUsage;
+import Model.MaterialReplacement;
 import Model.ProductComponent;
 import Model.Supplier;
 import java.sql.PreparedStatement;
@@ -237,7 +238,7 @@ public class MaterialDAO extends DBContext {
 
     public List<MaterialBatch> getAvailableMaterialBatches(int materialID) {
         List<MaterialBatch> list = new ArrayList<>();
-        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
+        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 AND dateExpire > CURRENT_DATE ORDER BY dateImport ASC";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, materialID);
@@ -293,15 +294,14 @@ public class MaterialDAO extends DBContext {
                         // Ghi vào MaterialBatchUsage
                         int usageID = 0;
                         try (PreparedStatement insert = connection.prepareStatement(
-                                "INSERT INTO MaterialBatchUsage (materialBatchID, productBatchID, materialID, quantityUsed, importPrice, dateImport, dateExpire) "
+                                "INSERT INTO MaterialBatchUsage (materialBatchID, productBatchID, quantityUsed, importPrice, dateImport, dateExpire) "
                                 + "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                             insert.setInt(1, batchID);
                             insert.setInt(2, productBatchID);
-                            insert.setInt(3, materialID);
-                            insert.setInt(4, consume);
-                            insert.setDouble(5, unitPrice);
-                            insert.setDate(6, dateImport);
-                            insert.setDate(7, dateExpire);
+                            insert.setInt(3, consume);
+                            insert.setDouble(4, unitPrice);
+                            insert.setDate(5, dateImport);
+                            insert.setDate(6, dateExpire);
                             insert.executeUpdate();
 
                             try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
@@ -313,7 +313,7 @@ public class MaterialDAO extends DBContext {
 
                         // Thêm vào danh sách trả về
                         usageList.add(new MaterialBatchUsage(
-                                usageID, batchID, materialID, consume, unitPrice, dateImport, dateExpire));
+                                usageID, batchID, consume, unitPrice, dateImport, dateExpire));
 
                         quantity -= consume;
                     }
@@ -364,7 +364,7 @@ public class MaterialDAO extends DBContext {
 
     public List<MaterialBatch> getMaterialBatchesFIFO(int materialID) {
         List<MaterialBatch> list = new ArrayList<>();
-        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 ORDER BY dateImport ASC";
+        String sql = "SELECT * FROM MaterialBatch WHERE materialID = ? AND quantity > 0 AND dateExpire > CURRENT_DATE ORDER BY dateImport ASC";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, materialID);
@@ -384,16 +384,74 @@ public class MaterialDAO extends DBContext {
         return list;
     }
 
-    public void deductMaterialFromBatch(int materialBatchID, int usedQuantity){
-    String sql = "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?";
-    try {
-        ps = connection.prepareStatement(sql);
-        ps.setInt(1, usedQuantity);
-        ps.setInt(2, materialBatchID);
-        ps.executeUpdate();
-    }catch(SQLException e){
-        System.out.println("deductMaterialFromBatch : " + e.getMessage());
+    public void deductMaterialFromBatch(int materialBatchID, int usedQuantity) {
+        String sql = "UPDATE MaterialBatch SET quantity = quantity - ? WHERE materialBatchID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, usedQuantity);
+            ps.setInt(2, materialBatchID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("deductMaterialFromBatch : " + e.getMessage());
+        }
     }
-}
+
+    public void insertMaterialBatchUsage(int productBatchID, int materialBatchID, int quantityUsed, double importPrice) throws SQLException {
+        String sql = "INSERT INTO MaterialBatchUsage (productBatchID, materialBatchID, quantityUsed, importPrice) VALUES (?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productBatchID);
+            ps.setInt(2, materialBatchID);
+            ps.setInt(3, quantityUsed);
+            ps.setDouble(4, importPrice);
+            ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("insertMaterialBatchUsage " + e.getMessage());
+        }
+    }
+
+    public void insertReplacement(MaterialReplacement r) {
+        String sql = "INSERT INTO MaterialReplacement (productBatchID, oldMaterialBatchID, newMaterialBatchID, materialID, quantity, dateReplaced, note) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, r.getProductBatchID());
+            ps.setInt(2, r.getOldMaterialBatchID());
+            ps.setInt(3, r.getNewMaterialBatchID());
+            ps.setInt(4, r.getMaterialID());
+            ps.setInt(5, r.getQuantity());
+            ps.setDate(6, new java.sql.Date(r.getDateReplaced().getTime()));
+            ps.setString(7, r.getNote());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertReplacement" + e.getMessage());
+        }
+    }
+
+    public List<MaterialReplacement> getReplacementsByProductBatchID(int productBatchID) {
+        List<MaterialReplacement> list = new ArrayList<>();
+        String sql = "SELECT * FROM MaterialReplacement WHERE productBatchID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productBatchID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                MaterialReplacement r = new MaterialReplacement(
+                        rs.getInt("replacementID"),
+                        rs.getInt("productBatchID"),
+                        rs.getInt("oldMaterialBatchID"),
+                        rs.getInt("newMaterialBatchID"),
+                        rs.getInt("materialID"),
+                        rs.getInt("quantity"),
+                        rs.getDate("dateReplaced"),
+                        rs.getString("note")
+                );
+                list.add(r);
+            }
+        } catch (SQLException e) {
+            System.out.println("getReplacementsByProductBatchID " + e.getMessage());
+        }
+        return list;
+    }
 
 }

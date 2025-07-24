@@ -82,6 +82,7 @@
                                         <th>Ngày nhập</th>
                                         <th>Hạn sử dụng</th>
                                         <th>Nhà cung cấp</th>
+                                        <th>Tình trạng</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,6 +95,28 @@
                                             <td><fmt:formatDate value="${b.dateImport}" pattern="dd-MM-yyyy"/></td>
                                             <td><fmt:formatDate value="${b.dateExpire}" pattern="dd-MM-yyyy"/></td>
                                             <td class="text-start">${b.supplierName}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${b.status eq 'Tươi mới'}">
+                                                        <span class="badge bg-success text-white px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-leaf"></i> Tươi mới
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${b.status eq 'Lão hóa'}">
+                                                        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-clock"></i> Lão hóa
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${b.status eq 'Đã Héo'}">
+                                                        <span class="badge bg-danger text-white px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-skull-crossbones"></i> Đã Héo
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary text-white">Không có hàng</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                     <c:if test="${empty materialBatchList}">

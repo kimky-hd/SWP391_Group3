@@ -157,7 +157,11 @@ public class AddProductBatchController extends HttpServlet {
             if (materialUsageMap != null) {
                 for (Map.Entry<Material, List<MaterialBatchUsage>> entry : materialUsageMap.entrySet()) {
                     for (MaterialBatchUsage usage : entry.getValue()) {
+                        int batchID = usage.getMaterialBatchID();
+                        int usedQty = usage.getQuantityUsed();
+                        double price = usage.getImportPrice();
                         materialDAO.deductMaterialFromBatch(usage.getMaterialBatchID(), usage.getQuantityUsed());
+                        materialDAO.insertMaterialBatchUsage(productID, batchID, usedQty, price);
                     }
                 }
                 session.removeAttribute("materialUsageMap");
