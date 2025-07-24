@@ -387,6 +387,7 @@
                                                 <th>Khách hàng</th>
                                                 <th>Địa chỉ</th>
                                                 <th>Giá trị</th>
+                                                <th>Thanh Toán</th>
                                                 <th>Ngày tạo</th>
                                                 <th>Trạng thái</th>
                                                 <th>Hành động</th>
@@ -412,6 +413,9 @@
                                                             <strong class="text-primary">
                                                                 <fmt:formatNumber value="${order.tongGia}" pattern="#,##0" />đ
                                                             </strong>
+                                                        </td>
+                                                        <td>
+                                                            <small class="text-muted">${order.paymentMethod}</small>
                                                         </td>
                                                         <td>
                                                             <fmt:formatDate value="${order.ngayXuat}" pattern="dd/MM/yyyy" />
