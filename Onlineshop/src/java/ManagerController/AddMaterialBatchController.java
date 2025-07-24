@@ -207,7 +207,8 @@ public class AddMaterialBatchController extends HttpServlet {
             }
 
             int materialID = Integer.parseInt(materialIDRaw);
-
+            
+            mateDAO.addNewBatchToMaterialBatchHistory(materialID, quantity, importPrice, dateImport, dateExpire, supplierID);
             mateDAO.addNewBatchToMaterial(materialID, quantity, importPrice, dateImport, dateExpire, supplierID);
 
             request.getSession().setAttribute("isactive", "Bổ sung nguyên liệu thành công!");

@@ -28,13 +28,13 @@ public class MaterialBatchDAO extends DBContext {
     PreparedStatement ps;
     ResultSet rs;
 
-    public List<MaterialBatch> getMaterialBatchByIndex(int indexPage) {
+    public List<MaterialBatch> getMaterialBatchHistoryByIndex(int indexPage) {
         List<MaterialBatch> list = new ArrayList<>();
-        String sql = "SELECT mb.*, m.name AS materialName, s.supplierName AS supplierName\n"
-                + "FROM MaterialBatch mb\n"
-                + "JOIN Material m ON mb.materialID = m.materialID\n"
-                + "JOIN Supplier s ON mb.supplierID = s.supplierID\n"
-                + "ORDER BY mb.materialBatchID\n"
+        String sql = "SELECT mbh.*, m.name AS materialName, s.supplierName AS supplierName\n"
+                + "FROM MaterialBatchHistory mbh\n"
+                + "JOIN Material m ON mbh.materialID = m.materialID\n"
+                + "JOIN Supplier s ON mbh.supplierID = s.supplierID\n"
+                + "ORDER BY mbh.materialBatchID\n"
                 + "LIMIT ?, 10";
         try {
             ps = connection.prepareStatement(sql);
@@ -367,15 +367,41 @@ public class MaterialBatchDAO extends DBContext {
         return replacements;
     }
 
-    public void updateMaterialBatchQuantity(int batchID, int newQty) throws SQLException {
+    public void restoreWiltedMaterialBatchQuantity(int productBatchID) {
+        String sql = "SELECT mb.materialBatchID, mb.quantity AS currentQty, mbu.quantity AS usedQty "
+                + "FROM MaterialBatchUsage mbu "
+                + "JOIN MaterialBatch mb ON mbu.materialBatchID = mb.materialBatchID "
+                + "WHERE mbu.productBatchID = ? AND mb.dateExpire < CURDATE()";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productBatchID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int batchID = rs.getInt("materialBatchID");
+                    int currentQty = rs.getInt("currentQty");
+                    int usedQty = rs.getInt("usedQty");
+
+                    // Cập nhật lại số lượng
+                    int restoredQty = currentQty + usedQty;
+
+                    updateMaterialBatchQuantity(batchID, restoredQty);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("restoreWiltedMaterialBatchQuantity: " + e.getMessage());
+        }
+    }
+
+    public void updateMaterialBatchQuantity(int materialBatchID, int newQuantity) {
         String sql = "UPDATE MaterialBatch SET quantity = ? WHERE materialBatchID = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, newQty);
-            ps.setInt(2, batchID);
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, materialBatchID);
             ps.executeUpdate();
-        }catch(SQLException e){
-            System.out.println("updateMaterialBatchQuantity : " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("updateMaterialBatchQuantity: " + e.getMessage());
         }
     }
 

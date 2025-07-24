@@ -10,7 +10,7 @@ import java.sql.Date;
  *
  * @author Duccon
  */
-public class ProductBatch {
+public class ProductBatchHistory {
 
     private int productBatchID;
     private Product product;
@@ -21,10 +21,10 @@ public class ProductBatch {
     private Date dateImport;
     private Date dateExpire;
 
-    public ProductBatch() {
+    public ProductBatchHistory() {
     }
     
-    public ProductBatch(int productID, int quantity, double price, Date dateImport, Date dateExpire) {
+    public ProductBatchHistory(int productID, int quantity, double price, Date dateImport, Date dateExpire) {
         this.productID = productID;
         this.quantity = quantity;
         this.importPrice = price;
@@ -32,7 +32,7 @@ public class ProductBatch {
         this.dateExpire = dateExpire;
     }
 
-    public ProductBatch(int productBatchID, String productTitle, int productID, int quantity, double price, Date dateImport, Date dateExpire) {
+    public ProductBatchHistory(int productBatchID, String productTitle, int productID, int quantity, double price, Date dateImport, Date dateExpire) {
         this.productBatchID = productBatchID;
         this.productTitle = productTitle;
         this.productID = productID;
@@ -43,7 +43,7 @@ public class ProductBatch {
         //this.status = status;
     }
     
-    public ProductBatch(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire) {
+    public ProductBatchHistory(int productBatchID, int productID, int quantity, double price, Date dateImport, Date dateExpire) {
         this.productBatchID = productBatchID;
         this.productID = productID;
         this.quantity = quantity;

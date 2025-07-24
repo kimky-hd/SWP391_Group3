@@ -81,7 +81,7 @@ public class MaterialBatchHistory extends HttpServlet {
                 index = "1";
             }
             int indexPage = Integer.parseInt(index);
-            list = matebatchDAO.getMaterialBatchByIndex(indexPage);
+            list = matebatchDAO.getMaterialBatchHistoryByIndex(indexPage);
             allMaterialBatch = matebatchDAO.countAllMaterialBatch();
             int endPage = allMaterialBatch / 10;
             if (allMaterialBatch % 10 != 0) {

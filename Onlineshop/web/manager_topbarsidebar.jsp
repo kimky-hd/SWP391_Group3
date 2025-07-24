@@ -178,12 +178,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/orders" class="nav-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Quản lý Đơn hàng</span>
-                    </a>
-                </li>
-                <li>
                     <a href="${pageContext.request.contextPath}/custom-orders" class="nav-link">
                         <i class="fas fa-palette"></i>
                         <span>Đơn hàng tự thiết kế</span>
