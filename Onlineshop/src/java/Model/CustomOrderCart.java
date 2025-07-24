@@ -25,6 +25,9 @@ public class CustomOrderCart {
     // Thêm trường giá mong muốn
     private double desiredPrice;
     private double shippingFee;
+    private String address;
+    private String district;
+    private String city;
 
     // Constructors
     public CustomOrderCart() {
@@ -89,7 +92,7 @@ public class CustomOrderCart {
     public void setReferenceImage(String referenceImage) {
         this.referenceImage = referenceImage;
     }
-    
+
     public String getReferenceImage2() {
         return referenceImage2;
     }
@@ -97,7 +100,7 @@ public class CustomOrderCart {
     public void setReferenceImage2(String referenceImage2) {
         this.referenceImage2 = referenceImage2;
     }
-    
+
     public String getReferenceImage3() {
         return referenceImage3;
     }
@@ -105,7 +108,7 @@ public class CustomOrderCart {
     public void setReferenceImage3(String referenceImage3) {
         this.referenceImage3 = referenceImage3;
     }
-    
+
     public String getReferenceImage4() {
         return referenceImage4;
     }
@@ -113,7 +116,7 @@ public class CustomOrderCart {
     public void setReferenceImage4(String referenceImage4) {
         this.referenceImage4 = referenceImage4;
     }
-    
+
     public String getReferenceImage5() {
         return referenceImage5;
     }
@@ -213,6 +216,33 @@ public class CustomOrderCart {
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
     }
+// Thêm getter và setter cho trường address
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+// Thêm getter và setter cho trường district
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+// Thêm getter và setter cho trường city
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     @Override
     public String toString() {
@@ -232,6 +262,9 @@ public class CustomOrderCart {
                 + ", fullName='" + fullName + '\'' 
                 + ", phone='" + phone + '\'' 
                 + ", email='" + email + '\'' 
+                + ", address='" + address + '\'' 
+                + ", district='" + district + '\'' 
+                + ", city='" + city + '\'' 
                 + ", managerComment='" + managerComment + '\'' 
                 + ", desiredPrice=" + desiredPrice
                 + ", shippingFee=" + shippingFee

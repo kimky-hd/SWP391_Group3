@@ -13,230 +13,235 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
-        <style>
-            /* Thiết lập chung */
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f8f9fa;
-                color: #333;
-            }
+        <!-- Sidebar -->
+        <jsp:include page="../manager_topbarsidebar.jsp"></jsp:include>
+            <style>
+                /* Thiết lập chung */
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background-color: #f8f9fa;
+                    color: #333;
+                }
 
-            /* Topbar và sidebar */
-            .topbar {
-                background-color: #1F2937;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
+                /* Topbar và sidebar */
+                .topbar {
+                    background-color: #1F2937;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                }
 
-            /* Card styling */
-            .card {
-                border: none;
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                margin-bottom: 25px;
-            }
+                /* Card styling */
+                .card {
+                    border: none;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    margin-bottom: 25px;
+                }
 
-            .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            }
+                .card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                }
 
-            .card-header {
-                border-radius: 10px 10px 0 0 !important;
-                font-weight: 600;
-                padding: 15px 20px;
-            }
+                .card-header {
+                    border-radius: 10px 10px 0 0 !important;
+                    font-weight: 600;
+                    padding: 15px 20px;
+                }
 
-            .card-body {
-                padding: 20px;
-            }
+                .card-body {
+                    padding: 20px;
+                }
 
-            /* Status badges */
-            .status-badge {
-                padding: 6px 12px;
-                border-radius: 30px;
-                font-size: 0.75rem;
-                font-weight: 600;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-            }
+                /* Status badges */
+                .status-badge {
+                    padding: 6px 12px;
+                    border-radius: 30px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                }
 
-            .status-1 {
-                background-color: #f8d7da;
-                color: #721c24;
-            } /* Chờ duyệt */
-            .status-2 {
-                background-color: #d4edda;
-                color: #155724;
-            } /* Đã duyệt và đóng gói */
-            .status-3 {
-                background-color: #fff3cd;
-                color: #856404;
-            } /* Đang vận chuyển */
-            .status-4 {
-                background-color: #cce5ff;
-                color: #004085;
-            } /* Đã giao hàng */
-            .status-5 {
-                background-color: #d1ecf1;
-                color: #0c5460;
-            } /* Đã thanh toán */
-            .status-6 {
-                background-color: #e2e3e5;
-                color: #383d41;
-            } /* Đã hủy */
-            .status-7 {
-                background-color: #c3e6cb;
-                color: #155724;
-            } /* Đã duyệt đơn thiết kế */
-            .status-8 {
-                background-color: #f5c6cb;
-                color: #721c24;
-            } /* Từ chối đơn thiết kế */
+                .status-1 {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                } /* Chờ duyệt */
+                .status-2 {
+                    background-color: #d4edda;
+                    color: #155724;
+                } /* Đã duyệt và đóng gói */
+                .status-3 {
+                    background-color: #fff3cd;
+                    color: #856404;
+                } /* Đang vận chuyển */
+                .status-4 {
+                    background-color: #cce5ff;
+                    color: #004085;
+                } /* Đã giao hàng */
+                .status-5 {
+                    background-color: #d1ecf1;
+                    color: #0c5460;
+                } /* Đã thanh toán */
+                .status-6 {
+                    background-color: #e2e3e5;
+                    color: #383d41;
+                } /* Đã hủy */
+                .status-7 {
+                    background-color: #c3e6cb;
+                    color: #155724;
+                } /* Đã duyệt đơn thiết kế */
+                .status-8 {
+                    background-color: #f5c6cb;
+                    color: #721c24;
+                } /* Từ chối đơn thiết kế */
+                .status-9 {
+                    background-color: #fff3cd;
+                    color: #664d03;
+                } /* Sẵn sàng giao */
+                /* Reference image */
+                .reference-image-container {
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    margin-bottom: 20px;
+                }
 
-            /* Reference image */
-            .reference-image-container {
-                position: relative;
-                overflow: hidden;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                margin-bottom: 20px;
-            }
+                .reference-image {
+                    width: 100%;
+                    height: auto;
+                    max-height: 500px;
+                    object-fit: contain;
+                    transition: transform 0.5s ease;
+                }
 
-            .reference-image {
-                width: 100%;
-                height: auto;
-                max-height: 500px;
-                object-fit: contain;
-                transition: transform 0.5s ease;
-            }
+                .reference-image:hover {
+                    transform: scale(1.03);
+                }
 
-            .reference-image:hover {
-                transform: scale(1.03);
-            }
+                /* Order info */
+                .info-table {
+                    width: 100%;
+                }
 
-            /* Order info */
-            .info-table {
-                width: 100%;
-            }
+                .info-table th {
+                    width: 40%;
+                    padding: 12px 15px;
+                    color: #4b5563;
+                    font-weight: 600;
+                    border-bottom: 1px solid #e5e7eb;
+                }
 
-            .info-table th {
-                width: 40%;
-                padding: 12px 15px;
-                color: #4b5563;
-                font-weight: 600;
-                border-bottom: 1px solid #e5e7eb;
-            }
+                .info-table td {
+                    padding: 12px 15px;
+                    border-bottom: 1px solid #e5e7eb;
+                }
 
-            .info-table td {
-                padding: 12px 15px;
-                border-bottom: 1px solid #e5e7eb;
-            }
+                .info-table tr:last-child th,
+                .info-table tr:last-child td {
+                    border-bottom: none;
+                }
 
-            .info-table tr:last-child th,
-            .info-table tr:last-child td {
-                border-bottom: none;
-            }
+                /* Order description */
+                .order-description {
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                    margin-bottom: 25px;
+                }
 
-            /* Order description */
-            .order-description {
-                background-color: #ffffff;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-                margin-bottom: 25px;
-            }
+                .order-description h5 {
+                    color: #4b5563;
+                    font-weight: 600;
+                    margin-bottom: 15px;
+                    border-bottom: 1px solid #e5e7eb;
+                    padding-bottom: 10px;
+                }
 
-            .order-description h5 {
-                color: #4b5563;
-                font-weight: 600;
-                margin-bottom: 15px;
-                border-bottom: 1px solid #e5e7eb;
-                padding-bottom: 10px;
-            }
+                .order-description p {
+                    color: #6b7280;
+                    line-height: 1.6;
+                    white-space: pre-line;
+                }
 
-            .order-description p {
-                color: #6b7280;
-                line-height: 1.6;
-                white-space: pre-line;
-            }
+                /* Form controls */
+                .form-label {
+                    font-weight: 500;
+                    color: #4b5563;
+                    margin-bottom: 8px;
+                }
 
-            /* Form controls */
-            .form-label {
-                font-weight: 500;
-                color: #4b5563;
-                margin-bottom: 8px;
-            }
+                .form-select,
+                .form-control {
+                    border-radius: 8px;
+                    border: 1px solid #e5e7eb;
+                    padding: 10px 15px;
+                    transition: all 0.15s ease-in-out;
+                }
 
-            .form-select,
-            .form-control {
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                padding: 10px 15px;
-                transition: all 0.15s ease-in-out;
-            }
+                .form-select:focus,
+                .form-control:focus {
+                    border-color: #3b82f6;
+                    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+                }
 
-            .form-select:focus,
-            .form-control:focus {
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
-            }
+                /* Buttons */
+                .btn {
+                    padding: 10px 20px;
+                    font-weight: 500;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                }
 
-            /* Buttons */
-            .btn {
-                padding: 10px 20px;
-                font-weight: 500;
-                border-radius: 8px;
-                transition: all 0.3s ease;
-            }
+                .btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                }
 
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
+                .btn-primary {
+                    background-color: #3b82f6;
+                    border-color: #3b82f6;
+                }
 
-            .btn-primary {
-                background-color: #3b82f6;
-                border-color: #3b82f6;
-            }
+                .btn-primary:hover {
+                    background-color: #2563eb;
+                    border-color: #2563eb;
+                }
 
-            .btn-primary:hover {
-                background-color: #2563eb;
-                border-color: #2563eb;
-            }
+                .btn-secondary {
+                    background-color: #6b7280;
+                    border-color: #6b7280;
+                }
 
-            .btn-secondary {
-                background-color: #6b7280;
-                border-color: #6b7280;
-            }
+                .btn-secondary:hover {
+                    background-color: #4b5563;
+                    border-color: #4b5563;
+                }
 
-            .btn-secondary:hover {
-                background-color: #4b5563;
-                border-color: #4b5563;
-            }
+                /* Alerts */
+                .alert {
+                    border-radius: 8px;
+                    border: none;
+                    padding: 15px 20px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                }
 
-            /* Alerts */
-            .alert {
-                border-radius: 8px;
-                border: none;
-                padding: 15px 20px;
-                margin-bottom: 20px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            }
+                .alert-success {
+                    background-color: #d1fae5;
+                    color: #065f46;
+                }
 
-            .alert-success {
-                background-color: #d1fae5;
-                color: #065f46;
-            }
-
-            .alert-danger {
-                background-color: #fee2e2;
-                color: #991b1b;
-            }
-        </style>
-    </head>
-    <body>
+                .alert-danger {
+                    background-color: #fee2e2;
+                    color: #991b1b;
+                }
+            </style>
+        </head>
+        <body>
         <%
             // Kiểm tra quyền truy cập - chỉ cho phép manager (roleID = 1)
             Model.Account account = (Model.Account) session.getAttribute("account");
@@ -247,14 +252,12 @@
         %>
         <div class="container-fluid">
             <div class="row">
-                <!-- Sidebar -->
-                <jsp:include page="../manager_topbarsidebar.jsp"></jsp:include>
 
-                    <!-- Main Content -->
-                    <div class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
-                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                            <h1 class="h2">
-                                <i class="fas fa-palette me-2"></i>Chi tiết đơn hàng tự thiết kế #${customOrder.customCartID}
+                <!-- Main Content -->
+                <div class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">
+                            <i class="fas fa-palette me-2"></i>Chi tiết đơn hàng tự thiết kế #${customOrder.customCartID}
                         </h1>
                         <a href="${pageContext.request.contextPath}/staff_custom-orders" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-1"></i>Quay lại
@@ -322,6 +325,46 @@
                                                 </c:choose>
                                             </td>
                                         </tr>
+                                        <!-- Thông tin địa chỉ khách hàng -->
+                                        <tr>
+                                            <th><i class="fas fa-map-marker-alt me-2"></i>Địa chỉ:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.address}">
+                                                        ${customOrder.address}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-city me-2"></i>Quận/Huyện:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.district}">
+                                                        ${customOrder.district}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-map me-2"></i>Thành phố:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.city}">
+                                                        ${customOrder.city}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <th><i class="fas fa-money-bill-wave me-2"></i>Giá mong muốn:</th>
                                             <td>
@@ -350,22 +393,25 @@
                                                 <span class="status-badge status-${customOrder.statusID}">
                                                     <c:choose>
                                                         <c:when test="${customOrder.statusID == 1}">
-                                                            <i class="fas fa-clock me-1"></i>
+                                                            <i class="fas fa"></i>
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 2 || customOrder.statusID == 7}">
-                                                            <i class="fas fa-check me-1"></i>
+                                                            <i class="fas fa"></i>
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 3}">
-                                                            <i class="fas fa-truck me-1"></i>
+                                                            <i class="fas fa"></i>
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 4}">
-                                                            <i class="fas fa-home me-1"></i>
+                                                            <i class="fas fa"></i>
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 5}">
-                                                            <i class="fas fa-money-bill-wave me-1"></i>
+                                                            <i class="fas fa"></i>
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 6 || customOrder.statusID == 8}">
-                                                            <i class="fas fa-ban me-1"></i>
+                                                            <i class="fas fa"></i>
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 9}">
+                                                            <i class="fas fa"></i>
                                                         </c:when>
                                                     </c:choose>
                                                     ${customOrder.status}
