@@ -93,6 +93,10 @@ public class CustomVNPayReturnController extends HttpServlet {
                         customOrderCart.setFullName(fullName);
                         customOrderCart.setPhone(phone);
                         customOrderCart.setEmail(email);
+                        // Thêm các dòng sau để cập nhật thông tin địa chỉ
+                        customOrderCart.setAddress(address);
+                        customOrderCart.setDistrict(district);
+                        customOrderCart.setCity(city);
                         
                         // Cập nhật voucher nếu có
                         String selectedVoucherId = (String) session.getAttribute("custom_vnp_selectedVoucherId");
