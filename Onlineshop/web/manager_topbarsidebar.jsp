@@ -178,15 +178,21 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${pageContext.request.contextPath}/orders" class="nav-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Quản lý Đơn hàng</span>
-                    </a>
-                </li>
-                <li>
                     <a href="${pageContext.request.contextPath}/custom-orders" class="nav-link">
                         <i class="fas fa-palette"></i>
                         <span>Đơn hàng tự thiết kế</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/banner?action=list" class="nav-link">
+                        <i class="fas fa-images"></i>
+                        <span>Quản lý Banner</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/cardtemplates" class="nav-link">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Quản lý Thiệp</span>
                     </a>
                 </li>
 
@@ -220,13 +226,14 @@
                         <span>Quản lý Blog</span>
                     </a>
                 </li>
+                <% } else if (roleId == 2) { // Staff Menu %>
+                
                 <li>
-                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Báo cáo & Thống kê</span>
+                    <a href="${pageContext.request.contextPath}/listwiltedbatches" class="nav-link">
+                        <i class="fas fa-boxes"></i>
+                        <span>Danh sách sản phẩm héo</span>
                     </a>
                 </li>
-                <% } else if (roleId == 2) { // Staff Menu %>
 
                 <li>
                     <a href="${pageContext.request.contextPath}/staff/blogs" class="nav-link">

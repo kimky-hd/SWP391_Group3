@@ -82,7 +82,7 @@ public class ProductBatchHistory extends HttpServlet {
             }
             int pageIndex = Integer.parseInt(index);
 
-            list = batchDAO.getProductBatchesByIndex(pageIndex);
+            list = batchDAO.getProductBatchesHistoryByIndex(pageIndex);
             total = batchDAO.countAllProductBatch();
 
             int endPage = total / 8;

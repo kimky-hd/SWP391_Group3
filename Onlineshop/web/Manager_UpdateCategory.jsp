@@ -45,12 +45,6 @@
             </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <h3>Đây là footer</h3>
-                </div>
-        </footer>
+        
     </body>
 </html>

@@ -173,6 +173,30 @@
                             </div>
                         </div>
                     </div>
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Thiệp chúc mừng</span></h5>
+                    <div class="bg-light p-30 mb-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="includeCardCheckbox">
+                            <label class="form-check-label" for="includeCardCheckbox">
+                                Thêm thiệp chúc mừng (+10.000đ)
+                            </label>
+                        </div>
+                        <div id="cardSelectionSection" style="display: none; margin-top: 15px;">
+                            <div class="form-group">
+                                <label for="cardTemplateSelect">Chọn mẫu thiệp</label>
+                                <select class="form-control" id="cardTemplateSelect">
+                                    <option value="">Chọn mẫu thiệp</option>
+                                    <c:forEach items="${cardTemplates}" var="card">
+                                        <option value="${card.cardId}" data-image="${card.image}">${card.cardName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="mt-2 text-center">
+                                <img id="cardImagePreview" src="" alt="Card Preview" style="max-width: 100%; height: auto; display: none;">
+                            </div>
+                            <p class="mt-2">Phí thiệp: <span id="cardFeeDisplay">10.000đ</span></p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-4">
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tổng đơn hàng</span></h5>
@@ -203,9 +227,9 @@
                                         <li>Phí ship 50.000đ (khu vực xa Hà Đông): Hai Bà Trưng, Hoàn Kiếm, Đống Đa, Ba Đình, Tây Hồ, Long Biên</li>
                                     </ul>
                                 </div>
+                                <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                                <h6 class="font-weight-medium" id="shippingFeeDisplay">30.000đ</h6>
                             </div>
-                            <h6 class="font-weight-medium">Phí vận chuyển</h6>
-                            <h6 class="font-weight-medium" id="shippingFeeDisplay">30.000đ</h6>
                         </div>
                         <div class="border-bottom pt-3 pb-3">
                             <div class="d-flex justify-content-between mb-3">
@@ -303,6 +327,7 @@
                                     <input type="hidden" name="paymentMethod" id="paymentMethod">
                                     <!-- Hidden input to store selected voucher -->
                                     <input type="hidden" name="selectedVoucherId" id="selectedVoucherId" />
+                                    <input type="hidden" name="selectedCardId" id="selectedCardId" />
                                     <!-- Hidden để giữ total gốc -->
                                     <input type="hidden" name="shippingFee" id="shippingFee" value="30000" />
                                     <input type="hidden" name="originalTotal" id="originalTotal" value="${cart.total + 30000}" />
@@ -325,6 +350,7 @@
                                         const city = $('#cityInput').val().trim();
 
                                         const selectedVoucherId = $('#selectedVoucherId').val().trim();
+                                        const selectedCardId = $('#cardTemplateSelect').val().trim();
                                         const totalAfterDiscount = $('#totalAfterDiscount').val().trim();
 
                                         // Ẩn tất cả các thông báo lỗi trước đó
@@ -524,56 +550,100 @@
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
             <script>
+                                    // Define cartTotalFromJSP at the top of the script block to avoid repeated JSP evaluation and parsing issues
+                                    const cartTotalFromJSP = parseFloat('<c:out value="${cart.total}" default="0"/>');
+
                                     // Danh sách các quận gần Hà Đông (phí ship 30.000đ)
                                     const nearbyDistricts = ['Hà Đông', 'Thanh Xuân', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Hoàng Mai', 'Cầu Giấy'];
-
+                                    
                                     // Danh sách các quận xa Hà Đông (phí ship 50.000đ)
                                     const farDistricts = ['Hai Bà Trưng', 'Hoàn Kiếm', 'Đống Đa', 'Ba Đình', 'Tây Hồ', 'Long Biên'];
-
+                                    
                                     // Phí ship mặc định
                                     const defaultShippingFee = 30000;
                                     const farShippingFee = 50000;
-
+                                    const cardFee = 10000; // Phí thiệp mặc định
+                                    
                                     // Hàm cập nhật phí ship và tổng thanh toán
                                     function updateShippingFee() {
                                         const selectedDistrict = $('#districtInput').val();
                                         let shippingFee = defaultShippingFee;
-
+                                        
                                         // Nếu quận được chọn thuộc danh sách quận xa
                                         if (farDistricts.includes(selectedDistrict)) {
                                             shippingFee = farShippingFee;
                                         }
-
+                                        
                                         // Cập nhật hiển thị phí ship
                                         $('#shippingFeeDisplay').text(shippingFee.toLocaleString('vi-VN') + 'đ');
-
+                                        
                                         // Cập nhật giá trị input ẩn
                                         $('#shippingFee').val(shippingFee);
-
+                                        
                                         // Tính lại tổng thanh toán
-                                        const cartTotal = ${cart.total};
+                                        const cartTotal = cartTotalFromJSP;
                                         const voucherDiscount = parseInt($('#selectedVoucherId').val() ? $('#discountAmount').text().replace(/[^0-9]/g, '') : 0) || 0;
-
+                                        
+                                        let currentCardFee = 0;
+                                        if ($('#includeCardCheckbox').is(':checked')) {
+                                            currentCardFee = cardFee;
+                                        }
+                                        
                                         // Tính tổng mới
-                                        const newTotal = cartTotal + shippingFee - voucherDiscount;
-
+                                        const newTotal = cartTotal + shippingFee + currentCardFee - voucherDiscount;
+                                        
                                         // Cập nhật hiển thị tổng thanh toán
                                         $('#totalDisplay').text(newTotal.toLocaleString('vi-VN') + 'đ');
-
+                                        
                                         // Cập nhật giá trị input ẩn
-                                        $('#originalTotal').val(cartTotal + shippingFee);
+                                        $('#originalTotal').val(cartTotal + shippingFee + currentCardFee);
                                         $('#totalAfterDiscount').val(newTotal);
                                     }
-
+                                    
                                     // Gọi hàm cập nhật khi trang được tải
-                                    $(document).ready(function () {
+                                    $(document).ready(function() {
                                         // Cập nhật phí ship khi chọn quận
                                         $('#districtInput').change(updateShippingFee);
-
+                                        
                                         // Cập nhật phí ship khi trang được tải
                                         updateShippingFee();
-                                    });
+                                        
+                                        // Xử lý sự kiện khi checkbox thiệp thay đổi
+                                        $('#includeCardCheckbox').change(function() {
+                                            if ($(this).is(':checked')) {
+                                                $('#cardSelectionSection').show();
+                                                $('#cardTemplateSelect').val(''); // Clear previous selection
+                                                $('#cardImagePreview').hide().attr('src', ''); // Hide and clear image
+                                            } else {
+                                                $('#cardSelectionSection').hide();
+                                                $('#cardTemplateSelect').val(''); // Clear selected card
+                                                $('#cardImagePreview').hide().attr('src', ''); // Hide and clear image
+                                            }
+                                            updateShippingFee(); // Cập nhật lại tổng tiền khi thay đổi trạng thái thiệp
+                                        });
+                                        
+                                        // Xử lý sự kiện khi chọn mẫu thiệp
+                                        $('#cardTemplateSelect').change(function() {
+                                            const selectedCardId = $(this).val();
+                                            $('#selectedCardId').val(selectedCardId); // Update hidden input
+                                            
+                                            // Update card image preview
+                                            const selectedOption = $(this).find('option:selected');
+                                            const imageUrl = selectedOption.data('image');
+                                            if (imageUrl) {
+                                                $('#cardImagePreview').attr('src', 'img/' + imageUrl).show(); // Assuming images are in img/
+                                            } else {
+                                                $('#cardImagePreview').hide().attr('src', '');
+                                            }
+                                            updateShippingFee(); // Recalculate total in case card price is dynamic (though it's fixed here)
+                                        });
 
+                                        // Ensure card selection section is hidden on page load unless checkbox is checked
+                                        if (!$('#includeCardCheckbox').is(':checked')) {
+                                            $('#cardSelectionSection').hide();
+                                        }
+                                    });
+                                    
                                     // Cập nhật lại hàm xử lý voucher
                                     document.querySelectorAll('.voucher-item').forEach(item => {
                                         item.addEventListener('click', function () {
@@ -588,15 +658,21 @@
 
                                             const discount = parseInt(this.dataset.discount || '0');
                                             const shippingFee = parseInt(document.getElementById('shippingFee').value);
-                                            const cartTotal = ${cart.total};
-                                            const originalTotal = cartTotal + shippingFee;
-
+                                            const cartTotal = cartTotalFromJSP;
+                                            
+                                            let currentCardFee = 0;
+                                            if ($('#includeCardCheckbox').is(':checked')) {
+                                                currentCardFee = cardFee;
+                                            }
+                                            
+                                            const originalTotal = cartTotal + shippingFee + currentCardFee;
+                                            
                                             // Tính tổng sau giảm
                                             const newTotal = Math.max(originalTotal - discount, 0);
-
+                                            
                                             // Format tiền VND
                                             const formatVND = (value) => value.toLocaleString('vi-VN') + 'đ';
-
+                                            
                                             // Hiển thị số tiền được giảm
                                             document.getElementById('discountAmount').textContent = '-' + formatVND(discount);
                                             document.getElementById('discountRow').style.display = 'flex';

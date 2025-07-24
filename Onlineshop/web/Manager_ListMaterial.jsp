@@ -239,13 +239,6 @@
             </div>
         </main>
 
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <h3>Đây là footer</h3>
-                </div>
-            </div>
-        </footer>
         <script>
             setTimeout(() => {
                 const alertBox = document.querySelector('.alert');

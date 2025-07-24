@@ -988,7 +988,7 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public void insertProductBatch(int productID, int quantity, double importPrice, Date dateImport, Date dateExpire){
+    public void insertProductBatch(int productID, int quantity, double importPrice, Date dateImport, Date dateExpire) {
         String sql = "INSERT INTO ProductBatch (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(sql);
@@ -998,9 +998,41 @@ public class ProductDAO extends DBContext {
             ps.setDate(4, dateImport);
             ps.setDate(5, dateExpire);
             ps.executeUpdate();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("insertProductBatch : " + e.getMessage());
         }
+    }
+    
+    public void insertProductBatchHistory(int productID, int quantity, double importPrice, Date dateImport, Date dateExpire) {
+        String sql = "INSERT INTO ProductBatchHistory (productID, quantity, importPrice, dateImport, dateExpire) VALUES (?, ?, ?, ?, ?)";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setInt(2, quantity);
+            ps.setDouble(3, importPrice);
+            ps.setDate(4, dateImport);
+            ps.setDate(5, dateExpire);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertProductBatchHistory : " + e.getMessage());
+        }
+    }
+
+    public boolean deleteProductBatch(int productBatchID) {
+        String deleteUsageSQL = "DELETE FROM MaterialBatchUsage WHERE productBatchID = ?";
+        String deleteBatchSQL = "DELETE FROM ProductBatch WHERE productBatchID = ?";
+        try {
+            ps = connection.prepareStatement(deleteUsageSQL);
+            ps.setInt(1, productBatchID);
+            ps.executeUpdate();
+            ps = connection.prepareStatement(deleteBatchSQL);
+            ps.setInt(1, productBatchID);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            System.out.println("deleteProductBatch: " + e.getMessage());
+        }
+        return false;
     }
 
     public List<ProductComponent> getProductComponentsWithMaterial(int productID) {
@@ -1038,7 +1070,6 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    
     // Lấy sản phẩm theo category có phân trang
     public List<Product> getProductByCategory(String categoryId, int page, int pageSize) {
         List<Product> list = new ArrayList<>();
@@ -1083,7 +1114,6 @@ public class ProductDAO extends DBContext {
         return 0;
     }
 
-
     public void updateImportPrice(int productBatchID, double avgImportPrice) {
         String sql = "UPDATE ProductBatch SET importPrice = ? WHERE productBatchID = ?";
         try {
@@ -1095,13 +1125,14 @@ public class ProductDAO extends DBContext {
             System.out.println("updateImportPrice" + e.getMessage());
         }
     }
-        // Lấy sản phẩm theo category với phân trang
+    // Lấy sản phẩm theo category với phân trang
+
     public List<Product> getProductByCategoryAndIndex(int categoryID, int index) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.* FROM Product p " +
-                    "JOIN CategoryProduct cp ON p.productID = cp.productID " +
-                    "WHERE cp.categoryID = ? AND p.isActive = TRUE " +
-                    "ORDER BY p.productID LIMIT ?, 8";
+        String sql = "SELECT p.* FROM Product p "
+                + "JOIN CategoryProduct cp ON p.productID = cp.productID "
+                + "WHERE cp.categoryID = ? AND p.isActive = TRUE "
+                + "ORDER BY p.productID LIMIT ?, 8";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, categoryID);
@@ -1127,9 +1158,9 @@ public class ProductDAO extends DBContext {
 
     // Đếm số sản phẩm theo category
     public int countProductByCategory(int categoryID) {
-        String sql = "SELECT COUNT(*) FROM Product p " +
-                    "JOIN CategoryProduct cp ON p.productID = cp.productID " +
-                    "WHERE cp.categoryID = ? AND p.isActive = TRUE";
+        String sql = "SELECT COUNT(*) FROM Product p "
+                + "JOIN CategoryProduct cp ON p.productID = cp.productID "
+                + "WHERE cp.categoryID = ? AND p.isActive = TRUE";
         try {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, categoryID);

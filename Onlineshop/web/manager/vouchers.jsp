@@ -230,9 +230,11 @@
                         <h4 class="mb-1"><i class="fas fa-ticket-alt me-2"></i>Quản Lý Voucher</h4>
                         <p class="text-muted mb-0">Quản lý mã giảm giá và khuyến mãi</p>
                     </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVoucherModal">
-                        <i class="fas fa-plus me-2"></i>Thêm Voucher mới
-                    </button>
+                  <a href="vouchers?action=add-form" class="btn btn-primary">
+    <i class="fas fa-plus me-2"></i>Thêm Voucher mới
+</a>
+
+
                 </div>
             </div>
 
@@ -421,77 +423,7 @@
             </div>
         </div>
 
-        <!-- Add Voucher Modal -->
-        <div class="modal fade" id="addVoucherModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Thêm Voucher Mới</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form action="vouchers" method="post">
-                        <input type="hidden" name="action" value="add">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Mã Voucher <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="code" required 
-                                               placeholder="VD: SALE2025">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Số tiền giảm (VNĐ) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="discountAmount" required 
-                                               min="1000" step="1000" placeholder="50000">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Đơn tối thiểu (VNĐ) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="minOrderValue" required 
-                                               min="0" step="1000" placeholder="200000">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Giới hạn sử dụng <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="usageLimit" required 
-                                               min="1" placeholder="100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ngày bắt đầu <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" class="form-control" name="startDate" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ngày kết thúc <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" class="form-control" name="endDate" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Mô tả</label>
-                                <textarea class="form-control" name="description" rows="3" 
-                                          placeholder="Mô tả về voucher..."></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">Thêm Voucher</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+      
 
         <!-- Edit Voucher Modal -->
         <div class="modal fade" id="editVoucherModal" tabindex="-1">

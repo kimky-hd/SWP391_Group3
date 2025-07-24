@@ -121,9 +121,6 @@ function updateOrderStatus(orderId, statusId, statusName, buttonElement) {
         case '4':
             confirmMessage = `Bạn có chắc chắn đã giao thành công đơn hàng #${orderId}?`;
             break;
-        case '9':
-            confirmMessage = `Bạn có chắc chắn muốn chuẩn bị đơn hàng #${orderId} để giao?`;
-            break;
         default:
             confirmMessage = `Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng #${orderId}?`;
     }
