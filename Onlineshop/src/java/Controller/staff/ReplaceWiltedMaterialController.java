@@ -95,7 +95,7 @@ public class ReplaceWiltedMaterialController extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             try {
-                matedao.restoreWiltedMaterialBatchQuantity(productBatchID);
+                
                 
                 List<MaterialReplacement> replacements = matedao.autoReplaceWiltedMaterial(productBatchID);
 
@@ -142,10 +142,12 @@ public class ReplaceWiltedMaterialController extends HttpServlet {
                     newBatch.setDateImport(new java.sql.Date(System.currentTimeMillis()));
                     newBatch.setDateExpire(newExpireDate); // Hoặc tính lại nếu cần
                     
+                    matedao.restoreWiltedMaterialBatchQuantity(oldBatch.getProductID());
                     productDAO.insertProductBatchHistory(productID, maxQuantity, totalCost, new java.sql.Date(System.currentTimeMillis()), newExpireDate);
                     productDAO.insertProductBatch(productID, maxQuantity, totalCost, new java.sql.Date(System.currentTimeMillis()), newExpireDate);
                     productDAO.deleteProductBatch(oldBatch.getProductID());
-
+                    
+                    
                     request.getSession().setAttribute("successMessage", "Cập nhật nguyên liệu thành công!");
                 } else {
                     request.getSession().setAttribute("errorMessage", "Không đủ nguyên liệu thay thế!");

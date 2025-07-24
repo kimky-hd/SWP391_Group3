@@ -231,7 +231,8 @@
                     </tbody>
 
                 </table>
-                <c:if test="${tag != null && not empty listWL}">
+             </div>
+            <c:if test="${tag != null && not empty listWL}">
                     <ul class="pagination">
                         <c:if test="${tag != 1}">
                             <li class="page-item">
@@ -251,7 +252,6 @@
                         </c:if>
                     </ul>
                 </c:if>
-            </div>
         </div>
 
         <-<!-- Footer start -->
