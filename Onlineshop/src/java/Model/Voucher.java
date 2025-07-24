@@ -25,13 +25,13 @@ public class Voucher {
         return this.endDate.before(new Date());
     }
     
-    // Method kiểm tra voucher có hiệu lực không (đã bắt đầu và chưa hết hạn)
+ 
     public boolean isValid() {
         Date now = new Date();
         return !now.before(this.startDate) && !now.after(this.endDate) && this.isActive;
     }
     
-    // Method lấy trạng thái chi tiết
+   
     public String getDetailedStatus() {
         Date now = new Date();
         if (now.after(this.endDate)) {
@@ -61,10 +61,10 @@ public boolean isNotStarted() {
         this.description = description;
         this.isActive = true;
         this.usedCount = 0;
-        this.createdDate = new Date(); // Tự động set ngày hiện tại
+        this.createdDate = new Date(); 
     }
 
-    // Getters and Setters
+   
     public int getVoucherId() {
         return voucherId;
     }

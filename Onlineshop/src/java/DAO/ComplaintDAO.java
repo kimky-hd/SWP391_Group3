@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.Complaint;
+import Model.ComplaintImage;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -218,34 +219,54 @@ public boolean updateComplaintResponse(Complaint complaint) {
     }
     
     // Lấy khiếu nại theo ID
-    public Complaint getComplaintById(int id) {
-        String sql = "SELECT * FROM Complaint WHERE complaintID = ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, id);
-            ResultSet rs = st.executeQuery();
+    public Complaint getComplaintById(int complaintID) {
+    String sql = "SELECT * FROM Complaint WHERE complaintID = ?";
+    
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, complaintID);
+        ResultSet rs = st.executeQuery();
+        
+        if (rs.next()) {
+            Complaint complaint = new Complaint();
+            complaint.setComplaintID(rs.getInt("complaintID"));
+            complaint.setMaHD(rs.getInt("maHD"));
+            complaint.setAccountID(rs.getInt("accountID"));
+            complaint.setTitle(rs.getString("title"));
+            complaint.setContent(rs.getString("content"));
+            complaint.setImage(rs.getString("image"));
+            complaint.setStatus(rs.getString("status"));
+            complaint.setDateCreated(rs.getTimestamp("dateCreated"));
+            complaint.setResponseContent(rs.getString("responseContent"));
+            complaint.setDateResolved(rs.getTimestamp("dateResolved"));
             
-            if (rs.next()) {
-                Complaint complaint = new Complaint();
-                complaint.setComplaintID(rs.getInt("complaintID"));
-                complaint.setMaHD(rs.getInt("maHD"));
-                complaint.setAccountID(rs.getInt("accountID"));
-                complaint.setTitle(rs.getString("title"));
-                complaint.setContent(rs.getString("content"));
-                complaint.setImage(rs.getString("image")); // Lấy giá trị image từ database
-                complaint.setStatus(rs.getString("status"));
-                complaint.setResponseContent(rs.getString("responseContent"));
-                complaint.setDateCreated(rs.getTimestamp("dateCreated"));
-                complaint.setDateResolved(rs.getTimestamp("dateResolved"));
-                
-                return complaint;
+            System.out.println("✅ Found complaint: " + complaint.getTitle());
+            
+            // ⭐ QUAN TRỌNG: Load images ngay tại đây
+            ComplaintImageDAO imageDAO = new ComplaintImageDAO();
+            List<ComplaintImage> images = imageDAO.getImagesByComplaintId(complaintID);
+            
+            System.out.println("📷 Loading images for complaint ID: " + complaintID);
+            System.out.println("📷 Images found: " + (images != null ? images.size() : 0));
+            
+            if (images != null && !images.isEmpty()) {
+                for (ComplaintImage img : images) {
+                    System.out.println("  - Image path: " + img.getImagePath());
+                }
             }
-        } catch (SQLException e) {
-            System.out.println("Error in getComplaintById: " + e.getMessage());
-            e.printStackTrace();
+            
+            complaint.setImages(images);
+            
+            return complaint;
         }
-        return null;
+    } catch (SQLException e) {
+        System.out.println("❌ Error in getComplaintById: " + e.getMessage());
+        e.printStackTrace();
     }
+    
+    return null;
+}
+
     
     // Lấy danh sách khiếu nại theo accountID (khiếu nại của một người dùng cụ thể)
     public List<Complaint> getComplaintsByAccountId(int accountId, int page, int pageSize) {
@@ -567,4 +588,58 @@ public boolean updateComplaintResponse(Complaint complaint) {
         }
         return 0;
     }
+    // Thêm vào class ComplaintDAO hiện tại của bạn
+
+// Lấy khiếu nại kèm ảnh
+public Complaint getComplaintWithImages(int complaintID) {
+    Complaint complaint = getComplaintById(complaintID);
+    if (complaint != null) {
+        ComplaintImageDAO imageDAO = new ComplaintImageDAO();
+        List<ComplaintImage> images = imageDAO.getImagesByComplaintId(complaintID);
+        complaint.setImages(images);
+    }
+    return complaint;
+}
+
+// Lấy danh sách khiếu nại kèm ảnh đầu tiên
+public List<Complaint> getAllComplaintsWithFirstImage() {
+    List<Complaint> complaints = getAllComplaints();
+    ComplaintImageDAO imageDAO = new ComplaintImageDAO();
+    
+    for (Complaint complaint : complaints) {
+        String firstImage = imageDAO.getFirstImageByComplaintId(complaint.getComplaintID());
+        if (firstImage != null && complaint.getImage() == null) {
+            complaint.setImage(firstImage); // Set ảnh đầu tiên làm ảnh đại diện
+        }
+    }
+    
+    return complaints;
+}
+
+// Tạo khiếu nại với nhiều ảnh
+public int createComplaintWithImages(Complaint complaint, List<String> imagePaths) {
+    int complaintID = createComplaint(complaint);
+    
+    if (complaintID > 0 && imagePaths != null && !imagePaths.isEmpty()) {
+        ComplaintImageDAO imageDAO = new ComplaintImageDAO();
+        boolean imageResult = imageDAO.addImages(complaintID, imagePaths);
+        
+        if (!imageResult) {
+            System.out.println("Warning: Complaint created but failed to add some images");
+        }
+    }
+    
+    return complaintID;
+}
+// Thêm method này vào ComplaintDAO
+public Complaint getComplaintByOrderIdWithImages(int maHD) {
+    Complaint complaint = getComplaintByOrderId(maHD);
+    if (complaint != null) {
+        ComplaintImageDAO imageDAO = new ComplaintImageDAO();
+        List<ComplaintImage> images = imageDAO.getImagesByComplaintId(complaint.getComplaintID());
+        complaint.setImages(images);
+    }
+    return complaint;
+}
+
 }

@@ -506,9 +506,10 @@
                         </h1>
                         <p class="mb-0 text-muted">Quản lý thông tin khách hàng</p>
                     </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                    <!-- Thành: -->
+                    <a href="${pageContext.request.contextPath}/staff/customers?action=showAdd" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Thêm Khách Hàng
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Statistics Cards -->
@@ -567,18 +568,14 @@
                     </div>
                 </div>
 
-                <!-- Thông báo -->
-                <c:if test="${not empty message}">
+                <!-- Hiển thị thông báo thành công từ session -->
+                <c:if test="${not empty sessionScope.successMessage}">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>${message}
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <i class="fas fa-check-circle me-2"></i>
+                        ${sessionScope.successMessage}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </c:if>
-                <c:if test="${not empty error}">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>${error}
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <% session.removeAttribute("successMessage"); %>
                 </c:if>
 
                 <!-- Filter Panel -->
@@ -706,13 +703,11 @@
                                                                 title="Xem chi tiết">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
-                                                        <button class="btn btn-sm btn-primary" 
-                                                                onclick="editUser(${user.accountID}, '${user.username}', '${user.email}', '${user.phone}', ${user.role})" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target="#editUserModal"
-                                                                title="Chỉnh sửa">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
+                                                                <a href="${pageContext.request.contextPath}/staff/customers?action=edit&id=${user.accountID}" 
+                                                                   class="btn btn-sm btn-primary" 
+                                                                   title="Chỉnh sửa">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
                                                         <c:if test="${user.isActive}">
                                                             <a href="customers?action=toggle&id=${user.accountID}&status=true" 
                                                                class="btn btn-sm btn-danger" 
@@ -781,72 +776,6 @@
             </div>
         </main>
 
-        <!-- Modal Thêm khách hàng -->
-        <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="addCustomerModalLabel">
-                            <i class="fas fa-user-plus me-2"></i>Thêm khách hàng mới
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="customers" method="post" id="addCustomerForm">
-                        <div class="modal-body">
-                            <input type="hidden" name="action" value="add">
-                            <!-- Đặt role mặc định là 0 (khách hàng) -->
-                            <input type="hidden" name="role" value="0">
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="username" class="form-label">
-                                            <i class="fas fa-user me-1"></i>Tên đăng nhập <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" class="form-control" id="username" name="username" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="password" class="form-label">
-                                            <i class="fas fa-lock me-1"></i>Mật khẩu <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">
-                                            <i class="fas fa-envelope me-1"></i>Email <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="phone" class="form-label">
-                                            <i class="fas fa-phone me-1"></i>Số điện thoại
-                                        </label>
-                                        <input type="text" class="form-control" id="phone" name="phone">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                <i class="fas fa-times me-1"></i>Đóng
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Lưu
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!-- Modal Xem Chi tiết -->
         <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
@@ -922,44 +851,6 @@
             </div>
         </div>
 
-        <!-- Modal Chỉnh sửa -->
-        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editUserModalLabel">Chỉnh Sửa Khách Hàng</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="customers" method="post">
-                        <div class="modal-body">
-                            <input type="hidden" name="action" value="update">
-                            <input type="hidden" id="edit-id" name="id">
-                            <!-- Giữ role là 0 (khách hàng) -->
-                            <input type="hidden" name="role" value="0">
-
-                            <div class="mb-3">
-                                <label for="edit-username" class="form-label">Tên đăng nhập</label>
-                                <input type="text" class="form-control" id="edit-username" name="username" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="edit-email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="edit-email" name="email" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="edit-phone" class="form-label">Số điện thoại</label>
-                                <input type="text" class="form-control" id="edit-phone" name="phone">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="footer">
@@ -1327,12 +1218,7 @@
             }
 
             // Hàm chỉnh sửa khách hàng
-            function editUser(id, username, email, phone, role) {
-                document.getElementById('edit-id').value = id;
-                document.getElementById('edit-username').value = username;
-                document.getElementById('edit-email').value = email;
-                document.getElementById('edit-phone').value = phone || '';
-            }
+           
 
             // Hiển thị toast notification
             function showToast(title, message, type) {
@@ -1362,71 +1248,9 @@
                 toast.show();
             }
 
-            // Validation form thêm khách hàng
-            document.getElementById('addCustomerForm').addEventListener('submit', function (e) {
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-
-                // Kiểm tra username
-                if (username.length < 3) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Tên đăng nhập phải có ít nhất 3 ký tự', 'danger');
-                    return;
-                }
-
-                // Kiểm tra password
-                if (password.length < 6) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự', 'danger');
-                    return;
-                }
-
-                // Kiểm tra email format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Email không đúng định dạng', 'danger');
-                    return;
-                }
-
-                // Kiểm tra số điện thoại (nếu có nhập)
-                if (phone && !/^[0-9]{10,11}$/.test(phone)) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Số điện thoại phải có 10-11 chữ số', 'danger');
-                    return;
-                }
-            });
-
+           
             // Validation form chỉnh sửa khách hàng
-            document.querySelector('#editUserModal form').addEventListener('submit', function (e) {
-                const username = document.getElementById('edit-username').value.trim();
-                const email = document.getElementById('edit-email').value.trim();
-                const phone = document.getElementById('edit-phone').value.trim();
-
-                // Kiểm tra username
-                if (username.length < 3) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Tên đăng nhập phải có ít nhất 3 ký tự', 'danger');
-                    return;
-                }
-
-                // Kiểm tra email format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Email không đúng định dạng', 'danger');
-                    return;
-                }
-
-                // Kiểm tra số điện thoại (nếu có nhập)
-                if (phone && !/^[0-9]{10,11}$/.test(phone)) {
-                    e.preventDefault();
-                    showToast('Lỗi', 'Số điện thoại phải có 10-11 chữ số', 'danger');
-                    return;
-                }
-            });
+           
 
             // Xác nhận trước khi vô hiệu hóa/kích hoạt tài khoản
             document.querySelectorAll('a[href*="action=toggle"]').forEach(function (link) {
@@ -1441,24 +1265,7 @@
                 });
             });
 
-            // Làm mới form khi đóng modal
-            document.getElementById('addCustomerModal').addEventListener('hidden.bs.modal', function () {
-                document.getElementById('addCustomerForm').reset();
-            });
-
-            document.getElementById('editUserModal').addEventListener('hidden.bs.modal', function () {
-                document.querySelector('#editUserModal form').reset();
-            });
-
-            // Tự động focus vào trường đầu tiên khi mở modal
-            document.getElementById('addCustomerModal').addEventListener('shown.bs.modal', function () {
-                
-                document.getElementById('username').focus();
-            });
-
-            document.getElementById('editUserModal').addEventListener('shown.bs.modal', function () {
-                document.getElementById('edit-username').focus();
-            });
+           
 
             // Hiệu ứng loading khi submit form
             document.querySelectorAll('form').forEach(function (form) {

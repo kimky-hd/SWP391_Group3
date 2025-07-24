@@ -47,74 +47,65 @@
                 <h1 class="h3 mb-2 text-gray-800">Lô sản phẩm cần thay nguyên liệu</h1>
 
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 font-weight-bold text-danger">Lô sản phẩm có nguyên liệu đã héo</h6>
-                        <a href="managerproductlist" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Quay lại
-                        </a>
-                    </div>
 
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover text-center">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>ID Lô</th>
-                                        <th>Mã sản phẩm</th>
-                                        <th>Số lượng</th>
-                                        <th>Giá nhập</th>
-                                        <th>Ngày nhập</th>
-                                        <th>Hạn sử dụng</th>
-                                        <th>Tình trạng</th>
-                                        <th>Hành động</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="b" items="${wiltedBatches}">
-                                        <tr class="align-middle">
-                                            <td>${b.productBatchID}</td>
-                                            <td>${b.productID}</td>
-                                            <td>${b.quantity}</td>
-                                            <td><fmt:formatNumber value="${b.importPrice}" pattern="#,##0"/> VND</td>
-                                            <td><fmt:formatDate value="${b.dateImport}" pattern="dd-MM-yyyy"/></td>
-                                            <td><fmt:formatDate value="${b.dateExpire}" pattern="dd-MM-yyyy"/></td>
-                                            <td>
-                                                <span class="badge bg-danger text-white px-2 py-1 rounded-pill">
-                                                    <i class="fas fa-skull-crossbones"></i> Có hoa héo
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <form action="replacewilted" method="post" class="auto-replace-form">
-                                                    <input type="hidden" name="productBatchID" value="${b.productBatchID}" />
-                                                    <button type="button" class="btn btn-warning auto-replace-btn">
-                                                        Cập nhật nguyên liệu bị héo
-                                                    </button>
-                                                </form>
+                        <c:choose>
+                            <c:when test="${not empty wiltedBatches}">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover text-center">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>ID Lô</th>
+                                                <th>Mã sản phẩm</th>
+                                                <th>Số lượng</th>
+                                                <th>Giá nhập</th>
+                                                <th>Ngày nhập</th>
+                                                <th>Hạn sử dụng</th>
+                                                <th>Tình trạng</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="b" items="${wiltedBatches}">
+                                                <tr class="align-middle">
+                                                    <td>${b.productBatchID}</td>
+                                                    <td>${b.productID}</td>
+                                                    <td>${b.quantity}</td>
+                                                    <td><fmt:formatNumber value="${b.importPrice}" pattern="#,##0"/> VND</td>
+                                                    <td><fmt:formatDate value="${b.dateImport}" pattern="dd-MM-yyyy"/></td>
+                                                    <td><fmt:formatDate value="${b.dateExpire}" pattern="dd-MM-yyyy"/></td>
+                                                    <td>
+                                                        <span class="badge bg-danger text-white px-2 py-1 rounded-pill">
+                                                            <i class="fas fa-skull-crossbones"></i> Có hoa héo
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <form action="replacewilted" method="post" class="auto-replace-form">
+                                                            <input type="hidden" name="productBatchID" value="${b.productBatchID}" />
+                                                            <button type="button" class="btn btn-warning auto-replace-btn">
+                                                                Cập nhật nguyên liệu bị héo
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:when>
 
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
+                            <c:otherwise>
+                                <div class="text-center py-5">
+                                    <h3 class="text-muted fw-semibold">Không có lô sản phẩm nào chứa nguyên liệu héo.</h3>
+                                </div>
+                            </c:otherwise>
 
-                                    <c:if test="${empty wiltedBatches}">
-                                        <tr>
-                                            <td colspan="8" class="text-center text-muted">Không có lô sản phẩm nào chứa nguyên liệu héo.</td>
-                                        </tr>
-                                    </c:if>
-                                </tbody>
-                            </table>
-                        </div>
+                        </c:choose>
+
                     </div>
                 </div>
             </div>
         </main>
-
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <h3>Đây là footer</h3>
-                </div>
-            </div>
-        </footer>
         <script>
             document.querySelectorAll('.auto-replace-btn').forEach(button => {
                 button.addEventListener('click', function () {
