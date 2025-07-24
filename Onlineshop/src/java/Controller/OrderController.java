@@ -3,14 +3,16 @@ package Controller;
 import DAO.CartDAO;
 import DAO.OrderDAO;
 import DAO.ProductDAO; // Được thêm vào để lấy thông tin sản phẩm
-import DAO.VoucherDAO; // Không được sử dụng trong mã hiện tại nhưng có thể hữu ích
+import DAO.VoucherDAO; 
+import DAO.CardTemplateDAO; // Import CardTemplateDAO
 import Model.Cart;
 import Model.CartItem;
 import Model.Order;
 import Model.OrderDetail;
 import Model.Account;
 import Model.Product;
-import Model.Voucher; // Không được sử dụng trong mã hiện tại
+import Model.Voucher;
+import Model.CardTemplate; // Import CardTemplate
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -126,6 +128,7 @@ public class OrderController extends HttpServlet {
             String paymentMethod = request.getParameter("paymentMethod");
             
             String selectedVoucherId = request.getParameter("selectedVoucherId");
+            String selectedCardId = request.getParameter("selectedCardId");
             double totalAfterDiscount = Double.parseDouble(request.getParameter("totalAfterDiscount"));
 
             // --- Bước 4: Kiểm tra thông tin bắt buộc ---
@@ -133,8 +136,27 @@ public class OrderController extends HttpServlet {
                 city == null || district == null || paymentMethod == null ||
                 fullName.trim().isEmpty() || phone.trim().isEmpty() || address.trim().isEmpty() ||
                 city.trim().isEmpty() || district.trim().isEmpty() || paymentMethod.trim().isEmpty()) {
-                sendJsonResponse(response, createErrorResponse("Vui lòng điền đầy đủ thông tin giao hàng"));
+                sendJsonResponse(response, createErrorResponse("Vui lòng điền đầy đủ thông tin giao hàng."));
                 return;
+            }
+            
+            // Validate card selection if included
+            Integer cardId = null;
+            Double cardFee = null;
+            if (selectedCardId != null && !selectedCardId.isEmpty()) {
+                try {
+                    cardId = Integer.parseInt(selectedCardId);
+                    CardTemplateDAO cardDAO = new CardTemplateDAO();
+                    CardTemplate card = cardDAO.getCardTemplateById(cardId);
+                    if (card == null || !card.isIsActive()) {
+                        sendJsonResponse(response, createErrorResponse("Mẫu thiệp không hợp lệ hoặc không có sẵn."));
+                        return;
+                    }
+                    cardFee = card.getPrice();
+                } catch (NumberFormatException e) {
+                    sendJsonResponse(response, createErrorResponse("Mã thiệp không hợp lệ."));
+                    return;
+                }
             }
 
             // --- Bước 5: Tạo đối tượng Order ---
@@ -153,6 +175,8 @@ public class OrderController extends HttpServlet {
             // Tính tổng tiền đơn hàng bao gồm phí vận chuyển (ví dụ: 30,000 VND)
             order.setTotal(totalAfterDiscount);
             order.setStatus("Pending"); // Đặt trạng thái ban đầu là "Pending"
+            order.setCardId(cardId);
+            order.setCardFee(cardFee);
 
             // --- Bước 6: Tạo danh sách OrderDetail từ CartItem ---
             List<OrderDetail> orderDetails = new ArrayList<>();

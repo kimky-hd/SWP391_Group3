@@ -30,8 +30,8 @@ public class OrderDAO extends DBContext {
      */
     public boolean createOrder(Order order, List<OrderDetail> orderDetails) {
         // Câu lệnh SQL để chèn dữ liệu vào bảng HoaDon (Đơn hàng chính)
-        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID, payment_method) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String orderSql = "INSERT INTO HoaDon (accountID, tongGia, ngayXuat, statusID, payment_method, cardId, cardFee) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         // Câu lệnh SQL để chèn dữ liệu vào bảng InforLine (Thông tin người nhận/khách hàng)
         String infoSql = "INSERT INTO InforLine (maHD, name, email, address, phoneNumber) "
@@ -52,6 +52,16 @@ public class OrderDAO extends DBContext {
                 ps.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
                 ps.setInt(4, 1); // Đặt trạng thái mặc định là "Pending" (Đang chuẩn bị) (statusID = 1)
                 ps.setString(5, order.getPaymentMethod()); // Thêm phương thức thanh toán
+                if (order.getCardId() != null) {
+                    ps.setInt(6, order.getCardId());
+                } else {
+                    ps.setNull(6, java.sql.Types.INTEGER);
+                }
+                if (order.getCardFee() != null) {
+                    ps.setDouble(7, order.getCardFee());
+                } else {
+                    ps.setNull(7, java.sql.Types.DECIMAL);
+                }
 
                 int affectedRows = ps.executeUpdate(); // Thực thi câu lệnh chèn
 
@@ -117,7 +127,7 @@ public class OrderDAO extends DBContext {
     public List<Order> getOrdersByAccountId(int accountId) {
         List<Order> orders = new ArrayList<>(); // Khởi tạo danh sách để lưu trữ các đơn hàng
         // Câu lệnh SQL JOIN giữa HoaDon và InforLine để lấy thông tin đơn hàng và thông tin người nhận
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, h.cardId, h.cardFee, i.name, i.phoneNumber, i.email, i.address "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.accountID = ? ORDER BY h.maHD DESC"; // Sắp xếp theo maHD giảm dần
 
@@ -140,6 +150,10 @@ public class OrderDAO extends DBContext {
                     // Bỏ comment dòng này để lấy phương thức thanh toán
                     order.setPaymentMethod(rs.getString("payment_method"));
                     order.setTotal(rs.getDouble("tongGia"));
+                    
+                    // Set cardId and cardFee
+                    order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
+                    order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
 
                     // Chuyển đổi statusID dạng số thành chuỗi trạng thái dễ đọc
                     int statusID = rs.getInt("statusID");
@@ -195,7 +209,7 @@ public class OrderDAO extends DBContext {
      * @return Đối tượng Order nếu tìm thấy, ngược lại là null.
      */
     public Order getOrderById(int orderId) {
-        String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, "
+        String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, h.cardId, h.cardFee, "
                 + "i.name, i.email, i.address, i.phoneNumber "
                 + "FROM HoaDon h LEFT JOIN InforLine i ON h.maHD = i.maHD "
                 + "WHERE h.maHD = ?";
@@ -217,6 +231,10 @@ public class OrderDAO extends DBContext {
                     order.setPhone(rs.getString("phoneNumber") != null ? rs.getString("phoneNumber") : "N/A");
                     order.setEmail(rs.getString("email") != null ? rs.getString("email") : "N/A");
                     order.setAddress(rs.getString("address") != null ? rs.getString("address") : "N/A");
+                    
+                    // Set cardId and cardFee
+                    order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
+                    order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
 
                     // Chuyển đổi statusID thành chuỗi trạng thái
                     int statusID = rs.getInt("statusID");
@@ -278,7 +296,7 @@ public class OrderDAO extends DBContext {
      */
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, h.cardId, h.cardFee, i.name, i.phoneNumber, i.email, i.address "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
                 + "ORDER BY h.ngayXuat DESC";
 
@@ -330,6 +348,10 @@ public class OrderDAO extends DBContext {
                 order.setPhone(rs.getString("phoneNumber"));
                 order.setEmail(rs.getString("email"));
                 order.setAddress(rs.getString("address"));
+                
+                // Set cardId and cardFee
+                order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
+                order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
 
                 orders.add(order);
             }
@@ -680,7 +702,7 @@ public class OrderDAO extends DBContext {
     public List<Order> getFilteredOrders(String status, String dateFrom, String dateTo, String customerName, int page, int size, String sortBy) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, i.name, i.phoneNumber, i.email, i.address ");
+        sql.append("SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.cardId, h.cardFee, i.name, i.phoneNumber, i.email, i.address ");
         sql.append("FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD ");
         sql.append("WHERE 1=1 ");
 
@@ -790,6 +812,10 @@ public class OrderDAO extends DBContext {
                     order.setPhone(rs.getString("phoneNumber"));
                     order.setEmail(rs.getString("email"));
                     order.setAddress(rs.getString("address"));
+                    
+                    // Set cardId and cardFee
+                    order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
+                    order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
 
                     // Chuyển đổi statusID thành chuỗi trạng thái
                     int statusID = rs.getInt("statusID");

@@ -1,12 +1,10 @@
 package Controller;
 
+import DAO.CustomOrderCartDAO;
 import DAO.VoucherDAO;
-import DAO.CardTemplateDAO; // Import CardTemplateDAO
 import Model.Account;
-import Model.Cart;
+import Model.CustomOrderCart;
 import Model.Voucher;
-import Model.CardTemplate; // Import CardTemplate
-import com.google.gson.Gson; // Thư viện để chuyển đổi đối tượng Java sang JSON và ngược lại
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,18 +15,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.google.gson.Gson;
 
 /**
- * Servlet CheckOutController xử lý các yêu cầu liên quan đến trang thanh toán (checkout).
- * Nó đảm bảo rằng người dùng đã đăng nhập và giỏ hàng không trống trước khi cho phép họ truy cập trang thanh toán.
- * URL pattern "/checkout" ánh xạ các yêu cầu đến servlet này.
+ * Servlet CustomCheckOutController xử lý các yêu cầu liên quan đến trang thanh toán (checkout) cho đơn hàng tùy chỉnh.
+ * Nó đảm bảo rằng người dùng đã đăng nhập và đơn hàng tùy chỉnh đã được duyệt (statusID = 7) trước khi cho phép họ truy cập trang thanh toán.
+ * URL pattern "/custom-checkout" ánh xạ các yêu cầu đến servlet này.
  */
-@WebServlet(name = "CheckOutController", urlPatterns = { "/checkout" })
-public class CheckOutController extends HttpServlet {
+@WebServlet(name = "CustomCheckOutController", urlPatterns = {"/custom-checkout"})
+public class CustomCheckOutController extends HttpServlet {
 
+    private final CustomOrderCartDAO customOrderCartDAO = new CustomOrderCartDAO();
+    
     /**
      * Phương thức `processRequest` là nơi chứa logic chính để xử lý cả yêu cầu GET và POST.
-     * Nó kiểm tra trạng thái giỏ hàng và trạng thái đăng nhập của người dùng.
+     * Nó kiểm tra trạng thái đơn hàng tùy chỉnh và trạng thái đăng nhập của người dùng.
      *
      * @param request Đối tượng HttpServletRequest chứa yêu cầu từ client.
      * @param response Đối tượng HttpServletResponse để gửi phản hồi về client.
@@ -38,20 +39,31 @@ public class CheckOutController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(); // Lấy phiên làm việc hiện tại của người dùng
-        Cart cart = (Cart) session.getAttribute("cart"); // Lấy đối tượng giỏ hàng từ session
-
-        // --- Bước 1: Kiểm tra giỏ hàng ---
-        // Kiểm tra xem giỏ hàng có tồn tại (không null) và có sản phẩm nào bên trong không.
-        if (cart == null || cart.isEmpty()) {
-            // Nếu giỏ hàng trống, đặt thông báo lỗi vào session
-            session.setAttribute("message", "Giỏ hàng trống, vui lòng thêm sản phẩm trước khi thanh toán");
+        
+        // Lấy ID của đơn hàng tùy chỉnh từ request
+        String customCartIdStr = request.getParameter("customCartId");
+        if (customCartIdStr == null || customCartIdStr.trim().isEmpty()) {
+            // Nếu không có ID đơn hàng, đặt thông báo lỗi vào session
+            session.setAttribute("message", "Không tìm thấy thông tin đơn hàng tùy chỉnh");
             session.setAttribute("messageType", "error");
-            // Chuyển hướng người dùng về trang giỏ hàng (Cart.jsp)
-            response.sendRedirect("Cart.jsp");
+            // Chuyển hướng người dùng về trang đơn hàng tùy chỉnh
+            response.sendRedirect("custom-cart");
+            return; // Dừng xử lý
+        }
+        
+        int customCartId;
+        try {
+            customCartId = Integer.parseInt(customCartIdStr);
+        } catch (NumberFormatException e) {
+            // Nếu ID không phải là số hợp lệ, đặt thông báo lỗi vào session
+            session.setAttribute("message", "ID đơn hàng tùy chỉnh không hợp lệ");
+            session.setAttribute("messageType", "error");
+            // Chuyển hướng người dùng về trang đơn hàng tùy chỉnh
+            response.sendRedirect("custom-cart");
             return; // Dừng xử lý
         }
 
-        // --- Bước 2: Kiểm tra trạng thái đăng nhập ---
+        // --- Bước 1: Kiểm tra trạng thái đăng nhập ---
         // Lấy thông tin tài khoản người dùng từ session
         Account account = (Account) session.getAttribute("account");
         if (account == null) {
@@ -63,23 +75,41 @@ public class CheckOutController extends HttpServlet {
             return; // Dừng xử lý
         }
 
-        // --- Bước 3: Truyền dữ liệu và chuyển hướng ---
-        // Nếu giỏ hàng hợp lệ và người dùng đã đăng nhập,
-        // truyền đối tượng giỏ hàng vào request để trang CheckOut.jsp có thể truy cập
-        request.setAttribute("cart", cart);
+        // --- Bước 2: Lấy thông tin đơn hàng tùy chỉnh ---
+        CustomOrderCart customOrderCart = customOrderCartDAO.getCustomOrderCartById(customCartId);
         
-        //get all valid voucher
-        VoucherDAO vdao = new VoucherDAO();
-        List<Voucher> vouchers = vdao.getValidVouchersByAccountId(account.getAccountID(), cart.getTotal());
-        request.setAttribute("vouchers", vouchers);
+        // Kiểm tra xem đơn hàng có tồn tại và thuộc về người dùng hiện tại không
+        if (customOrderCart == null || customOrderCart.getAccountID() != account.getAccountID()) {
+            // Nếu đơn hàng không tồn tại hoặc không thuộc về người dùng hiện tại, đặt thông báo lỗi vào session
+            session.setAttribute("message", "Không tìm thấy thông tin đơn hàng tùy chỉnh hoặc bạn không có quyền truy cập");
+            session.setAttribute("messageType", "error");
+            // Chuyển hướng người dùng về trang đơn hàng tùy chỉnh
+            response.sendRedirect("custom-cart");
+            return; // Dừng xử lý
+        }
         
-        // Get all active card templates
-        CardTemplateDAO cardDAO = new CardTemplateDAO();
-        List<CardTemplate> cardTemplates = cardDAO.getAllActiveCardTemplates();
-        request.setAttribute("cardTemplates", cardTemplates);
+        // --- Bước 3: Kiểm tra trạng thái đơn hàng ---
+        if (customOrderCart.getStatusID() != 7) { // Giả sử 7 là trạng thái "Đã duyệt"
+            // Nếu đơn hàng chưa được duyệt, đặt thông báo lỗi vào session
+            session.setAttribute("message", "Đơn hàng tùy chỉnh chưa được duyệt, không thể thanh toán");
+            session.setAttribute("messageType", "error");
+            // Chuyển hướng người dùng về trang đơn hàng tùy chỉnh
+            response.sendRedirect("custom-cart");
+            return; // Dừng xử lý
+        }
 
-        // Chuyển tiếp yêu cầu đến trang CheckOut.jsp để hiển thị giao diện thanh toán
-        request.getRequestDispatcher("CheckOut.jsp").forward(request, response);
+        // --- Bước 4: Truyền dữ liệu và chuyển hướng ---
+        // Nếu đơn hàng hợp lệ và người dùng đã đăng nhập,
+        // truyền đối tượng đơn hàng tùy chỉnh vào request để trang CustomCheckOut.jsp có thể truy cập
+        request.setAttribute("customOrderCart", customOrderCart);
+        
+        // Lấy danh sách voucher hợp lệ cho người dùng
+        VoucherDAO vdao = new VoucherDAO();
+        List<Voucher> vouchers = vdao.getValidVouchersByAccountId(account.getAccountID(), customOrderCart.getDesiredPrice());
+        request.setAttribute("vouchers", vouchers);
+
+        // Chuyển tiếp yêu cầu đến trang CustomCheckOut.jsp để hiển thị giao diện thanh toán
+        request.getRequestDispatcher("CustomCheckOut.jsp").forward(request, response);
     }
 
     /**
@@ -101,7 +131,7 @@ public class CheckOutController extends HttpServlet {
      * Xử lý các yêu cầu HTTP POST.
      * Phương thức này cũng gọi `processRequest` để xử lý logic chung,
      * vì trong trường hợp này, cả GET và POST đều dẫn đến việc hiển thị trang thanh toán
-     * sau khi kiểm tra giỏ hàng và đăng nhập.
+     * sau khi kiểm tra đơn hàng tùy chỉnh và đăng nhập.
      *
      * @param request servlet request
      * @param response servlet response

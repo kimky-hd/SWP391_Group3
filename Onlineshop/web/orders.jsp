@@ -53,7 +53,7 @@
             }
 
             h1, h2, h3, h4, h5, h6 {
-                font-family: 'Montserrat', sans-serif; 
+                font-family: 'Montserrat', sans-serif;
                 color: var(--dark-pink);
                 margin-bottom: 1rem;
             }
@@ -363,7 +363,7 @@
                                                     <tr>
                                                         <th>Sản phẩm</th>
                                                         <th>Hình ảnh</th>
-                                                        <th>Số lượng</th>
+                                                        <th>Số lượng</th>  
                                                         <th>Đơn giá</th>
                                                         <th>Thành tiền</th>
                                                     </tr>
@@ -410,6 +410,13 @@
                                             <div class="text-right mt-4">
                                                 <button class="btn btn-danger" onclick="cancelOrder(${order.orderId})">
                                                     <i class="fa fa-times-circle mr-2"></i> Hủy đơn hàng
+                                                </button>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${order.status eq 'Đơn hàng đang được vận chuyển'}">
+                                            <div class="text-right mt-4">
+                                                <button class="btn btn-success" onclick="confirmReceived(${order.orderId})">
+                                                    <i class="fa fa-check-circle mr-2"></i> Đã nhận được hàng
                                                 </button>
                                             </div>
                                         </c:if>
@@ -533,6 +540,48 @@ session.removeAttribute("messageType");
                     fetch('ordercount'); // Gửi yêu cầu lấy số lượng đơn hàng
                 <% } %>
                 });
+
+// Hàm xác nhận đã nhận được hàng
+                function confirmReceived(orderId) {
+                    // Hỏi xác nhận người dùng trước khi cập nhật
+                    if (confirm('Bạn xác nhận đã nhận được hàng? Đơn hàng sẽ được chuyển sang trạng thái "Đã giao hàng thành công".')) {
+                        $.ajax({
+                            url: 'order?action=confirm_received', // Đường dẫn xử lý xác nhận đã nhận hàng
+                            type: 'POST',
+                            data: {orderId: orderId}, // Gửi dữ liệu orderId
+                            success: function (response) {
+                                // Thử chuyển đổi phản hồi thành JSON
+                                try {
+                                    response = JSON.parse(response);
+                                } catch (e) {
+                                    console.error("Không thể parse JSON response:", response);
+                                    // Nếu lỗi, vẫn hiển thị toast và reload vì có thể backend đã xử lý xong
+                                    showToast('Đã xác nhận nhận hàng thành công!', 'success');
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 2000);
+                                    return;
+                                }
+
+                                // Nếu phản hồi thành công -> thông báo và reload
+                                if (response.success) {
+                                    showToast('Đã xác nhận nhận hàng thành công!', 'success');
+                                    setTimeout(function () {
+                                        location.reload(); // Tải lại trang để cập nhật trạng thái đơn hàng
+                                    }, 1500); // Đợi 1.5 giây cho người dùng đọc
+                                } else {
+                                    // Nếu có lỗi từ backend -> hiển thị thông báo lỗi
+                                    showToast(response.message || 'Có lỗi xảy ra khi xác nhận. Vui lòng thử lại.', 'error');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                // Lỗi khi không thể kết nối server
+                                console.error("Lỗi AJAX: ", status, error);
+                                showToast('Không thể kết nối máy chủ. Vui lòng thử lại sau.', 'error');
+                            }
+                        });
+                    }
+                }
             </script>
         </body>
     </html>

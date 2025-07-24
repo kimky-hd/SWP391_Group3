@@ -12,7 +12,7 @@
     int roleId = 0;
     String roleName = "";
     if (account != null) {
-        roleId = account.getRole(); // Sử dụng getRole() thay vì getRoleId()
+        roleId = account.getRole(); 
         switch (roleId) {
             case 1:
                 roleName = "manager";
@@ -40,7 +40,7 @@
                else { %>Hệ thống<% } %>
         </title>
         <!-- Bootstrap CSS -->
-        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <!-- Role-specific CSS -->
@@ -73,7 +73,7 @@
             <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
                 <!-- Left: Brand -->
-                <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "managerproductlist" : (roleId == 2 ? "staffdashboard" : (roleId == 3 ? "shipperdashboard" : "#")) %>">
+                <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "managerproductlist" : (roleId == 2 ? "staffdashboard" : (roleId == 3 ? "dashboard" : "#")) %>">
                     <div class="brand-icon">
                         <% if (roleId == 1) { %>
                         <i class="fas fa-crown"></i>
@@ -152,26 +152,27 @@
         <nav class="sidebar">
             <ul class="sidebar-menu">
                 <% if (roleId == 1) { // Manager Menu %>
-                <li>
-                    <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Dashboard</span>
+                
+                 <li>
+                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo & Thống kê</span>
                     </a>
                 </li>
                 <li>
-                    <a href="managerproductlist" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/managerproductlist" class="nav-link">
                         <i class="fas fa-boxes"></i>
                         <span>Quản lý Sản phẩm</span>
                     </a>
                 </li>
                 <li>
-                    <a href="viewcategorylist" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/viewcategorylist" class="nav-link">
                         <i class="fas fa-tags"></i>
                         <span>Danh mục Sản phẩm</span>
                     </a>
                 </li>
                 <li>
-                    <a href="managermateriallist" class="nav-link">
+                    <a href="${pageContext.request.contextPath}/managermateriallist" class="nav-link">
                         <i class="fas fa-seedling"></i>
                         <span>Quản lý nguyên liệu</span>
                     </a>
@@ -188,13 +189,19 @@
                         <span>Đơn hàng tự thiết kế</span>
                     </a>
                 </li>
-                <!-- Quản lý Banner -->
                 <li>
                     <a href="${pageContext.request.contextPath}/manager/banner?action=list" class="nav-link">
                         <i class="fas fa-images"></i>
                         <span>Quản lý Banner</span>
                     </a>
                 </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/manager/cardtemplates" class="nav-link">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Quản lý Thiệp</span>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/manager/staff">
                         <i class="fas fa-user-tie"></i>
@@ -219,23 +226,10 @@
                         <span>Khuyến mãi</span>
                     </a>
                 </li>
-               
                 <li>
                     <a href="${pageContext.request.contextPath}/manager/blogs" class="nav-link">
                         <i class="fas fa-blog"></i>
                         <span>Quản lý Blog</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/revenue-chart" class="nav-link">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Báo cáo & Thống kê</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/settings" class="nav-link">
-                        <i class="fas fa-cog"></i>
-                        <span>Cài đặt Hệ thống</span>
                     </a>
                 </li>
                 <% } else if (roleId == 2) { // Staff Menu %>
@@ -244,12 +238,6 @@
                     <a href="${pageContext.request.contextPath}/staff/blogs" class="nav-link">
                         <i class="fas fa-blog"></i>
                         <span>Quản lý Blog</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/staff/staff_custom-orders" class="nav-link">
-                        <i class="fas fa-palette"></i>
-                        <span>Đơn hàng tự thiết kế</span>
                     </a>
                 </li>
                 <li>

@@ -20,12 +20,14 @@ public class Order {
     private String paymentMethod;
     private double total;
     private String status;
+    private Integer cardId; // Use Integer for nullable int
+    private Double cardFee; // Use Double for nullable double
 
     public Order() {
     }
 
     public Order(int orderId, int accountId, Date orderDate, String fullName, String phone, String email, 
-            String address, String paymentMethod, double total, String status) {
+            String address, String paymentMethod, double total, String status, Integer cardId, Double cardFee) {
         this.orderId = orderId;
         this.accountId = accountId;
         this.orderDate = orderDate;
@@ -36,6 +38,8 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.total = total;
         this.status = status;
+        this.cardId = cardId;
+        this.cardFee = cardFee;
     }
 
     public int getOrderId() {
@@ -125,4 +129,20 @@ public class Order {
 public void setStatusId(int statusID) {
     this.statusID = statusID;
 }
+
+    public Integer getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Integer cardId) {
+        this.cardId = cardId;
+    }
+
+    public Double getCardFee() {
+        return cardFee;
+    }
+
+    public void setCardFee(Double cardFee) {
+        this.cardFee = cardFee;
+    }
 }
