@@ -146,10 +146,6 @@ function updateStatus(orderId, statusId) {
             // Handle cancellation with note
             cancelOrder(orderId);
             return;
-        case '9':
-            confirmMessage = `Bạn có chắc chắn muốn chuẩn bị đơn hàng #${orderId} để giao?`;
-            actionText = 'Chuẩn bị giao hàng';
-            break;
         default:
             confirmMessage = `Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng #${orderId}?`;
             actionText = 'Cập nhật trạng thái';

@@ -13,6 +13,7 @@ public class HoaDon {
     private int statusID;
     private String paymentMethod;
     private String note; // Thêm trường note để lưu lý do hủy
+    private Integer shippingID; // ID của shipper được giao đơn hàng
     
     // Additional fields for joined data
     private String username;
@@ -166,6 +167,14 @@ public class HoaDon {
     
     public void setNote(String note) {
         this.note = note;
+    }
+    
+    public Integer getShippingID() {
+        return shippingID;
+    }
+    
+    public void setShippingID(Integer shippingID) {
+        this.shippingID = shippingID;
     }
     
     // Convenience methods for compatibility with test JSPs
