@@ -54,6 +54,139 @@ public class VoucherManagementController extends HttpServlet {
                 request.getRequestDispatcher("/manager/vouchers.jsp").forward(request, response);
                 break;
 
+            case "add-form":
+                // Hiển thị form thêm voucher
+                request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                break;
+
+            case "add":
+                String code = request.getParameter("code");
+                double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
+                double minOrderValue = Double.parseDouble(request.getParameter("minOrderValue"));
+                String startDateStr = request.getParameter("startDate");
+                String endDateStr = request.getParameter("endDate");
+                int usageLimit = Integer.parseInt(request.getParameter("usageLimit"));
+                String description = request.getParameter("description");
+
+                // Kiểm tra xem mã voucher đã tồn tại chưa
+                if (voucherDAO.checkVoucherCodeExist(code)) {
+                    request.setAttribute("error", "Mã voucher đã tồn tại!");
+                    request.setAttribute("code", code);
+                    request.setAttribute("discountAmount", discountAmount);
+                    request.setAttribute("minOrderValue", minOrderValue);
+                    request.setAttribute("startDate", startDateStr);
+                    request.setAttribute("endDate", endDateStr);
+                    request.setAttribute("usageLimit", usageLimit);
+                    request.setAttribute("description", description);
+                    request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                    return;
+                }
+
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+                    dateFormat.setLenient(false);
+
+                    System.out.println("Start date string: " + startDateStr);
+                    System.out.println("End date string: " + endDateStr);
+
+                    Date startDate = dateFormat.parse(startDateStr);
+                    Date endDate = dateFormat.parse(endDateStr);
+                  
+                    // Kiểm tra ngày bắt đầu phải trước ngày kết thúc
+                    if (startDate.after(endDate)) {
+                        request.setAttribute("error", "Ngày bắt đầu phải trước ngày kết thúc!");
+                        request.setAttribute("code", code);
+                        request.setAttribute("discountAmount", discountAmount);
+                        request.setAttribute("minOrderValue", minOrderValue);
+                        request.setAttribute("startDate", startDateStr);
+                        request.setAttribute("endDate", endDateStr);
+                        request.setAttribute("usageLimit", usageLimit);
+                        request.setAttribute("description", description);
+                        request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                        return;
+                    }
+
+                    // Kiểm tra ngày bắt đầu không được trong quá khứ (trừ trong ngày hiện tại)
+                    Date now = new Date();
+                    Date today = new Date(now.getYear(), now.getMonth(), now.getDate());
+                    if (startDate.before(today)) {
+                        request.setAttribute("error", "Ngày bắt đầu không được trong quá khứ!");
+                        request.setAttribute("code", code);
+                        request.setAttribute("discountAmount", discountAmount);
+                        request.setAttribute("minOrderValue", minOrderValue);
+                        request.setAttribute("startDate", startDateStr);
+                        request.setAttribute("endDate", endDateStr);
+                        request.setAttribute("usageLimit", usageLimit);
+                        request.setAttribute("description", description);
+                        request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                        return;
+                    }
+
+                    Timestamp startTimestamp = new Timestamp(startDate.getTime());
+                    Timestamp endTimestamp = new Timestamp(endDate.getTime());
+                
+                    Voucher newVoucher = new Voucher();
+                    newVoucher.setCode(code);
+                    newVoucher.setDiscountAmount(discountAmount);
+                    newVoucher.setMinOrderValue(minOrderValue);
+                    newVoucher.setStartDate(startTimestamp);
+                    newVoucher.setEndDate(endTimestamp);
+                    newVoucher.setIsActive(true);
+                    newVoucher.setUsageLimit(usageLimit);
+                    newVoucher.setUsedCount(0);
+                    newVoucher.setDescription(description);
+                    // created_date sẽ được tự động set trong database
+
+                    boolean success = voucherDAO.addVoucher(newVoucher);
+
+                    if (success) {
+                        request.getSession().setAttribute("message", "Thêm voucher thành công!");
+                        response.sendRedirect("vouchers");
+                    } else {
+                        request.setAttribute("error", "Thêm voucher thất bại!");
+                        request.setAttribute("code", code);
+                        request.setAttribute("discountAmount", discountAmount);
+                        request.setAttribute("minOrderValue", minOrderValue);
+                        request.setAttribute("startDate", startDateStr);
+                        request.setAttribute("endDate", endDateStr);
+                        request.setAttribute("usageLimit", usageLimit);
+                        request.setAttribute("description", description);
+                        request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    request.setAttribute("error", "Định dạng ngày tháng không hợp lệ: " + e.getMessage());
+                    request.setAttribute("code", code);
+                    request.setAttribute("discountAmount", discountAmount);
+                    request.setAttribute("minOrderValue", minOrderValue);
+                    request.setAttribute("startDate", startDateStr);
+                    request.setAttribute("endDate", endDateStr);
+                    request.setAttribute("usageLimit", usageLimit);
+                    request.setAttribute("description", description);
+                    request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                } catch (NumberFormatException e) {
+                    request.setAttribute("error", "Dữ liệu số không hợp lệ!");
+                    request.setAttribute("code", code);
+                    request.setAttribute("discountAmount", discountAmount);
+                    request.setAttribute("minOrderValue", minOrderValue);
+                    request.setAttribute("startDate", startDateStr);
+                    request.setAttribute("endDate", endDateStr);
+                    request.setAttribute("usageLimit", usageLimit);
+                    request.setAttribute("description", description);
+                    request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                } catch (Exception e) {
+                    request.setAttribute("error", "Lỗi: " + e.getMessage());
+                    request.setAttribute("code", code);
+                    request.setAttribute("discountAmount", discountAmount);
+                    request.setAttribute("minOrderValue", minOrderValue);
+                    request.setAttribute("startDate", startDateStr);
+                    request.setAttribute("endDate", endDateStr);
+                    request.setAttribute("usageLimit", usageLimit);
+                    request.setAttribute("description", description);
+                    request.getRequestDispatcher("/manager/voucher_add.jsp").forward(request, response);
+                }
+                break;
+
             case "view":
                 int viewId = Integer.parseInt(request.getParameter("id"));
                 Voucher viewVoucher = voucherDAO.getVoucherById(viewId);
@@ -95,82 +228,6 @@ public class VoucherManagementController extends HttpServlet {
                     response.getWriter().write("{\"error\":\"Không tìm thấy voucher\"}");
                 }
                 return;
-
-            case "add":
-                String code = request.getParameter("code");
-                double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
-                double minOrderValue = Double.parseDouble(request.getParameter("minOrderValue"));
-                String startDateStr = request.getParameter("startDate");
-                String endDateStr = request.getParameter("endDate");
-                int usageLimit = Integer.parseInt(request.getParameter("usageLimit"));
-                String description = request.getParameter("description");
-
-                // Kiểm tra xem mã voucher đã tồn tại chưa
-                if (voucherDAO.checkVoucherCodeExist(code)) {
-                    request.getSession().setAttribute("error", "Mã voucher đã tồn tại!");
-                    response.sendRedirect("vouchers");
-                    return;
-                }
-
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-                    dateFormat.setLenient(false);
-
-                    System.out.println("Start date string: " + startDateStr);
-                    System.out.println("End date string: " + endDateStr);
-
-                    Date startDate = dateFormat.parse(startDateStr);
-                    Date endDate = dateFormat.parse(endDateStr);
-                  
-                    // Kiểm tra ngày bắt đầu phải trước ngày kết thúc
-                    if (startDate.after(endDate)) {
-                        request.getSession().setAttribute("error", "Ngày bắt đầu phải trước ngày kết thúc!");
-                        response.sendRedirect("vouchers");
-                        return;
-                    }
-
-                    // Kiểm tra ngày bắt đầu không được trong quá khứ (trừ trong ngày hiện tại)
-                    Date now = new Date();
-                    Date today = new Date(now.getYear(), now.getMonth(), now.getDate());
-                    if (startDate.before(today)) {
-                        request.getSession().setAttribute("error", "Ngày bắt đầu không được trong quá khứ!");
-                        response.sendRedirect("vouchers");
-                        return;
-                    }
-
-                    Timestamp startTimestamp = new Timestamp(startDate.getTime());
-                    Timestamp endTimestamp = new Timestamp(endDate.getTime());
-                
-                    Voucher newVoucher = new Voucher();
-                    newVoucher.setCode(code);
-                    newVoucher.setDiscountAmount(discountAmount);
-                    newVoucher.setMinOrderValue(minOrderValue);
-                    newVoucher.setStartDate(startTimestamp);
-                    newVoucher.setEndDate(endTimestamp);
-                    newVoucher.setIsActive(true);
-                    newVoucher.setUsageLimit(usageLimit);
-                    newVoucher.setUsedCount(0);
-                    newVoucher.setDescription(description);
-                    // created_date sẽ được tự động set trong database
-
-                    boolean success = voucherDAO.addVoucher(newVoucher);
-
-                    if (success) {
-                        request.getSession().setAttribute("message", "Thêm voucher thành công!");
-                    } else {
-                        request.getSession().setAttribute("error", "Thêm voucher thất bại!");
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    request.getSession().setAttribute("error", "Định dạng ngày tháng không hợp lệ: " + e.getMessage());
-                } catch (NumberFormatException e) {
-                    request.getSession().setAttribute("error", "Dữ liệu số không hợp lệ!");
-                } catch (Exception e) {
-                    request.getSession().setAttribute("error", "Lỗi: " + e.getMessage());
-                }
-
-                response.sendRedirect("vouchers");
-                break;
 
             case "update":
                 try {
@@ -251,7 +308,6 @@ public class VoucherManagementController extends HttpServlet {
                 response.sendRedirect("vouchers");
                 break;
 
-            // **METHOD MỚI**: Lấy vouchers mới nhất
             case "recent":
                 int limit = 5; // Lấy 5 voucher mới nhất
                 if (request.getParameter("limit") != null) {

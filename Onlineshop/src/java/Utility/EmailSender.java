@@ -625,5 +625,116 @@ private static String createNewShipperAccountEmailContent(String username, Strin
            "</html>";
 }
 
+/**
+ * Gửi email thông báo tài khoản mới cho khách hàng
+ * 
+ * @param recipientEmail Email của khách hàng mới
+ * @param username Tên đăng nhập của khách hàng
+ * @param password Mật khẩu của khách hàng
+ * @return true nếu gửi email thành công, false nếu thất bại
+ */
+public static boolean sendNewCustomerAccountEmail(String recipientEmail, String username, String password) {
+    // Cấu hình thuộc tính gửi email
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", SMTP_HOST);
+    props.put("mail.smtp.port", SMTP_PORT);
+    
+    // Thêm các cấu hình bảo mật và timeout
+    props.put("mail.smtp.ssl.trust", SMTP_HOST);
+    props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+    props.put("mail.smtp.connectiontimeout", "10000");
+    props.put("mail.smtp.timeout", "10000");
+    props.put("mail.debug", "true");
+
+    // Tạo session có xác thực với Gmail
+    Session session = Session.getInstance(props, new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
+        }
+    });
+
+    try {
+        // Tạo email mới (định dạng MIME)
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(SENDER_EMAIL));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+
+        // Tiêu đề email (mã hoá UTF-8)
+        message.setSubject(MimeUtility.encodeText("Thông tin tài khoản khách hàng mới", "UTF-8", "B"));
+
+        // Nội dung HTML của email
+        String emailContent = createNewCustomerAccountEmailContent(username, password);
+        message.setContent(emailContent, "text/html; charset=UTF-8");
+
+        // Gửi email
+        Transport.send(message);
+        System.out.println("Email thông báo tài khoản khách hàng mới đã được gửi thành công đến " + recipientEmail);
+        return true;
+    } catch (MessagingException | java.io.UnsupportedEncodingException e) {
+        System.err.println("Lỗi gửi email thông báo tài khoản khách hàng: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+
+/**
+ * Tạo nội dung HTML cho email thông báo tài khoản khách hàng mới
+ */
+private static String createNewCustomerAccountEmailContent(String username, String password) {
+    // Nội dung email
+    return "<html>" +
+           "<head>" +
+           "    <style>" +
+           "        body { font-family: Arial, sans-serif; line-height: 1.6; }" +
+           "        .container { width: 80%; margin: 0 auto; padding: 20px; }" +
+           "        .header { background-color: #4CAF50; color: white; padding: 10px; text-align: center; }" +
+           "        .content { padding: 20px; border: 1px solid #ddd; }" +
+           "        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #777; }" +
+           "        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }" +
+           "        table, th, td { border: 1px solid #ddd; }" +
+           "        th, td { padding: 10px; text-align: left; }" +
+           "        th { background-color: #f2f2f2; }" +
+           "        .highlight { font-weight: bold; color: #4CAF50; }" +
+           "    </style>" +
+           "</head>" +
+           "<body>" +
+           "    <div class='container'>" +
+           "        <div class='header'>" +
+           "            <h1>Chào mừng bạn đến với cửa hàng của chúng tôi!</h1>" +
+           "        </div>" +
+           "        <div class='content'>" +
+           "            <p>Xin chào <span class='highlight'>" + username + "</span>,</p>" +
+           "            <p>Cảm ơn bạn đã đăng ký tài khoản tại cửa hàng của chúng tôi. Dưới đây là thông tin tài khoản của bạn:</p>" +
+           "            <table>" +
+           "                <tr>" +
+           "                    <th>Thông tin</th>" +
+           "                    <th>Chi tiết</th>" +
+           "                </tr>" +
+           "                <tr>" +
+           "                    <td>Tên đăng nhập</td>" +
+           "                    <td>" + username + "</td>" +
+           "                </tr>" +
+           "                <tr>" +
+           "                    <td>Mật khẩu</td>" +
+           "                    <td>" + password + "</td>" +
+           "                </tr>" +
+           "            </table>" +
+           "            <p>Vui lòng đăng nhập vào hệ thống của chúng tôi bằng thông tin trên để bắt đầu mua sắm.</p>" +
+           "            <p>Nếu bạn có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với chúng tôi qua email hoặc số điện thoại hỗ trợ.</p>" +
+           "            <p>Chúc bạn có những trải nghiệm mua sắm tuyệt vời cùng chúng tôi!</p>" +
+           "            <p>Trân trọng,<br>Ban quản lý</p>" +
+           "        </div>" +
+           "        <div class='footer'>" +
+           "            <p>Email này được gửi tự động, vui lòng không trả lời.</p>" +
+           "            <p>&copy; " + java.time.Year.now().getValue() + " - Cửa hàng trực tuyến</p>" +
+           "        </div>" +
+           "    </div>" +
+           "</body>" +
+           "</html>";
+}
+
     
 }

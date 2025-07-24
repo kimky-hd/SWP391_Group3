@@ -394,9 +394,9 @@
                         </h1>
                         <p class="mb-0 text-muted">Quản lý thông tin nhân viên và lương</p>
                     </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                     <a href="staff?action=add" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Thêm Nhân Viên
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Statistics Cards -->
@@ -607,21 +607,13 @@
                                                     </a>
 
                                                     <!-- CHỈNH SỬA -->
-                                                    <button type="button" class="btn btn-warning btn-sm" 
-                                                            onclick="editStaff(${staff.staffID}, '${fn:escapeXml(staff.username)}', '${fn:escapeXml(staff.email)}', '${fn:escapeXml(staff.phone)}',
-                                                            <c:choose>
-                                                                <c:when test="${staff.startMonth != null}">new Date('${staff.startMonth}')</c:when>
-                                                                <c:otherwise>null</c:otherwise>
-                                                            </c:choose>,
-                                                            <c:choose>
-                                                                <c:when test="${staff.endMonth != null}">new Date('${staff.endMonth}')</c:when>
-                                                                <c:otherwise>null</c:otherwise>
-                                                            </c:choose>,
-                                                            ${staff.salary}
-                                                                        )" 
-                                                            data-bs-toggle="modal" data-bs-target="#editStaffModal" title="Chỉnh sửa">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
+                                                    <!-- Thay thế nút chỉnh sửa cũ bằng: -->
+<a href="staff?action=edit&id=${staff.staffID}" 
+   class="btn btn-warning btn-sm" 
+   title="Chỉnh sửa">
+    <i class="fas fa-edit"></i>
+</a>
+
 
                                                     <!-- KÍCH HOẠT/VÔ HIỆU HÓA -->
                                                     <c:choose>
@@ -681,153 +673,8 @@
             </div>
         </main>
 
-       <!-- Modal Thêm nhân viên -->
-<div class="modal fade" id="addStaffModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-user-plus me-2"></i>Thêm nhân viên mới
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="staff" method="post">
-                <input type="hidden" name="action" value="add">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="add-username" class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="add-username" name="username" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="add-password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control" id="add-password" name="password" required>
-                            </div>
-                        </div>
-                    </div>
+   
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="add-email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="add-email" name="email" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="add-phone" class="form-label">Số điện thoại</label>
-                                <input type="tel" class="form-control" id="add-phone" name="phone">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="add-startMonth" class="form-label">Ngày bắt đầu <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="add-startMonth" name="startMonth" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="add-endMonth" class="form-label">Ngày kết thúc hợp đồng <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="add-endMonth" name="endMonth" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- LOẠI BỎ TRƯỜNG LƯƠNG KHỎI MODAL THÊM MỚI -->
-                    <!-- Lương sẽ được set mặc định là 0 trong backend -->
-                    
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Lưu ý:</strong> Lương sẽ được thiết lập mặc định là 0 VNĐ. Bạn có thể cập nhật lương sau khi tạo tài khoản.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i>Thêm nhân viên
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-        <!-- Modal chỉnh sửa -->
-        <div class="modal fade" id="editStaffModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="fas fa-user-edit me-2"></i>Chỉnh sửa thông tin nhân viên
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form action="staff" method="post">
-                        <input type="hidden" name="action" value="update">
-                        <input type="hidden" id="edit-id" name="id">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="edit-username" class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="edit-username" name="username" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="edit-email" class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" id="edit-email" name="email" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="edit-phone" class="form-label">Số điện thoại</label>
-                                        <input type="tel" class="form-control" id="edit-phone" name="phone">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="edit-salary" class="form-label">Lương (VNĐ)</label>
-                                        <input type="number" class="form-control" id="edit-salary" name="salary" min="0" step="1000">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="edit-startMonth" class="form-label">Ngày bắt đầu</label>
-                                        <input type="date" class="form-control" id="edit-startMonth" name="startMonth">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="edit-endMonth" class="form-label">Ngày kết thúc hợp đồng</label>
-                                        <input type="date" class="form-control" id="edit-endMonth" name="endMonth">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Cập nhật
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="footer">
@@ -1154,37 +1001,7 @@
                 return `${year}-${month}-${day}`;
             }
 
-            // Hàm chỉnh sửa nhân viên
-            // Hàm chỉnh sửa nhân viên
-function editStaff(id, username, email, phone, startMonth, endMonth, salary) {
-    // Set basic info
-    document.getElementById('edit-id').value = id;
-    document.getElementById('edit-username').value = username || '';
-    document.getElementById('edit-email').value = email || '';
-    document.getElementById('edit-phone').value = (phone && phone !== 'Chưa cập nhật') ? phone : '';
-
-    // Set salary
-    if (salary && salary !== 'null' && salary !== null && salary !== 0) {
-        document.getElementById('edit-salary').value = salary;
-    } else {
-        document.getElementById('edit-salary').value = '';
-    }
-
-    // Set start date - đã được format sẵn từ JSP
-    if (startMonth && startMonth.trim() !== '') {
-        document.getElementById('edit-startMonth').value = startMonth;
-    } else {
-        document.getElementById('edit-startMonth').value = '';
-    }
-
-    // Set end date - đã được format sẵn từ JSP
-    if (endMonth && endMonth.trim() !== '') {
-        document.getElementById('edit-endMonth').value = endMonth;
-    } else {
-        document.getElementById('edit-endMonth').value = '';
-    }
-}
-
+           
             
         </script>
     </body>

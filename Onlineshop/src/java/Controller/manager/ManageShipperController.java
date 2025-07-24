@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -289,58 +291,94 @@ public class ManageShipperController extends HttpServlet {
     }
     
     // Xử lý thêm shipper mới
-    private void addShipper(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            System.out.println("Executing addShipper method");
-            // Lấy dữ liệu từ form
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            Date startDate = Date.valueOf(request.getParameter("startDate"));
-            String endDateStr = request.getParameter("endDate");
-            Date endDate = (endDateStr != null && !endDateStr.isEmpty()) ? Date.valueOf(endDateStr) : null;
-            double baseSalary = Double.parseDouble(request.getParameter("baseSalary"));
-            String bonusPerOrderStr = request.getParameter("bonusPerOrder");
-            double bonusPerOrder = (bonusPerOrderStr != null && !bonusPerOrderStr.isEmpty()) 
-                ? Double.parseDouble(bonusPerOrderStr) : 0;
-            boolean isActive = request.getParameter("isActive") != null;
+    // Xử lý thêm shipper mới
+private void addShipper(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        System.out.println("Executing addShipper method");
+        
+        // Lấy dữ liệu từ form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        Date startDate = Date.valueOf(request.getParameter("startDate"));
+        String endDateStr = request.getParameter("endDate");
+        Date endDate = (endDateStr != null && !endDateStr.isEmpty()) ? Date.valueOf(endDateStr) : null;
+        
+        // Thiết lập giá trị mặc định
+        double baseSalary = 0.0;
+        double bonusPerOrder = 0.0;
+        boolean isActive = true; // Mặc định là hoạt động
+        
+        // Map để lưu lỗi cho từng field
+        Map<String, String> fieldErrors = new HashMap<>();
+        
+        // Kiểm tra validation
+        if (username == null || username.trim().isEmpty()) {
+            fieldErrors.put("username", "Tên đăng nhập không được để trống");
+        } else if (username.trim().length() < 3) {
+            fieldErrors.put("username", "Tên đăng nhập phải có ít nhất 3 ký tự");
+        } else if (shipperDAO.isUsernameExists(username)) {
+            fieldErrors.put("username", "Tên đăng nhập đã tồn tại");
+        }
+        
+        if (password == null || password.length() < 6) {
+            fieldErrors.put("password", "Mật khẩu phải có ít nhất 6 ký tự");
+        }
+        
+        if (email == null || email.trim().isEmpty()) {
+            fieldErrors.put("email", "Email không được để trống");
+        } else if (shipperDAO.isEmailExists(email)) {
+            fieldErrors.put("email", "Email đã tồn tại");
+        }
+        
+        if (phone == null || phone.trim().isEmpty()) {
+            fieldErrors.put("phone", "Số điện thoại không được để trống");
+        } else if (!phone.matches("^[0-9]{10,11}$")) {
+            fieldErrors.put("phone", "Số điện thoại phải có 10-11 chữ số");
+        } else if (shipperDAO.isPhoneExists(phone)) {
+            fieldErrors.put("phone", "Số điện thoại đã tồn tại");
+        }
+        
+        if (startDate == null) {
+            fieldErrors.put("startDate", "Ngày bắt đầu không được để trống");
+        }
+        
+        // Nếu có lỗi, quay lại form với thông báo lỗi
+        if (!fieldErrors.isEmpty()) {
+            request.setAttribute("fieldErrors", fieldErrors);
             
-            // Kiểm tra dữ liệu
-            StringBuilder errorMessage = new StringBuilder();
-            if (shipperDAO.isUsernameExists(username)) {
-                errorMessage.append("Tên đăng nhập đã tồn tại. ");
-            }
-            if (shipperDAO.isEmailExists(email)) {
-                errorMessage.append("Email đã tồn tại. ");
-            }
-            if (shipperDAO.isPhoneExists(phone)) {
-                errorMessage.append("Số điện thoại đã tồn tại. ");
-            }
+            // Tạo object để giữ lại dữ liệu form
+            Map<String, String> formData = new HashMap<>();
+            formData.put("username", username);
+            formData.put("email", email);
+            formData.put("phone", phone);
+            formData.put("startDate", request.getParameter("startDate"));
+            formData.put("endDate", endDateStr);
             
-            if (errorMessage.length() > 0) {
-                request.setAttribute("errorMessage", errorMessage.toString());
-                request.getRequestDispatcher("/manager/shipper_add.jsp").forward(request, response);
-                return;
-            }
-            
-            // Tạo đối tượng shipper mới
-            Shipper shipper = new Shipper();
-            shipper.setUsername(username);
-            shipper.setEmail(email);
-            shipper.setPhone(phone);
-            shipper.setStartDate(startDate);
-            shipper.setEndDate(endDate);
-            shipper.setBaseSalary(baseSalary);
-            shipper.setOrdersDelivered(0); // Mặc định là 0 khi mới tạo
-            shipper.setBonusPerOrder(bonusPerOrder);
-            shipper.setActive(isActive);
-            
-            // Lưu vào database
-            boolean success = shipperDAO.addShipper(shipper, password);
-            
-            if (success) {
+            request.setAttribute("formData", formData);
+            request.getRequestDispatcher("/manager/shipper_add.jsp").forward(request, response);
+            return;
+        }
+        
+        // Tạo đối tượng Shipper
+        Shipper shipper = new Shipper();
+        shipper.setUsername(username.trim());
+        // Không set password ở đây nếu Shipper không có field password
+        shipper.setEmail(email.trim());
+        shipper.setPhone(phone.trim());
+        shipper.setStartDate(startDate);
+        shipper.setEndDate(endDate);
+        shipper.setBaseSalary(baseSalary);
+        shipper.setBonusPerOrder(bonusPerOrder);
+        shipper.setOrdersDelivered(0); // Mặc định 0 đơn hàng đã giao
+        shipper.setActive(isActive);
+        
+        // Lưu vào database với password
+        boolean success = shipperDAO.addShipper(shipper, password); // Truyền password riêng
+        
+        if (success) {
                 // Gửi email thông báo cho shipper mới trong thread pool
                 final String finalEmail = email.trim();
                 final String finalUsername = username.trim();
@@ -377,17 +415,33 @@ public class ManageShipperController extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("successMessage", "Thêm shipper mới thành công! Email thông báo đang được gửi.");
                 response.sendRedirect(request.getContextPath() + "/manager/shipper");
-            } else {
-                request.setAttribute("errorMessage", "Không thể thêm shipper mới. Vui lòng thử lại.");
-                request.getRequestDispatcher("/manager/shipper_add.jsp").forward(request, response);
-            }
-        } catch (Exception e) {
-            System.out.println("Error in addShipper: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Lỗi khi thêm shipper: " + e.getMessage());
+            
+        } else {
+            request.setAttribute("errorMessage", "Không thể thêm shipper. Vui lòng thử lại.");
+            
+            // Tạo object để giữ lại dữ liệu form
+            Map<String, String> formData = new HashMap<>();
+            formData.put("username", username);
+            formData.put("email", email);
+            formData.put("phone", phone);
+            formData.put("startDate", request.getParameter("startDate"));
+            formData.put("endDate", endDateStr);
+            
+            request.setAttribute("formData", formData);
             request.getRequestDispatcher("/manager/shipper_add.jsp").forward(request, response);
         }
+    } catch (IllegalArgumentException e) {
+        System.out.println("Error in addShipper: " + e.getMessage());
+        request.setAttribute("errorMessage", "Dữ liệu không hợp lệ: " + e.getMessage());
+        request.getRequestDispatcher("/manager/shipper_add.jsp").forward(request, response);
+    } catch (Exception e) {
+        System.out.println("Error in addShipper: " + e.getMessage());
+        e.printStackTrace();
+        request.setAttribute("errorMessage", "Lỗi khi thêm shipper: " + e.getMessage());
+        request.getRequestDispatcher("/manager/shipper_add.jsp").forward(request, response);
     }
+}
+
     
     // Xử lý cập nhật shipper
     private void updateShipper(HttpServletRequest request, HttpServletResponse response)
@@ -424,6 +478,11 @@ public class ManageShipperController extends HttpServlet {
             }
             if (!phone.equals(currentShipper.getPhone()) && shipperDAO.isPhoneExists(phone)) {
                 errorMessage.append("Số điện thoại đã tồn tại. ");
+            }
+            
+            // Thêm kiểm tra định dạng email
+            if (!isValidEmail(email)) {
+                errorMessage.append("Email không đúng định dạng @gmail.com. ");
             }
             
             if (errorMessage.length() > 0) {
@@ -566,4 +625,10 @@ public class ManageShipperController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/manager/shipper");
         }
     }
+    
+    // Kiểm tra định dạng email
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("^[A-Za-z0-9+_.-]+@gmail\\.com$");
+    }
 }
+

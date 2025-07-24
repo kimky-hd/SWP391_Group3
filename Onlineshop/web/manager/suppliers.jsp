@@ -299,13 +299,12 @@
                     </form>
                 </div>
                 <div class="col-lg-4 col-md-5 text-end">
-    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
-        <i class="fas fa-plus"></i>
-        <span class="d-none d-sm-inline">Thêm nhà cung cấp</span>
-        <span class="d-sm-none">Thêm</span>
-    </button>
-</div>
-
+                    <a href="${pageContext.request.contextPath}/manager/supplier?action=showAdd" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i>
+                        <span class="d-none d-sm-inline">Thêm nhà cung cấp</span>
+                        <span class="d-sm-none">Thêm</span>
+                    </a>
+                </div>
             </div>
 
             <!-- Bảng danh sách nhà cung cấp với responsive tối ưu -->
@@ -439,58 +438,13 @@
         </div>
     </div>
 
-    <!-- Modal Thêm nhà cung cấp -->
-    <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addSupplierModalLabel">Thêm nhà cung cấp mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="addSupplierForm">
-                    <div class="modal-body">
-                        <div id="add-form-errors" class="alert alert-danger d-none"></div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="supplierName" class="form-label">Tên nhà cung cấp <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="supplierName" name="supplierName" required>
-                                <div class="error-feedback" id="supplierName-error"></div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                                <div class="error-feedback" id="email-error"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="phone" class="form-label">Số điện thoại</label>
-                                <input type="tel" class="form-control" id="phone" name="phone">
-                                <div class="error-feedback" id="phone-error"></div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="address" class="form-label">Địa chỉ</label>
-                                <textarea class="form-control" id="address" name="address" rows="3"></textarea>
-                                <div class="error-feedback" id="address-error"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button type="button" id="addSupplierBtn" class="btn btn-success">Thêm mới</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal Xem chi tiết nhà cung cấp -->
     <div class="modal fade" id="viewSupplierModal" tabindex="-1" aria-labelledby="viewSupplierModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="viewSupplierModalLabel">Chi tiết nhà cung cấp</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -654,57 +608,6 @@
                 });
             });
             
-            // Xử lý thêm mới nhà cung cấp với Ajax
-            $('#addSupplierBtn').click(function() {
-                // Reset form errors
-                $('#add-form-errors').addClass('d-none').html('');
-                $('.error-feedback').text('');
-                
-                const formData = {
-                    action: 'add',
-                    supplierName: $('#supplierName').val(),
-                    email: $('#email').val(),
-                    phone: $('#phone').val(),
-                    address: $('#address').val()
-                };
-                
-                $.ajax({
-                    url: 'supplier',
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    success: function(response) {
-                                                if (response.status === 'success') {
-                            // Đóng modal
-                            $('#addSupplierModal').modal('hide');
-                            
-                            // Hiển thị thông báo thành công
-                            showAlert(response.message, 'success');
-                            
-                            // Tải lại trang sau 1 giây
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
-                        } else {
-                            // Hiển thị lỗi
-                            if (response.errors) {
-                                // Hiển thị lỗi cụ thể cho từng trường
-                                for (const field in response.errors) {
-                                    $(`#${field}-error`).text(response.errors[field]);
-                                }
-                            }
-                            
-                            if (response.message) {
-                                $('#add-form-errors').removeClass('d-none').html(response.message);
-                            }
-                        }
-                    },
-                    error: function(xhr) {
-                        showAlert('Đã xảy ra lỗi khi thêm nhà cung cấp.', 'danger');
-                    }
-                });
-            });
-            
             // Xử lý cập nhật nhà cung cấp với Ajax
             $('#updateSupplierBtn').click(function() {
                 // Reset form errors
@@ -758,12 +661,6 @@
             });
             
             // Reset form khi đóng modal
-            $('#addSupplierModal').on('hidden.bs.modal', function () {
-                $('#addSupplierForm')[0].reset();
-                $('#add-form-errors').addClass('d-none').html('');
-                $('.error-feedback').text('');
-            });
-            
             $('#editSupplierModal').on('hidden.bs.modal', function () {
                 $('#edit-form-errors').addClass('d-none').html('');
                 $('.error-feedback').text('');
