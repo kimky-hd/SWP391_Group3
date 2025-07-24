@@ -681,79 +681,83 @@
             </div>
         </main>
 
-        <!-- Modal Thêm nhân viên -->
-        <div class="modal fade" id="addStaffModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="fas fa-user-plus me-2"></i>Thêm nhân viên mới
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form action="staff" method="post">
-                        <input type="hidden" name="action" value="add">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="add-username" class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="add-username" name="username" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="add-password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
-                                        <input type="password" class="form-control" id="add-password" name="password" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="add-email" class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" id="add-email" name="email" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="add-phone" class="form-label">Số điện thoại</label>
-                                        <input type="tel" class="form-control" id="add-phone" name="phone">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="add-startMonth" class="form-label">Ngày bắt đầu <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" id="add-startMonth" name="startMonth" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="add-endMonth" class="form-label">Ngày kết thúc hợp đồng <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" id="add-endMonth" name="endMonth" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="add-salary" class="form-label">Lương (VNĐ) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="add-salary" name="salary" min="0" step="1000" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Thêm nhân viên
-                            </button>
-                        </div>
-                    </form>
-                </div>
+       <!-- Modal Thêm nhân viên -->
+<div class="modal fade" id="addStaffModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-plus me-2"></i>Thêm nhân viên mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <form action="staff" method="post">
+                <input type="hidden" name="action" value="add">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add-username" class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="add-username" name="username" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add-password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="add-password" name="password" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add-email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="add-email" name="email" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add-phone" class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" id="add-phone" name="phone">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add-startMonth" class="form-label">Ngày bắt đầu <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="add-startMonth" name="startMonth" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add-endMonth" class="form-label">Ngày kết thúc hợp đồng <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="add-endMonth" name="endMonth" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LOẠI BỎ TRƯỜNG LƯƠNG KHỎI MODAL THÊM MỚI -->
+                    <!-- Lương sẽ được set mặc định là 0 trong backend -->
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Lưu ý:</strong> Lương sẽ được thiết lập mặc định là 0 VNĐ. Bạn có thể cập nhật lương sau khi tạo tài khoản.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Thêm nhân viên
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+
 
         <!-- Modal chỉnh sửa -->
         <div class="modal fade" id="editStaffModal" tabindex="-1">
@@ -1151,33 +1155,37 @@
             }
 
             // Hàm chỉnh sửa nhân viên
-            function editStaff(id, username, email, phone, startMonth, endMonth, salary) {
-                document.getElementById('edit-id').value = id;
-                document.getElementById('edit-username').value = username || '';
-                document.getElementById('edit-email').value = email || '';
-                document.getElementById('edit-phone').value = phone || '';
+            // Hàm chỉnh sửa nhân viên
+function editStaff(id, username, email, phone, startMonth, endMonth, salary) {
+    // Set basic info
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-username').value = username || '';
+    document.getElementById('edit-email').value = email || '';
+    document.getElementById('edit-phone').value = (phone && phone !== 'Chưa cập nhật') ? phone : '';
 
-                // Set salary
-                if (salary && salary !== 'null' && salary !== null) {
-                    document.getElementById('edit-salary').value = salary;
-                } else {
-                    document.getElementById('edit-salary').value = '';
-                }
+    // Set salary
+    if (salary && salary !== 'null' && salary !== null && salary !== 0) {
+        document.getElementById('edit-salary').value = salary;
+    } else {
+        document.getElementById('edit-salary').value = '';
+    }
 
-                // Set start date
-                if (startMonth && startMonth !== 'null' && startMonth !== null) {
-                    document.getElementById('edit-startMonth').value = formatDateForInput(startMonth);
-                } else {
-                    document.getElementById('edit-startMonth').value = '';
-                }
+    // Set start date - đã được format sẵn từ JSP
+    if (startMonth && startMonth.trim() !== '') {
+        document.getElementById('edit-startMonth').value = startMonth;
+    } else {
+        document.getElementById('edit-startMonth').value = '';
+    }
 
-                // Set end date
-                if (endMonth && endMonth !== 'null' && endMonth !== null) {
-                    document.getElementById('edit-endMonth').value = formatDateForInput(endMonth);
-                } else {
-                    document.getElementById('edit-endMonth').value = '';
-                }
-            }
+    // Set end date - đã được format sẵn từ JSP
+    if (endMonth && endMonth.trim() !== '') {
+        document.getElementById('edit-endMonth').value = endMonth;
+    } else {
+        document.getElementById('edit-endMonth').value = '';
+    }
+}
+
+            
         </script>
     </body>
 </html>

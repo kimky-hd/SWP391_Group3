@@ -7,6 +7,8 @@ import javax.mail.internet.*; // Hỗ trợ email dạng MIME (HTML)
 import Model.OrderDetail;
 import Model.Product;
 import DAO.ProductDAO;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class EmailSender {
@@ -412,6 +414,216 @@ public static String createOrderDetailsHtml(List<OrderDetail> orderDetails) {
     return html.toString();
 }
 
+/**
+ * Gửi email thông báo tài khoản mới cho nhân viên
+ * @param recipientEmail email của nhân viên
+ * @param username tên đăng nhập
+ * @param password mật khẩu
+ * @param startDate ngày bắt đầu làm việc
+ * @param endDate ngày kết thúc hợp đồng
+ * @return true nếu gửi thành công, false nếu thất bại
+ */
+public static boolean sendNewStaffAccountEmail(String recipientEmail, String username, 
+                                              String password, Date startDate, Date endDate) {
+    // Cấu hình thuộc tính gửi email
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", SMTP_HOST);
+    props.put("mail.smtp.port", SMTP_PORT);
+    
+    // Thêm các cấu hình bảo mật và timeout
+    props.put("mail.smtp.ssl.trust", SMTP_HOST);
+    props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+    props.put("mail.smtp.connectiontimeout", "10000");
+    props.put("mail.smtp.timeout", "10000");
+    props.put("mail.debug", "true");
+
+    // Tạo session có xác thực với Gmail
+    Session session = Session.getInstance(props, new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
+        }
+    });
+
+    try {
+        // Tạo email mới (định dạng MIME)
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(SENDER_EMAIL));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+
+        // Tiêu đề email (mã hoá UTF-8)
+        message.setSubject(MimeUtility.encodeText("Thông tin tài khoản nhân viên mới", "UTF-8", "B"));
+
+        // Nội dung HTML của email
+        String emailContent = createNewStaffAccountEmailContent(username, password, startDate, endDate);
+        message.setContent(emailContent, "text/html; charset=UTF-8");
+
+        // Gửi email
+        Transport.send(message);
+        System.out.println("Email thông báo tài khoản nhân viên mới đã được gửi thành công đến " + recipientEmail);
+        return true;
+    } catch (MessagingException | java.io.UnsupportedEncodingException e) {
+        System.err.println("Lỗi gửi email thông báo tài khoản nhân viên: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+
+/**
+ * Tạo nội dung email thông báo tài khoản nhân viên mới
+ */
+private static String createNewStaffAccountEmailContent(String username, String password, 
+                                                      Date startDate, Date endDate) {
+    // Format ngày tháng
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+    String startDateStr = startDate != null ? sdf.format(startDate) : "Chưa xác định";
+    String endDateStr = endDate != null ? sdf.format(endDate) : "Chưa xác định";
+    
+    return "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0; border-radius: 10px;'>"
+            + "<h2 style='color: #4CAF50; text-align: center;'>Thông Tin Tài Khoản Nhân Viên Mới</h2>"
+            + "<p>Xin chào <b>" + username + "</b>,</p>"
+            + "<p>Chúc mừng bạn đã trở thành thành viên của công ty chúng tôi. Dưới đây là thông tin tài khoản của bạn:</p>"
+            + "<div style='background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 15px 0;'>"
+            + "<p><b>Tên đăng nhập:</b> " + username + "</p>"
+            + "<p><b>Mật khẩu:</b> " + password + "</p>"
+            + "<p><b>Ngày bắt đầu làm việc:</b> " + startDateStr + "</p>"
+            + "<p><b>Ngày kết thúc hợp đồng:</b> " + endDateStr + "</p>"
+            + "</div>"
+            + "<p style='color: #FF5722; font-weight: bold;'>Lưu ý: Vui lòng đổi mật khẩu của bạn sau khi đăng nhập lần đầu để đảm bảo an toàn.</p>"
+            + "<p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với quản lý trực tiếp của bạn.</p>"
+            + "<p>Trân trọng,<br>Ban Quản Lý</p>"
+            + "</div>";
+}
+/**
+ * Gửi email thông báo tài khoản mới cho shipper
+ * 
+ * @param recipientEmail Email của shipper mới
+ * @param username Tên đăng nhập của shipper
+ * @param password Mật khẩu của shipper
+ * @param startDate Ngày bắt đầu làm việc
+ * @param endDate Ngày kết thúc hợp đồng (có thể null)
+ * @return true nếu gửi email thành công, false nếu thất bại
+ */
+public static boolean sendNewShipperAccountEmail(String recipientEmail, String username, String password, 
+                                               Date startDate, Date endDate) {
+    // Cấu hình thuộc tính gửi email
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", SMTP_HOST);
+    props.put("mail.smtp.port", SMTP_PORT);
+    
+    // Thêm các cấu hình bảo mật và timeout
+    props.put("mail.smtp.ssl.trust", SMTP_HOST);
+    props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+    props.put("mail.smtp.connectiontimeout", "10000");
+    props.put("mail.smtp.timeout", "10000");
+    props.put("mail.debug", "true");
+
+    // Tạo session có xác thực với Gmail
+    Session session = Session.getInstance(props, new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
+        }
+    });
+
+    try {
+        // Tạo email mới (định dạng MIME)
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(SENDER_EMAIL));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+
+        // Tiêu đề email (mã hoá UTF-8)
+        message.setSubject(MimeUtility.encodeText("Chào mừng bạn trở thành Shipper mới của chúng tôi", "UTF-8", "B"));
+
+        // Nội dung HTML của email
+        String emailContent = createNewShipperAccountEmailContent(username, password, startDate, endDate);
+        message.setContent(emailContent, "text/html; charset=UTF-8");
+
+        // Gửi email
+        Transport.send(message);
+        System.out.println("Email thông báo tài khoản shipper mới đã được gửi thành công đến " + recipientEmail);
+        return true;
+    } catch (MessagingException | java.io.UnsupportedEncodingException e) {
+        System.err.println("Lỗi gửi email thông báo tài khoản shipper: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+
+/**
+ * Tạo nội dung HTML cho email thông báo tài khoản shipper mới
+ */
+private static String createNewShipperAccountEmailContent(String username, String password, 
+                                                        Date startDate, Date endDate) {
+    // Định dạng ngày tháng
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    String startDateStr = dateFormat.format(startDate);
+    String endDateStr = endDate != null ? dateFormat.format(endDate) : "Không xác định";
+    
+    // Nội dung email
+    return "<html>" +
+           "<head>" +
+           "    <style>" +
+           "        body { font-family: Arial, sans-serif; line-height: 1.6; }" +
+           "        .container { width: 80%; margin: 0 auto; padding: 20px; }" +
+           "        .header { background-color: #4CAF50; color: white; padding: 10px; text-align: center; }" +
+           "        .content { padding: 20px; border: 1px solid #ddd; }" +
+           "        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #777; }" +
+           "        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }" +
+           "        table, th, td { border: 1px solid #ddd; }" +
+           "        th, td { padding: 10px; text-align: left; }" +
+           "        th { background-color: #f2f2f2; }" +
+           "        .highlight { font-weight: bold; color: #4CAF50; }" +
+           "    </style>" +
+           "</head>" +
+           "<body>" +
+           "    <div class='container'>" +
+           "        <div class='header'>" +
+           "            <h1>Chào mừng bạn trở thành Shipper của chúng tôi!</h1>" +
+           "        </div>" +
+           "        <div class='content'>" +
+           "            <p>Xin chào <span class='highlight'>" + username + "</span>,</p>" +
+           "            <p>Chúc mừng bạn đã trở thành một phần của đội ngũ Shipper của chúng tôi! Chúng tôi rất vui mừng được hợp tác với bạn.</p>" +
+           "            <p>Dưới đây là thông tin tài khoản và công việc của bạn:</p>" +
+           "            <table>" +
+           "                <tr>" +
+           "                    <th>Thông tin</th>" +
+           "                    <th>Chi tiết</th>" +
+           "                </tr>" +
+           "                <tr>" +
+           "                    <td>Tên đăng nhập</td>" +
+           "                    <td>" + username + "</td>" +
+           "                </tr>" +
+           "                <tr>" +
+           "                    <td>Mật khẩu</td>" +
+           "                    <td>" + password + "</td>" +
+           "                </tr>" +
+           "                <tr>" +
+           "                    <td>Ngày bắt đầu</td>" +
+           "                    <td>" + startDateStr + "</td>" +
+           "                </tr>" +
+           "                <tr>" +
+           "                    <td>Ngày kết thúc (nếu có)</td>" +
+           "                    <td>" + endDateStr + "</td>" +
+           "                </tr>" +
+           "            </table>" +
+           "            <p>Vui lòng đăng nhập vào hệ thống của chúng tôi bằng thông tin trên để bắt đầu nhận đơn hàng.</p>" +
+           "            <p>Nếu bạn có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với chúng tôi qua email hoặc số điện thoại hỗ trợ.</p>" +
+           "            <p>Chúc bạn thành công và có những trải nghiệm tuyệt vời cùng chúng tôi!</p>" +
+           "            <p>Trân trọng,<br>Ban quản lý</p>" +
+           "        </div>" +
+           "        <div class='footer'>" +
+           "            <p>Email này được gửi tự động, vui lòng không trả lời.</p>" +
+           "            <p>&copy; " + java.time.Year.now().getValue() + " - Hệ thống quản lý giao hàng</p>" +
+           "        </div>" +
+           "    </div>" +
+           "</body>" +
+           "</html>";
+}
 
     
 }

@@ -2,6 +2,7 @@ package Model;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 public class Complaint {
     private int complaintID;
@@ -9,58 +10,21 @@ public class Complaint {
     private int accountID;
     private String title;
     private String content;
-    private String image;        // Thêm trường image mới
+    private String image;        // Giữ nguyên để backward compatibility
     private String status;
     private String responseContent;
     private Timestamp dateCreated;
     private Timestamp dateResolved;
-    // Thêm các trường này vào class Complaint
-private String userName;
-private String userPhone;
-private double orderTotal;
-private Date orderDate;
-private String orderStatus;
-
-// Thêm getters và setters cho các trường này
-public String getUserName() {
-    return userName;
-}
-
-public void setUserName(String userName) {
-    this.userName = userName;
-}
-
-public String getUserPhone() {
-    return userPhone;
-}
-
-public void setUserPhone(String userPhone) {
-    this.userPhone = userPhone;
-}
-
-public double getOrderTotal() {
-    return orderTotal;
-}
-
-public void setOrderTotal(double orderTotal) {
-    this.orderTotal = orderTotal;
-}
-
-public Date getOrderDate() {
-    return orderDate;
-}
-
-public void setOrderDate(Date orderDate) {
-    this.orderDate = orderDate;
-}
-
-public String getOrderStatus() {
-    return orderStatus;
-}
-
-public void setOrderStatus(String orderStatus) {
-    this.orderStatus = orderStatus;
-}
+    
+    // Thêm List ảnh mới
+    private List<ComplaintImage> images;
+    
+    // Các trường bổ sung
+    private String userName;
+    private String userPhone;
+    private double orderTotal;
+    private Date orderDate;
+    private String orderStatus;
 
     // Constructor đầy đủ
     public Complaint(int complaintID, int maHD, int accountID, String title, String content, 
@@ -92,7 +56,16 @@ public void setOrderStatus(String orderStatus) {
     public Complaint() {
     }
     
-    // Getters và Setters
+    // Getters và Setters cho trường images mới
+    public List<ComplaintImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ComplaintImage> images) {
+        this.images = images;
+    }
+    
+    // Các getter/setter khác giữ nguyên như cũ...
     public int getComplaintID() {
         return complaintID;
     }
@@ -133,7 +106,6 @@ public void setOrderStatus(String orderStatus) {
         this.content = content;
     }
     
-    // Getter và Setter cho trường image mới
     public String getImage() {
         return image;
     }
@@ -173,6 +145,46 @@ public void setOrderStatus(String orderStatus) {
     public void setDateResolved(Timestamp dateResolved) {
         this.dateResolved = dateResolved;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public double getOrderTotal() {
+        return orderTotal;
+    }
+
+    public void setOrderTotal(double orderTotal) {
+        this.orderTotal = orderTotal;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
     
     @Override
     public String toString() {
@@ -186,6 +198,7 @@ public void setOrderStatus(String orderStatus) {
                 ", status='" + status + '\'' +
                 ", dateCreated=" + dateCreated +
                 ", dateResolved=" + dateResolved +
+                ", imagesCount=" + (images != null ? images.size() : 0) +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package Controller.manager;
 
 import DAO.ShipperDAO;
 import Model.Shipper;
+import Utility.EmailSender;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,14 +12,27 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @WebServlet(name = "ManageShipperController", urlPatterns = {"/manager/shipper", "/manager/shipper/*"})
 public class ManageShipperController extends HttpServlet {
     private ShipperDAO shipperDAO;
+    // Tạo ExecutorService với 5 thread để xử lý gửi email
+    private static final ExecutorService emailExecutor = Executors.newFixedThreadPool(5);
     
     @Override
     public void init() {
         shipperDAO = new ShipperDAO();
+    }
+    
+    @Override
+    public void destroy() {
+        // Đảm bảo đóng ExecutorService khi servlet bị hủy
+        if (emailExecutor != null && !emailExecutor.isShutdown()) {
+            emailExecutor.shutdown();
+        }
+        super.destroy();
     }
     
     @Override
@@ -327,8 +341,41 @@ public class ManageShipperController extends HttpServlet {
             boolean success = shipperDAO.addShipper(shipper, password);
             
             if (success) {
+                // Gửi email thông báo cho shipper mới trong thread pool
+                final String finalEmail = email.trim();
+                final String finalUsername = username.trim();
+                final String finalPassword = password.trim();
+                final Date finalStartDate = startDate;
+                final Date finalEndDate = endDate;
+                final double finalBaseSalary = baseSalary;
+                final double finalBonusPerOrder = bonusPerOrder;
+                
+                // Gửi email bất đồng bộ sử dụng ExecutorService
+                emailExecutor.submit(() -> {
+                    try {
+                        System.out.println("Đang gửi email thông báo đến shipper mới: " + finalEmail);
+                        boolean emailSent = EmailSender.sendNewShipperAccountEmail(
+                            finalEmail,
+                            finalUsername,
+                            finalPassword,
+                            finalStartDate,
+                            finalEndDate
+                            
+                        );
+                        
+                        if (emailSent) {
+                            System.out.println("Email đã được gửi thành công đến shipper: " + finalEmail);
+                        } else {
+                            System.err.println("Không thể gửi email đến shipper: " + finalEmail);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Lỗi khi gửi email đến shipper: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
+                
                 HttpSession session = request.getSession();
-                session.setAttribute("successMessage", "Thêm shipper mới thành công!");
+                session.setAttribute("successMessage", "Thêm shipper mới thành công! Email thông báo đang được gửi.");
                 response.sendRedirect(request.getContextPath() + "/manager/shipper");
             } else {
                 request.setAttribute("errorMessage", "Không thể thêm shipper mới. Vui lòng thử lại.");
@@ -519,8 +566,4 @@ public class ManageShipperController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/manager/shipper");
         }
     }
-    
-   
-    
-    
 }

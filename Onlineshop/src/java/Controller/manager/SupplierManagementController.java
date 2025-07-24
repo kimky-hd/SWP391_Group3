@@ -3,8 +3,11 @@ package Controller.manager;
 import DAO.SupplierDAO;
 import Model.Supplier;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -41,15 +44,15 @@ public class SupplierManagementController extends HttpServlet {
                 
             case "add":
                 handleAddSupplier(request, response, supplierDAO);
-                break;
+                return; // Không chuyển hướng để xử lý Ajax
                 
             case "update":
                 handleUpdateSupplier(request, response, supplierDAO);
-                break;
+                return; // Không chuyển hướng để xử lý Ajax
                 
             case "toggle":
                 handleToggleStatus(request, response, supplierDAO);
-                break;
+                return; // Không chuyển hướng để xử lý Ajax
                 
             case "search":
                 handleSearchSuppliers(request, response, supplierDAO);
@@ -142,6 +145,11 @@ public class SupplierManagementController extends HttpServlet {
     private void handleAddSupplier(HttpServletRequest request, HttpServletResponse response, SupplierDAO supplierDAO)
             throws ServletException, IOException {
         System.out.println("=== ADDING NEW SUPPLIER ===");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        Map<String, Object> jsonResponse = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
         
         try {
             String supplierName = request.getParameter("supplierName");
@@ -155,30 +163,31 @@ public class SupplierManagementController extends HttpServlet {
             System.out.println("Address: " + address);
 
             // Validate input
+            boolean hasError = false;
+            
             if (supplierName == null || supplierName.trim().isEmpty()) {
-                request.getSession().setAttribute("error", "Tên nhà cung cấp không được để trống!");
-                response.sendRedirect("supplier");
-                return;
+                errors.put("supplierName", "Tên nhà cung cấp không được để trống!");
+                hasError = true;
             }
             
             if (email == null || email.trim().isEmpty()) {
-                request.getSession().setAttribute("error", "Email không được để trống!");
-                response.sendRedirect("supplier");
-                return;
-            }
-            
-            // Validate email format
-            if (!isValidEmail(email)) {
-                request.getSession().setAttribute("error", "Định dạng email không hợp lệ!");
-                response.sendRedirect("supplier");
-                return;
+                errors.put("email", "Email không được để trống!");
+                hasError = true;
+            } else if (!isValidEmail(email)) {
+                errors.put("email", "Định dạng email không hợp lệ!");
+                hasError = true;
+            } else if (supplierDAO.checkEmailExist(email)) {
+                errors.put("email", "Email đã tồn tại!");
+                hasError = true;
             }
 
-            // Check if email already exists
-            if (supplierDAO.checkEmailExist(email)) {
-                System.out.println("ERROR: Email already exists: " + email);
-                request.getSession().setAttribute("error", "Email đã tồn tại!");
-                response.sendRedirect("supplier");
+            if (hasError) {
+                jsonResponse.put("status", "error");
+                jsonResponse.put("errors", errors);
+                jsonResponse.put("message", "Vui lòng kiểm tra lại thông tin!");
+                
+                Gson gson = new Gson();
+                response.getWriter().write(gson.toJson(jsonResponse));
                 return;
             }
 
@@ -196,25 +205,34 @@ public class SupplierManagementController extends HttpServlet {
 
             if (success) {
                 System.out.println("SUCCESS: Supplier added successfully!");
-                request.getSession().setAttribute("message", "Thêm nhà cung cấp thành công!");
+                jsonResponse.put("status", "success");
+                jsonResponse.put("message", "Thêm nhà cung cấp thành công!");
             } else {
                 System.out.println("ERROR: Failed to add supplier to database");
-                request.getSession().setAttribute("error", "Thêm nhà cung cấp thất bại!");
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Thêm nhà cung cấp thất bại!");
             }
             
         } catch (Exception e) {
             System.out.println("ERROR: Unexpected error - " + e.getMessage());
             e.printStackTrace();
-            request.getSession().setAttribute("error", "Lỗi: " + e.getMessage());
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "Lỗi: " + e.getMessage());
         }
 
         System.out.println("=== END ADDING SUPPLIER ===");
-        response.sendRedirect("supplier");
+        Gson gson = new Gson();
+        response.getWriter().write(gson.toJson(jsonResponse));
     }
     
     private void handleUpdateSupplier(HttpServletRequest request, HttpServletResponse response, SupplierDAO supplierDAO)
             throws ServletException, IOException {
         System.out.println("=== UPDATING SUPPLIER ===");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        Map<String, Object> jsonResponse = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
         
         try {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -227,34 +245,35 @@ public class SupplierManagementController extends HttpServlet {
             System.out.println("New values - Name: " + supplierName + ", Email: " + email);
 
             // Validate input
+            boolean hasError = false;
+            
             if (supplierName == null || supplierName.trim().isEmpty()) {
-                request.getSession().setAttribute("error", "Tên nhà cung cấp không được để trống!");
-                response.sendRedirect("supplier");
-                return;
+                errors.put("supplierName", "Tên nhà cung cấp không được để trống!");
+                hasError = true;
             }
             
             if (email == null || email.trim().isEmpty()) {
-                request.getSession().setAttribute("error", "Email không được để trống!");
-                response.sendRedirect("supplier");
-                return;
+                errors.put("email", "Email không được để trống!");
+                hasError = true;
+            } else if (!isValidEmail(email)) {
+                errors.put("email", "Định dạng email không hợp lệ!");
+                hasError = true;
+            } else if (supplierDAO.checkEmailExistExclude(email, id)) {
+                errors.put("email", "Email đã tồn tại!");
+                hasError = true;
             }
-            
-            // Validate email format
-            if (!isValidEmail(email)) {
-                request.getSession().setAttribute("error", "Định dạng email không hợp lệ!");
-                response.sendRedirect("supplier");
+
+            if (hasError) {
+                jsonResponse.put("status", "error");
+                jsonResponse.put("errors", errors);
+                jsonResponse.put("message", "Vui lòng kiểm tra lại thông tin!");
+                
+                Gson gson = new Gson();
+                response.getWriter().write(gson.toJson(jsonResponse));
                 return;
             }
 
-            // Check if email already exists (exclude current supplier)
-            if (supplierDAO.checkEmailExistExclude(email, id)) {
-                System.out.println("ERROR: Email already exists: " + email);
-                request.getSession().setAttribute("error", "Email đã tồn tại!");
-                response.sendRedirect("supplier");
-                return;
-            }
-
-                     Supplier existingSupplier = supplierDAO.getSupplierById(id);
+            Supplier existingSupplier = supplierDAO.getSupplierById(id);
             if (existingSupplier != null) {
                 existingSupplier.setSupplierName(supplierName.trim());
                 existingSupplier.setPhone(phone != null ? phone.trim() : "");
@@ -265,26 +284,36 @@ public class SupplierManagementController extends HttpServlet {
 
                 if (updateSuccess) {
                     System.out.println("SUCCESS: Supplier updated successfully!");
-                    request.getSession().setAttribute("message", "Cập nhật nhà cung cấp thành công!");
+                    jsonResponse.put("status", "success");
+                    jsonResponse.put("message", "Cập nhật nhà cung cấp thành công!");
                 } else {
                     System.out.println("ERROR: Failed to update supplier");
-                    request.getSession().setAttribute("error", "Cập nhật nhà cung cấp thất bại!");
+                    jsonResponse.put("status", "error");
+                    jsonResponse.put("message", "Cập nhật nhà cung cấp thất bại!");
                 }
             } else {
-                request.getSession().setAttribute("error", "Không tìm thấy nhà cung cấp!");
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Không tìm thấy nhà cung cấp!");
             }
             
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
             e.printStackTrace();
-            request.getSession().setAttribute("error", "Lỗi: " + e.getMessage());
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "Lỗi: " + e.getMessage());
         }
 
-        response.sendRedirect("supplier");
+        Gson gson = new Gson();
+        response.getWriter().write(gson.toJson(jsonResponse));
     }
     
     private void handleToggleStatus(HttpServletRequest request, HttpServletResponse response, SupplierDAO supplierDAO)
             throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        Map<String, Object> jsonResponse = new HashMap<>();
+        
         try {
             int supplierId = Integer.parseInt(request.getParameter("id"));
             boolean status = Boolean.parseBoolean(request.getParameter("status"));
@@ -295,18 +324,22 @@ public class SupplierManagementController extends HttpServlet {
 
             if (toggleSuccess) {
                 System.out.println("SUCCESS: Status changed successfully!");
-                request.getSession().setAttribute("message", "Thay đổi trạng thái thành công!");
+                jsonResponse.put("status", "success");
+                jsonResponse.put("message", "Thay đổi trạng thái thành công!");
             } else {
                 System.out.println("ERROR: Failed to change status");
-                request.getSession().setAttribute("error", "Thay đổi trạng thái thất bại!");
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Thay đổi trạng thái thất bại!");
             }
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
             e.printStackTrace();
-            request.getSession().setAttribute("error", "Lỗi khi thay đổi trạng thái: " + e.getMessage());
+            jsonResponse.put("status", "error");
+            jsonResponse.put("message", "Lỗi khi thay đổi trạng thái: " + e.getMessage());
         }
 
-        response.sendRedirect("supplier");
+        Gson gson = new Gson();
+        response.getWriter().write(gson.toJson(jsonResponse));
     }
     
     private void handleSearchSuppliers(HttpServletRequest request, HttpServletResponse response, SupplierDAO supplierDAO)
@@ -359,4 +392,3 @@ public class SupplierManagementController extends HttpServlet {
         processRequest(request, response);
     }
 }
-
