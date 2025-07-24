@@ -202,7 +202,7 @@ public class MaterialDAO extends DBContext {
         String sql = "INSERT INTO Material (\n"
                 + "     name,\n"
                 + "     unit) \n"
-                + "     VALUES (?,'cành', ?)";
+                + "     VALUES (?,'cành')";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, name);

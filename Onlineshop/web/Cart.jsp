@@ -451,8 +451,6 @@
     <body>
         <jsp:include page="header.jsp" />
         
-        <jsp:include page="FilterProductForUser.jsp" />
-        
 
         <div class="page-content-wrapper">
             <div class="container-fluid">
