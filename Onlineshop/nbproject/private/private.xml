@@ -17,15 +17,16 @@
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductComponent.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/web/manager/Manager_AddProductBatch.jsp</file>
         <group>
+
+
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/Shipper/ShipperCustomOrderController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/CustomOrderCartDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/shipper/order_detail_fragment.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CustomOrder.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/orders.jsp</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/staff/StaffBlogListController.java</file>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Cart.java</file>
@@ -34,17 +35,18 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Account.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/css/style.css</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Manager_ListProduct.jsp</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/ManagerController/LinkedHashMap.java</file>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/vouchers.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/ProfileController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Model/Feedback.java</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/shipper/order_detail.jsp</file>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/revenueChart.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Utility/EmailSender.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/subiz-chat.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerProductList.java</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/AccountVerification.java</file>
+
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CustomCheckOut.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/VNPayController.java</file>
@@ -63,7 +65,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/AccountDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/VNPayReturnController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/RevenueChartServlet.java</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Manager_ListCategory.jsp</file>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/CartDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/CustomOrderController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/js/main.js</file>
@@ -75,8 +77,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/DAO/VoucherDAO.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/AddressController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/manager/vouchers.jsp</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/shipper/shipper_custom_order_detail.jsp</file>
-            <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/shipper/shipper_custom_orders.jsp</file>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/manager/StaffController.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/staff/staff_custom_orders.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/staff/StaffCustomOrderController.java</file>
@@ -92,6 +93,31 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/build/web/Homepage.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CustomCart.jsp</file>
+
+        </group>
+        <group name="New Folder (2)">
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/header.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/CommonController/Homepage.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/NewServlet.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/ShipperDAO.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/Homepage.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/register.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Model/Order.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/HoaDonDAO.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/CommonController/BlogsControllers.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/AdminOrderController.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/OrderController.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/CheckOut.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/CheckOutController.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/OrderDetailDAO.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/DAO/OrderDAO.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/RevenueChartServlet.java</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/orders.jsp</file>
+            <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/admin/order-detail.jsp</file>
+
         </group>
     </open-files>
 </project-private>

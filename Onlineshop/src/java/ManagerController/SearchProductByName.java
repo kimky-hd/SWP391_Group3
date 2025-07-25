@@ -5,9 +5,13 @@
 
 package ManagerController;
 
+import DAO.CategoryDAO;
+import DAO.MaterialDAO;
 import DAO.ProductDAO;
 import Model.Account;
+import Model.Category;
 import Model.Product;
+import Model.ProductComponent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -62,6 +66,8 @@ public class SearchProductByName extends HttpServlet {
     throws ServletException, IOException {
         String txt = request.getParameter("txt").trim();
         ProductDAO productDAO = new ProductDAO();
+        MaterialDAO mateDAO = new MaterialDAO();
+        CategoryDAO cateDAO = new CategoryDAO();
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
         if (a == null) {
@@ -69,7 +75,16 @@ public class SearchProductByName extends HttpServlet {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
         List<Product> product = productDAO.getProductByTitle(txt);
-        
+        for (Product p : product) {
+            p.setBatches(productDAO.getBatchesByProductID(p.getProductID()));
+            List<ProductComponent> components = productDAO.getProductComponentsByProductID(p.getProductID());
+            for (ProductComponent c : components) {
+                c.setMaterial(mateDAO.getMaterialByID(c.getMaterialID()));
+            }
+            p.setComponents(components);
+            List<Category> categories = cateDAO.getCategoryByProductID(p.getProductID());
+            p.setCategories(categories);
+        }
         request.setAttribute("txt", txt);
         request.setAttribute("productList", product);
         request.getRequestDispatcher("Manager_ListProduct.jsp").forward(request, response);

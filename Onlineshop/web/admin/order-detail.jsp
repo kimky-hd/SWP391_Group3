@@ -437,7 +437,7 @@
                 <div class="action-buttons">
                     <c:if test="${order.status eq 'Pending'}">
                         <button class="btn btn-success" onclick="updateStatus(${order.orderId}, 2)">
-                            <i class="fas fa-check"></i> Xác nhận hoàn thành
+                            <i class="fas fa-check"></i> Duyệt đơn hàng
                         </button>
                         <button class="btn btn-warning" onclick="updateStatus(${order.orderId}, 6)">
     <i class="fas fa-times"></i> Hủy đơn hàng

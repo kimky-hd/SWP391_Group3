@@ -42,7 +42,6 @@ public class ViewListProductController extends HttpServlet {
     ProductDAO productDAO = new ProductDAO();
     
     //Gọi cập nhật trạng thái các lô sản phẩm
-    productDAO.updateProductBatchStatus();
     
     String index = request.getParameter("index");
     if (index == null || index.isEmpty()) {

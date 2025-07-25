@@ -15,8 +15,11 @@ import DAO.ProductDAO;
 import Model.Product;
 import java.util.List;
 import DAO.CategoryDAO;
+import Model.Account;
 import Model.Banner;
 import Model.Category;
+import Model.WishList;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation for rendering the homepage.
@@ -31,6 +34,7 @@ public class Homepage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        ProductDAO productDAO = new ProductDAO();
         int page = 1;
         int productsPerPage = 8;
         if (request.getParameter("page") != null) {
@@ -40,9 +44,18 @@ public class Homepage extends HttpServlet {
                 page = 1;
             }
         }
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        int count;
+        if (a == null) {
+            count = 0;
+        } else {
+            count = productDAO.countProductWishLish(a.getAccountID());
+            List<WishList> ListWishListProductByAccount = productDAO.getWishListProductByAccount(a.getAccountID());
+            request.setAttribute("wishlistProductIDs", ListWishListProductByAccount);
+        }
         BannerDAO bannerDAO = new BannerDAO();
         List<Banner> banners = bannerDAO.getActiveBanners();
-        ProductDAO productDAO = new ProductDAO();
         CategoryDAO categoryDAO = new CategoryDAO();
         List<Category> categories = categoryDAO.getAllCategory();
         request.setAttribute("categories", categories);
@@ -58,6 +71,7 @@ public class Homepage extends HttpServlet {
             totalProducts = productDAO.countAllProduct();
         }
         int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
+        request.setAttribute("countWL", count);
         request.setAttribute("featuredProducts", featuredProducts);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);

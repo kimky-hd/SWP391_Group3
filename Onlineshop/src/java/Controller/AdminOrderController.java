@@ -4,6 +4,7 @@ import DAO.CartDAO;
 import DAO.DBContext;
 import DAO.OrderDAO;
 import DAO.ProductDAO;
+import DAO.ShipperDAO;
 import Model.Order;
 import Model.OrderDetail;
 import Model.Product;
@@ -32,6 +33,7 @@ public class AdminOrderController extends HttpServlet {
 
     private final OrderDAO orderDAO = new OrderDAO();
     private final ProductDAO productDAO = new ProductDAO();
+    private final ShipperDAO shipperDAO = new ShipperDAO();
     private final Gson gson = new Gson();
 
   @Override
@@ -61,7 +63,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         break;
     case "getOrderDetails":  
     getOrderDetailsForNotification(request, response); 
-    break;  
+    break;
+    case "getShippers":
+        getShippers(request, response);
+        break;  
 default:
     handleFilterOrders(request, response);
     break;
@@ -142,12 +147,18 @@ private void handleFilterOrders(HttpServletRequest request, HttpServletResponse 
     try {
         // Lấy tham số filter
         String customerName = request.getParameter("customerName");
+        if (customerName != null) {
+            customerName = customerName.trim();
+            if (customerName.isEmpty()) {
+                customerName = null;
+            }
+        }
         String status = request.getParameter("status");
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
         String sortBy = request.getParameter("sortBy");
 if (sortBy == null || sortBy.isEmpty()) {
-    sortBy = "date_desc"; // Mặc định sắp xếp theo ngày mới nhất
+    sortBy = "order_id"; // Mặc định sắp xếp theo ID đơn hàng tăng dần
 }
         // In ra các tham số để debug
         System.out.println("Filter parameters: customerName=" + customerName + ", status=" + status + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo);
@@ -228,6 +239,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             case "notify":  // THÊM CASE NÀY
                 sendCustomNotification(request, response);
                 break;
+            case "assignShipper":
+                assignShipper(request, response);
+                break;
             
             default:
                 sendJsonError(response, "Hành động không được hỗ trợ");
@@ -238,11 +252,11 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     }
 }
 
-    private boolean checkAdminAccess(HttpServletRequest request, HttpServletResponse response) 
+    private boolean checkAdminAccess(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-        if (account == null || account.getRole() != 1) {
+        if (account == null || account.getRole() != 2) {
             response.sendRedirect("login.jsp");
             return false;
         }
@@ -912,4 +926,77 @@ private String createOrderNotificationEmailTemplate(Order order, String customMe
         e.printStackTrace();
     }
 }
+
+    // Lấy danh sách shipper
+    private void getShippers(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        try {
+            List<Model.Shipper> shippers = shipperDAO.getAllShippers();
+            List<Map<String, Object>> shipperList = new ArrayList<>();
+            
+            for (Model.Shipper shipper : shippers) {
+                if (shipper.isActive()) { // Chỉ lấy shipper đang hoạt động
+                    Map<String, Object> shipperInfo = new HashMap<>();
+                    shipperInfo.put("accountID", shipper.getShipperID());
+                    shipperInfo.put("fullName", shipper.getUsername());
+                    shipperInfo.put("phone", shipper.getPhone());
+                    shipperList.add(shipperInfo);
+                }
+            }
+            
+            Map<String, Object> jsonResponse = new HashMap<>();
+            jsonResponse.put("success", true);
+            jsonResponse.put("shippers", shipperList);
+            
+            response.getWriter().write(gson.toJson(jsonResponse));
+            
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Lỗi khi lấy danh sách shipper: " + e.getMessage());
+            response.getWriter().write(gson.toJson(errorResponse));
+        }
+    }
+    
+    // Phân công shipper cho đơn hàng
+    private void assignShipper(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        try {
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            int shipperId = Integer.parseInt(request.getParameter("shipperId"));
+            
+            // Cập nhật shippingID trong bảng HoaDon
+            boolean success = orderDAO.updateShippingID(orderId, shipperId);
+            
+            Map<String, Object> jsonResponse = new HashMap<>();
+            if (success) {
+                // Lấy thông tin shipper để trả về
+                Model.Shipper shipper = shipperDAO.getShipperById(shipperId);
+                jsonResponse.put("success", true);
+                jsonResponse.put("message", "Phân công shipper thành công");
+                if (shipper != null) {
+                    jsonResponse.put("shipperName", shipper.getUsername());
+                    jsonResponse.put("shipperPhone", shipper.getPhone());
+                    jsonResponse.put("shipperEmail", shipper.getEmail());
+                }
+            } else {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Không thể phân công shipper");
+            }
+            
+            response.getWriter().write(gson.toJson(jsonResponse));
+            
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Lỗi khi phân công shipper: " + e.getMessage());
+            response.getWriter().write(gson.toJson(errorResponse));
+        }
+    }
 }

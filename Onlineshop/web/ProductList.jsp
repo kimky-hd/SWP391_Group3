@@ -145,7 +145,7 @@
             <div id="message-popup">${sessionScope.mess}</div>
             <c:remove var="mess" scope="session" />
         </c:if>
-
+            
 
         <jsp:include page="header.jsp" />
 
@@ -195,7 +195,7 @@
                     <c:otherwise>
                         <c:forEach items="${productList}" var="product" varStatus="status">
                             <div class="col-lg-3 col-md-6 col-sm-6 col-12 pb-1">
-                                <div class="card product-item border-0 mb-4">
+                                <div class="card product-item border-0 mb-4" data-product-id="${product.getProductID()}">
                                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0" style="height: 250px; display: flex; align-items: center; justify-content: center;">
                                         <img class="img-fluid h-100" src="${pageContext.request.contextPath}/img/${product.getImage()}" alt="${product.getTitle()}" style="object-fit: contain;">
                                     </div>
