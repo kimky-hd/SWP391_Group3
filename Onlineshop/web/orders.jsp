@@ -422,8 +422,11 @@
                                         </c:if>
                                         <c:if test="${order.status eq 'Đã giao hàng thành công'}">
                                             <div class="text-right mt-4">
-                                                <a href="complaint?action=showForm&maHD=${order.orderId}" class="btn btn-warning">
+                                                <a href="complaint?action=showForm&maHD=${order.orderId}" class="btn btn-warning mr-2">
                                                     <i class="fa fa-exclamation-triangle mr-2"></i> Gửi khiếu nại
+                                                </a>
+                                                <a href="product-rating-simple.jsp?orderId=${order.orderId}" class="btn btn-primary">
+                                                    <i class="fa fa-star mr-2"></i> Đánh giá sản phẩm
                                                 </a>
                                             </div>
                                         </c:if>

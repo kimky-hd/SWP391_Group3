@@ -5,6 +5,7 @@
 package CommonController;
 
 import DAO.CategoryDAO;
+import DAO.FeedbackDAO;
 import DAO.ProductDAO;
 import Model.Account;
 import Model.AccountProfile;
@@ -46,6 +47,7 @@ public class ViewProductDetail extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("productid"));
         ProductDAO productDAO = new ProductDAO();
         CategoryDAO cateDAO = new CategoryDAO();
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
         Product p = productDAO.getProductById(id);
         if (p == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sản phẩm không tồn tại");
@@ -64,9 +66,7 @@ public class ViewProductDetail extends HttpServlet {
         }
         
         List<ProductComponent> cpList = productDAO.getProductComponentsByProductID(id);
-        List<Feedback> listAllFeedback = productDAO.getAllReviewByProductID(id);
-        int countAllFeedback = listAllFeedback.size();
-        float rate = productDAO.getRateByProductID(id);
+
         List<AccountProfile> listAllAccountprofile = productDAO.getAllAccountProfile();
         
         List<Category> cateList = cateDAO.getCategoryByProductID(id);
@@ -74,18 +74,26 @@ public class ViewProductDetail extends HttpServlet {
         List<Color> listAllColors = productDAO.getAllColor();
         List<Season> listAllSeasons = productDAO.getAllSeason();
 
+        // Load product feedbacks
+        List<Feedback> productFeedbacks = feedbackDAO.getFeedbacksByProductId(id);
+
+        // Check if this is a redirect from rating submission (highlight latest feedback)
+        String highlight = request.getParameter("highlight");
+        boolean highlightLatest = "latest".equals(highlight);
+
         request.setAttribute("countWL", count);
         request.setAttribute("componentList", cpList);
         request.setAttribute("categoryList", cateList);
-        request.setAttribute("listFeedback", listAllFeedback);
         request.setAttribute("detail", p);
-        request.setAttribute("totalFeedback", countAllFeedback);
         request.setAttribute("listAccountProfile", listAllAccountprofile);
-        request.setAttribute("rate", rate);
-        
+
         request.setAttribute("listAllCategory", listAllCategory);
         request.setAttribute("listAllColors", listAllColors);
         request.setAttribute("listAllSeasons", listAllSeasons);
+
+        // Add feedback attributes
+        request.setAttribute("productFeedbacks", productFeedbacks);
+        request.setAttribute("highlightLatest", highlightLatest);
 
         request.getRequestDispatcher("ProductDetail.jsp").forward(request, response);
 

@@ -22,6 +22,12 @@ public class Order {
     private String status;
     private Integer cardId; // Use Integer for nullable int
     private Double cardFee; // Use Double for nullable double
+    
+    // Shipper information
+    private Integer shippingID;
+    private String shipperName;
+    private String shipperEmail;
+    private String shipperPhone;
 
     public Order() {
     }
@@ -144,5 +150,38 @@ public void setStatusId(int statusID) {
 
     public void setCardFee(Double cardFee) {
         this.cardFee = cardFee;
+    }
+    
+    // Shipper getter and setter methods
+    public Integer getShippingID() {
+        return shippingID;
+    }
+    
+    public void setShippingID(Integer shippingID) {
+        this.shippingID = shippingID;
+    }
+    
+    public String getShipperName() {
+        return shipperName;
+    }
+    
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
+    }
+    
+    public String getShipperEmail() {
+        return shipperEmail;
+    }
+    
+    public void setShipperEmail(String shipperEmail) {
+        this.shipperEmail = shipperEmail;
+    }
+    
+    public String getShipperPhone() {
+        return shipperPhone;
+    }
+    
+    public void setShipperPhone(String shipperPhone) {
+        this.shipperPhone = shipperPhone;
     }
 }
