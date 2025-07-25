@@ -276,8 +276,8 @@
                 </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/shipper/custom-orders" class="nav-link">
-                        <i class="fas fa-bars"></i>
-                        <span>Dashboard</span>
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn hàng thiết kế</span>
                     </a>
                 </li>
 

@@ -46,14 +46,17 @@
                                                     <c:when test="${order.statusID == 3}">
                                                         <span class="badge bg-primary">Đang giao</span>
                                                     </c:when>
+                                                    <c:when test="${order.statusID == 2}">
+                                                        <span class="badge bg-info">Đã duyệt</span>
+                                                    </c:when>
                                                     <c:when test="${order.statusID == 4}">
                                                         <span class="badge bg-success">Đã giao</span>
                                                     </c:when>
-                                                    <c:when test="${order.statusID == 6}">
-                                                        <span class="badge bg-danger">Đã hủy</span>
-                                                    </c:when>
                                                     <c:when test="${order.statusID == 9}">
-                                                        <span class="badge bg-secondary">Sẵn sàng giao</span>
+                                                        <span class="badge bg-danger">Không thành công</span>
+                                                    </c:when>
+                                                    <c:when test="${order.statusID == 3}">
+                                                        <span class="badge bg-primary">Đang vận chuyển</span>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <span class="badge bg-light text-dark">${order.statusName}</span>

@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Servlet to handle blog listing
  *
- * @author dungb
+ * @author ADMIN
  */
 
 @WebServlet(name = "BlogsControllers", urlPatterns = {"/blogs"})

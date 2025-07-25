@@ -51,20 +51,17 @@
         // 2 (Approved) -> 9 (Ready to ship) or 3 (Shipping) or 6 (Cancelled)
         // 9 (Ready to ship) -> 3 (Shipping) or 6 (Cancelled)
         // 3 (Shipping) -> 4 (Delivered) or 6 (Cancelled)
-        // Any status -> 6 (Cancelled) - with note
+        // Any status -> 9 (Cancelled) - with note
         
         switch (currentStatus) {
-            case 2: // Approved and ready for packaging
-                isValidTransition = (statusId == 9 || statusId == 3 || statusId == 6);
-                break;
-            case 9: // Ready to ship
-                isValidTransition = (statusId == 3 || statusId == 6);
+            case 2: // Approved and ready for shipping
+                isValidTransition = (statusId == 3 || statusId == 9);
                 break;
             case 3: // Shipping
-                isValidTransition = (statusId == 4 || statusId == 6);
+                isValidTransition = (statusId == 4 || statusId == 9);
                 break;
             case 4: // Delivered
-            case 6: // Cancelled
+            case 9: // Failed
                 isValidTransition = false; // No further transitions allowed
                 break;
             default:
@@ -77,15 +74,15 @@
             return;
         }
         
-        // If status is 6 (cancelled), note is required
-        if (statusId == 6 && (note == null || note.trim().isEmpty())) {
+        // If status is 9 (cancelled), note is required
+        if (statusId == 9 && (note == null || note.trim().isEmpty())) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("Cancellation reason is required");
             return;
         }
         
         boolean success;
-        if (statusId == 6) {
+        if (statusId == 9) {
             // Update with note for cancellation
             success = hoaDonDAO.updateOrderStatusWithNote(orderId, statusId, note);
         } else {
