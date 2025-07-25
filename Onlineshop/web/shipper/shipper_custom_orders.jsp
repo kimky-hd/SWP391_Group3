@@ -74,10 +74,10 @@
                 align-items: center;
                 gap: 5px;
             }
-            .status-2 {
-                background-color: #cff4fc;
-                color: #055160;
-            } /* Đã duyệt */
+            .status-9 {
+                background-color: #fff3cd;
+                color: #664d03;
+            } /* Sẵn sàng giao */
             .status-3 {
                 background-color: #cfe2ff;
                 color: #084298;
@@ -86,10 +86,6 @@
                 background-color: #d1e7dd;
                 color: #0f5132;
             } /* Đã giao hàng thành công */
-            .status-9 {
-                background-color: #f8d7da;
-                color: #721c24;
-            } /* Không thành công */
         </style>
     </head>
     <body>
@@ -131,10 +127,9 @@
                                 <label for="status" class="form-label">Trạng thái</label>
                                 <select class="form-select" id="status" name="status">
                                     <option value="" ${empty status ? 'selected' : ''}>Tất cả trạng thái</option>
-                                    <option value="2" ${status == '2' ? 'selected' : ''}>Đã duyệt</option>
+                                    <option value="9" ${status == '9' ? 'selected' : ''}>Sẵn sàng giao</option>
                                     <option value="3" ${status == '3' ? 'selected' : ''}>Đang vận chuyển</option>
                                     <option value="4" ${status == '4' ? 'selected' : ''}>Đã giao hàng thành công</option>
-                                    <option value="9" ${status == '9' ? 'selected' : ''}>Không thành công</option>
                                 </select>
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
@@ -204,24 +199,19 @@
                                                 </td>
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${order.statusID eq 2}">
-                                                            <span class="status-badge status-2">
-                                                                <i class="fas fa-check-circle"></i>Đã duyệt
+                                                        <c:when test="${order.statusID == 9}">
+                                                            <span class="status-badge status-9">
+                                                                <i class="fas fa-box"></i>Sẵn sàng giao
                                                             </span>
                                                         </c:when>
-                                                        <c:when test="${order.statusID eq 3}">
+                                                        <c:when test="${order.statusID == 3}">
                                                             <span class="status-badge status-3">
                                                                 <i class="fas fa-truck"></i>Đang vận chuyển
                                                             </span>
                                                         </c:when>
-                                                        <c:when test="${order.statusID eq 4}">
+                                                        <c:when test="${order.statusID == 4}">
                                                             <span class="status-badge status-4">
-                                                                <i class="fas fa-check-double"></i>Đã giao hàng thành công
-                                                            </span>
-                                                        </c:when>
-                                                        <c:when test="${order.statusID eq 9}">
-                                                            <span class="status-badge status-9">
-                                                                <i class="fas fa-times-circle"></i>Không thành công
+                                                                <i class="fas fa-check-circle"></i>Đã giao hàng thành công
                                                             </span>
                                                         </c:when>
                                                     </c:choose>
@@ -231,23 +221,18 @@
                                                         <a href="${pageContext.request.contextPath}/shipper/custom-orders?action=detail&id=${order.customCartID}" class="btn btn-sm btn-outline-primary">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <!-- DEBUG: Order #${order.customCartID} has statusID: [${order.statusID}] Type: [${order.statusID.class.simpleName}] Test==2: [${order.statusID == 2}] Test eq 2: [${order.statusID eq 2}] -->
-                                                        <c:if test="${order.statusID eq 2}">
+                                                        <c:if test="${order.statusID == 9}">
                                                             <button type="button" class="btn btn-sm btn-primary start-shipping-btn" data-id="${order.customCartID}">
                                                                 <i class="fas fa-truck me-1"></i>Bắt đầu giao
                                                             </button>
                                                         </c:if>
-                                                        <c:if test="${order.statusID eq 3}">
+                                                        <c:if test="${order.statusID == 3}">
                                                             <button type="button" class="btn btn-sm btn-success complete-shipping-btn" data-id="${order.customCartID}">
                                                                 <i class="fas fa-check me-1"></i>Đã giao
                                                             </button>
                                                             <button type="button" class="btn btn-sm btn-danger cancel-order-btn" data-id="${order.customCartID}">
                                                                 <i class="fas fa-times"></i>
                                                             </button>
-                                                        </c:if>
-                                                        <!-- Status 4 and 9 have no action buttons -->
-                                                        <c:if test="${order.statusID eq 4 || order.statusID eq 9}">
-                                                            <!-- Final status - no actions available -->
                                                         </c:if>
                                                     </div>
                                                 </td>
@@ -318,12 +303,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function () {
-                // Debug: Log tất cả các nút start-shipping-btn
-                console.log("Found start-shipping buttons:", $(".start-shipping-btn").length);
-                $(".start-shipping-btn").each(function() {
-                    console.log("Start button for order:", $(this).data("id"));
-                });
-
                 // Xử lý nút bắt đầu giao hàng
                 $(".start-shipping-btn").click(function () {
                     const orderId = $(this).data("id");
@@ -368,12 +347,12 @@
                         data: {
                             action: "updateStatus",
                             customCartId: orderId,
-                            statusId: 9,
+                            statusId: 6,
                             note: reason
                         },
                         success: function (response) {
                             if (response.success) {
-                                alert("Cập nhật đơn hàng không thành công!");
+                                alert("Hủy đơn hàng thành công!");
                                 location.reload();
                             } else {
                                 alert("Lỗi: " + response.message);
