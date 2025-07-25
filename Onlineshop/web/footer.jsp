@@ -6,7 +6,7 @@
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
             <h5 class="text-secondary text-uppercase mb-4">Thông tin liên hệ</h5>
             <p class="mb-4">Chúng tôi chuyên cung cấp các loại hoa tươi, hoa chúc mừng, hoa sinh nhật, hoa khai trương và các dịch vụ hoa tươi chuyên nghiệp.</p>
-            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Đường ABC, Quận 1, TP.HCM</p>
+            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>1123 Phố Trung Kính, Trung Hòa, Cầu Giấy, Hà Nội</p>
             <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@flowershop.com</p>
             <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
         </div>

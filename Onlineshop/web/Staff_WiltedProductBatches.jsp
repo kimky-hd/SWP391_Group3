@@ -28,6 +28,7 @@
                     confirmButtonText: 'OK'
                 });
             </script>
+            <c:remove var="successMessage" scope="session"/>
         </c:if>
         <c:if test="${not empty errorMessage}">
             <script>
@@ -38,6 +39,7 @@
                     confirmButtonText: 'OK'
                 });
             </script>
+            <c:remove var="errorMessage" scope="session"/>
         </c:if>
 
 
