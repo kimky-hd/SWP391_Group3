@@ -106,16 +106,16 @@ public class ShipperController extends HttpServlet {
             int approvedOrders = hoaDonDAO.getTotalOrdersByStatusAndShipper(2, shipperID, null); // Approved and ready for shipping
             int shipping = hoaDonDAO.getTotalOrdersByStatusAndShipper(3, shipperID, null); // Shipping
             int delivered = hoaDonDAO.getTotalOrdersByStatusAndShipper(4, shipperID, null); // Delivered
-            int cancelled = hoaDonDAO.getTotalOrdersByStatusAndShipper(9, shipperID, null); // Cancelled
+            int cancelled = hoaDonDAO.getTotalOrdersByStatusAndShipper(10, shipperID, null); // Cancelled
 
             System.out.println("Orders count for shipper " + shipperID + ":");
             System.out.println("- Approved (status 2): " + approvedOrders);
             System.out.println("- Shipping (status 3): " + shipping);
             System.out.println("- Delivered (status 4): " + delivered);
-            System.out.println("- Cancelled (status 9): " + cancelled);
+            System.out.println("- Cancelled (status 10): " + cancelled);
 
-            // Get recent orders (status 2, 3, 4, 9) - only for this shipper
-            List<HoaDon> recentOrders = hoaDonDAO.getOrdersByMultipleStatusForSpecificShipper(new int[]{2, 3, 4, 9}, shipperID);
+            // Get recent orders (status 2, 3, 4, 10) - only for this shipper
+            List<HoaDon> recentOrders = hoaDonDAO.getOrdersByMultipleStatusForSpecificShipper(new int[]{2, 3, 4, 10}, shipperID);
 
             System.out.println("Recent orders count: " + recentOrders.size());
             for (HoaDon order : recentOrders) {
@@ -180,7 +180,7 @@ public class ShipperController extends HttpServlet {
             System.out.println("Parsed parameters - orderId: " + orderId + ", statusId: " + statusId);
 
             // Validate status transitions for shipper
-            // 2 -> 9 -> 3 -> 4 or 9 (with note for cancellation)
+            // 2 -> 3 -> 4 or 10 (with note for cancellation)
             if (!isValidStatusTransition(orderId, statusId)) {
                 System.out.println("Invalid status transition - returning 400");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -188,8 +188,8 @@ public class ShipperController extends HttpServlet {
                 return;
             }
 
-            // If status is 9 (cancelled), note is required
-            if (statusId == 9 && (note == null || note.trim().isEmpty())) {
+            // If status is 10 (cancelled), note is required
+            if (statusId == 10 && (note == null || note.trim().isEmpty())) {
                 System.out.println("Cancellation reason required - returning 400");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write("Cancellation reason is required");
@@ -197,7 +197,7 @@ public class ShipperController extends HttpServlet {
             }
 
             boolean success;
-            if (statusId == 9) {
+            if (statusId == 10) {
                 System.out.println("Cancelling order " + orderId + " - will restore product quantities");
                 // When cancelling order, restore product quantities FIRST
                 restoreProductQuantities(orderId);
@@ -233,7 +233,7 @@ public class ShipperController extends HttpServlet {
     }
 
     /**
-     * Validate if the status transition is allowed for shipper New flow: 2 -> 3 -> 4 or 9
+     * Validate if the status transition is allowed for shipper New flow: 2 -> 3 -> 4 or 10
      */
     private boolean isValidStatusTransition(int orderId, int newStatusId) {
         try {
@@ -254,13 +254,13 @@ public class ShipperController extends HttpServlet {
             boolean isValid = false;
             switch (currentStatus) {
                 case 2: // Approved and ready for shipping
-                    isValid = newStatusId == 3 || newStatusId == 9; // Can ship or fail
+                    isValid = newStatusId == 3 || newStatusId == 10; // Can ship or fail
                     break;
                 case 3: // Shipping
-                    isValid = newStatusId == 4 || newStatusId == 9; // Can deliver or fail
+                    isValid = newStatusId == 4 || newStatusId == 10; // Can deliver or fail
                     break;
                 case 4: // Delivered
-                case 9: // Failed
+                case 10: // Failed
                     isValid = false; // No further transitions allowed
                     break;
                 default:
