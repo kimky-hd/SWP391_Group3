@@ -281,7 +281,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stats-card card border-0 shadow-sm clickable-card" onclick="filterOrders(9)" data-status="9">
+                    <div class="stats-card card border-0 shadow-sm clickable-card" onclick="filterOrders(10)" data-status="10">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="stats-icon bg-danger text-white rounded-circle me-3">
@@ -320,7 +320,7 @@
                                 <button type="button" class="btn btn-outline-success btn-sm" onclick="filterOrders(4)" id="btn4">
                                     <i class="fas fa-check-circle me-1"></i>Đã giao
                                 </button>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="filterOrders(9)" id="btn9">
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="filterOrders(10)" id="btn10">
                                     <i class="fas fa-times-circle me-1"></i>Không thành công
                                 </button>
                             </div>

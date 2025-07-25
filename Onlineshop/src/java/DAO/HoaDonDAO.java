@@ -309,8 +309,8 @@ public class HoaDonDAO extends DBContext {
      */
     public List<Status> getShipperStatuses() {
         List<Status> statuses = new ArrayList<>();
-        // Shipper can see orders with status: 2, 3, 4, 6
-        String sql = "SELECT statusID, name FROM status WHERE statusID IN (2, 3, 4, 6) ORDER BY statusID";
+        // Shipper can see orders with status: 2, 3, 4, 10
+        String sql = "SELECT statusID, name FROM status WHERE statusID IN (2, 3, 4, 10) ORDER BY statusID";
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
