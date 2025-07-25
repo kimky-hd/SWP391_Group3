@@ -16,40 +16,20 @@
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductBatch.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductComponent.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/web/manager/Manager_AddProductBatch.jsp</file>
-
-
         <group>
-
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialBatchDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_CreateMaterial.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_UpdateCategory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/CartDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Staff_WiltedProductBatches.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/ProductComponent.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_AddProductBatch.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CommonController/Homepage.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/ProductBatch.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/manager_topbarsidebar.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ProductBatchHistory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListCategory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_CreateCategory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/ProductBatchDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Controller/CartController.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CommonController/ViewListProductController.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_ListProduct.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CustomerController/AddWishlistController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CommonController/BlogsControllers.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductDetail.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/CustomerController/ManageWishListController.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/ManagerProductList.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/AddProductBatchController.java</file>
             <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/DAO/MaterialDAO.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_UpdateProduct.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Controller/staff/ReplaceWiltedMaterialController.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/Model/MaterialReplacement.java</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_MaterialBatchHistory.jsp</file>
-            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Manager_CreateProduct.jsp</file>
-
-            <file>file:/C:/Users/dungb/Downloads/drive-download-20250723T163513Z-1-001/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/DAO/DBContext.java</file>
-            <file>file:/C:/Users/dungb/Downloads/drive-download-20250723T163513Z-1-001/SWP391_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/LoginServlet.java</file>
-
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/src/java/ManagerController/SearchProductByName.java</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/WishList.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/ProductList.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/header.jsp</file>
+            <file>file:/C:/Users/hieub/Downloads/SWP/SWP391_Group3/Onlineshop/web/Cart.jsp</file>
         </group>
     </open-files>
 </project-private>
