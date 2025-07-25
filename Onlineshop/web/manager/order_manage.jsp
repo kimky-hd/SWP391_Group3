@@ -866,11 +866,11 @@
                                     <button type="button" class="sort-btn-modern" onclick="sortOrders('date_desc')"
                                         data-sort="date_desc">
                                         <div class="btn-icon">
-                                            <i class="fas fa-calendar-alt"></i>
+                                            <i class="fas fa-hashtag"></i>
                                         </div>
                                         <div class="btn-content">
                                             <span class="btn-title">Mới nhất</span>
-                                            <span class="btn-subtitle">Đơn hàng gần đây</span>
+                                            <span class="btn-subtitle">Mã đơn lớn nhất</span>
                                         </div>
                                     </button>
 
@@ -925,7 +925,7 @@
                                         </div>
                                         <div class="btn-content">
                                             <span class="btn-title">Mã đơn</span>
-                                            <span class="btn-subtitle">Theo ID đơn hàng</span>
+                                            <span class="btn-subtitle">Mã đơn lớn nhất</span>
                                         </div>
                                     </button>
                                 </div>
@@ -943,7 +943,6 @@
                                             <th><i class="fas fa-calendar me-2"></i>Ngày đặt</th>
                                             <th><i class="fas fa-user me-2"></i>Khách hàng</th>
                                             <th><i class="fas fa-money-bill me-2"></i>Tổng tiền</th>
-                                            <th><i class="fas fa-shipping-fast me-2"></i>Shipper</th>
                                             <th><i class="fas fa-info-circle me-2"></i>Trạng thái</th>
                                             <th><i class="fas fa-cogs me-2"></i>Thao tác</th>
                                         </tr>
@@ -999,53 +998,6 @@
                                                         order.paymentMethod : 'Chưa xác định'}
                                                     </span>
                                                 </td>
-                                                <td class="custom-tooltip">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar-sm bg-info rounded-circle d-flex align-items-center justify-content-center me-2">
-                                                            <i class="fas fa-shipping-fast text-white"></i>
-                                                        </div>
-                                                        <div class="expandable-cell">
-                                                            <c:choose>
-                                                                <c:when test="${order.shipperName != null}">
-                                                                    <div class="fw-bold">${order.shipperName}</div>
-                                                                    <small class="text-muted">${order.shipperPhone}</small>
-                                                                    <button class="btn btn-sm btn-outline-warning mt-1" 
-                                                                            onclick="changeShipper(${order.orderId}, '${order.shipperName}')"
-                                                                            title="Thay đổi shipper">
-                                                                        <i class="fas fa-edit"></i> Đổi
-                                                                    </button>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <div class="text-muted">
-                                                                        <i class="fas fa-user-plus"></i> Chưa phân công
-                                                                    </div>
-                                                                    <button class="btn btn-sm btn-outline-primary mt-1" 
-                                                                            onclick="assignShipper(${order.orderId})"
-                                                                            title="Phân công shipper">
-                                                                        <i class="fas fa-plus"></i> Phân công
-                                                                    </button>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
-                                                    <c:choose>
-                                                        <c:when test="${order.shipperName != null}">
-                                                            <span class="tooltip-text">
-                                                                <strong>Thông tin shipper:</strong><br>
-                                                                <strong>Tên:</strong> ${order.shipperName}<br>
-                                                                <strong>Email:</strong> ${order.shipperEmail}<br>
-                                                                <strong>Số điện thoại:</strong> ${order.shipperPhone}
-                                                            </span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span class="tooltip-text">
-                                                                <strong>Trạng thái shipper:</strong><br>
-                                                                Đơn hàng chưa được phân công cho shipper nào.<br>
-                                                                Nhấn "Phân công" để chọn shipper.
-                                                            </span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${order.statusId == 1}">
@@ -1065,15 +1017,6 @@
                                                                     gói<br>
                                                                     <strong>Mô tả:</strong> Đơn hàng đã được duyệt và
                                                                     đang đóng gói
-                                                                </span>
-                                                            </span>
-                                                        </c:when>
-                                                        <c:when test="${order.statusId == 9}">
-                                                            <span class="status-badge status-approved custom-tooltip">
-                                                                <i class="fas fa-check-circle"></i> Đã duyệt
-                                                                <span class="tooltip-text">
-                                                                    <strong>Trạng thái:</strong> Đã duyệt<br>
-                                                                    <strong>Mô tả:</strong> Đơn hàng đã được staff duyệt
                                                                 </span>
                                                             </span>
                                                         </c:when>
@@ -1186,7 +1129,7 @@
 
                                         <c:if test="${empty orders}">
                                             <tr>
-                                                <td colspan="7" class="text-center py-5">
+                                                <td colspan="6" class="text-center py-5">
                                                     <div class="text-muted">
                                                         <i class="fas fa-inbox fa-3x mb-3"></i>
                                                         <h5>Không có đơn hàng nào</h5>
@@ -2265,137 +2208,6 @@
                                                 text: 'Có lỗi xảy ra khi cập nhật trạng thái'
                                             });
                                         }
-                                    });
-                                }
-                            });
-                        }
-
-                        // Hàm phân công shipper
-                        function assignShipper(orderId) {
-                            // Hiển thị modal để chọn shipper
-                            showShipperModal(orderId);
-                        }
-
-                        // Hàm thay đổi shipper
-                        function changeShipper(orderId, currentShipperName) {
-                            Swal.fire({
-                                title: 'Thay đổi shipper',
-                                text: `Shipper hiện tại: ${currentShipperName}. Bạn có muốn thay đổi?`,
-                                icon: 'question',
-                                showCancelButton: true,
-                                confirmButtonText: 'Thay đổi',
-                                cancelButtonText: 'Hủy'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    showShipperModal(orderId);
-                                }
-                            });
-                        }
-
-                        // Hàm hiển thị modal chọn shipper
-                        function showShipperModal(orderId) {
-                            // Tạo modal động để chọn shipper
-                            Swal.fire({
-                                title: 'Chọn Shipper',
-                                html: `
-                                    <div class="mb-3">
-                                        <label class="form-label">Chọn shipper cho đơn hàng #${orderId}:</label>
-                                        <select id="shipperSelect" class="form-select">
-                                            <option value="">Đang tải danh sách shipper...</option>
-                                        </select>
-                                    </div>
-                                `,
-                                showCancelButton: true,
-                                confirmButtonText: 'Phân công',
-                                cancelButtonText: 'Hủy',
-                                didOpen: () => {
-                                    // Load danh sách shipper
-                                    loadShippers(orderId);
-                                },
-                                preConfirm: () => {
-                                    const shipperId = document.getElementById('shipperSelect').value;
-                                    if (!shipperId) {
-                                        Swal.showValidationMessage('Vui lòng chọn shipper');
-                                        return false;
-                                    }
-                                    return shipperId;
-                                }
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    assignShipperToOrder(orderId, result.value);
-                                }
-                            });
-                        }
-
-                        function loadShippers(orderId) {
-    $.ajax({
-        url: '${pageContext.request.contextPath}/shipper-assignment',
-        type: 'GET',
-        data: { action: 'getActiveShippers' },
-        success: function(response) {
-            const select = document.getElementById('shipperSelect');
-            // Clear existing options
-            select.innerHTML = '';
-            
-            // Add default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = '-- Chọn shipper --';
-            select.appendChild(defaultOption);
-            
-            if (response && response.length > 0) {
-                response.forEach((shipper, index) => {
-                    const option = document.createElement('option');
-                    option.value = shipper.shipperID;
-                    option.textContent = shipper.username || `Shipper ${shipper.shipperID}`;
-                    select.appendChild(option);
-                });
-            }
-        },
-        error: function() {
-            const select = document.getElementById('shipperSelect');
-            select.innerHTML = '<option value="">Lỗi khi tải danh sách shipper</option>';
-        }
-    });
-}
-
-                        // Hàm phân công shipper cho đơn hàng
-                        function assignShipperToOrder(orderId, shipperId) {
-                            showLoading();
-                            $.ajax({
-                                url: '${pageContext.request.contextPath}/orders',
-                                type: 'POST',
-                                data: {
-                                    action: 'assignShipper',
-                                    orderId: orderId,
-                                    shipperId: shipperId
-                                },
-                                success: function(response) {
-                                    hideLoading();
-                                    if (response.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Thành công!',
-                                            text: 'Đã phân công shipper thành công',
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        }).then(() => {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Lỗi!',
-                                            text: response.message || 'Có lỗi xảy ra khi phân công shipper'
-                                        });
-                                    }
-                                },
-                                error: function() {
-                                    hideLoading();
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Lỗi!',
-                                        text: 'Có lỗi xảy ra khi phân công shipper'
                                     });
                                 }
                             });

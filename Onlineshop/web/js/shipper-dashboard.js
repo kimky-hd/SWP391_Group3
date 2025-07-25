@@ -55,7 +55,7 @@ function updateStatus(orderId, statusId) {
             iconClass = 'fa-check-circle';
             buttonClass = 'success';
             break;
-        case '6':
+        case '9':
             // Handle cancellation with note
             cancelOrder(orderId);
             return;
@@ -143,7 +143,7 @@ function confirmCancel() {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `orderId=${orderId}&statusId=6&note=${encodeURIComponent(note)}`
+        body: `orderId=${orderId}&statusId=9&note=${encodeURIComponent(note)}`
     })
     .then(response => {
         if (response.ok) {
@@ -573,34 +573,6 @@ function displayOrderDetails(order) {
             </div>
         </div>
 
-        <!-- Order Timeline -->
-        <div class="order-timeline">
-            <h6><i class="fas fa-history me-2"></i>Lịch sử đơn hàng</h6>
-            <div class="timeline-item ${safeOrder.statusID >= 1 ? 'active' : ''}">
-                <strong>Đặt hàng</strong>
-                <div class="text-muted small">${formatDate(safeOrder.ngayXuat)}</div>
-            </div>
-            <div class="timeline-item ${safeOrder.statusID >= 2 ? 'active' : ''}">
-                <strong>Đã duyệt</strong>
-                <div class="text-muted small">${safeOrder.approvedDate ? formatDate(safeOrder.approvedDate) : 'Chưa duyệt'}</div>
-            </div>
-            <div class="timeline-item ${safeOrder.statusID >= 3 ? 'active' : ''}">
-                <strong>Đang giao hàng</strong>
-                <div class="text-muted small">${safeOrder.shippingDate ? formatDate(safeOrder.shippingDate) : 'Chưa giao'}</div>
-            </div>
-            <div class="timeline-item ${safeOrder.statusID >= 4 ? 'active' : ''}">
-                <strong>Đã giao thành công</strong>
-                <div class="text-muted small">${safeOrder.deliveredDate ? formatDate(safeOrder.deliveredDate) : 'Chưa hoàn thành'}</div>
-            </div>
-            ${safeOrder.statusID === 6 ? `
-                <div class="timeline-item active" style="color: #dc3545;">
-                    <strong>Đã hủy</strong>
-                    <div class="text-muted small">${safeOrder.cancelledDate ? formatDate(safeOrder.cancelledDate) : ''}</div>
-                    ${safeOrder.cancelReason ? `<div class="small text-danger mt-1">Lý do: ${safeOrder.cancelReason}</div>` : ''}
-                </div>
-            ` : ''}
-        </div>
-
         <!-- Total Section -->
         <div class="total-section">
             <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Tổng giá trị đơn hàng</h6>
@@ -656,7 +628,7 @@ function getStatusInfo(statusID) {
         2: { text: 'Đã duyệt', color: '#17a2b8', icon: 'fas fa-check-circle' },
         3: { text: 'Đang giao', color: '#007bff', icon: 'fas fa-truck' },
         4: { text: 'Đã giao', color: '#28a745', icon: 'fas fa-check-double' },
-        6: { text: 'Đã hủy', color: '#dc3545', icon: 'fas fa-times-circle' }
+        9: { text: 'Giao hàng không thành công', color: '#dc3545', icon: 'fas fa-times-circle' }
     };
     return statusMap[statusID] || { text: 'Không xác định', color: '#6c757d', icon: 'fas fa-question' };
 }

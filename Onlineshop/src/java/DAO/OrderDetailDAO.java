@@ -21,8 +21,10 @@ public class OrderDetailDAO extends DBContext {
      */
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         List<OrderDetail> orderDetails = new ArrayList<>();
-        String sql = "SELECT od.orderdetailID, od.maHD, od.productID, od.price as orderPrice, od.quantity, " +
-                     "p.title, p.image, p.description, p.price as productPrice " +
+
+        String sql = "SELECT od.orderdetailID, od.maHD, od.productID, od.price, od.quantity, " +
+                     "p.title, p.image, p.description, p.price as product_price " +
+
                      "FROM orderdetail od " +
                      "JOIN product p ON od.productID = p.productID " +
                      "WHERE od.maHD = ?";
@@ -63,7 +65,9 @@ public class OrderDetailDAO extends DBContext {
                 product.setTitle(rs.getString("title"));
                 product.setImage(rs.getString("image"));
                 product.setDescription(rs.getString("description"));
-                product.setPrice(productPrice); // Set product price for reference
+
+                product.setPrice(rs.getDouble("product_price"));
+
                 
                 orderDetail.setProduct(product);
                 orderDetails.add(orderDetail);

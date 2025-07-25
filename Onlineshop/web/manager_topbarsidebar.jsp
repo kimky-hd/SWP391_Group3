@@ -177,6 +177,7 @@
                         <span>Quản lý nguyên liệu</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="${pageContext.request.contextPath}/custom-orders" class="nav-link">
                         <i class="fas fa-palette"></i>
@@ -245,6 +246,12 @@
                     <a href="${pageContext.request.contextPath}/staff/customers" class="nav-link">
                         <i class="fas fa-users"></i>
                         <span>Quản lý Khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/orders" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Quản lý Đơn hàng</span>
                     </a>
                 </li>
                 <li>

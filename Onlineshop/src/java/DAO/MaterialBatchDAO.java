@@ -368,7 +368,7 @@ public class MaterialBatchDAO extends DBContext {
     }
 
     public void restoreWiltedMaterialBatchQuantity(int productBatchID) {
-        String sql = "SELECT mb.materialBatchID, mb.quantity AS currentQty, mbu.quantity AS usedQty "
+        String sql = "SELECT mb.materialBatchID, mb.quantity AS currentQty, mbu.quantityUsed AS usedQty "
                 + "FROM MaterialBatchUsage mbu "
                 + "JOIN MaterialBatch mb ON mbu.materialBatchID = mb.materialBatchID "
                 + "WHERE mbu.productBatchID = ? AND mb.dateExpire < CURDATE()";

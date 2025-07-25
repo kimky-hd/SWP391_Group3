@@ -13,13 +13,12 @@ public class ShipperDAO {
     private PreparedStatement ps = null;
     private ResultSet rs = null;
     
-    // Lấy danh sách tất cả shipper
+    // Lấy danh sách tất cả shipper (accounts có role = 3)
     public List<Shipper> getAllShippers() {
         List<Shipper> list = new ArrayList<>();
-        String query = "SELECT a.accountID, a.username, a.email, a.phone, s.startDate, s.endDate, " +
-                      "s.baseSalary, s.ordersDelivered, s.bonusPerOrder, s.isActive " +
-                      "FROM Account a JOIN ShipperDetails s ON a.accountID = s.shipperID " +
-                      "WHERE a.role = 3";
+        String query = "SELECT accountID, username, email, phone, isActive " +
+                      "FROM Account " +
+                      "WHERE role = 3";
         
         try {
             conn = new DBContext().getConnection();
@@ -27,18 +26,12 @@ public class ShipperDAO {
             rs = ps.executeQuery();
             
             while (rs.next()) {
-                Shipper shipper = new Shipper(
-                    rs.getInt("accountID"),
-                    rs.getString("username"),
-                    rs.getString("email"),
-                    rs.getString("phone"),
-                    rs.getDate("startDate"),
-                    rs.getDate("endDate"),
-                    rs.getDouble("baseSalary"),
-                    rs.getInt("ordersDelivered"),
-                    rs.getDouble("bonusPerOrder"),
-                    rs.getBoolean("isActive")
-                );
+                Shipper shipper = new Shipper();
+                shipper.setShipperID(rs.getInt("accountID"));
+                shipper.setUsername(rs.getString("username"));
+                shipper.setEmail(rs.getString("email"));
+                shipper.setPhone(rs.getString("phone"));
+                shipper.setActive(rs.getBoolean("isActive"));
                 list.add(shipper);
             }
         } catch (SQLException e) {
@@ -747,8 +740,36 @@ public int countSearchResults(String keyword, String statusFilter) {
     return count;
 }
 
-
-
-
+// Lấy danh sách shipper đang hoạt động (chỉ từ bảng Account)
+public List<Shipper> getActiveShippers() {
+    List<Shipper> list = new ArrayList<>();
+    String query = "SELECT accountID, username, email, phone, isActive " +
+                  "FROM Account " +
+                  "WHERE role = 3 AND isActive = true " +
+                  "ORDER BY username";
+    
+    try {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(query);
+        rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Shipper shipper = new Shipper();
+            shipper.setShipperID(rs.getInt("accountID"));
+            shipper.setUsername(rs.getString("username"));
+            shipper.setEmail(rs.getString("email"));
+            shipper.setPhone(rs.getString("phone"));
+            shipper.setActive(rs.getBoolean("isActive"));
+            list.add(shipper);
+        }
+    } catch (SQLException e) {
+        System.err.println("Error in getActiveShippers: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+    
+    return list;
+}
 
 }

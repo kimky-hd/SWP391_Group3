@@ -43,8 +43,6 @@ public class ManagerProductList extends HttpServlet {
         MaterialDAO mateDAO = new MaterialDAO();
         CategoryDAO cateDAO = new CategoryDAO();
 
-        //Gọi cập nhật trạng thái các lô sản phẩm
-        productDAO.updateProductBatchStatus();
 
         String index = request.getParameter("index");
         if (index == null || index.isEmpty()) {

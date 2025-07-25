@@ -127,8 +127,11 @@ public class OrderDAO extends DBContext {
     public List<Order> getOrdersByAccountId(int accountId) {
         List<Order> orders = new ArrayList<>(); // Khởi tạo danh sách để lưu trữ các đơn hàng
         // Câu lệnh SQL JOIN giữa HoaDon và InforLine để lấy thông tin đơn hàng và thông tin người nhận
-        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, h.cardId, h.cardFee, i.name, i.phoneNumber, i.email, i.address "
+        String sql = "SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.payment_method, h.cardId, h.cardFee, h.shippingID, "
+                + "i.name, i.phoneNumber, i.email, i.address, "
+                + "s.username as shipperName, s.email as shipperEmail, s.phone as shipperPhone "
                 + "FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD "
+                + "LEFT JOIN Account s ON h.shippingID = s.accountID AND s.role = 3 "
                 + "WHERE h.accountID = ? ORDER BY h.maHD DESC"; // Sắp xếp theo maHD giảm dần
 
         try (Connection conn = getConnection(); // Lấy kết nối
@@ -154,6 +157,12 @@ public class OrderDAO extends DBContext {
                     // Set cardId and cardFee
                     order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
                     order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
+                    
+                    // Set shipper information
+                    order.setShippingID(rs.getObject("shippingID") != null ? rs.getInt("shippingID") : null);
+                    order.setShipperName(rs.getString("shipperName"));
+                    order.setShipperEmail(rs.getString("shipperEmail"));
+                    order.setShipperPhone(rs.getString("shipperPhone"));
 
                     // Chuyển đổi statusID dạng số thành chuỗi trạng thái dễ đọc
                     int statusID = rs.getInt("statusID");
@@ -209,9 +218,11 @@ public class OrderDAO extends DBContext {
      * @return Đối tượng Order nếu tìm thấy, ngược lại là null.
      */
     public Order getOrderById(int orderId) {
-        String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, h.cardId, h.cardFee, "
-                + "i.name, i.email, i.address, i.phoneNumber "
+        String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, h.cardId, h.cardFee, h.shippingID, "
+                + "i.name, i.email, i.address, i.phoneNumber, "
+                + "s.username as shipperName, s.email as shipperEmail, s.phone as shipperPhone "
                 + "FROM HoaDon h LEFT JOIN InforLine i ON h.maHD = i.maHD "
+                + "LEFT JOIN Account s ON h.shippingID = s.accountID AND s.role = 3 "
                 + "WHERE h.maHD = ?";
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -235,6 +246,12 @@ public class OrderDAO extends DBContext {
                     // Set cardId and cardFee
                     order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
                     order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
+                    
+                    // Set shipper information
+                    order.setShippingID(rs.getObject("shippingID") != null ? rs.getInt("shippingID") : null);
+                    order.setShipperName(rs.getString("shipperName"));
+                    order.setShipperEmail(rs.getString("shipperEmail"));
+                    order.setShipperPhone(rs.getString("shipperPhone"));
 
                     // Chuyển đổi statusID thành chuỗi trạng thái
                     int statusID = rs.getInt("statusID");
@@ -556,9 +573,9 @@ public class OrderDAO extends DBContext {
             params.add(dateTo);
         }
 
-        if (customerName != null && !customerName.isEmpty()) {
-            sql.append("AND i.name LIKE ? ");
-            params.add("%" + customerName + "%");
+        if (customerName != null && !customerName.trim().isEmpty()) {
+            sql.append("AND LOWER(i.name) LIKE LOWER(?) ");
+            params.add("%" + customerName.trim() + "%");
         }
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
@@ -702,8 +719,11 @@ public class OrderDAO extends DBContext {
     public List<Order> getFilteredOrders(String status, String dateFrom, String dateTo, String customerName, int page, int size, String sortBy) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.cardId, h.cardFee, i.name, i.phoneNumber, i.email, i.address ");
+        sql.append("SELECT h.maHD, h.accountID, h.ngayXuat, h.tongGia, h.statusID, h.cardId, h.cardFee, h.shippingID, ");
+        sql.append("i.name, i.phoneNumber, i.email, i.address, ");
+        sql.append("s.username as shipperName, s.email as shipperEmail, s.phone as shipperPhone ");
         sql.append("FROM HoaDon h JOIN InforLine i ON h.maHD = i.maHD ");
+        sql.append("LEFT JOIN Account s ON h.shippingID = s.accountID AND s.role = 3 ");
         sql.append("WHERE 1=1 ");
 
         List<Object> params = new ArrayList<>();
@@ -753,9 +773,9 @@ public class OrderDAO extends DBContext {
             params.add(dateFrom);
         }
 
-        if (customerName != null && !customerName.isEmpty()) {
-            sql.append("AND i.name LIKE ? ");
-            params.add("%" + customerName + "%");
+        if (customerName != null && !customerName.trim().isEmpty()) {
+            sql.append("AND LOWER(i.name) LIKE LOWER(?) ");
+            params.add("%" + customerName.trim() + "%");
         }
 
         // In ra câu truy vấn để debug
@@ -778,10 +798,10 @@ public class OrderDAO extends DBContext {
                 orderClause = " ORDER BY h.statusID, h.ngayXuat DESC";
                 break;
             case "order_id":
-                orderClause = " ORDER BY h.maHD ASC";
+                orderClause = " ORDER BY h.maHD DESC";
                 break;
-            default: // date_desc
-                orderClause = " ORDER BY h.ngayXuat DESC";
+            default: // date_desc - sắp xếp theo mã đơn lớn nhất (đơn mới nhất)
+                orderClause = " ORDER BY h.maHD DESC";
                 break;
         }
         sql.append(orderClause);
@@ -816,6 +836,12 @@ public class OrderDAO extends DBContext {
                     // Set cardId and cardFee
                     order.setCardId(rs.getObject("cardId") != null ? rs.getInt("cardId") : null);
                     order.setCardFee(rs.getObject("cardFee") != null ? rs.getDouble("cardFee") : null);
+                    
+                    // Set shipper information
+                    order.setShippingID(rs.getObject("shippingID") != null ? rs.getInt("shippingID") : null);
+                    order.setShipperName(rs.getString("shipperName"));
+                    order.setShipperEmail(rs.getString("shipperEmail"));
+                    order.setShipperPhone(rs.getString("shipperPhone"));
 
                     // Chuyển đổi statusID thành chuỗi trạng thái
                     int statusID = rs.getInt("statusID");
@@ -888,5 +914,24 @@ public class OrderDAO extends DBContext {
         }
 
         return result;
+    }
+    
+    // Cập nhật shippingID cho đơn hàng
+    public boolean updateShippingID(int orderId, int shipperId) {
+        String sql = "UPDATE HoaDon SET shippingID = ? WHERE maHD = ?";
+        
+        try (Connection conn = new DBContext().getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, shipperId);
+            ps.setInt(2, orderId);
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
