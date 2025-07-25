@@ -56,10 +56,7 @@
         <servlet-name>ViewListProductController</servlet-name>
         <servlet-class>CommonController.ViewListProductController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>AddRatingController</servlet-name>
-        <servlet-class>CustomerController.AddRatingController</servlet-class>
-    </servlet>
+
     <servlet>
         <servlet-name>AddWishlistController</servlet-name>
         <servlet-class>CustomerController.AddWishlistController</servlet-class>
@@ -228,10 +225,7 @@
         <servlet-name>ViewListProductController</servlet-name>
         <url-pattern>/ViewListProductController</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddRatingController</servlet-name>
-        <url-pattern>/AddRatingController</url-pattern>
-    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
@@ -403,5 +397,15 @@
     <servlet-mapping>
         <servlet-name>RevenueChartServlet</servlet-name>
         <url-pattern>/revenue-chart</url-pattern>
+    </servlet-mapping>
+
+    <!-- FeedbackController -->
+    <servlet>
+        <servlet-name>FeedbackController</servlet-name>
+        <servlet-class>Controller.FeedbackController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FeedbackController</servlet-name>
+        <url-pattern>/FeedbackController</url-pattern>
     </servlet-mapping>
 </web-app>
