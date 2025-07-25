@@ -36,7 +36,7 @@
         HoaDonDAO hoaDonDAO = new HoaDonDAO();
         
         // Validate status transitions for shipper
-        // 2 -> 9 -> 3 -> 4 or 6 (with note for cancellation)
+        // 2 -> 3 -> 4 or 10 (with note for cancellation)
         HoaDon order = hoaDonDAO.getOrderById(orderId);
         if (order == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -48,20 +48,19 @@
         boolean isValidTransition = false;
         
         // Shipper can make these transitions:
-        // 2 (Approved) -> 9 (Ready to ship) or 3 (Shipping) or 6 (Cancelled)
-        // 9 (Ready to ship) -> 3 (Shipping) or 6 (Cancelled)
-        // 3 (Shipping) -> 4 (Delivered) or 6 (Cancelled)
-        // Any status -> 9 (Cancelled) - with note
+        // 2 (Approved) ->  3 (Shipping) 
+        // 3 (Shipping) -> 4 (Delivered) or 10 (Cancelled)
+        // Any status -> 10 (Cancelled) - with note
         
         switch (currentStatus) {
             case 2: // Approved and ready for shipping
-                isValidTransition = (statusId == 3 || statusId == 9);
+                isValidTransition = (statusId == 3 || statusId == 10);
                 break;
             case 3: // Shipping
-                isValidTransition = (statusId == 4 || statusId == 9);
+                isValidTransition = (statusId == 4 || statusId == 10);
                 break;
             case 4: // Delivered
-            case 9: // Failed
+            case 10: // Failed
                 isValidTransition = false; // No further transitions allowed
                 break;
             default:
@@ -74,15 +73,15 @@
             return;
         }
         
-        // If status is 9 (cancelled), note is required
-        if (statusId == 9 && (note == null || note.trim().isEmpty())) {
+        // If status is 10 (cancelled), note is required
+        if (statusId == 10 && (note == null || note.trim().isEmpty())) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print("Cancellation reason is required");
             return;
         }
         
         boolean success;
-        if (statusId == 9) {
+        if (statusId == 10) {
             // Update with note for cancellation
             success = hoaDonDAO.updateOrderStatusWithNote(orderId, statusId, note);
         } else {

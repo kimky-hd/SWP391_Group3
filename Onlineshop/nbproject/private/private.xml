@@ -40,6 +40,7 @@
             <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/admin/order-detail.jsp</file>
         </group>
         <group>
+
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/Controller/Shipper/ShipperCustomOrderController.java</file>
@@ -115,6 +116,7 @@
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/admin/orders.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/build/web/Homepage.jsp</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/CustomCart.jsp</file>
+
         </group>
     </open-files>
 </project-private>

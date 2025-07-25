@@ -79,7 +79,7 @@
                                                     <c:when test="${order.statusID == 4}">
                                                         <span class="badge bg-success">Đã giao</span>
                                                     </c:when>
-                                                    <c:when test="${order.statusID == 9}">
+                                                    <c:when test="${order.statusID == 10}">
                                                         <span class="badge bg-secondary">Không thành công</span>
                                                     </c:when>
                                                     <c:otherwise>
