@@ -55,7 +55,7 @@ function updateStatus(orderId, statusId) {
             iconClass = 'fa-check-circle';
             buttonClass = 'success';
             break;
-        case '9':
+        case '10':
             // Handle cancellation with note
             cancelOrder(orderId);
             return;
@@ -143,7 +143,7 @@ function confirmCancel() {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `orderId=${orderId}&statusId=9&note=${encodeURIComponent(note)}`
+        body: `orderId=${orderId}&statusId=10&note=${encodeURIComponent(note)}`
     })
     .then(response => {
         if (response.ok) {
@@ -628,7 +628,7 @@ function getStatusInfo(statusID) {
         2: { text: 'Đã duyệt', color: '#17a2b8', icon: 'fas fa-check-circle' },
         3: { text: 'Đang giao', color: '#007bff', icon: 'fas fa-truck' },
         4: { text: 'Đã giao', color: '#28a745', icon: 'fas fa-check-double' },
-        9: { text: 'Giao hàng không thành công', color: '#dc3545', icon: 'fas fa-times-circle' }
+        10: { text: 'Giao hàng không thành công', color: '#dc3545', icon: 'fas fa-times-circle' }
     };
     return statusMap[statusID] || { text: 'Không xác định', color: '#6c757d', icon: 'fas fa-question' };
 }
