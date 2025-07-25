@@ -153,10 +153,10 @@ public class ShipperCustomOrderController extends HttpServlet {
         // Lấy danh sách đơn hàng tự thiết kế theo bộ lọc
         List<CustomOrderCart> filteredOrders = customOrderCartDAO.getFilteredCustomOrderCarts(orderId, customerName, statusId);
 
-        // Lọc chỉ lấy các đơn hàng sẵn sàng giao, đang giao hoặc đã giao thành công (statusID = 9, 3 hoặc 4)
+        // Lọc chỉ lấy các đơn hàng đã duyệt, đang giao hoặc đã giao thành công (statusID = 2, 3, 4 hoặc 9)
         List<CustomOrderCart> shipperCustomOrders = new ArrayList<>();
         for (CustomOrderCart order : filteredOrders) {
-            if (order.getStatusID() == 9 || order.getStatusID() == 3 || order.getStatusID() == 4) {
+            if (order.getStatusID() == 2 || order.getStatusID() == 3 || order.getStatusID() == 4 || order.getStatusID() == 9) {
                 shipperCustomOrders.add(order);
             }
         }
@@ -192,9 +192,9 @@ public class ShipperCustomOrderController extends HttpServlet {
             return;
         }
 
-        // Kiểm tra xem đơn hàng có phải sẵn sàng giao, đang giao hoặc đã giao thành công không
-        if (customOrder.getStatusID() != 9 && customOrder.getStatusID() != 3 && customOrder.getStatusID() != 4) {
-            request.setAttribute("errorMessage", "Bạn chỉ có thể xem các đơn hàng sẵn sàng giao, đang giao hoặc đã giao thành công!");
+        // Kiểm tra xem đơn hàng có phải đã duyệt, đang giao hoặc đã giao thành công không
+        if (customOrder.getStatusID() != 2 && customOrder.getStatusID() != 3 && customOrder.getStatusID() != 4 && customOrder.getStatusID() != 9) {
+            request.setAttribute("errorMessage", "Bạn chỉ có thể xem các đơn hàng đã duyệt, đang giao hoặc đã giao thành công!");
             request.getRequestDispatcher("/shipper/shipper_custom_orders.jsp").forward(request, response);
             return;
         }
@@ -219,7 +219,7 @@ public class ShipperCustomOrderController extends HttpServlet {
         }
 
         // Kiểm tra trạng thái hợp lệ cho shipper
-        if (statusId != 3 && statusId != 4 && statusId != 6) {
+        if (statusId != 3 && statusId != 4 && statusId != 9) {
             sendJsonResponse(response, false, "Trạng thái không hợp lệ cho shipper!");
             return;
         }
@@ -227,11 +227,11 @@ public class ShipperCustomOrderController extends HttpServlet {
         // Kiểm tra chuyển đổi trạng thái hợp lệ
         boolean isValidTransition = false;
         switch (customOrder.getStatusID()) {
-            case 9: // Sẵn sàng giao
-                isValidTransition = (statusId == 3 || statusId == 6); // Chuyển sang đang giao hoặc hủy
+            case 2: // Đã duyệt
+                isValidTransition = (statusId == 3 || statusId == 9); // Chuyển sang đang giao hoặc không thành công
                 break;
             case 3: // Đang giao
-                isValidTransition = (statusId == 4 || statusId == 6); // Chuyển sang đã giao hoặc hủy
+                isValidTransition = (statusId == 4 || statusId == 9); // Chuyển sang đã giao hoặc không thành công
                 break;
             default:
                 isValidTransition = false;
@@ -243,8 +243,8 @@ public class ShipperCustomOrderController extends HttpServlet {
         }
 
         // Nếu hủy đơn, yêu cầu ghi chú
-        if (statusId == 6 && (note == null || note.trim().isEmpty())) {
-            sendJsonResponse(response, false, "Vui lòng nhập lý do hủy đơn hàng!");
+        if (statusId == 9 && (note == null || note.trim().isEmpty())) {
+            sendJsonResponse(response, false, "Vui lòng nhập lý do không thành công!");
             return;
         }
 
@@ -258,9 +258,9 @@ public class ShipperCustomOrderController extends HttpServlet {
             case 4: // Đã giao hàng thành công
                 customOrder.setStatus("Đã giao hàng thành công");
                 break;
-            case 6: // Đã hủy
-                customOrder.setStatus("Đã hủy");
-                customOrder.setManagerComment(note); // Lưu lý do hủy
+            case 9: // Không thành công
+                customOrder.setStatus("Không thành công");
+                customOrder.setManagerComment(note); // Lưu lý do không thành công
                 break;
             default:
                 customOrder.setStatus("Chờ duyệt");

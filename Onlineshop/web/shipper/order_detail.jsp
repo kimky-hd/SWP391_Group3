@@ -79,11 +79,8 @@
                                                     <c:when test="${order.statusID == 4}">
                                                         <span class="badge bg-success">Đã giao</span>
                                                     </c:when>
-                                                    <c:when test="${order.statusID == 6}">
-                                                        <span class="badge bg-danger">Đã hủy</span>
-                                                    </c:when>
                                                     <c:when test="${order.statusID == 9}">
-                                                        <span class="badge bg-secondary">Sẵn sàng giao</span>
+                                                        <span class="badge bg-secondary">Không thành công</span>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <span class="badge bg-light text-dark">${order.statusName}</span>
@@ -258,7 +255,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-danger" onclick="confirmCancel()">Xác nhận hủy</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmCancel()">Xác nhận </button>
                 </div>
             </div>
         </div>
@@ -310,11 +307,11 @@
                 method: 'POST',
                 data: {
                     orderId: currentOrderId,
-                    statusId: 6,
+                    statusId: 9,
                     note: reason
                 },
                 success: function(response) {
-                    alert('Đã hủy đơn hàng thành công!');
+                    alert('Đã cập nhật đơn hàng không thành công!');
                     $('#cancelOrderModal').modal('hide');
                     location.reload();
                 },

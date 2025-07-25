@@ -62,10 +62,10 @@
                 align-items: center;
                 gap: 5px;
             }
-            .status-9 {
-                background-color: #fff3cd;
-                color: #664d03;
-            } /* Sẵn sàng giao */
+            .status-2 {
+                background-color: #cff4fc;
+                color: #055160;
+            } /* Đã duyệt */
             .status-3 {
                 background-color: #cfe2ff;
                 color: #084298;
@@ -74,10 +74,10 @@
                 background-color: #d1e7dd;
                 color: #0f5132;
             } /* Đã giao hàng thành công */
-            .status-6 {
+            .status-9 {
                 background-color: #f8d7da;
                 color: #721c24;
-            } /* Đã hủy */
+            } /* Không thành công */
 
             /* Reference image */
             .reference-image-container {
@@ -319,14 +319,17 @@
                                             <td>
                                                 <span class="status-badge status-${customOrder.statusID}">
                                                     <c:choose>
+                                                        <c:when test="${customOrder.statusID == 2}">
+                                                            <i class="fas fa-check-circle"></i>Đã duyệt
+                                                        </c:when>
                                                         <c:when test="${customOrder.statusID == 9}">
-                                                            <i class="fas fa-box"></i>Sẵn sàng giao
+                                                            <i class="fas fa-times-circle"></i>Không thành công
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 3}">
                                                             <i class="fas fa-truck"></i>Đang vận chuyển
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 4}">
-                                                            <i class="fas fa-truck"></i>Đã giao hàng thành công
+                                                            <i class="fas fa-check-double"></i>Đã giao hàng thành công
                                                         </c:when>
                                                     </c:choose>
                                                 </span>
@@ -373,13 +376,20 @@
                                     <div class="mb-3">
                                         <label for="statusId" class="form-label">Trạng thái mới:</label>
                                         <select class="form-select" id="statusId" name="statusId" required>
-                                            <c:if test="${customOrder.statusID == 9}">
+                                            <c:if test="${customOrder.statusID == 2}">
                                                 <option value="3">Đang vận chuyển</option>
+                                                <option value="9">Không thành công</option>
                                             </c:if>
                                             <c:if test="${customOrder.statusID == 3}">
                                                 <option value="4">Đã giao hàng thành công</option>
+                                                <option value="9">Không thành công</option>
                                             </c:if>
                                         </select>
+                                    </div>
+
+                                    <div class="mb-3" id="cancelReasonGroup" style="display: none;">
+                                        <label for="note" class="form-label">Lý do không thành công:</label>
+                                        <textarea class="form-control" id="note" name="note" rows="3" placeholder="Vui lòng nhập lý do không thành công..."></textarea>
                                     </div>
 
                                     <button type="button" id="updateStatusBtn" class="btn btn-primary">
@@ -460,7 +470,7 @@
             $(document).ready(function () {
                 // Hiển thị/ẩn trường lý do hủy đơn hàng dựa trên trạng thái được chọn
                 $("#statusId").change(function () {
-                    if ($(this).val() == "6") {
+                    if ($(this).val() == "9") {
                         $("#cancelReasonGroup").show();
                         $("#note").attr("required", true);
                     } else {
@@ -472,8 +482,8 @@
                 // Xử lý sự kiện khi nhấn nút cập nhật trạng thái
                 $("#updateStatusBtn").click(function () {
                     // Kiểm tra nếu là hủy đơn hàng thì phải có lý do
-                    if ($("#statusId").val() == "6" && $("#note").val().trim() === "") {
-                        alert("Vui lòng nhập lý do hủy đơn hàng!");
+                    if ($("#statusId").val() == "9" && $("#note").val().trim() === "") {
+                        alert("Vui lòng nhập lý do không thành công!");
                         return;
                     }
 

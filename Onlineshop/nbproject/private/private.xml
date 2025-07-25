@@ -16,9 +16,8 @@
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductBatch.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/src/java/Model/ProductComponent.java</file>
         <file>file:/C:/Users/Admin/Desktop/SWP391/flower-shop/SWP391/Onlineshop/web/manager/Manager_AddProductBatch.jsp</file>
-
-
         <group>
+
 
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/src/java/CommonController/SearchProductByCategory.java</file>
             <file>file:/D:/SWP_Project_Group3_Main/SWP_Project_Group3/SWP391_Group3/Onlineshop/web/Manager_ListMaterial.jsp</file>
@@ -109,6 +108,7 @@
             <file>file:/D:/swp11/SWP391_Group3/Onlineshop/src/java/Controller/RevenueChartServlet.java</file>
             <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/orders.jsp</file>
             <file>file:/D:/swp11/SWP391_Group3/Onlineshop/web/admin/order-detail.jsp</file>
+
 
         </group>
     </open-files>
