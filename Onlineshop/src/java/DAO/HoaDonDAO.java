@@ -186,7 +186,7 @@ public class HoaDonDAO extends DBContext {
      * @return HoaDon object
      */
     public HoaDon getOrderById(int maHD) {
-        String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, h.note, h.shippingID, " +
+        String sql = "SELECT h.maHD, h.accountID, h.tongGia, h.ngayXuat, h.statusID, h.payment_method, h.note, h.ImageNote, h.shippingID, " +
                     "a.username, a.email, a.phone, s.name as statusName, " +
                     "i.name as customerName, i.email as customerEmail, i.phoneNumber as customerPhone, i.address as customerAddress " +
                     "FROM hoadon h " +
@@ -210,6 +210,7 @@ public class HoaDonDAO extends DBContext {
                 order.setStatusID(rs.getInt("statusID"));
                 order.setPaymentMethod(rs.getString("payment_method"));
                 order.setNote(rs.getString("note"));
+                order.setImageNote(rs.getString("ImageNote"));
                 order.setShippingID(rs.getObject("shippingID", Integer.class));
                 order.setUsername(rs.getString("username"));
                 order.setEmail(rs.getString("email"));
@@ -267,6 +268,58 @@ public class HoaDonDAO extends DBContext {
             
             ps.setInt(1, statusID);
             ps.setString(2, note);
+            ps.setInt(3, maHD);
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Update order status with note and image (for delivery completion/failure)
+     * @param maHD Order ID
+     * @param statusID New status ID
+     * @param note Note for the status change
+     * @param imageNote Image path for evidence
+     * @return true if successful, false otherwise
+     */
+    public boolean updateOrderStatusWithNoteAndImage(int maHD, int statusID, String note, String imageNote) {
+        String sql = "UPDATE hoadon SET statusID = ?, note = ?, ImageNote = ? WHERE maHD = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, statusID);
+            ps.setString(2, note);
+            ps.setString(3, imageNote);
+            ps.setInt(4, maHD);
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Update order status with image only (for successful delivery)
+     * @param maHD Order ID
+     * @param statusID New status ID
+     * @param imageNote Image path for evidence
+     * @return true if successful, false otherwise
+     */
+    public boolean updateOrderStatusWithImage(int maHD, int statusID, String imageNote) {
+        String sql = "UPDATE hoadon SET statusID = ?, ImageNote = ? WHERE maHD = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, statusID);
+            ps.setString(2, imageNote);
             ps.setInt(3, maHD);
             
             int rowsAffected = ps.executeUpdate();
