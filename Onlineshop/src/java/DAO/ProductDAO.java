@@ -8,7 +8,7 @@ import Model.AccountProfile;
 import Model.Category;
 import Model.CategoryProduct;
 import Model.Color;
-import Model.Feedback;
+
 import Model.Material;
 import Model.Product;
 import Model.ProductBatch;
@@ -589,65 +589,16 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
-    public List<Feedback> getAllReviewByProductID(int id) {
-        List<Feedback> list = new ArrayList<>();
-        String sql = "Select * from Feedback where productID = ?";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new Feedback(rs.getInt(1),
-                        rs.getFloat(5),
-                        rs.getDate(6),
-                        rs.getString(4),
-                        rs.getInt(2),
-                        rs.getInt(3)
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("getAllReviewByProductID" + e.getMessage());
-        }
-        return list;
-    }
 
-    public float getRateByProductID(int id) {
-        String sql = "SELECT ROUND(AVG(Rate), 1) AS rate FROM Feedback WHERE productID = ?";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                return rs.getFloat(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("getRateByProductID" + e.getMessage());
-        }
-        return 0;
-    }
+
+
 
     private static java.sql.Date getCurrentDate() {
         java.util.Date today = new java.util.Date();
         return new java.sql.Date(today.getTime());
     }
 
-    public void insertFeedback(int accountID, String productID, String comment, String rate, LocalDateTime currentDateTime) {
-        String sql = "INSERT INTO Feedback (accountID, productID, comment, rate, dateReview)\n"
-                + "VALUES \n"
-                + "(?, ?, ?, ?, ?)";
-        try {
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, accountID);
-            ps.setString(2, productID);
-            ps.setString(3, comment);
-            ps.setString(4, rate);
-            ps.setDate(5, getCurrentDate());
 
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("insertFeedback" + e.getMessage());
-        }
-    }
 
     public List<AccountProfile> getAllAccountProfile() {
         List<AccountProfile> list = new ArrayList<>();

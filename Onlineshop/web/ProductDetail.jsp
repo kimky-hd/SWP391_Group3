@@ -13,7 +13,7 @@
 
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
         <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -212,9 +212,9 @@
                             <div class="row">
                                 <!-- Ảnh -->
                                 <div class="col-md-6 text-center mb-3 mb-md-0">
-                                    <img src="${pageContext.request.contextPath}/img/${detail.getImage()}" 
-                                         alt="${detail.getTitle()}" 
-                                         class="img-fluid bg-white rounded p-2 shadow" 
+                                    <img src="${pageContext.request.contextPath}/img/${detail.getImage()}"
+                                         alt="${detail.getTitle()}"
+                                         class="img-fluid bg-white rounded p-2 shadow"
                                          style="max-height: 300px; object-fit: contain;">
                                 </div>
                                 <!-- Mô tả -->
@@ -334,29 +334,7 @@
                     </div>
                 </div>
             </div>
-            <section class="comment-section py-5 bg-light">
-                <div class="container">
-                    <h4 class="mb-4">Bình luận (${totalFeedback})</h4>
 
-                    <!-- Danh sách bình luận -->
-                    <ul class="list-unstyled mb-5">
-                        <c:forEach items="${listFeedback}" var="feedback">
-                            <c:forEach items="${listAccountProfile}" var="profile">
-                                <c:if test="${feedback.getAccount_ID() == profile.getAccount_ID()}">
-                                    <li class="mb-3 p-3 border rounded bg-white shadow-sm">
-                                        <strong>${profile.getFullName()}</strong> 
-                                        <span class="text-warning">${feedback.getRate()} ★</span><br>
-                                        <span>${feedback.getComment()}</span>
-                                    </li>
-                                </c:if>
-                            </c:forEach>
-                        </c:forEach>
-                    </ul>
-
-
-
-                </div>
-            </section> 
         </section>
         <!-- Product End -->
 
@@ -369,12 +347,175 @@
 
 
 
+        <!-- Product Feedback Section -->
+        <div class="container-fluid py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="feedback-section">
+                            <h3 class="feedback-title mb-4">
+                                <i class="fas fa-star text-warning mr-2"></i>
+                                Đánh giá sản phẩm
+                                <c:if test="${not empty productFeedbacks}">
+                                    <span class="badge badge-primary ml-2">${fn:length(productFeedbacks)} đánh giá</span>
+                                </c:if>
+                            </h3>
+
+                            <c:choose>
+                                <c:when test="${empty productFeedbacks}">
+                                    <div class="no-feedback text-center py-5">
+                                        <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                                        <h5 class="text-muted">Chưa có đánh giá nào cho sản phẩm này</h5>
+                                        <p class="text-muted">Hãy là người đầu tiên đánh giá sản phẩm này!</p>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="feedback-list">
+                                        <c:forEach var="feedback" items="${productFeedbacks}" varStatus="status">
+                                            <div class="feedback-item ${highlightLatest && status.index == 0 ? 'highlight-latest' : ''}"
+                                                 data-feedback-id="${feedback.feedbackId}">
+                                                <div class="feedback-header d-flex justify-content-between align-items-start">
+                                                    <div class="feedback-user">
+                                                        <h6 class="mb-1">
+                                                            <i class="fas fa-user-circle text-primary mr-2"></i>
+                                                            ${feedback.username}
+                                                            <c:if test="${highlightLatest && status.index == 0}">
+                                                                <span class="badge badge-success ml-2">Mới nhất</span>
+                                                            </c:if>
+                                                        </h6>
+                                                        <div class="feedback-rating mb-2">
+                                                            <c:forEach begin="1" end="5" var="star">
+                                                                <i class="fas fa-star ${star <= feedback.rating ? 'text-warning' : 'text-muted'}"></i>
+                                                            </c:forEach>
+                                                            <span class="ml-2 text-muted">${feedback.rating}/5 sao</span>
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                                    </small>
+                                                </div>
+                                                <div class="feedback-content">
+                                                    <p class="mb-0">${feedback.comment}</p>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Footer Start -->
         <jsp:include page="footer.jsp" />
 
         <!-- Footer End -->
 
-        <style>.comment-section {
+        <style>
+            /* Feedback Section Styles */
+            .feedback-section {
+                background: #fff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.08);
+                margin-bottom: 30px;
+            }
+
+            .feedback-title {
+                color: #2c3e50;
+                font-weight: 600;
+                border-bottom: 2px solid #f8f9fa;
+                padding-bottom: 15px;
+            }
+
+            .feedback-item {
+                background: #f8f9fa;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 15px;
+                border-left: 4px solid #dee2e6;
+                transition: all 0.3s ease;
+            }
+
+            .feedback-item:hover {
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+            }
+
+            .feedback-item.highlight-latest {
+                border-left-color: #28a745;
+                background: linear-gradient(135deg, #d4edda 0%, #f8f9fa 100%);
+                animation: highlightPulse 2s ease-in-out;
+            }
+
+            @keyframes highlightPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+
+            .feedback-item.flash-highlight {
+                animation: flashHighlight 0.8s ease-in-out;
+            }
+
+            @keyframes flashHighlight {
+                0%, 100% { background: linear-gradient(135deg, #d4edda 0%, #f8f9fa 100%); }
+                50% { background: linear-gradient(135deg, #c3e6cb 0%, #e2e6ea 100%); }
+            }
+
+            /* Smooth scrolling for the entire page */
+            html {
+                scroll-behavior: smooth;
+            }
+
+            /* Additional highlight effect for better visibility */
+            .feedback-item.highlight-latest {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .feedback-item.highlight-latest::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(40, 167, 69, 0.3), transparent);
+                animation: shimmer 2s ease-in-out;
+            }
+
+            @keyframes shimmer {
+                0% { left: -100%; }
+                100% { left: 100%; }
+            }
+
+            .feedback-header {
+                margin-bottom: 15px;
+            }
+
+            .feedback-user h6 {
+                color: #2c3e50;
+                font-weight: 600;
+            }
+
+            .feedback-rating .fas.fa-star {
+                font-size: 16px;
+            }
+
+            .feedback-content p {
+                color: #495057;
+                line-height: 1.6;
+                font-size: 15px;
+            }
+
+            .no-feedback {
+                background: #f8f9fa;
+                border-radius: 10px;
+                border: 2px dashed #dee2e6;
+            }
+
+            .comment-section {
                 background: #fff;
                 padding: 25px;
                 border-radius: 12px;
@@ -501,3 +642,51 @@
     </body>
 </html>
 
+
+        <script>
+            // Auto-scroll to latest feedback if highlighted
+            $(document).ready(function() {
+                console.log('Page loaded, checking for highlight...');
+                console.log('highlightLatest:', ${highlightLatest});
+
+                // Check URL parameters for highlight
+                const urlParams = new URLSearchParams(window.location.search);
+                const shouldHighlight = urlParams.get('highlight') === 'latest' || ${highlightLatest};
+
+                if (shouldHighlight) {
+                    console.log('Should highlight latest feedback');
+
+                    // Wait a bit for page to fully load
+                    setTimeout(function() {
+                        const feedbackSection = $('.feedback-section');
+                        const latestFeedback = $('.feedback-item.highlight-latest');
+
+                        console.log('Feedback section found:', feedbackSection.length);
+                        console.log('Latest feedback found:', latestFeedback.length);
+
+                        if (feedbackSection.length > 0) {
+                            // Scroll to feedback section first
+                            $('html, body').animate({
+                                scrollTop: feedbackSection.offset().top - 50
+                            }, 1000, function() {
+                                console.log('Scrolled to feedback section');
+
+                                // If there's a highlighted feedback, scroll to it specifically
+                                if (latestFeedback.length > 0) {
+                                    setTimeout(function() {
+                                        $('html, body').animate({
+                                            scrollTop: latestFeedback.offset().top - 100
+                                        }, 500);
+
+                                        // Add flash effect
+                                        setTimeout(function() {
+                                            latestFeedback.addClass('flash-highlight');
+                                        }, 600);
+                                    }, 200);
+                                }
+                            });
+                        }
+                    }, 500); // Wait 500ms for page to fully render
+                }
+            });
+        </script>
