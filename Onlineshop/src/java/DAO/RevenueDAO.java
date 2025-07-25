@@ -27,10 +27,57 @@ public class RevenueDAO extends DBContext {
 
     // Tổng doanh thu toàn bộ sản phẩm đã bán
     public double getTotalRevenue() {
-        String sql = "SELECT SUM(price * quantity) AS total FROM OrderDetail od "
-                + "JOIN HoaDon hd ON od.maHD = hd.maHD WHERE hd.statusID = 4";
+        String sql = "SELECT SUM(tongGia) AS total FROM HoaDon WHERE statusID = 4";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
+            if (rs.next()) {
+                return rs.getDouble("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    // Tổng doanh thu theo tháng cụ thể  
+    public double getTotalRevenueByMonth(int month) {
+        String sql = "SELECT SUM(price * quantity) AS total FROM OrderDetail od "
+                + "JOIN HoaDon hd ON od.maHD = hd.maHD WHERE hd.statusID = 4 AND MONTH(hd.ngayXuat) = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, month);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    // Tổng chi phí nhập hàng theo tháng
+    public double getTotalImportCostByMonth(int month) {
+        String sql = "SELECT SUM(mb.quantity * mb.importPrice) AS total " +
+                     "FROM MaterialBatch mb WHERE MONTH(mb.dateImport) = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, month);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    // Tổng thiệt hại theo tháng
+    public double getTotalDamagedCostByMonth(int month) {
+        String sql = "SELECT SUM(mb.quantity * mb.importPrice) AS total " +
+                     "FROM MaterialBatch mb WHERE mb.dateExpire < CURDATE() AND MONTH(mb.dateExpire) = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, month);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("total");
             }
@@ -215,6 +262,131 @@ public class RevenueDAO extends DBContext {
             e.printStackTrace();
         }
         return summary;
+    }
+
+    // 5. Doanh thu hoa thiệt hại (hoa đã hết hạn)
+    public Map<String, Object> getDamagedFlowerRevenue() {
+        Map<String, Object> result = new HashMap<>();
+        String sql = "SELECT m.name, mb.quantity, mb.importPrice, " +
+                     "(mb.quantity * mb.importPrice) AS totalLoss " +
+                     "FROM MaterialBatch mb " +
+                     "JOIN Material m ON mb.materialID = m.materialID " +
+                     "WHERE mb.dateExpire < CURDATE()";
+        
+        try (Connection conn = getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+            
+            List<Map<String, Object>> details = new ArrayList<>();
+            double totalLoss = 0;
+            
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("materialName", rs.getString("name"));
+                item.put("quantity", rs.getInt("quantity"));
+                item.put("importPrice", rs.getDouble("importPrice"));
+                item.put("totalLoss", rs.getDouble("totalLoss"));
+                details.add(item);
+                totalLoss += rs.getDouble("totalLoss");
+            }
+            
+            result.put("details", details);
+            result.put("totalLoss", totalLoss);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    // 6. Doanh thu nhập hàng (từ bảng Material và MaterialBatch)
+    public Map<String, Object> getImportRevenue() {
+        Map<String, Object> result = new HashMap<>();
+        String sql = "SELECT m.name, mb.quantity, mb.importPrice, " +
+                     "(mb.quantity * mb.importPrice) AS totalImport, " +
+                     "mb.dateImport " +
+                     "FROM MaterialBatch mb " +
+                     "JOIN Material m ON mb.materialID = m.materialID " +
+                     "ORDER BY mb.dateImport DESC";
+        
+        try (Connection conn = getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+            
+            List<Map<String, Object>> details = new ArrayList<>();
+            double totalImport = 0;
+            
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("materialName", rs.getString("name"));
+                item.put("quantity", rs.getInt("quantity"));
+                item.put("importPrice", rs.getDouble("importPrice"));
+                item.put("totalImport", rs.getDouble("totalImport"));
+                item.put("dateImport", rs.getDate("dateImport"));
+                details.add(item);
+                totalImport += rs.getDouble("totalImport");
+            }
+            
+            result.put("details", details);
+            result.put("totalImport", totalImport);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    // Doanh thu nhập hàng theo tháng
+    public List<Map<String, Object>> getImportRevenueByMonth() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = "SELECT MONTH(mb.dateImport) AS month, " +
+                     "SUM(mb.quantity * mb.importPrice) AS totalImport " +
+                     "FROM MaterialBatch mb " +
+                     "GROUP BY MONTH(mb.dateImport) " +
+                     "ORDER BY month";
+        
+        try (Connection conn = getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("month", rs.getInt("month"));
+                item.put("totalImport", rs.getDouble("totalImport"));
+                list.add(item);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Doanh thu thiệt hại theo tháng
+    public List<Map<String, Object>> getDamagedRevenueByMonth() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = "SELECT MONTH(mb.dateExpire) AS month, " +
+                     "SUM(mb.quantity * mb.importPrice) AS totalDamaged " +
+                     "FROM MaterialBatch mb " +
+                     "WHERE mb.dateExpire < CURDATE() " +
+                     "GROUP BY MONTH(mb.dateExpire) " +
+                     "ORDER BY month";
+        
+        try (Connection conn = getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql); 
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("month", rs.getInt("month"));
+                item.put("totalDamaged", rs.getDouble("totalDamaged"));
+                list.add(item);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

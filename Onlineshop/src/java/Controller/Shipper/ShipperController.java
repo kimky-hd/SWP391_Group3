@@ -7,11 +7,14 @@ import Model.HoaDon;
 import Model.Status;
 import Model.Account;
 import Model.OrderDetail;
+import Utils.FileUploadUtil;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 /**
  * Shipper Controller for managing orders that need to be shipped
  */
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024) // 5MB
 public class ShipperController extends HttpServlet {
 
     private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
@@ -142,7 +146,7 @@ public class ShipperController extends HttpServlet {
     }
 
     /**
-     * Handle order status update
+     * Handle order status update with image upload support
      */
     private void handleUpdateStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -152,14 +156,10 @@ public class ShipperController extends HttpServlet {
             System.out.println("=== handleUpdateStatus Debug ===");
             System.out.println("Request method: " + request.getMethod());
             System.out.println("Content type: " + request.getContentType());
-            System.out.println("All parameters:");
-            request.getParameterMap().forEach((key, values) -> {
-                System.out.println("  " + key + ": " + String.join(", ", values));
-            });
 
             String orderIdParam = request.getParameter("orderId");
             String statusIdParam = request.getParameter("statusId");
-            String note = request.getParameter("note"); // For cancellation reason
+            String note = request.getParameter("note"); // For notes/cancellation reason
 
             // Debug logging
             System.out.println("Update status request received:");
@@ -180,7 +180,6 @@ public class ShipperController extends HttpServlet {
             System.out.println("Parsed parameters - orderId: " + orderId + ", statusId: " + statusId);
 
             // Validate status transitions for shipper
-            // 2 -> 3 -> 4 or 10 (with note for cancellation)
             if (!isValidStatusTransition(orderId, statusId)) {
                 System.out.println("Invalid status transition - returning 400");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -188,25 +187,59 @@ public class ShipperController extends HttpServlet {
                 return;
             }
 
-            // If status is 10 (cancelled), note is required
-            if (statusId == 10 && (note == null || note.trim().isEmpty())) {
-                System.out.println("Cancellation reason required - returning 400");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("Cancellation reason is required");
-                return;
+            // Handle image upload for status 4 (delivered) and 10 (failed delivery)
+            String imagePath = null;
+            try {
+                Part imagePart = request.getPart("image");
+                if (imagePart != null && imagePart.getSize() > 0) {
+                    imagePath = FileUploadUtil.saveFile(imagePart, getServletContext().getRealPath("/"));
+                    System.out.println("Image uploaded: " + imagePath);
+                }
+            } catch (Exception e) {
+                System.out.println("Error uploading image: " + e.getMessage());
+                // Continue without image for status 4, but fail for status 10
+                if (statusId == 10) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write("Image upload failed for delivery failure");
+                    return;
+                }
             }
 
-            boolean success;
+            // Validation based on status
             if (statusId == 10) {
-                System.out.println("Cancelling order " + orderId + " - will restore product quantities");
-                // When cancelling order, restore product quantities FIRST
-                restoreProductQuantities(orderId);
-                // Then update order status with note
-                success = hoaDonDAO.updateOrderStatusWithNote(orderId, statusId, note);
-                System.out.println("Order status update result: " + success);
+                // Status 10 (failed delivery) requires both note and image
+                if ((note == null || note.trim().isEmpty())) {
+                    System.out.println("Failure reason required - returning 400");
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write("Failure reason is required");
+                    return;
+                }
+                if (imagePath == null) {
+                    System.out.println("Evidence image required for failed delivery - returning 400");
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().write("Evidence image is required for failed delivery");
+                    return;
+                }
+            }
+
+            boolean success = false;
+            
+            if (statusId == 10) {
+                // Failed delivery with note and image
+                System.out.println("Updating to failed delivery with note and image");
+                restoreProductQuantities(orderId); // Restore quantities first
+                success = hoaDonDAO.updateOrderStatusWithNoteAndImage(orderId, statusId, note, imagePath);
+            } else if (statusId == 4 && imagePath != null) {
+                // Successful delivery with optional image
+                System.out.println("Updating to successful delivery with image");
+                success = hoaDonDAO.updateOrderStatusWithImage(orderId, statusId, imagePath);
+            } else if (statusId == 4) {
+                // Successful delivery without image
+                System.out.println("Updating to successful delivery without image");
+                success = hoaDonDAO.updateOrderStatus(orderId, statusId);
             } else {
-                System.out.println("Regular status update for order " + orderId + " to status " + statusId);
                 // Regular status update
+                System.out.println("Regular status update for order " + orderId + " to status " + statusId);
                 success = hoaDonDAO.updateOrderStatus(orderId, statusId);
             }
 
@@ -233,7 +266,8 @@ public class ShipperController extends HttpServlet {
     }
 
     /**
-     * Validate if the status transition is allowed for shipper New flow: 2 -> 3 -> 4 or 10
+     * Validate if the status transition is allowed for shipper 
+     * New flow: 2 -> 3 -> 4 or 9 (failed delivery)
      */
     private boolean isValidStatusTransition(int orderId, int newStatusId) {
         try {
@@ -254,13 +288,13 @@ public class ShipperController extends HttpServlet {
             boolean isValid = false;
             switch (currentStatus) {
                 case 2: // Approved and ready for shipping
-                    isValid = newStatusId == 3 || newStatusId == 10; // Can ship or fail
+                    isValid = newStatusId == 3 || newStatusId == 10; // Can start shipping or fail
                     break;
                 case 3: // Shipping
-                    isValid = newStatusId == 4 || newStatusId == 10; // Can deliver or fail
+                    isValid = newStatusId == 4 || newStatusId == 10; // Can deliver successfully or fail
                     break;
-                case 4: // Delivered
-                case 10: // Failed
+                case 4: // Delivered successfully
+                case 9: // Failed delivery
                     isValid = false; // No further transitions allowed
                     break;
                 default:
@@ -367,6 +401,7 @@ public class ShipperController extends HttpServlet {
                 json.append("\"ngayXuat\":\"").append(order.getNgayXuat() != null ? order.getNgayXuat().toString() : "").append("\",");
                 json.append("\"statusID\":").append(order.getStatusID()).append(",");
                 json.append("\"note\":\"").append(order.getNote() != null ? order.getNote().replaceAll("\"", "\\\\\"") : "").append("\",");
+                json.append("\"imageNote\":\"").append(order.getImageNote() != null ? order.getImageNote().replaceAll("\"", "\\\\\"") : "").append("\",");
                 json.append("\"shipperName\":\"").append(shipperInfo != null ? shipperInfo : "Chưa phân công").append("\",");
                 json.append("\"items\":[");
                 

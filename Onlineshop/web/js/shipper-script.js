@@ -190,6 +190,11 @@ function updateOrderStatus(orderId, statusId, statusName, buttonElement) {
 
 // Function to view order details
 function viewOrderDetails(orderId) {
+    console.log('=== viewOrderDetails CALLED ===');
+    console.log('OrderId:', orderId);
+    console.log('typeof orderId:', typeof orderId);
+    console.log('================================');
+    
     const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
     const contentDiv = document.getElementById('orderDetailsContent');
     
@@ -224,18 +229,28 @@ function viewOrderDetails(orderId) {
     fetch(`${contextPath}/shipper/order-detail?orderId=${orderId}`, {
         method: 'GET',
         headers: {
+            'Accept': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
     .then(response => {
         if (response.ok) {
-            return response.text();
+            return response.json();
         } else {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
     })
-    .then(html => {
-        contentDiv.innerHTML = html;
+    .then(orderData => {
+        console.log('=== ORDER DATA DEBUG ===');
+        console.log('Full order data:', orderData);
+        console.log('ImageNote value:', orderData.imageNote);
+        console.log('ImageNote type:', typeof orderData.imageNote);
+        console.log('ImageNote length:', orderData.imageNote ? orderData.imageNote.length : 'null/undefined');
+        console.log('ImageNote trimmed:', orderData.imageNote ? orderData.imageNote.trim() : 'null/undefined');
+        console.log('Status ID:', orderData.statusID);
+        console.log('=== END DEBUG ===');
+        
+        contentDiv.innerHTML = generateOrderDetailsHTML(orderData);
     })
     .catch(error => {
         console.error('Error loading order details:', error);
@@ -250,6 +265,169 @@ function viewOrderDetails(orderId) {
             </div>
         `;
     });
+}
+
+// Function to generate order details HTML from JSON data
+function generateOrderDetailsHTML(orderData) {
+    console.log('=== generateOrderDetailsHTML called ===');
+    console.log('Order data received in function:', orderData);
+    console.log('ImageNote from orderData:', orderData.imageNote);
+    console.log('======================================');
+    
+    const statusBadges = {
+        2: '<span class="badge bg-warning">Sẵn sàng giao</span>',
+        3: '<span class="badge bg-primary">Đang giao</span>',
+        4: '<span class="badge bg-success">Đã giao</span>',
+        10: '<span class="badge bg-danger">Giao không thành công</span>'
+    };
+    
+    const statusBadge = statusBadges[orderData.statusID] || '<span class="badge bg-secondary">Khác</span>';
+    
+    // Generate items HTML
+    let itemsHTML = '';
+    if (orderData.items && orderData.items.length > 0) {
+        orderData.items.forEach(item => {
+            itemsHTML += `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${getContextPath()}/img/${item.image}" alt="${item.name}" 
+                                 class="product-image me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                            <div>
+                                <div class="fw-bold">${item.name}</div>
+                                <small class="text-muted">${item.description}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">${item.quantity}</td>
+                    <td class="text-end">${new Intl.NumberFormat('vi-VN').format(item.price)}đ</td>
+                    <td class="text-end fw-bold">${new Intl.NumberFormat('vi-VN').format(item.total)}đ</td>
+                </tr>
+            `;
+        });
+    }
+    
+    // DEBUG: Check ImageNote value and logic
+    console.log('=== IMAGE NOTE PROCESSING ===');
+    console.log('Raw ImageNote:', orderData.imageNote);
+    console.log('ImageNote type:', typeof orderData.imageNote);
+    console.log('ImageNote is null:', orderData.imageNote === null);
+    console.log('ImageNote is undefined:', orderData.imageNote === undefined);
+    console.log('ImageNote is empty string:', orderData.imageNote === '');
+    if (orderData.imageNote) {
+        console.log('ImageNote length:', orderData.imageNote.length);
+        console.log('ImageNote trimmed:', orderData.imageNote.trim());
+        console.log('ImageNote trimmed length:', orderData.imageNote.trim().length);
+    }
+    console.log('Condition result (imageNote && trim !== ""):', orderData.imageNote && orderData.imageNote.trim() !== '');
+    console.log('=== END IMAGE NOTE PROCESSING ===');
+    
+    return `
+        <div class="order-detail-section">
+            <h6><i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng</h6>
+            <div class="order-info-grid">
+                <div class="info-item">
+                    <i class="fas fa-hashtag"></i>
+                    <span class="label">Mã đơn hàng:</span>
+                    <span class="value">#${orderData.maHD}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="label">Ngày tạo:</span>
+                    <span class="value">${new Date(orderData.ngayXuat).toLocaleDateString('vi-VN')}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-tag"></i>
+                    <span class="label">Trạng thái:</span>
+                    <span class="value">${statusBadge}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-detail-section">
+            <h6><i class="fas fa-user me-2"></i>Thông tin khách hàng </h6>
+            <div class="order-info-grid">
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <span class="label">Tên:</span>
+                    <span class="value">${orderData.customerName}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <span class="label">Điện thoại:</span>
+                    <span class="value">${orderData.customerPhone}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span class="label">Email:</span>
+                    <span class="value">${orderData.customerEmail}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="label">Địa chỉ:</span>
+                    <span class="value">${orderData.customerAddress}</span>
+                </div>
+            </div>
+        </div>
+
+        ${orderData.note && orderData.note.trim() !== '' ? `
+        <div class="order-detail-section">
+            <h6><i class="fas fa-sticky-note me-2"></i>Ghi chú</h6>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                ${orderData.note}
+            </div>
+        </div>
+        ` : ''}
+
+        <div class="order-detail-section">
+            <h6><i class="fas fa-image me-2"></i>Ảnh minh chứng giao hàng</h6>
+            ${orderData.imageNote && orderData.imageNote.trim() !== '' ? `
+                <div class="text-center">
+                    <img src="${getContextPath()}/uploads/${orderData.imageNote}" 
+                         alt="Ảnh minh chứng giao hàng" 
+                         class="img-fluid rounded shadow-sm"
+                         style="max-width: 400px; max-height: 300px; cursor: pointer;"
+                         onclick="showImageModal('${getContextPath()}/uploads/${orderData.imageNote}', 'Ảnh minh chứng giao hàng')">
+                    <br>
+                    <button class="btn btn-outline-primary btn-sm mt-2" 
+                            onclick="downloadImage('${getContextPath()}/uploads/${orderData.imageNote}', 'delivery-evidence-${orderData.maHD}.jpg')">
+                        <i class="fas fa-download me-1"></i>Tải xuống
+                    </button>
+                </div>
+            ` : `
+                <div class="text-center text-muted">
+                    <i class="fas fa-image" style="font-size: 3rem; opacity: 0.3;"></i>
+                    <p class="mt-2">Chưa có ảnh minh chứng</p>
+                    <small class="text-muted">Ảnh sẽ được hiển thị sau khi giao hàng</small>
+                </div>
+            `}
+        </div>
+
+        <div class="order-detail-section">
+            <h6><i class="fas fa-shopping-cart me-2"></i>Sản phẩm đặt hàng</h6>
+            <div class="table-responsive">
+                <table class="table order-items-table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-end">Đơn giá</th>
+                            <th class="text-end">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHTML}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="total-section">
+            <h5><i class="fas fa-calculator me-2"></i>Tổng cộng</h5>
+            <div class="total-amount">${new Intl.NumberFormat('vi-VN').format(orderData.tongGia)}đ</div>
+        </div>
+    `;
 }
 
 // Function to refresh page
@@ -328,6 +506,68 @@ function enableAutoRefresh(intervalMinutes = 5) {
 // Initialize auto-refresh
 enableAutoRefresh(5);
 
+// Function to show image in modal
+function showImageModal(imageSrc, imageTitle) {
+    // Create modal HTML if it doesn't exist
+    let imageModal = document.getElementById('imageModal');
+    if (!imageModal) {
+        const modalHTML = `
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="imageModalLabel">Xem ảnh</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img id="modalImage" src="" alt="" class="img-fluid">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-primary" id="downloadBtn">
+                                <i class="fas fa-download me-1"></i>Tải xuống
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        imageModal = document.getElementById('imageModal');
+    }
+    
+    // Update modal content
+    document.getElementById('imageModalLabel').textContent = imageTitle;
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('modalImage').alt = imageTitle;
+    document.getElementById('downloadBtn').onclick = () => downloadImage(imageSrc, imageTitle + '.jpg');
+    
+    // Show modal
+    const modal = new bootstrap.Modal(imageModal);
+    modal.show();
+}
+
+// Function to download image
+function downloadImage(imageSrc, filename) {
+    fetch(imageSrc)
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            console.error('Error downloading image:', error);
+            alert('Không thể tải xuống ảnh. Vui lòng thử lại.');
+        });
+}
+
 // Export functions for global use
 window.shipperUtils = {
     showNotification: showShipperNotification,
@@ -339,3 +579,5 @@ window.updateOrderStatus = updateOrderStatus;
 window.viewOrderDetails = viewOrderDetails;
 window.refreshPage = refreshPage;
 window.showToast = showToast;
+window.showImageModal = showImageModal;
+window.downloadImage = downloadImage;

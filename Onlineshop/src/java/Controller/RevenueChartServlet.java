@@ -60,9 +60,39 @@ public class RevenueChartServlet extends HttpServlet {
         request.setAttribute("revenueList", revenueList);
         request.setAttribute("selectedMonth", monthParam); // để giữ lại lựa chọn trong dropdown
 
-        // 2. Tổng doanh thu
-        double totalRevenue = dao.getTotalRevenue();
+        // 2. Tổng doanh thu (toàn bộ hoặc theo tháng)
+        double totalRevenue;
+        double totalImportCost;
+        double totalDamagedCost;
+        
+        if (selectedMonth > 0) {
+            // Tính theo tháng được chọn
+            totalRevenue = dao.getTotalRevenueByMonth(selectedMonth);
+            totalImportCost = dao.getTotalImportCostByMonth(selectedMonth);
+            totalDamagedCost = dao.getTotalDamagedCostByMonth(selectedMonth);
+        } else {
+            // Tính tổng toàn bộ
+            totalRevenue = dao.getTotalRevenue();
+            Map<String, Object> importRevData = dao.getImportRevenue();
+            totalImportCost = importRevData != null && importRevData.get("totalImport") != null ? 
+                              (Double) importRevData.get("totalImport") : 0;
+            Map<String, Object> damagedRevData = dao.getDamagedFlowerRevenue();
+            totalDamagedCost = damagedRevData != null && damagedRevData.get("totalLoss") != null ? 
+                               (Double) damagedRevData.get("totalLoss") : 0;
+        }
+        
         request.setAttribute("totalRevenue", totalRevenue);
+        request.setAttribute("totalImportCost", totalImportCost);
+        request.setAttribute("totalDamagedCost", totalDamagedCost);
+        
+        // Tính lợi nhuận
+        double profit = totalRevenue - totalImportCost - totalDamagedCost;
+        double profitMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
+        double damageRate = totalImportCost > 0 ? (totalDamagedCost / totalImportCost) * 100 : 0;
+        
+        request.setAttribute("profit", profit);
+        request.setAttribute("profitMargin", profitMargin);
+        request.setAttribute("damageRate", damageRate);
 
         // 3. Doanh thu theo sản phẩm (nếu có tìm kiếm)
         List<RevenueByProduct> productRevenueList;
@@ -95,7 +125,23 @@ public class RevenueChartServlet extends HttpServlet {
         Map<String, Integer> statusMap = dao.getOrderStatusSummary();
         request.setAttribute("statusMap", statusMap);
 
-        // 6. Forward sang JSP
+        // 6. Doanh thu hoa thiệt hại
+        Map<String, Object> damagedFlowerRevenue = dao.getDamagedFlowerRevenue();
+        request.setAttribute("damagedFlowerRevenue", damagedFlowerRevenue);
+
+        // 7. Doanh thu nhập hàng
+        Map<String, Object> importRevenue = dao.getImportRevenue();
+        request.setAttribute("importRevenue", importRevenue);
+
+        // 8. Doanh thu nhập hàng theo tháng
+        List<Map<String, Object>> importRevenueByMonth = dao.getImportRevenueByMonth();
+        request.setAttribute("importRevenueByMonth", importRevenueByMonth);
+
+        // 9. Doanh thu thiệt hại theo tháng
+        List<Map<String, Object>> damagedRevenueByMonth = dao.getDamagedRevenueByMonth();
+        request.setAttribute("damagedRevenueByMonth", damagedRevenueByMonth);
+
+        // 10. Forward sang JSP
         request.getRequestDispatcher("/revenueChart.jsp").forward(request, response);
     }
 

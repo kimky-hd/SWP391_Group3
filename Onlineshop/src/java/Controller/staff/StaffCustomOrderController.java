@@ -158,7 +158,7 @@ public class StaffCustomOrderController extends HttpServlet {
         List<CustomOrderCart> approvedCustomOrders = new ArrayList<>();
         for (CustomOrderCart order : filteredOrders) {
             if (order.getStatusID() == 2 || order.getStatusID() == 3 || order.getStatusID() == 4 || order.getStatusID() == 5 || order.getStatusID() == 6
-                    || order.getStatusID() == 7 || order.getStatusID() == 8 || order.getStatusID() == 9) {
+                    || order.getStatusID() == 7 || order.getStatusID() == 8 || order.getStatusID() == 10) {
                 
                 approvedCustomOrders.add(order);
             }
@@ -197,7 +197,7 @@ public class StaffCustomOrderController extends HttpServlet {
 
         // Kiểm tra xem đơn hàng có phải đã được duyệt không
         if (customOrder.getStatusID() != 2 && customOrder.getStatusID() != 3 && customOrder.getStatusID() != 4 && customOrder.getStatusID() != 5
-                && customOrder.getStatusID() != 6 && customOrder.getStatusID() != 7 && customOrder.getStatusID() != 8 && customOrder.getStatusID() == 9) {
+                && customOrder.getStatusID() != 6 && customOrder.getStatusID() != 7 && customOrder.getStatusID() != 8 && customOrder.getStatusID() == 10) {
             request.setAttribute("errorMessage", "Bạn chỉ có thể xem các đơn hàng đã được duyệt!");
             request.getRequestDispatcher("/staff/staff_custom_orders.jsp").forward(request, response);
             return;
