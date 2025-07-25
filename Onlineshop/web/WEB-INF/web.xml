@@ -177,6 +177,14 @@
         <servlet-name>ProductBatchHistory</servlet-name>
         <servlet-class>ManagerController.ProductBatchHistory</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ListWiltedBatchesController</servlet-name>
+        <servlet-class>Controller.staff.ListWiltedBatchesController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReplaceWiltedMaterialController</servlet-name>
+        <servlet-class>Controller.staff.ReplaceWiltedMaterialController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ContactServlet</servlet-name>
         <url-pattern>/ContactServlet</url-pattern>
@@ -341,6 +349,14 @@
     <servlet-mapping>
         <servlet-name>ProductBatchHistory</servlet-name>
         <url-pattern>/productbatchhistory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListWiltedBatchesController</servlet-name>
+        <url-pattern>/listwiltedbatches</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReplaceWiltedMaterialController</servlet-name>
+        <url-pattern>/replacewilted</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>

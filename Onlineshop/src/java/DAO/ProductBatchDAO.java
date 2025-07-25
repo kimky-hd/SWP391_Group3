@@ -18,12 +18,6 @@ public class ProductBatchDAO extends DBContext {
     PreparedStatement ps;
     ResultSet rs;
 
-    /**
-     * Get all product batches for a specific product
-     *
-     * @param productId Product ID
-     * @return List of ProductBatch objects
-     */
     public List<ProductBatch> getProductBatchesByProductId(int productId) {
         List<ProductBatch> batches = new ArrayList<>();
         String sql = "SELECT * FROM productbatch WHERE productID = ? ORDER BY dateImport DESC";
@@ -52,13 +46,27 @@ public class ProductBatchDAO extends DBContext {
         return batches;
     }
 
-    /**
-     * Add quantity back to product batch when order is cancelled
-     *
-     * @param productId Product ID
-     * @param quantity Quantity to add back
-     * @return true if successful, false otherwise
-     */
+    public ProductBatch getProductBatchByID(int productBatchID) {
+        String sql = "SELECT * From ProductBatch WHERE productBatchID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productBatchID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                ProductBatch pb = new ProductBatch(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getDouble(4),
+                        rs.getDate(5),
+                        rs.getDate(6));
+                return pb;
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductBatchByID " + e.getMessage());
+        }
+        return null;
+    }
+
     public boolean addQuantityToProduct(int productId, int quantity) {
         System.out.println("=== Starting addQuantityToProduct ===");
         System.out.println("Product ID: " + productId + ", Quantity to add: " + quantity);
@@ -426,13 +434,13 @@ public class ProductBatchDAO extends DBContext {
         }
     }
 
-    public List<ProductBatch> getProductBatchesByIndex(int indexPage) {
+    public List<ProductBatch> getProductBatchesHistoryByIndex(int indexPage) {
         List<ProductBatch> list = new ArrayList<>();
-        String sql = "SELECT pb.productBatchID, pb.quantity, pb.importPrice, pb.dateImport, pb.dateExpire,\n"
+        String sql = "SELECT pbh.productBatchID, pbh.quantity, pbh.importPrice, pbh.dateImport, pbh.dateExpire,\n"
                 + "p.productID, p.title\n"
-                + "FROM ProductBatch pb\n"
-                + "JOIN Product p ON pb.productID = p.productID\n"
-                + "ORDER BY pb.productBatchID\n"
+                + "FROM ProductBatchHistory pbh\n"
+                + "JOIN Product p ON pbh.productID = p.productID\n"
+                + "ORDER BY pbh.productBatchID\n"
                 + "LIMIT ?, 8";
 
         try {
@@ -525,6 +533,38 @@ public class ProductBatchDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("getFilteredProductBatches: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<ProductBatch> getProductBatchesWithWiltedMaterials() {
+        List<ProductBatch> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT pb.*, p.title \n"
+                + "FROM ProductBatch pb\n"
+                + "JOIN MaterialBatchUsage mbu ON pb.productBatchID = mbu.productBatchID\n"
+                + "JOIN MaterialBatch mb ON mbu.materialBatchID = mb.materialBatchID\n"
+                + "JOIN Product p ON pb.productID = p.productID\n"
+                + "WHERE mb.dateExpire < CURDATE()";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProductBatch pb = new ProductBatch();
+                pb.setProductBatchID(rs.getInt("productBatchID"));
+                pb.setProductID(rs.getInt("productID"));
+                pb.setProductTitle(rs.getString("title"));
+                pb.setQuantity(rs.getInt("quantity"));
+                pb.setImportPrice(rs.getDouble("importPrice"));
+                pb.setDateImport(rs.getDate("dateImport"));
+                pb.setDateExpire(rs.getDate("dateExpire"));
+                
+                
+                list.add(pb);
+            }
+        } catch (SQLException e) {
+            System.out.println("getProductBatchesWithWiltedMaterials " + e.getMessage());
         }
         return list;
     }

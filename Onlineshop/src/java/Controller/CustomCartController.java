@@ -120,6 +120,9 @@ public class CustomCartController extends HttpServlet {
             case "delete":
                 deleteCustomOrderCart(request, response, account);
                 break;
+            case "updateStatus":
+                updateCustomOrderStatus(request, response, account);
+                break;
             default:
                 response.sendRedirect("custom-cart");
                 break;
@@ -263,6 +266,36 @@ public class CustomCartController extends HttpServlet {
         boolean success = customOrderCartDAO.deleteCustomOrderCart(customCartId);
         
         sendJsonResponse(response, success, success ? "Đã xóa đơn hàng thành công." : "Không thể xóa đơn hàng. Vui lòng thử lại sau.");
+    }
+    
+    /**
+     * Cập nhật trạng thái đơn hàng tùy chỉnh.
+     */
+    private void updateCustomOrderStatus(HttpServletRequest request, HttpServletResponse response, Account account)
+            throws ServletException, IOException {
+        int customCartId = Integer.parseInt(request.getParameter("customCartId"));
+        int statusId = Integer.parseInt(request.getParameter("statusId"));
+        
+        // Kiểm tra xem đơn hàng có tồn tại và thuộc về người dùng hiện tại không
+        CustomOrderCart customOrderCart = customOrderCartDAO.getCustomOrderCartById(customCartId);
+        
+        if (customOrderCart == null || customOrderCart.getAccountID() != account.getAccountID()) {
+            sendJsonResponse(response, false, "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập.");
+            return;
+        }
+        
+        // Kiểm tra nếu trạng thái hiện tại là 3 (đang vận chuyển) và trạng thái mới là 4 (đã giao hàng thành công)
+        if (customOrderCart.getStatusID() == 3 && statusId == 4) {
+            customOrderCart.setStatusID(statusId);
+            customOrderCart.setStatus("Đã giao hàng thành công");
+            
+            // Lưu thay đổi vào cơ sở dữ liệu
+            boolean success = customOrderCartDAO.updateCustomOrderCart(customOrderCart);
+            
+            sendJsonResponse(response, success, success ? "Đã cập nhật trạng thái đơn hàng thành công." : "Không thể cập nhật trạng thái đơn hàng. Vui lòng thử lại sau.");
+        } else {
+            sendJsonResponse(response, false, "Không thể cập nhật trạng thái đơn hàng trong trạng thái hiện tại.");
+        }
     }
     
     /**

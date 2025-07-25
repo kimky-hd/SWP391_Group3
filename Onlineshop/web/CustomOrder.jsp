@@ -494,6 +494,25 @@
                 $('#contactInfoModal').modal('show');
             });
 
+            // Tự động điền thông tin liên hệ khi modal hiển thị
+            $('#contactInfoModal').on('shown.bs.modal', function () {
+                // Lấy thông tin từ session
+                const account = <%= session.getAttribute("account") != null ? "true" : "false" %>;
+                
+                if (account) {
+                    <% if (session.getAttribute("account") != null) { %>
+                        const username = "<%= session.getAttribute("account") != null ? ((Model.Account)session.getAttribute("account")).getUsername() : "" %>";
+                        const phone = "<%= session.getAttribute("account") != null ? ((Model.Account)session.getAttribute("account")).getPhone() : "" %>";
+                        const email = "<%= session.getAttribute("account") != null ? ((Model.Account)session.getAttribute("account")).getEmail() : "" %>";
+                        
+                        // Điền thông tin vào form
+                        if (username) document.getElementById('fullName').value = username;
+                        if (phone) document.getElementById('phone').value = phone;
+                        if (email) document.getElementById('email').value = email;
+                    <% } %>
+                }
+            });
+
             // Xử lý form thông tin liên hệ
             document.getElementById('contactInfoForm').addEventListener('submit', function (e) {
                 e.preventDefault(); // Ngăn form submit mặc định

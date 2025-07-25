@@ -174,11 +174,42 @@
                     if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
+                        
+                        // Focus on first invalid field
+                        const firstInvalidField = form.querySelector(':invalid');
+                        if (firstInvalidField) {
+                            firstInvalidField.focus();
+                        }
                     }
                     form.classList.add('was-validated');
                 }, false);
             });
         })();
+        
+        // Email validation
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value.trim();
+            const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
+            if (email.length > 0 && !emailRegex.test(email)) {
+                this.setCustomValidity('Email không đúng định dạng @gmail.com');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Phone validation
+        document.getElementById('phone').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+            
+            if (this.value.length > 0 && (this.value.length < 10 || this.value.length > 11)) {
+                this.setCustomValidity('Số điện thoại phải có 10-11 chữ số');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
     </script>
 </body>
 </html>

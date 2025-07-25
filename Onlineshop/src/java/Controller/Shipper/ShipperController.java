@@ -47,6 +47,9 @@ public class ShipperController extends HttpServlet {
             case "/shipper/order-detail":
                 handleOrderDetail(request, response);
                 break;
+            case "/shipper/customer-email":
+                handleCustomerEmail(request, response);
+                break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -91,23 +94,42 @@ public class ShipperController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // Get summary data for dashboard
-            int approvedOrders = hoaDonDAO.getTotalOrdersByStatus(2, null); // Approved and ready for packaging
-            int readyToShip = hoaDonDAO.getTotalOrdersByStatus(9, null); // Ready to ship
-            int shipping = hoaDonDAO.getTotalOrdersByStatus(3, null); // Shipping
-            int delivered = hoaDonDAO.getTotalOrdersByStatus(4, null); // Delivered
-            int cancelled = hoaDonDAO.getTotalOrdersByStatus(6, null); // Cancelled
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+            int shipperID = account.getAccountID();
 
-            // Get recent orders (status 2, 9, 3, 4, 6)
-            List<HoaDon> recentOrders = hoaDonDAO.getOrdersByMultipleStatusForShipper(new int[]{2, 9, 3, 4, 6});
+            System.out.println("=== SHIPPER DASHBOARD DEBUG ===");
+            System.out.println("Shipper ID: " + shipperID);
+            System.out.println("Account details: " + account.getUsername() + " (Role: " + account.getRole() + ")");
+
+            // Get summary data for dashboard - only for this shipper
+            int approvedOrders = hoaDonDAO.getTotalOrdersByStatusAndShipper(2, shipperID, null); // Approved and ready for shipping
+            int shipping = hoaDonDAO.getTotalOrdersByStatusAndShipper(3, shipperID, null); // Shipping
+            int delivered = hoaDonDAO.getTotalOrdersByStatusAndShipper(4, shipperID, null); // Delivered
+            int cancelled = hoaDonDAO.getTotalOrdersByStatusAndShipper(6, shipperID, null); // Cancelled
+
+            System.out.println("Orders count for shipper " + shipperID + ":");
+            System.out.println("- Approved (status 2): " + approvedOrders);
+            System.out.println("- Shipping (status 3): " + shipping);
+            System.out.println("- Delivered (status 4): " + delivered);
+            System.out.println("- Cancelled (status 6): " + cancelled);
+
+            // Get recent orders (status 2, 3, 4, 6) - only for this shipper
+            List<HoaDon> recentOrders = hoaDonDAO.getOrdersByMultipleStatusForSpecificShipper(new int[]{2, 3, 4, 6}, shipperID);
+
+            System.out.println("Recent orders count: " + recentOrders.size());
+            for (HoaDon order : recentOrders) {
+                System.out.println("- Order #" + order.getMaHD() + " (Status: " + order.getStatusID() + ", ShipperID: " + order.getShippingID() + ")");
+            }
 
             // Set attributes
             request.setAttribute("approvedOrders", approvedOrders);
-            request.setAttribute("readyToShip", readyToShip);
             request.setAttribute("shipping", shipping);
             request.setAttribute("delivered", delivered);
             request.setAttribute("cancelled", cancelled);
             request.setAttribute("recentOrders", recentOrders);
+
+            System.out.println("=== END SHIPPER DASHBOARD DEBUG ===");
 
             // Forward to dashboard JSP
             request.getRequestDispatcher("/shipper/shipper_dashboard.jsp").forward(request, response);
@@ -230,21 +252,11 @@ public class ShipperController extends HttpServlet {
             System.out.println("New Status: " + newStatusId);
 
             // Shipper can make these transitions:
-            // 2 (Approved) -> 9 (Ready to ship)
-            // 9 (Ready to ship) -> 3 (Shipping)
+            // 2 (Approved) -> 3 (Shipping)
             // 3 (Shipping) -> 4 (Delivered) or 6 (Cancelled with note)
-            // Only status 3 can be cancelled
             boolean isValid = false;
             switch (currentStatus) {
-                case 2: // Approved and ready for packaging
-                    isValid = newStatusId == 9; // Can only move to Ready to ship
-                    // TEMPORARY: Allow direct transition from 2 to 3 for testing
-                    if (newStatusId == 3) {
-                        System.out.println("WARNING: Direct transition from status 2 to 3 detected - this should go through status 9");
-                        isValid = true; // Allow for now, but log the issue
-                    }
-                    break;
-                case 9: // Ready to ship
+                case 2: // Approved and ready for shipping
                     isValid = newStatusId == 3; // Can only move to Shipping
                     break;
                 case 3: // Shipping
@@ -298,28 +310,107 @@ public class ShipperController extends HttpServlet {
 
             System.out.println("Found order: " + order.getMaHD() + ", Customer: " + order.getCustomerName());
 
+            // Get shipper information
+            String shipperInfo = hoaDonDAO.getShipperInfo(order.getShippingID());
+            
+            // Get customer email from inforline
+            String customerEmail = hoaDonDAO.getCustomerEmailFromInforline(order.getCustomerName(), order.getCustomerPhone());
+            
+            System.out.println("Shipper info: " + shipperInfo);
+            System.out.println("Customer email: " + customerEmail);
+
             // Get order items
             List<OrderDetail> orderDetails = orderDetailDAO.getOrderDetailsByOrderId(orderId);
             System.out.println("Found " + orderDetails.size() + " order details");
 
             // Tính tổng giá đơn hàng tại đây:
             double tongGia = 0;
+            System.out.println("=== PROCESSING ORDER DETAILS ===");
             for (OrderDetail detail : orderDetails) {
                 double total = detail.getPrice() * detail.getQuantity();
                 detail.setTotal(total); // <- DÒNG NÀY QUAN TRỌNG!
                 tongGia += total;
-
+                
+                System.out.println("Product: " + (detail.getProductName() != null ? detail.getProductName().toString() : "null"));
+                System.out.println("Price: " + detail.getPrice());
+                System.out.println("Quantity: " + detail.getQuantity());
+                System.out.println("Total: " + detail.getTotal());
+                System.out.println("---");
             }
+            System.out.println("Final tongGia: " + tongGia);
+            System.out.println("=== END ORDER DETAILS PROCESSING ===");
 
             // Set attributes
             request.setAttribute("order", order);
             request.setAttribute("orderDetails", orderDetails);
+            request.setAttribute("shipperInfo", shipperInfo);
+            request.setAttribute("customerEmail", customerEmail);
 
             // Check if this is an AJAX request (for modal)
             String ajaxHeader = request.getHeader("X-Requested-With");
             boolean isAjax = "XMLHttpRequest".equals(ajaxHeader);
+            
+            // Check if this is a JSON request (from JavaScript fetch)
+            String acceptHeader = request.getHeader("Accept");
+            boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
 
-            if (isAjax) {
+            if (isJsonRequest) {
+                // Return JSON response for JavaScript
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                
+                StringBuilder json = new StringBuilder();
+                json.append("{");
+                json.append("\"maHD\":\"").append(order.getMaHD()).append("\",");
+                json.append("\"customerName\":\"").append(order.getCustomerName() != null ? order.getCustomerName() : "").append("\",");
+                json.append("\"customerPhone\":\"").append(order.getCustomerPhone() != null ? order.getCustomerPhone() : "").append("\",");
+                json.append("\"customerEmail\":\"").append(customerEmail != null ? customerEmail : "Chưa có").append("\",");
+                json.append("\"customerAddress\":\"").append(order.getCustomerAddress() != null ? order.getCustomerAddress() : "").append("\",");
+                json.append("\"tongGia\":").append(tongGia).append(",");
+                json.append("\"ngayXuat\":\"").append(order.getNgayXuat() != null ? order.getNgayXuat().toString() : "").append("\",");
+                json.append("\"statusID\":").append(order.getStatusID()).append(",");
+                json.append("\"note\":\"").append(order.getNote() != null ? order.getNote().replaceAll("\"", "\\\\\"") : "").append("\",");
+                json.append("\"shipperName\":\"").append(shipperInfo != null ? shipperInfo : "Chưa phân công").append("\",");
+                json.append("\"items\":[");
+                
+                for (int i = 0; i < orderDetails.size(); i++) {
+                    OrderDetail detail = orderDetails.get(i);
+                    if (i > 0) json.append(",");
+                    json.append("{");
+                    
+                    // Get product name safely
+                    String productName = "Sản phẩm";
+                    if (detail.getProductName() != null) {
+                        productName = detail.getProductName().toString();
+                    }
+                    
+                    // Get product image safely
+                    String imageName = "default-flower.jpg";
+                    if (detail.getProduct() != null && detail.getProduct().getImage() != null && !detail.getProduct().getImage().isEmpty()) {
+                        imageName = detail.getProduct().getImage();
+                    }
+                    
+                    // Get product description safely
+                    String description = "Sản phẩm hoa tươi";
+                    if (detail.getProduct() != null && detail.getProduct().getDescription() != null && !detail.getProduct().getDescription().isEmpty()) {
+                        description = detail.getProduct().getDescription();
+                    }
+                    
+                    json.append("\"name\":\"").append(productName).append("\",");
+                    json.append("\"quantity\":").append(detail.getQuantity()).append(",");
+                    json.append("\"price\":").append(detail.getPrice()).append(",");
+                    json.append("\"total\":").append(detail.getTotal()).append(",");
+                    json.append("\"image\":\"").append(imageName).append("\",");
+                    json.append("\"description\":\"").append(description).append("\"");
+                    json.append("}");
+                }
+                
+                json.append("]");
+                json.append("}");
+                
+                response.getWriter().write(json.toString());
+                return;
+            } else if (isAjax) {
                 // Forward to JSP fragment for modal content
                 request.getRequestDispatcher("/shipper/order_detail_fragment.jsp").forward(request, response);
             } else {
@@ -420,6 +511,47 @@ public class ShipperController extends HttpServlet {
         } catch (Exception e) {
             System.out.println("Error restoring product quantities: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handle customer email request from inforline table
+     */
+    private void handleCustomerEmail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            
+            String customerName = request.getParameter("name");
+            String customerPhone = request.getParameter("phone");
+            
+            System.out.println("=== CUSTOMER EMAIL REQUEST ===");
+            System.out.println("Looking for customer: " + customerName + " | Phone: " + customerPhone);
+            
+            if (customerName == null || customerPhone == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\":\"Missing name or phone parameter\"}");
+                return;
+            }
+            
+            // Get email from inforline table based on name and phone
+            String email = hoaDonDAO.getCustomerEmailFromInforline(customerName, customerPhone);
+            
+            System.out.println("Found email: " + email);
+            
+            if (email != null && !email.isEmpty()) {
+                response.getWriter().write("{\"email\":\"" + email + "\"}");
+            } else {
+                response.getWriter().write("{\"email\":\"Chưa có email\"}");
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error in handleCustomerEmail: " + e.getMessage());
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\":\"Server error: " + e.getMessage() + "\"}");
         }
     }
 }

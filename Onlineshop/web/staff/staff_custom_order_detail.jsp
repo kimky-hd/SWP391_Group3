@@ -62,15 +62,49 @@
                 align-items: center;
                 gap: 5px;
             }
+            .status-badge {
+                padding: 6px 12px;
+                border-radius: 30px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
 
             .status-2 {
                 background-color: #d4edda;
                 color: #155724;
             } /* Đã duyệt và đóng gói */
+            .status-3 {
+                background-color: #cff4fc;
+                color: #055160;
+            } /* Đơn hàng đang được vận chuyển */
+            .status-4 {
+                background-color: #d1e7dd;
+                color: #0f5132;
+            } /* Đã giao hàng thành công */
+            .status-5 {
+                background-color: #e8f5e9;
+                color: #1b5e20;
+            } /* Đã thanh toán thành công */
+            .status-6 {
+                background-color: #f8d7da;
+                color: #842029;
+            } /* Đã hủy */
             .status-7 {
                 background-color: #c3e6cb;
                 color: #155724;
             } /* Đã duyệt đơn thiết kế */
+            .status-8 {
+                background-color: #f8d7da;
+                color: #721c24;
+            } /* Đơn thiết kế đã bị từ chối */
+            .status-9 {
+                background-color: #fff3cd;
+                color: #664d03;
+            } /* Sẵn sàng giao */
+
 
             /* Reference image */
             .reference-image-container {
@@ -268,6 +302,46 @@
                                                 </c:choose>
                                             </td>
                                         </tr>
+                                        <!-- Thông tin địa chỉ khách hàng -->
+                                        <tr>
+                                            <th><i class="fas fa-map-marker-alt me-2"></i>Địa chỉ:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.address}">
+                                                        ${customOrder.address}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-city me-2"></i>Quận/Huyện:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.district}">
+                                                        ${customOrder.district}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class="fas fa-map me-2"></i>Thành phố:</th>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty customOrder.city}">
+                                                        ${customOrder.city}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted"><i class="fas fa-exclamation-circle me-1"></i>Không có</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <th><i class="fas fa-money-bill-wave me-2"></i>Giá mong muốn:</th>
                                             <td>
@@ -296,10 +370,28 @@
                                                 <span class="status-badge status-${customOrder.statusID}">
                                                     <c:choose>
                                                         <c:when test="${customOrder.statusID == 2}">
-                                                            <i class="fas fa-check me-1"></i>Đã duyệt và đóng gói
+                                                            <i class="fas fa"></i>Đơn hàng đang được đóng gói
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 3}">
+                                                            <i class="fas fa"></i>Đơn hàng đang được vận chuyển
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 4}">
+                                                            <i class="fas fa"></i>Đã giao hàng thành công
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 5}">
+                                                            <i class="fas fa"></i>Đã thanh toán thành công
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 6}">
+                                                            <i class="fas fa"></i>Đã hủy
                                                         </c:when>
                                                         <c:when test="${customOrder.statusID == 7}">
-                                                            <i class="fas fa-check me-1"></i>Đã duyệt đơn thiết kế
+                                                            <i class="fas fa"></i>Đã duyệt đơn thiết kế
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 8}">
+                                                            <i class="fas fa"></i>Đơn thiết kế đã bị từ chối
+                                                        </c:when>
+                                                        <c:when test="${customOrder.statusID == 9}">
+                                                            <i class="fas fa"></i>Sẵn sàng giao
                                                         </c:when>
                                                     </c:choose>
                                                 </span>
@@ -329,6 +421,35 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">${customOrder.description}</p>
+                                </div>
+                            </div>
+
+                            <!-- Cập nhật trạng thái -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-edit me-2"></i>Cập nhật trạng thái
+                                </div>
+                                <div class="card-body">
+                                    <form id="updateStatusForm">
+                                        <input type="hidden" name="customCartId" value="${customOrder.customCartID}">
+                                        <input type="hidden" name="action" value="updateStatus">
+
+                                        <div class="mb-3">
+                                            <label for="statusId" class="form-label">Trạng thái mới:</label>
+                                            <select class="form-select" id="statusId" name="statusId" required>
+                                                <option value="2" ${customOrder.statusID == 2 ? 'selected' : ''}>Đơn hàng đang được đóng gói</option>
+                                                <option value="9" ${customOrder.statusID == 9 ? 'selected' : ''}>Sẵn sàng giao</option>
+                                                <option value="3" ${customOrder.statusID == 3 ? 'selected' : ''}>Đang vận chuyển</option>
+                                                <option value="5" ${customOrder.statusID == 5 ? 'selected' : ''}>Đã thanh toán thành công</option>
+                                                <option value="6" ${customOrder.statusID == 6 ? 'selected' : ''}>Đã hủy</option>
+                                                
+                                            </select>
+                                        </div>
+
+                                        <button type="button" id="updateStatusBtn" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i>Cập nhật trạng thái
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -399,5 +520,103 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                // Xử lý sự kiện khi nhấn nút cập nhật trạng thái
+                $("#updateStatusBtn").click(function () {
+                    // Hiển thị trạng thái đang tải
+                    $(this).html('<i class="fas fa-spinner fa-spin me-1"></i>Đang cập nhật...');
+                    $(this).prop('disabled', true);
+
+                    // Lấy dữ liệu từ form
+                    var customCartId = $("input[name='customCartId']").val();
+                    var statusId = $("#statusId").val();
+                    var action = $("input[name='action']").val();
+
+                    // Gửi yêu cầu AJAX
+                    $.ajax({
+                        url: "${pageContext.request.contextPath}/staff/staff_custom-orders",
+                        type: "POST",
+                        data: {
+                            customCartId: customCartId,
+                            statusId: statusId,
+                            action: action
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                            // Hiển thị thông báo
+                            var statusMessage = $("#statusMessage");
+                            statusMessage.removeClass("alert-success alert-danger");
+
+                            if (response.success) {
+                                statusMessage.addClass("alert-success");
+                                // Cập nhật hiển thị trạng thái trên trang
+                                updateStatusDisplay(statusId);
+                            } else {
+                                statusMessage.addClass("alert-danger");
+                            }
+
+                            statusMessage.html(response.message);
+                            statusMessage.show();
+
+                            // Tự động ẩn thông báo sau 5 giây
+                            setTimeout(function () {
+                                statusMessage.fadeOut();
+                            }, 5000);
+
+                            // Khôi phục trạng thái nút
+                            $("#updateStatusBtn").html('<i class="fas fa-save me-1"></i>Cập nhật trạng thái');
+                            $("#updateStatusBtn").prop('disabled', false);
+                        },
+                        error: function (xhr, status, error) {
+                            // Hiển thị thông báo lỗi
+                            var statusMessage = $("#statusMessage");
+                            statusMessage.removeClass("alert-success alert-danger");
+                            statusMessage.addClass("alert-danger");
+                            statusMessage.html("Đã xảy ra lỗi khi cập nhật trạng thái: " + error);
+                            statusMessage.show();
+
+                            // Khôi phục trạng thái nút
+                            $("#updateStatusBtn").html('<i class="fas fa-save me-1"></i>Cập nhật trạng thái');
+                            $("#updateStatusBtn").prop('disabled', false);
+                        }
+                    });
+                });
+
+                // Hàm cập nhật hiển thị trạng thái trên trang
+                function updateStatusDisplay(statusId) {
+                    var statusBadge = $(".status-badge");
+                    statusBadge.removeClass();
+                    statusBadge.addClass("status-badge status-" + statusId);
+
+                    var statusText = "";
+                    var statusIcon = '<i class="fas fa-check me-1"></i>';
+
+                    switch (parseInt(statusId)) {
+                        case 2:
+                            statusText = "Đã duyệt và đóng gói";
+                            break;
+                        case 3:
+                            statusText = "Đang vận chuyển";
+                            statusIcon = '<i class="fas fa-truck me-1"></i>';
+                            break;
+                        case 6:
+                            statusText = "Đã hủy";
+                            statusIcon = '<i class="fas fa-times me-1"></i>';
+                            break;
+                        case 9:
+                            statusText = "Sẵn sàng giao";
+                            statusIcon = '<i class="fas fa-box me-1"></i>';
+                            break;
+                        default:
+                            statusText = "Chờ duyệt";
+                            statusIcon = '<i class="fas fa-clock me-1"></i>';
+                    }
+
+                    statusBadge.html(statusIcon + statusText);
+                }
+            });
+        </script>
     </body>
 </html>

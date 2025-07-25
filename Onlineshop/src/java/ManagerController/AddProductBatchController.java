@@ -149,6 +149,7 @@ public class AddProductBatchController extends HttpServlet {
             }
 
             // Đủ nguyên liệu => thêm batch sản phẩm
+            productDAO.insertProductBatchHistory(productID, quantity, importPrice, dateImport, dateExpire);
             productDAO.insertProductBatch(productID, quantity, importPrice, dateImport, dateExpire);
 
             Map<Material, List<MaterialBatchUsage>> materialUsageMap
@@ -157,7 +158,11 @@ public class AddProductBatchController extends HttpServlet {
             if (materialUsageMap != null) {
                 for (Map.Entry<Material, List<MaterialBatchUsage>> entry : materialUsageMap.entrySet()) {
                     for (MaterialBatchUsage usage : entry.getValue()) {
+                        int batchID = usage.getMaterialBatchID();
+                        int usedQty = usage.getQuantityUsed();
+                        double price = usage.getImportPrice();
                         materialDAO.deductMaterialFromBatch(usage.getMaterialBatchID(), usage.getQuantityUsed());
+                        materialDAO.insertMaterialBatchUsage(productID, batchID, usedQty, price);
                     }
                 }
                 session.removeAttribute("materialUsageMap");

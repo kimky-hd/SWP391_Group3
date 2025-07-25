@@ -21,8 +21,10 @@ public class OrderDetailDAO extends DBContext {
      */
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         List<OrderDetail> orderDetails = new ArrayList<>();
+
         String sql = "SELECT od.orderdetailID, od.maHD, od.productID, od.price, od.quantity, " +
                      "p.title, p.image, p.description, p.price as product_price " +
+
                      "FROM orderdetail od " +
                      "JOIN product p ON od.productID = p.productID " +
                      "WHERE od.maHD = ?";
@@ -38,9 +40,24 @@ public class OrderDetailDAO extends DBContext {
                 orderDetail.setOrderDetailId(rs.getInt("orderdetailID"));
                 orderDetail.setOrderId(rs.getInt("maHD"));
                 orderDetail.setProductId(rs.getInt("productID"));
-                orderDetail.setPrice(rs.getDouble("price"));
+                
+                // Use orderPrice first, fallback to productPrice if orderPrice is 0
+                double orderPrice = rs.getDouble("orderPrice");
+                double productPrice = rs.getDouble("productPrice");
+                double finalPrice = orderPrice > 0 ? orderPrice : productPrice;
+                
+                orderDetail.setPrice(finalPrice);
                 orderDetail.setQuantity(rs.getInt("quantity"));
-                orderDetail.setTotal(rs.getDouble("price") * rs.getInt("quantity"));
+                orderDetail.setTotal(finalPrice * rs.getInt("quantity"));
+                
+                System.out.println("=== ORDER DETAIL DEBUG ===");
+                System.out.println("Product ID: " + rs.getInt("productID"));
+                System.out.println("Order Price from DB: " + orderPrice);
+                System.out.println("Product Price from DB: " + productPrice);
+                System.out.println("Final Price used: " + finalPrice);
+                System.out.println("Quantity: " + rs.getInt("quantity"));
+                System.out.println("Calculated Total: " + (finalPrice * rs.getInt("quantity")));
+                System.out.println("=========================");
                 
                 // Create product object
                 Product product = new Product();
@@ -48,7 +65,9 @@ public class OrderDetailDAO extends DBContext {
                 product.setTitle(rs.getString("title"));
                 product.setImage(rs.getString("image"));
                 product.setDescription(rs.getString("description"));
+
                 product.setPrice(rs.getDouble("product_price"));
+
                 
                 orderDetail.setProduct(product);
                 orderDetails.add(orderDetail);

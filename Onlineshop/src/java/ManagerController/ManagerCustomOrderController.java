@@ -126,11 +126,32 @@ public class ManagerCustomOrderController extends HttpServlet {
         }
         
         // Lấy tham số lọc
+        String orderIdStr = request.getParameter("orderId");
         String customerName = request.getParameter("customerName");
-        String status = request.getParameter("status");
+        String statusStr = request.getParameter("status");
         
-        // Lấy danh sách đơn hàng tự thiết kế
-        List<CustomOrderCart> customOrders = customOrderCartDAO.getAllCustomOrderCarts();
+        int orderId = 0;
+        int statusId = 0;
+        
+        // Chuyển đổi tham số lọc
+        try {
+            if (orderIdStr != null && !orderIdStr.trim().isEmpty()) {
+                orderId = Integer.parseInt(orderIdStr.trim());
+            }
+        } catch (NumberFormatException e) {
+            // Giữ giá trị mặc định
+        }
+        
+        try {
+            if (statusStr != null && !statusStr.trim().isEmpty()) {
+                statusId = Integer.parseInt(statusStr.trim());
+            }
+        } catch (NumberFormatException e) {
+            // Giữ giá trị mặc định
+        }
+        
+        // Lấy danh sách đơn hàng tự thiết kế theo bộ lọc
+        List<CustomOrderCart> customOrders = customOrderCartDAO.getFilteredCustomOrderCarts(orderId, customerName, statusId);
         
         // Tính toán phân trang
         int totalRecords = customOrders.size();
@@ -141,8 +162,9 @@ public class ManagerCustomOrderController extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("recordsPerPage", recordsPerPage);
+        request.setAttribute("orderId", orderIdStr);
         request.setAttribute("customerName", customerName);
-        request.setAttribute("status", status);
+        request.setAttribute("status", statusStr);
         
         // Chuyển hướng đến trang JSP
         request.getRequestDispatcher("/manager/custom_orders.jsp").forward(request, response);
@@ -188,21 +210,6 @@ public class ManagerCustomOrderController extends HttpServlet {
         switch (statusId) {
             case 1: // Chờ duyệt
                 customOrder.setStatus("Chờ duyệt");
-                break;
-            case 2: // Đã duyệt và đóng gói
-                customOrder.setStatus("Đã duyệt và đóng gói");
-                break;
-            case 3: // Đang vận chuyển
-                customOrder.setStatus("Đang vận chuyển");
-                break;
-            case 4: // Đã giao hàng thành công
-                customOrder.setStatus("Đã giao hàng thành công");
-                break;
-            case 5: // Đã thanh toán thành công
-                customOrder.setStatus("Đã thanh toán thành công");
-                break;
-            case 6: // Đã hủy
-                customOrder.setStatus("Đã hủy");
                 break;
             case 7: // Đã duyệt đơn hàng thiết kế riêng
                 customOrder.setStatus("Đã duyệt đơn hàng thiết kế riêng");
