@@ -10,8 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .main-content { background-color: #f8f9fa; min-height: 100vh; padding: 20px; }
-        .header-card, .banner-table { background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+        .main-content { background-color: #f8f9fa; min-height: 100vh; padding: 30px; margin-left: 260px; margin-top: 70px; }
+        .header-card, .banner-table { background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 30px; margin-bottom: 20px; }
         .table th { background: #4f63d2; color: white; border: none; font-weight: 600; text-align: center; }
         .table td { text-align: center; vertical-align: middle; }
         .action-buttons { display: flex; justify-content: center; gap: 8px; }

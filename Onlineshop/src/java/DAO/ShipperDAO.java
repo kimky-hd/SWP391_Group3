@@ -520,6 +520,62 @@ public List<Shipper> getAllShippersWithPaging(String sort, int offset, int limit
     return list;
 }
 
+// Tìm shipper có ít đơn hàng nhất để tự động phân công
+public Shipper getShipperWithLeastOrders() {
+    String query = "SELECT a.accountID, a.username, a.email, a.phone, s.startDate, s.endDate, " +
+                  "s.baseSalary, s.ordersDelivered, s.bonusPerOrder, s.isActive " +
+                  "FROM Account a JOIN ShipperDetails s ON a.accountID = s.shipperID " +
+                  "WHERE a.role = 3 AND s.isActive = true " +
+                  "ORDER BY s.ordersDelivered ASC, a.accountID ASC " +
+                  "LIMIT 1";
+
+    try {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(query);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return new Shipper(
+                rs.getInt("accountID"),
+                rs.getString("username"),
+                rs.getString("email"),
+                rs.getString("phone"),
+                rs.getDate("startDate"),
+                rs.getDate("endDate"),
+                rs.getDouble("baseSalary"),
+                rs.getInt("ordersDelivered"),
+                rs.getDouble("bonusPerOrder"),
+                rs.getBoolean("isActive")
+            );
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return null;
+}
+
+// Cập nhật số đơn hàng đã giao cho shipper
+public boolean incrementOrdersDelivered(int shipperId) {
+    String query = "UPDATE ShipperDetails SET ordersDelivered = ordersDelivered + 1 WHERE shipperID = ?";
+
+    try {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(query);
+        ps.setInt(1, shipperId);
+
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        closeResources();
+    }
+}
+
 // Lấy danh sách shipper theo trạng thái
 public List<Shipper> getShippersByStatus(boolean isActive, String sort, int offset, int limit) {
     List<Shipper> list = new ArrayList<>();

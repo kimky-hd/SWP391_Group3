@@ -3,6 +3,7 @@ package Controller.Shipper;
 import DAO.HoaDonDAO;
 import DAO.ProductBatchDAO;
 import DAO.OrderDetailDAO;
+import DAO.ShipperDAO;
 import Model.HoaDon;
 import Model.Status;
 import Model.Account;
@@ -208,6 +209,8 @@ public class ShipperController extends HttpServlet {
                 System.out.println("Regular status update for order " + orderId + " to status " + statusId);
                 // Regular status update
                 success = hoaDonDAO.updateOrderStatus(orderId, statusId);
+
+                // Logic tăng ordersDelivered đã được chuyển sang AdminOrderController khi duyệt đơn hàng (status 2)
             }
 
             System.out.println("Update result: " + success);

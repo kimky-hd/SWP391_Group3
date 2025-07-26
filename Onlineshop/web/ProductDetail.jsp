@@ -390,12 +390,67 @@
                                                             <span class="ml-2 text-muted">${feedback.rating}/5 sao</span>
                                                         </div>
                                                     </div>
-                                                    <small class="text-muted">
-                                                        <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
-                                                    </small>
+                                                    <div class="feedback-actions d-flex align-items-center">
+                                                        <small class="text-muted mr-3">
+                                                            <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                                        </small>
+                                                        <!-- Hiển thị button sửa/xóa chỉ cho chủ sở hữu đánh giá -->
+                                                        <c:if test="${sessionScope.account != null && sessionScope.account.accountID == feedback.accountId}">
+                                                            <div class="btn-group btn-group-sm">
+                                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                                        onclick="editFeedback(${feedback.feedbackId}, ${feedback.rating}, '${feedback.comment}')"
+                                                                        title="Sửa đánh giá">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                                        onclick="deleteFeedback(${feedback.feedbackId})"
+                                                                        title="Xóa đánh giá">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </c:if>
+                                                    </div>
                                                 </div>
                                                 <div class="feedback-content">
-                                                    <p class="mb-0">${feedback.comment}</p>
+                                                    <p class="mb-0" id="feedback-comment-${feedback.feedbackId}">${feedback.comment}</p>
+
+                                                    <!-- Staff Reply Section -->
+                                                    <c:if test="${not empty feedback.replyText}">
+                                                        <div class="staff-reply mt-4 p-4" style="background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+                                                             border: 2px solid #28a745; border-radius: 12px;
+                                                             box-shadow: 0 4px 8px rgba(40, 167, 69, 0.15);
+                                                             margin-left: 20px; position: relative;">
+
+                                                            <!-- Shop Icon Badge -->
+                                                            <div style="position: absolute; top: -12px; left: 15px;
+                                                                        background: #28a745; color: white; padding: 8px 12px;
+                                                                        border-radius: 20px; font-size: 12px; font-weight: bold;
+                                                                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                                                <i class="fas fa-store mr-1"></i>SHOP
+                                                            </div>
+
+                                                            <div class="reply-header mb-3" style="margin-top: 10px;">
+                                                                <h6 class="mb-2 text-success" style="font-weight: bold; font-size: 16px;">
+                                                                    <i class="fas fa-reply mr-2"></i>
+                                                                    <strong>Phản hồi từ cửa hàng:</strong>
+                                                                </h6>
+                                                                <hr style="border-color: #28a745; margin: 10px 0;">
+                                                            </div>
+
+                                                            <div class="reply-content" style="background: white; padding: 15px;
+                                                                 border-radius: 8px; border-left: 4px solid #28a745;">
+                                                                <p class="mb-0 text-dark" style="line-height: 1.8; white-space: pre-wrap;
+                                                                   font-size: 14px; font-style: italic;">${feedback.replyText}</p>
+                                                            </div>
+
+                                                            <!-- Thank you note -->
+                                                            <div class="mt-2 text-right">
+                                                                <small class="text-success" style="font-weight: 500;">
+                                                                    <i class="fas fa-heart mr-1"></i>Cảm ơn bạn đã tin tưởng shop!
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
                                                 </div>
                                             </div>
                                         </c:forEach>
@@ -407,6 +462,49 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal sửa đánh giá -->
+        <div class="modal fade" id="editFeedbackModal" tabindex="-1" role="dialog" aria-labelledby="editFeedbackModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editFeedbackModalLabel">Sửa đánh giá</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editFeedbackForm">
+                            <input type="hidden" id="editFeedbackId" name="feedbackId">
+                            <input type="hidden" name="action" value="updateProductFeedback">
+
+                            <div class="form-group">
+                                <label for="editRating">Đánh giá:</label>
+                                <div class="rating-stars" id="editRatingStars">
+                                    <i class="fas fa-star" data-rating="1"></i>
+                                    <i class="fas fa-star" data-rating="2"></i>
+                                    <i class="fas fa-star" data-rating="3"></i>
+                                    <i class="fas fa-star" data-rating="4"></i>
+                                    <i class="fas fa-star" data-rating="5"></i>
+                                </div>
+                                <input type="hidden" id="editRating" name="rating" value="5">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editComment">Nội dung đánh giá:</label>
+                                <textarea id="editComment" name="comment" class="form-control" rows="4"
+                                          placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" onclick="updateFeedback()">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer Start -->
         <jsp:include page="footer.jsp" />
 
@@ -637,6 +735,247 @@
                         messageBox.style.display = "none";
                     }, 3000); // Ẩn sau 3 giây
                 }
+            });
+        </script>
+
+        <!-- Custom CSS for feedback management -->
+        <style>
+            .feedback-actions .btn-group {
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .feedback-item:hover .feedback-actions .btn-group {
+                opacity: 1;
+            }
+
+            .rating-stars {
+                font-size: 1.5rem;
+                margin: 10px 0;
+            }
+
+            .rating-stars i {
+                color: #ddd;
+                cursor: pointer;
+                transition: color 0.2s ease;
+                margin-right: 5px;
+            }
+
+            .rating-stars i:hover,
+            .rating-stars i.active {
+                color: #ffc107;
+            }
+
+            .feedback-item {
+                transition: background-color 0.3s ease;
+            }
+
+            .feedback-item:hover {
+                background-color: #f8f9fa;
+            }
+        </style>
+
+        <!-- JavaScript for feedback management -->
+        <script>
+            // Biến global để lưu rating hiện tại
+            let currentEditRating = 5;
+
+            // Khởi tạo rating stars cho modal edit
+            function initEditRatingStars() {
+                $('#editRatingStars i').on('click', function() {
+                    const rating = $(this).data('rating');
+                    currentEditRating = rating;
+                    $('#editRating').val(rating);
+
+                    // Update visual stars
+                    $('#editRatingStars i').each(function(index) {
+                        if (index < rating) {
+                            $(this).addClass('active');
+                        } else {
+                            $(this).removeClass('active');
+                        }
+                    });
+                });
+
+                // Hover effect
+                $('#editRatingStars i').on('mouseenter', function() {
+                    const rating = $(this).data('rating');
+                    $('#editRatingStars i').each(function(index) {
+                        if (index < rating) {
+                            $(this).css('color', '#ffc107');
+                        } else {
+                            $(this).css('color', '#ddd');
+                        }
+                    });
+                });
+
+                $('#editRatingStars').on('mouseleave', function() {
+                    // Reset to current rating
+                    $('#editRatingStars i').each(function(index) {
+                        if (index < currentEditRating) {
+                            $(this).css('color', '#ffc107').addClass('active');
+                        } else {
+                            $(this).css('color', '#ddd').removeClass('active');
+                        }
+                    });
+                });
+            }
+
+            // Hàm mở modal sửa đánh giá
+            function editFeedback(feedbackId, rating, comment) {
+                $('#editFeedbackId').val(feedbackId);
+                $('#editRating').val(rating);
+                $('#editComment').val(comment);
+                currentEditRating = rating;
+
+                // Set visual stars
+                $('#editRatingStars i').each(function(index) {
+                    if (index < rating) {
+                        $(this).addClass('active').css('color', '#ffc107');
+                    } else {
+                        $(this).removeClass('active').css('color', '#ddd');
+                    }
+                });
+
+                $('#editFeedbackModal').modal('show');
+            }
+
+            // Hàm cập nhật đánh giá
+            function updateFeedback() {
+                const feedbackId = $('#editFeedbackId').val();
+                const rating = $('#editRating').val();
+                const comment = $('#editComment').val().trim();
+
+                if (!comment) {
+                    alert('Vui lòng nhập nội dung đánh giá!');
+                    return;
+                }
+
+                // Hiển thị loading
+                const updateBtn = $('.modal-footer .btn-primary');
+                const originalText = updateBtn.text();
+                updateBtn.text('Đang cập nhật...').prop('disabled', true);
+
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/FeedbackController',
+                    type: 'POST',
+                    data: {
+                        action: 'updateProductFeedback',
+                        feedbackId: feedbackId,
+                        rating: rating,
+                        comment: comment
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Cập nhật giao diện
+                            updateFeedbackDisplay(feedbackId, rating, comment);
+                            $('#editFeedbackModal').modal('hide');
+                            showToast('Cập nhật đánh giá thành công!', 'success');
+                        } else {
+                            showToast(response.message || 'Có lỗi xảy ra khi cập nhật đánh giá!', 'error');
+                        }
+                    },
+                    error: function() {
+                        showToast('Có lỗi xảy ra khi cập nhật đánh giá!', 'error');
+                    },
+                    complete: function() {
+                        updateBtn.text(originalText).prop('disabled', false);
+                    }
+                });
+            }
+
+            // Hàm xóa đánh giá
+            function deleteFeedback(feedbackId) {
+                if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này không?')) {
+                    return;
+                }
+
+                $.ajax({
+                    url: '${pageContext.request.contextPath}/FeedbackController',
+                    type: 'POST',
+                    data: {
+                        action: 'deleteProductFeedback',
+                        feedbackId: feedbackId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Xóa element khỏi giao diện
+                            $('[data-feedback-id="' + feedbackId + '"]').fadeOut(300, function() {
+                                $(this).remove();
+
+                                // Kiểm tra nếu không còn đánh giá nào
+                                if ($('.feedback-item').length === 0) {
+                                    $('.feedback-list').html(`
+                                        <div class="no-feedback text-center py-5">
+                                            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">Chưa có đánh giá nào cho sản phẩm này</h5>
+                                            <p class="text-muted">Hãy là người đầu tiên đánh giá sản phẩm này!</p>
+                                        </div>
+                                    `);
+                                }
+                            });
+                            showToast('Xóa đánh giá thành công!', 'success');
+                        } else {
+                            showToast(response.message || 'Có lỗi xảy ra khi xóa đánh giá!', 'error');
+                        }
+                    },
+                    error: function() {
+                        showToast('Có lỗi xảy ra khi xóa đánh giá!', 'error');
+                    }
+                });
+            }
+
+            // Hàm cập nhật hiển thị đánh giá sau khi sửa
+            function updateFeedbackDisplay(feedbackId, rating, comment) {
+                const feedbackItem = $('[data-feedback-id="' + feedbackId + '"]');
+
+                // Cập nhật rating stars
+                feedbackItem.find('.feedback-rating i').each(function(index) {
+                    if (index < rating) {
+                        $(this).removeClass('text-muted').addClass('text-warning');
+                    } else {
+                        $(this).removeClass('text-warning').addClass('text-muted');
+                    }
+                });
+
+                // Cập nhật rating text
+                feedbackItem.find('.feedback-rating span').text(rating + '/5 sao');
+
+                // Cập nhật comment
+                feedbackItem.find('#feedback-comment-' + feedbackId).text(comment);
+
+                // Highlight updated feedback
+                feedbackItem.addClass('bg-light').delay(2000).queue(function() {
+                    $(this).removeClass('bg-light').dequeue();
+                });
+            }
+
+            // Hàm hiển thị toast notification
+            function showToast(message, type) {
+                const toastClass = type === 'success' ? 'alert-success' : 'alert-danger';
+                const toastHtml = `
+                    <div class="alert ${toastClass} alert-dismissible fade show position-fixed"
+                         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                `;
+
+                $('body').append(toastHtml);
+
+                // Auto remove after 3 seconds
+                setTimeout(function() {
+                    $('.alert').fadeOut();
+                }, 3000);
+            }
+
+            // Khởi tạo khi document ready
+            $(document).ready(function() {
+                initEditRatingStars();
             });
         </script>
     </body>

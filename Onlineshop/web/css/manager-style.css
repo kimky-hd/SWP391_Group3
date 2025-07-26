@@ -167,6 +167,15 @@ body[data-role="1"] .user-dropdown .badge {
     background: linear-gradient(180deg, var(--manager-primary) 0%, var(--manager-secondary) 100%) !important;
     border-right: 3px solid var(--manager-accent) !important;
     width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    flex: none !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    flex-basis: 260px !important;
 }
 
 /* Sidebar Menu Items */
@@ -179,7 +188,6 @@ body[data-role="1"] .user-dropdown .badge {
     padding: 15px 25px !important;
     margin: 5px 15px !important;
     border-radius: 10px !important;
-    transition: all 0.3s ease !important;
     border-left: 4px solid transparent !important;
     display: flex !important;
     align-items: center !important;
@@ -188,7 +196,6 @@ body[data-role="1"] .user-dropdown .badge {
 .sidebar-menu .nav-link:hover {
     background: rgba(255, 255, 255, 0.15) !important;
     color: #ffffff !important;
-    transform: translateX(5px) !important;
     border-left: 4px solid #ffffff !important;
     text-decoration: none !important;
 }
@@ -257,6 +264,7 @@ body[data-role="1"] .main-content {
     border-top-left-radius: 20px !important;
     border-top-right-radius: 20px !important;
     box-shadow: inset 0 4px 10px rgba(30, 64, 175, 0.05) !important;
+    transition: none !important;
 }
 
 /* ===== CARDS ===== */
@@ -400,6 +408,20 @@ body[data-role="1"] .modal-header {
 /* Force override any CSS that might come after this */
 html [data-role="1"] .sidebar {
     background: linear-gradient(180deg, var(--manager-primary) 0%, var(--manager-secondary) 100%) !important;
+    transition: none !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    flex: none !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+html [data-role="1"] .main-content {
+    transition: none !important;
+    margin-left: 260px !important;
+    transform: none !important;
+    animation: none !important;
 }
 
 html [data-role="1"] .topbar-brand {
@@ -411,11 +433,1176 @@ html [data-role="1"] .btn-primary {
     border-color: var(--manager-primary) !important;
 }
 
+/* ===== ULTIMATE SIDEBAR SIZE LOCK ===== */
+/* This ensures sidebar NEVER changes size under any circumstances */
+.sidebar,
+body .sidebar,
+html .sidebar,
+* .sidebar,
+nav.sidebar,
+body nav.sidebar,
+html body nav.sidebar {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    flex: 0 0 260px !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    flex-basis: 260px !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 70px !important;
+    bottom: 0 !important;
+    z-index: 1020 !important;
+    overflow-y: auto !important;
+}
+
+/* Lock main content margin */
+.main-content,
+body .main-content,
+html .main-content,
+* .main-content {
+    margin-left: 260px !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+/* ===== LOCK ALL SIDEBAR CHILD ELEMENTS SIZE ===== */
+/* Fix all li elements in sidebar to absolute positions */
+.sidebar li:nth-child(1),
+.sidebar-menu li:nth-child(1) {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(2),
+.sidebar-menu li:nth-child(2) {
+    position: absolute !important;
+    top: 76px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(3),
+.sidebar-menu li:nth-child(3) {
+    position: absolute !important;
+    top: 132px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(4),
+.sidebar-menu li:nth-child(4) {
+    position: absolute !important;
+    top: 188px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(5),
+.sidebar-menu li:nth-child(5) {
+    position: absolute !important;
+    top: 244px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(6),
+.sidebar-menu li:nth-child(6) {
+    position: absolute !important;
+    top: 300px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(7),
+.sidebar-menu li:nth-child(7) {
+    position: absolute !important;
+    top: 356px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(8),
+.sidebar-menu li:nth-child(8) {
+    position: absolute !important;
+    top: 412px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(9),
+.sidebar-menu li:nth-child(9) {
+    position: absolute !important;
+    top: 468px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(10),
+.sidebar-menu li:nth-child(10) {
+    position: absolute !important;
+    top: 524px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(11),
+.sidebar-menu li:nth-child(11) {
+    position: absolute !important;
+    top: 580px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar li:nth-child(12),
+.sidebar-menu li:nth-child(12) {
+    position: absolute !important;
+    top: 636px !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Common properties for all li elements */
+.sidebar li,
+.sidebar-menu li,
+body .sidebar li,
+html .sidebar li,
+* .sidebar li,
+body .sidebar-menu li,
+html .sidebar-menu li,
+* .sidebar-menu li {
+    min-width: 257.87px !important;
+    max-width: 257.87px !important;
+    min-height: 51px !important;
+    max-height: 51px !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    flex: none !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    flex-basis: 51px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    display: block !important;
+}
+
+/* Fix all nav-link elements in sidebar with absolute positions */
+.sidebar li:nth-child(1) .nav-link,
+.sidebar-menu li:nth-child(1) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(2) .nav-link,
+.sidebar-menu li:nth-child(2) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(3) .nav-link,
+.sidebar-menu li:nth-child(3) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(4) .nav-link,
+.sidebar-menu li:nth-child(4) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(5) .nav-link,
+.sidebar-menu li:nth-child(5) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(6) .nav-link,
+.sidebar-menu li:nth-child(6) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(7) .nav-link,
+.sidebar-menu li:nth-child(7) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(8) .nav-link,
+.sidebar-menu li:nth-child(8) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(9) .nav-link,
+.sidebar-menu li:nth-child(9) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(10) .nav-link,
+.sidebar-menu li:nth-child(10) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(11) .nav-link,
+.sidebar-menu li:nth-child(11) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+.sidebar li:nth-child(12) .nav-link,
+.sidebar-menu li:nth-child(12) .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+}
+
+/* Common properties for all nav-link elements */
+.sidebar .nav-link,
+.sidebar-menu .nav-link,
+body .sidebar .nav-link,
+html .sidebar .nav-link,
+* .sidebar .nav-link,
+body .sidebar-menu .nav-link,
+html .sidebar-menu .nav-link,
+* .sidebar-menu .nav-link {
+    min-width: 257.87px !important;
+    max-width: 257.87px !important;
+    min-height: 51px !important;
+    max-height: 51px !important;
+    font-size: 16px !important;
+    line-height: 21px !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    flex: none !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    flex-basis: 51px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    vertical-align: top !important;
+    white-space: nowrap !important;
+}
+
+/* Fix all div and span elements inside sidebar */
+.sidebar div,
+.sidebar span,
+.sidebar-menu div,
+.sidebar-menu span,
+body .sidebar div,
+body .sidebar span,
+html .sidebar div,
+html .sidebar span,
+* .sidebar div,
+* .sidebar span,
+body .sidebar-menu div,
+body .sidebar-menu span,
+html .sidebar-menu div,
+html .sidebar-menu span,
+* .sidebar-menu div,
+* .sidebar-menu span {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    flex-shrink: 0 !important;
+}
+
+/* Fix sidebar ul elements */
+.sidebar ul,
+.sidebar-menu,
+body .sidebar ul,
+html .sidebar ul,
+* .sidebar ul,
+body .sidebar-menu,
+html .sidebar-menu,
+* .sidebar-menu {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    height: 700px !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    flex: none !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+/* ===== ABSOLUTE LOCK FOR SIDEBAR-MENU ===== */
+/* Force sidebar-menu to FIXED position and dimensions */
+.sidebar-menu,
+body .sidebar-menu,
+html .sidebar-menu,
+* .sidebar-menu,
+.sidebar .sidebar-menu,
+.sidebar > .sidebar-menu,
+body .sidebar .sidebar-menu,
+html .sidebar .sidebar-menu,
+* .sidebar .sidebar-menu {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    height: 700px !important;
+    min-height: 700px !important;
+    max-height: 700px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    display: block !important;
+    float: none !important;
+    clear: none !important;
+    vertical-align: top !important;
+    text-align: left !important;
+    background: transparent !important;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    -moz-transform: translate3d(0, 0, 0) !important;
+    -ms-transform: translate3d(0, 0, 0) !important;
+    -o-transform: translate3d(0, 0, 0) !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -ms-animation: none !important;
+    -o-animation: none !important;
+    will-change: auto !important;
+    contain: none !important;
+    isolation: auto !important;
+    z-index: 1 !important;
+}
+
+/* Fix all icons and text inside nav-links */
+.sidebar .nav-link i,
+.sidebar .nav-link span,
+.sidebar-menu .nav-link i,
+.sidebar-menu .nav-link span,
+body .sidebar .nav-link i,
+body .sidebar .nav-link span,
+html .sidebar .nav-link i,
+html .sidebar .nav-link span,
+* .sidebar .nav-link i,
+* .sidebar .nav-link span,
+body .sidebar-menu .nav-link i,
+body .sidebar-menu .nav-link span,
+html .sidebar-menu .nav-link i,
+html .sidebar-menu .nav-link span,
+* .sidebar-menu .nav-link i,
+* .sidebar-menu .nav-link span {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    vertical-align: middle !important;
+    line-height: 21px !important;
+    height: auto !important;
+    display: inline-block !important;
+}
+
+/* ===== ULTIMATE COORDINATE LOCK FOR ALL SIDEBAR ELEMENTS ===== */
+/* Force absolute positioning for every single element in sidebar */
+.sidebar *,
+.sidebar-menu *,
+body .sidebar *,
+html .sidebar *,
+* .sidebar *,
+body .sidebar-menu *,
+html .sidebar-menu *,
+* .sidebar-menu * {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto !important;
+}
+
+/* Lock sidebar container position */
+.sidebar,
+body .sidebar,
+html .sidebar,
+* .sidebar {
+    position: fixed !important;
+    top: 70px !important;
+    left: 0 !important;
+    width: 260px !important;
+    height: calc(100vh - 70px) !important;
+    z-index: 1020 !important;
+    overflow-y: auto !important;
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Force specific coordinates for each menu item - ABSOLUTE LOCK */
+.sidebar li:nth-child(1),
+.sidebar-menu li:nth-child(1),
+body .sidebar li:nth-child(1),
+body .sidebar-menu li:nth-child(1),
+html .sidebar li:nth-child(1),
+html .sidebar-menu li:nth-child(1) {
+    --item-top: 20px;
+    top: 20px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(2),
+.sidebar-menu li:nth-child(2),
+body .sidebar li:nth-child(2),
+body .sidebar-menu li:nth-child(2),
+html .sidebar li:nth-child(2),
+html .sidebar-menu li:nth-child(2) {
+    --item-top: 76px;
+    top: 76px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(3),
+.sidebar-menu li:nth-child(3),
+body .sidebar li:nth-child(3),
+body .sidebar-menu li:nth-child(3),
+html .sidebar li:nth-child(3),
+html .sidebar-menu li:nth-child(3) {
+    --item-top: 132px;
+    top: 132px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(4),
+.sidebar-menu li:nth-child(4),
+body .sidebar li:nth-child(4),
+body .sidebar-menu li:nth-child(4),
+html .sidebar li:nth-child(4),
+html .sidebar-menu li:nth-child(4) {
+    --item-top: 188px;
+    top: 188px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(5),
+.sidebar-menu li:nth-child(5),
+body .sidebar li:nth-child(5),
+body .sidebar-menu li:nth-child(5),
+html .sidebar li:nth-child(5),
+html .sidebar-menu li:nth-child(5) {
+    --item-top: 244px;
+    top: 244px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(6),
+.sidebar-menu li:nth-child(6),
+body .sidebar li:nth-child(6),
+body .sidebar-menu li:nth-child(6),
+html .sidebar li:nth-child(6),
+html .sidebar-menu li:nth-child(6) {
+    --item-top: 300px;
+    top: 300px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(7),
+.sidebar-menu li:nth-child(7),
+body .sidebar li:nth-child(7),
+body .sidebar-menu li:nth-child(7),
+html .sidebar li:nth-child(7),
+html .sidebar-menu li:nth-child(7) {
+    --item-top: 356px;
+    top: 356px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(8),
+.sidebar-menu li:nth-child(8),
+body .sidebar li:nth-child(8),
+body .sidebar-menu li:nth-child(8),
+html .sidebar li:nth-child(8),
+html .sidebar-menu li:nth-child(8) {
+    --item-top: 412px;
+    top: 412px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(9),
+.sidebar-menu li:nth-child(9),
+body .sidebar li:nth-child(9),
+body .sidebar-menu li:nth-child(9),
+html .sidebar li:nth-child(9),
+html .sidebar-menu li:nth-child(9) {
+    --item-top: 468px;
+    top: 468px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(10),
+.sidebar-menu li:nth-child(10),
+body .sidebar li:nth-child(10),
+body .sidebar-menu li:nth-child(10),
+html .sidebar li:nth-child(10),
+html .sidebar-menu li:nth-child(10) {
+    --item-top: 524px;
+    top: 524px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(11),
+.sidebar-menu li:nth-child(11),
+body .sidebar li:nth-child(11),
+body .sidebar-menu li:nth-child(11),
+html .sidebar li:nth-child(11),
+html .sidebar-menu li:nth-child(11) {
+    --item-top: 580px;
+    top: 580px !important;
+    position: absolute !important;
+}
+
+.sidebar li:nth-child(12),
+.sidebar-menu li:nth-child(12),
+body .sidebar li:nth-child(12),
+body .sidebar-menu li:nth-child(12),
+html .sidebar li:nth-child(12),
+html .sidebar-menu li:nth-child(12) {
+    --item-top: 636px;
+    top: 636px !important;
+    position: absolute !important;
+}
+
+/* Force coordinates for nav-links */
+.sidebar li .nav-link {
+    top: 0 !important;
+    left: 0 !important;
+    position: absolute !important;
+}
+
+/* ===== JAVASCRIPT-PROOF COORDINATE LOCK ===== */
+/* Override any JavaScript attempts to change positions */
+.sidebar[style*="transform"],
+.sidebar[style*="top"],
+.sidebar[style*="left"],
+.sidebar[style*="position"],
+.sidebar li[style*="transform"],
+.sidebar li[style*="top"],
+.sidebar li[style*="left"],
+.sidebar li[style*="position"],
+.sidebar .nav-link[style*="transform"],
+.sidebar .nav-link[style*="top"],
+.sidebar .nav-link[style*="left"],
+.sidebar .nav-link[style*="position"] {
+    position: fixed !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Lock all sidebar children positions */
+.sidebar > *,
+.sidebar-menu > *,
+.sidebar ul > *,
+.sidebar li > *,
+.sidebar .nav-link > * {
+    position: relative !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+}
+
+/* Final override for any dynamic styles */
+.sidebar,
+.sidebar *,
+.sidebar-menu,
+.sidebar-menu * {
+    transition-property: none !important;
+    transition-duration: 0s !important;
+    transition-timing-function: none !important;
+    transition-delay: 0s !important;
+    animation-name: none !important;
+    animation-duration: 0s !important;
+    animation-timing-function: none !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    animation-direction: normal !important;
+    animation-fill-mode: none !important;
+    animation-play-state: paused !important;
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/* ===== ULTIMATE ANTI-BOUNCE SYSTEM ===== */
+/* Prevent any movement, bouncing, or position changes */
+.sidebar,
+.sidebar *,
+.sidebar-menu,
+.sidebar-menu *,
+.sidebar li,
+.sidebar .nav-link,
+.sidebar ul,
+body .sidebar,
+body .sidebar *,
+body .sidebar-menu,
+body .sidebar-menu *,
+body .sidebar li,
+body .sidebar .nav-link,
+body .sidebar ul,
+html .sidebar,
+html .sidebar *,
+html .sidebar-menu,
+html .sidebar-menu *,
+html .sidebar li,
+html .sidebar .nav-link,
+html .sidebar ul {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto !important;
+    backface-visibility: hidden !important;
+    perspective: none !important;
+    transform-style: flat !important;
+    transform-origin: 0 0 !important;
+    translate: none !important;
+    rotate: none !important;
+    scale: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    contain: none !important;
+    isolation: auto !important;
+    mix-blend-mode: normal !important;
+    object-fit: fill !important;
+    object-position: 50% 50% !important;
+    overflow-anchor: auto !important;
+    scroll-behavior: auto !important;
+    scroll-snap-type: none !important;
+    scroll-snap-align: none !important;
+    overscroll-behavior: auto !important;
+    touch-action: auto !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+    resize: none !important;
+    cursor: default !important;
+}
+
+/* Force static positioning for all sidebar children to prevent any movement */
+.sidebar li,
+.sidebar .nav-link,
+body .sidebar li,
+body .sidebar .nav-link,
+html .sidebar li,
+html .sidebar .nav-link {
+    position: absolute !important;
+    top: var(--item-top, 0) !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    padding: 15px 25px !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    min-width: 257.87px !important;
+    max-width: 257.87px !important;
+    min-height: 51px !important;
+    max-height: 51px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+}
+
+/* ===== FINAL NUCLEAR OPTION - PREVENT ALL MOVEMENT ===== */
+/* This CSS will override ANY attempt to move sidebar elements */
+.sidebar,
+.sidebar *,
+.sidebar-menu,
+.sidebar-menu *,
+.sidebar li,
+.sidebar .nav-link {
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    -moz-transform: translate3d(0, 0, 0) !important;
+    -ms-transform: translate3d(0, 0, 0) !important;
+    -o-transform: translate3d(0, 0, 0) !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -ms-animation: none !important;
+    -o-animation: none !important;
+}
+
+/* Lock sidebar container completely */
+.sidebar {
+    position: fixed !important;
+    top: 70px !important;
+    left: 0 !important;
+    width: 260px !important;
+    height: calc(100vh - 70px) !important;
+    z-index: 1020 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Lock all li elements to their exact positions */
+.sidebar li {
+    position: absolute !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ===== LOCK Y-AXIS COORDINATES FOR ALL LI ELEMENTS ===== */
+/* Force each li to stay at exact Y position */
+.sidebar li:nth-child(1) { top: 20px !important; }
+.sidebar li:nth-child(2) { top: 76px !important; }
+.sidebar li:nth-child(3) { top: 132px !important; }
+.sidebar li:nth-child(4) { top: 188px !important; }
+.sidebar li:nth-child(5) { top: 244px !important; }
+.sidebar li:nth-child(6) { top: 300px !important; }
+.sidebar li:nth-child(7) { top: 356px !important; }
+.sidebar li:nth-child(8) { top: 412px !important; }
+.sidebar li:nth-child(9) { top: 468px !important; }
+.sidebar li:nth-child(10) { top: 524px !important; }
+.sidebar li:nth-child(11) { top: 580px !important; }
+.sidebar li:nth-child(12) { top: 636px !important; }
+
+/* Prevent any Y-axis movement */
+.sidebar li,
+.sidebar .nav-link,
+.sidebar li *,
+.sidebar .nav-link * {
+    transform: translateY(0) !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    vertical-align: top !important;
+    bottom: auto !important;
+}
+
+/* ===== NUCLEAR OPTION - SIDEBAR-MENU POSITION LOCK ===== */
+/* Override ANY attempt to change sidebar-menu position */
+.sidebar-menu[style],
+.sidebar-menu[style*="position"],
+.sidebar-menu[style*="top"],
+.sidebar-menu[style*="left"],
+.sidebar-menu[style*="width"],
+.sidebar-menu[style*="height"],
+.sidebar-menu[style*="transform"],
+.sidebar-menu[style*="margin"],
+.sidebar-menu[style*="padding"],
+.sidebar .sidebar-menu[style],
+.sidebar > .sidebar-menu[style],
+body .sidebar-menu[style],
+html .sidebar-menu[style],
+body .sidebar .sidebar-menu[style],
+html .sidebar .sidebar-menu[style] {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+    width: 260px !important;
+    height: 700px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translate3d(0, 0, 0) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Force sidebar-menu to stay at exact coordinates */
+.sidebar-menu,
+.sidebar .sidebar-menu,
+.sidebar > .sidebar-menu {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 260px !important;
+    height: 700px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translate3d(0, 0, 0) !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+    backface-visibility: hidden !important;
+    perspective: none !important;
+    transform-style: flat !important;
+}
+
+/* Lock sidebar-menu against any CSS or JS manipulation */
+.sidebar-menu {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+}
+
+.sidebar .sidebar-menu {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+}
+
+.sidebar > .sidebar-menu {
+    position: absolute !important;
+    top: 20px !important;
+    left: 0 !important;
+}
+
+/* ===== LOCK FONT SIZE FOR SIDEBAR TEXT ELEMENTS ===== */
+/* Force consistent font size for text elements (excluding icons) */
+.sidebar,
+.sidebar div,
+.sidebar span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+.sidebar a,
+.sidebar p,
+.sidebar h1,
+.sidebar h2,
+.sidebar h3,
+.sidebar h4,
+.sidebar h5,
+.sidebar h6,
+.sidebar-menu,
+.sidebar-menu div,
+.sidebar-menu span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+.sidebar-menu a,
+.sidebar-menu p,
+.sidebar li,
+.sidebar li span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+.sidebar li a,
+.sidebar .nav-link,
+.sidebar .nav-link span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+.sidebar .nav-link a,
+body .sidebar,
+body .sidebar div,
+body .sidebar span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+body .sidebar a,
+body .sidebar-menu,
+body .sidebar-menu div,
+body .sidebar-menu span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+html .sidebar,
+html .sidebar div,
+html .sidebar span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab),
+html .sidebar a,
+html .sidebar-menu,
+html .sidebar-menu div,
+html .sidebar-menu span:not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab) {
+    font-size: 16px !important;
+    line-height: 24px !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    font-stretch: normal !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-decoration: none !important;
+    text-shadow: none !important;
+    text-indent: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    text-overflow: ellipsis !important;
+}
+
+/* ===== ADDITIONAL FONT SIZE LOCKS ===== */
+/* Prevent font size inheritance and scaling */
+.sidebar *::before,
+.sidebar *::after,
+.sidebar-menu *::before,
+.sidebar-menu *::after {
+    font-size: 16px !important;
+    line-height: 24px !important;
+    font-weight: 400 !important;
+}
+
+/* ===== PRESERVE ICONS IN SIDEBAR ===== */
+/* Keep icons visible and properly sized */
+.sidebar i,
+.sidebar .fa,
+.sidebar .fas,
+.sidebar .far,
+.sidebar .fab,
+.sidebar .fal,
+.sidebar .fad,
+.sidebar .icon,
+.sidebar [class*="fa-"],
+.sidebar-menu i,
+.sidebar-menu .fa,
+.sidebar-menu .fas,
+.sidebar-menu .far,
+.sidebar-menu .fab,
+.sidebar-menu .fal,
+.sidebar-menu .fad,
+.sidebar-menu .icon,
+.sidebar-menu [class*="fa-"] {
+    font-size: 18px !important;
+    line-height: 24px !important;
+    font-weight: 900 !important;
+    font-family: "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 5 Brands", "FontAwesome", sans-serif !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    margin-right: 10px !important;
+    vertical-align: middle !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Lock font size for icon pseudo elements */
+.sidebar i::before,
+.sidebar i::after,
+.sidebar .fa::before,
+.sidebar .fa::after,
+.sidebar .fas::before,
+.sidebar .fas::after,
+.sidebar .far::before,
+.sidebar .far::after,
+.sidebar .fab::before,
+.sidebar .fab::after,
+.sidebar [class*="fa-"]::before,
+.sidebar [class*="fa-"]::after,
+.sidebar-menu i::before,
+.sidebar-menu i::after,
+.sidebar-menu .fa::before,
+.sidebar-menu .fa::after,
+.sidebar-menu .fas::before,
+.sidebar-menu .fas::after,
+.sidebar-menu .far::before,
+.sidebar-menu .far::after,
+.sidebar-menu .fab::before,
+.sidebar-menu .fab::after,
+.sidebar-menu [class*="fa-"]::before,
+.sidebar-menu [class*="fa-"]::after {
+    font-size: 18px !important;
+    line-height: 24px !important;
+    font-weight: 900 !important;
+    font-family: "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 5 Brands", "FontAwesome", sans-serif !important;
+    display: inline-block !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Specific icon classes */
+.sidebar .fa-chart-bar::before { content: "\f080"; }
+.sidebar .fa-box::before { content: "\f466"; }
+.sidebar .fa-list::before { content: "\f03a"; }
+.sidebar .fa-leaf::before { content: "\f06c"; }
+.sidebar .fa-paint-brush::before { content: "\f1fc"; }
+.sidebar .fa-image::before { content: "\f03e"; }
+.sidebar .fa-id-card::before { content: "\f2c2"; }
+.sidebar .fa-users::before { content: "\f0c0"; }
+.sidebar .fa-truck::before { content: "\f0d1"; }
+.sidebar .fa-building::before { content: "\f1ad"; }
+.sidebar .fa-percent::before { content: "\f295"; }
+.sidebar .fa-blog::before { content: "\f781"; }
+
+/* Lock font size for specific sidebar elements */
+.sidebar .nav-link,
+.sidebar .nav-link span,
+.sidebar .nav-link i,
+.sidebar li,
+.sidebar li span,
+.sidebar li i,
+.sidebar-menu li,
+.sidebar-menu li span,
+.sidebar-menu li i,
+.sidebar-menu .nav-link,
+.sidebar-menu .nav-link span,
+.sidebar-menu .nav-link i {
+    font-size: 16px !important;
+    line-height: 24px !important;
+    font-weight: 400 !important;
+}
+
+/* Override any dynamic font size changes */
+.sidebar[style*="font-size"],
+.sidebar *[style*="font-size"],
+.sidebar-menu[style*="font-size"],
+.sidebar-menu *[style*="font-size"] {
+    font-size: 16px !important;
+    line-height: 24px !important;
+}
+
+/* Lock sidebar-menu children positioning */
+.sidebar-menu > li,
+.sidebar-menu > * {
+    position: absolute !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Apply Y-coordinates to sidebar-menu children */
+.sidebar-menu > li:nth-child(1) { top: 20px !important; }
+.sidebar-menu > li:nth-child(2) { top: 76px !important; }
+.sidebar-menu > li:nth-child(3) { top: 132px !important; }
+.sidebar-menu > li:nth-child(4) { top: 188px !important; }
+.sidebar-menu > li:nth-child(5) { top: 244px !important; }
+.sidebar-menu > li:nth-child(6) { top: 300px !important; }
+.sidebar-menu > li:nth-child(7) { top: 356px !important; }
+.sidebar-menu > li:nth-child(8) { top: 412px !important; }
+.sidebar-menu > li:nth-child(9) { top: 468px !important; }
+.sidebar-menu > li:nth-child(10) { top: 524px !important; }
+.sidebar-menu > li:nth-child(11) { top: 580px !important; }
+.sidebar-menu > li:nth-child(12) { top: 636px !important; }
+
+/* Lock all nav-link elements */
+.sidebar .nav-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 257.87px !important;
+    height: 51px !important;
+    padding: 15px 25px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+}
+
 /* ===== RESPONSIVE ENHANCEMENTS FOR MANAGER ===== */
 @media (max-width: 768px) {
     body[data-role="1"] .sidebar {
         transform: translateX(-100%) !important;
-        transition: transform 0.3s ease !important;
     }
     
     body[data-role="1"] .sidebar.show {

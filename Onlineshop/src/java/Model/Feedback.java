@@ -15,8 +15,16 @@ public class Feedback {
     
     // Additional fields for display purposes
     private String username;
+    private String email;
     private String productTitle;
     private String productImage;
+    private Double productPrice;
+    private int imageCount;
+
+    // Staff management fields
+    private boolean isActive = true; // For hide/show functionality
+    private String replyText; // Staff reply to feedback
+    private String status; // VISIBLE, HIDDEN, etc.
     
     // Default constructor
     public Feedback() {
@@ -110,9 +118,17 @@ public class Feedback {
     public String getUsername() {
         return username;
     }
-    
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
     
     public String getProductTitle() {
@@ -126,9 +142,50 @@ public class Feedback {
     public String getProductImage() {
         return productImage;
     }
-    
+
     public void setProductImage(String productImage) {
         this.productImage = productImage;
+    }
+
+    public Double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(Double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public int getImageCount() {
+        return imageCount;
+    }
+
+    public void setImageCount(int imageCount) {
+        this.imageCount = imageCount;
+    }
+
+    // Getters and setters for staff management fields
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public String getReplyText() {
+        return replyText;
+    }
+
+    public void setReplyText(String replyText) {
+        this.replyText = replyText;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     // Utility methods

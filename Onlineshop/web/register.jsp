@@ -7,8 +7,19 @@
     <head>
         <meta charset="UTF-8">
         <title>Đăng ký - Flower Shop</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+        <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link href="lib/animate/animate.min.css" rel="stylesheet">
+        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="css/style.css" rel="stylesheet">
         <!-- Thêm script reCAPTCHA API -->
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <style>
@@ -106,14 +117,7 @@
                 color: #FFA5B5 !important;
             }
 
-            /* Đảm bảo không ảnh hưởng đến style của header */
-            .row.bg-secondary {
-                background-color: #6c757d !important;
-            }
 
-            .row.bg-light {
-                background-color: #f8f9fa !important;
-            }
 
             /* Đảm bảo chiều cao phù hợp */
             @media (min-height: 800px) {
@@ -270,7 +274,7 @@
                                     <div class="mb-4">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required value="<%= request.getAttribute("username") != null ? request.getAttribute("username") : "" %>">
-                                            <label for="username"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
+                                            <label for="username"></label>
                                         </div>
                                         <small class="form-text text-muted">Tên đăng nhập không được chứa khoảng trắng</small>
                                         <span id="username-error" class="text-danger" style="display: none;"></span>
@@ -279,7 +283,7 @@
                                     <div class="mb-4">
                                         <div class="form-floating">
                                             <input type="email" class="form-control" id="email" name="email" placeholder="Email" required value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
-                                            <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
+                                            <label for="email"></label>
                                         </div>
                                         <small class="form-text text-muted">Email phải có định dạng @gmail.com và không chứa khoảng trắng</small>
                                         <span id="email-error" class="text-danger" style="display: none;"></span>
@@ -288,7 +292,7 @@
                                     <div class="mb-4">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required value="<%= request.getAttribute("phone") != null ? request.getAttribute("phone") : "" %>">
-                                            <label for="phone"><i class="fas fa-phone me-2"></i>Số điện thoại</label>
+                                            <label for="phone"></label>
                                         </div>
                                         <small class="form-text text-muted">Số điện thoại chỉ được chứa chữ số, không khoảng trắng</small>
                                         <span id="phone-error" class="text-danger" style="display: none;"></span>
@@ -297,7 +301,7 @@
                                     <div class="mb-4">
                                         <div class="form-floating">
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
-                                            <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                                            <label for="password"></label>
                                         </div>
                                         <small class="form-text text-muted">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số, không được chứa khoảng trắng</small>
                                         <span id="password-error" class="text-danger" style="display: none;"></span>
@@ -306,7 +310,7 @@
                                     <div class="mb-4">
                                         <div class="form-floating">
                                             <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Xác nhận mật khẩu" required>
-                                            <label for="confirm-password"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu</label>
+                                            <label for="confirm-password"></label>
                                         </div>
                                         <span id="confirm-password-error" class="text-danger" style="display: none;"></span>
                                     </div>
@@ -316,9 +320,9 @@
                                         <div class="g-recaptcha" data-sitekey="6LdWek4rAAAAAPy1lqXYjQHUiVHyjS5KOj3eEwRs"></div>
                                     </div>
                                     
-                                    <div class="d-grid gap-2">
-                                        <button type="submit" id="register-btn" class="btn btn-pink py-3">
-                                            <i class="fas fa-user-plus me-2"></i>Đăng ký
+                                    <div class="d-grid gap-2 text-center">
+                                        <button type="submit" id="register-btn" class="btn btn-pink py-3 px-5 mx-auto rounded-pill">
+                                            Đăng ký
                                         </button>
                                     </div>
                                 </form>
@@ -353,8 +357,8 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="d-grid gap-2">
-                                        <button type="submit" class="btn btn-pink py-3">
+                                    <div class="d-grid gap-2 text-center">
+                                        <button type="submit" class="btn btn-pink py-3 px-5 rounded-pill mx-auto">
                                             <i class="fas fa-check-circle me-2"></i>Xác nhận
                                         </button>
                                     </div>
