@@ -55,7 +55,7 @@ function updateStatus(orderId, statusId) {
             iconClass = 'fa-check-circle';
             buttonClass = 'success';
             break;
-        case '6':
+        case '10':
             // Handle cancellation with note
             cancelOrder(orderId);
             return;
@@ -143,7 +143,7 @@ function confirmCancel() {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `orderId=${orderId}&statusId=6&note=${encodeURIComponent(note)}`
+        body: `orderId=${orderId}&statusId=10&note=${encodeURIComponent(note)}`
     })
     .then(response => {
         if (response.ok) {
@@ -296,6 +296,8 @@ function viewOrderDetails(orderId) {
                     ngayXuat: cells[4]?.textContent || new Date().toLocaleDateString('vi-VN'),
                     statusID: parseInt(row.getAttribute('data-status')) || 2,
                     shipperName: 'Chưa phân công',
+                    note: '',
+                    imageNote: '',
                     items: [
                         {
                             name: 'Đơn hàng hoa',
@@ -342,6 +344,7 @@ function viewOrderDetails(orderId) {
                 statusID: serverData.statusID || orderFromTable.statusID,
                 shipperName: serverData.shipperName || 'Chưa phân công',
                 note: serverData.note || '',
+                imageNote: serverData.imageNote || '',
                 items: serverData.items && serverData.items.length > 0 ? serverData.items : orderFromTable.items
             };
                 // Display the complete data
@@ -383,6 +386,8 @@ function viewOrderDetails(orderId) {
                     ngayXuat: new Date().toLocaleDateString('vi-VN'),
                     statusID: 2,
                     shipperName: 'Đang tải...',
+                    note: '',
+                    imageNote: '',
                     items: [
                         {
                             name: 'Đang tải thông tin sản phẩm...',
@@ -445,8 +450,14 @@ function displayOrderDetails(order) {
         statusID: order.statusID || 2,
         shipperName: order.shipperName || 'Chưa phân công',
         note: order.note || '',
+        imageNote: order.imageNote || '',
         items: order.items || []
     };
+    
+    // Debug: Check imageNote value
+    console.log('Order data received:', order);
+    console.log('ImageNote value:', safeOrder.imageNote);
+    console.log('ImageNote URL will be:', getDeliveryImageUrl(safeOrder.imageNote));
     
     const statusInfo = getStatusInfo(safeOrder.statusID);
     
@@ -515,6 +526,29 @@ function displayOrderDetails(order) {
             </div>
         </div>
 
+        <!-- ImageNote Section -->
+        ${safeOrder.imageNote && safeOrder.imageNote.trim() !== '' ? `
+        <div class="order-detail-section">
+            <h6><i class="fas fa-camera me-2"></i>Hình ảnh giao hàng</h6>
+            <div class="order-info-grid">
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <i class="fas fa-image"></i>
+                    <span class="label">Ảnh giao hàng:</span>
+                    <div class="value">
+                        <img src="${getDeliveryImageUrl(safeOrder.imageNote)}" alt="Ảnh giao hàng" 
+                             style="max-width: 200px; max-height: 150px; cursor: pointer; border: 1px solid #ddd; border-radius: 8px; margin: 5px 0;"
+                             onclick="openImageModal('${getDeliveryImageUrl(safeOrder.imageNote)}')"
+                             onerror="handleDeliveryImageError(this);">
+                        <br>
+                        <a href="${getDeliveryImageUrl(safeOrder.imageNote)}" download="delivery-image.jpg" class="btn btn-sm btn-outline-primary mt-2">
+                            <i class="fas fa-download me-1"></i>Tải xuống ảnh
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ` : ''}
+
         <!-- Order Items -->
         <div class="order-detail-section">
             <h6><i class="fas fa-shopping-cart me-2"></i>Sản phẩm đặt hàng</h6>
@@ -573,34 +607,6 @@ function displayOrderDetails(order) {
             </div>
         </div>
 
-        <!-- Order Timeline -->
-        <div class="order-timeline">
-            <h6><i class="fas fa-history me-2"></i>Lịch sử đơn hàng</h6>
-            <div class="timeline-item ${safeOrder.statusID >= 1 ? 'active' : ''}">
-                <strong>Đặt hàng</strong>
-                <div class="text-muted small">${formatDate(safeOrder.ngayXuat)}</div>
-            </div>
-            <div class="timeline-item ${safeOrder.statusID >= 2 ? 'active' : ''}">
-                <strong>Đã duyệt</strong>
-                <div class="text-muted small">${safeOrder.approvedDate ? formatDate(safeOrder.approvedDate) : 'Chưa duyệt'}</div>
-            </div>
-            <div class="timeline-item ${safeOrder.statusID >= 3 ? 'active' : ''}">
-                <strong>Đang giao hàng</strong>
-                <div class="text-muted small">${safeOrder.shippingDate ? formatDate(safeOrder.shippingDate) : 'Chưa giao'}</div>
-            </div>
-            <div class="timeline-item ${safeOrder.statusID >= 4 ? 'active' : ''}">
-                <strong>Đã giao thành công</strong>
-                <div class="text-muted small">${safeOrder.deliveredDate ? formatDate(safeOrder.deliveredDate) : 'Chưa hoàn thành'}</div>
-            </div>
-            ${safeOrder.statusID === 6 ? `
-                <div class="timeline-item active" style="color: #dc3545;">
-                    <strong>Đã hủy</strong>
-                    <div class="text-muted small">${safeOrder.cancelledDate ? formatDate(safeOrder.cancelledDate) : ''}</div>
-                    ${safeOrder.cancelReason ? `<div class="small text-danger mt-1">Lý do: ${safeOrder.cancelReason}</div>` : ''}
-                </div>
-            ` : ''}
-        </div>
-
         <!-- Total Section -->
         <div class="total-section">
             <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Tổng giá trị đơn hàng</h6>
@@ -623,6 +629,56 @@ function handleImageError(imgElement) {
     imgElement.src = '/Onlineshop/img/product-1.jpg'; // Use existing product image as fallback
     imgElement.style.backgroundColor = '#e9ecef';
     imgElement.style.opacity = '1';
+}
+
+/**
+ * Get proper delivery image URL for ImageNote
+ */
+function getDeliveryImageUrl(imagePath) {
+    if (!imagePath || imagePath.trim() === '') {
+        return ''; // Return empty if no image
+    }
+    
+    // If it's already a full URL, use as is
+    if (imagePath.startsWith('http')) {
+        return imagePath;
+    }
+    
+    // If it already starts with /, use as is
+    if (imagePath.startsWith('/')) {
+        return imagePath;
+    }
+    
+    // If it contains the full path from img/, use with context
+    if (imagePath.includes('img/uploads/delivery_evidence/')) {
+        return `/Onlineshop/${imagePath}`;
+    }
+    
+    // If it's just the filename, assume it's in delivery_evidence folder
+    if (!imagePath.includes('/')) {
+        return `/Onlineshop/img/uploads/delivery_evidence/${imagePath}`;
+    }
+    
+    // Default: try to construct the path
+    return `/Onlineshop/img/uploads/delivery_evidence/${imagePath}`;
+}
+
+/**
+ * Handle delivery image loading errors
+ */
+function handleDeliveryImageError(imgElement) {
+    if (imgElement.dataset.errorHandled === 'true') {
+        return; // Already handled, prevent infinite loop
+    }
+    
+    imgElement.dataset.errorHandled = 'true';
+    imgElement.style.display = 'none'; // Hide broken image
+    
+    // Show error message instead
+    const errorDiv = document.createElement('div');
+    errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning me-2"></i>Không thể tải ảnh giao hàng';
+    errorDiv.className = 'text-muted';
+    imgElement.parentNode.insertBefore(errorDiv, imgElement);
 }
 
 /**
@@ -656,7 +712,7 @@ function getStatusInfo(statusID) {
         2: { text: 'Đã duyệt', color: '#17a2b8', icon: 'fas fa-check-circle' },
         3: { text: 'Đang giao', color: '#007bff', icon: 'fas fa-truck' },
         4: { text: 'Đã giao', color: '#28a745', icon: 'fas fa-check-double' },
-        6: { text: 'Đã hủy', color: '#dc3545', icon: 'fas fa-times-circle' }
+        10: { text: 'Giao hàng không thành công', color: '#dc3545', icon: 'fas fa-times-circle' }
     };
     return statusMap[statusID] || { text: 'Không xác định', color: '#6c757d', icon: 'fas fa-question' };
 }
@@ -814,3 +870,53 @@ window.cancelOrder = cancelOrder;
 window.confirmCancel = confirmCancel;
 window.executeConfirmedAction = executeConfirmedAction;
 window.viewOrderDetails = viewOrderDetails;
+window.openImageModal = openImageModal;
+
+// Function to open image modal for viewing delivery images
+function openImageModal(imageUrl) {
+    if (!imageUrl || imageUrl.trim() === '') return;
+    
+    // Create modal HTML
+    const modalHTML = `
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">
+                            <i class="fas fa-image me-2"></i>Hình ảnh giao hàng
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="${imageUrl}" alt="Ảnh giao hàng" 
+                             style="max-width: 100%; max-height: 500px; border-radius: 8px;">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="${imageUrl}" download="delivery-image.jpg" class="btn btn-primary">
+                            <i class="fas fa-download me-1"></i>Tải xuống
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById('imageModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+    
+    // Clean up after modal is hidden
+    document.getElementById('imageModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
+}

@@ -166,50 +166,6 @@
             margin-top: 5px;
         }
         
-        .order-timeline {
-            margin: 15px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .timeline-item {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 15px;
-        }
-        
-        .timeline-item:before {
-            content: '';
-            position: absolute;
-            left: 8px;
-            top: 8px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #28a745;
-        }
-        
-        .timeline-item:after {
-            content: '';
-            position: absolute;
-            left: 11px;
-            top: 16px;
-            width: 2px;
-            height: calc(100% + 5px);
-            background: #e9ecef;
-        }
-        
-        .timeline-item:last-child:after {
-            display: none;
-        }
-        
-        .timeline-item.active:before {
-            background: #007bff;
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.3);
-        }
-        
         .loading-spinner {
             display: flex;
             justify-content: center;
@@ -325,7 +281,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stats-card card border-0 shadow-sm clickable-card" onclick="filterOrders(6)" data-status="6">
+                    <div class="stats-card card border-0 shadow-sm clickable-card" onclick="filterOrders(10)" data-status="10">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="stats-icon bg-danger text-white rounded-circle me-3">
@@ -333,7 +289,7 @@
                                 </div>
                                 <div>
                                     <h5 class="mb-0">${cancelled}</h5>
-                                    <small class="text-muted">Đã hủy</small>
+                                    <small class="text-muted">Không thành công</small>
                                 </div>
                             </div>
                         </div>
@@ -364,8 +320,8 @@
                                 <button type="button" class="btn btn-outline-success btn-sm" onclick="filterOrders(4)" id="btn4">
                                     <i class="fas fa-check-circle me-1"></i>Đã giao
                                 </button>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="filterOrders(6)" id="btn6">
-                                    <i class="fas fa-times-circle me-1"></i>Đã hủy
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="filterOrders(10)" id="btn10">
+                                    <i class="fas fa-times-circle me-1"></i>Không thành công
                                 </button>
                             </div>
                         </div>
@@ -431,6 +387,9 @@
                                                                 <c:when test="${order.statusID == 4}">
                                                                     <span class="badge bg-success">Đã giao</span>
                                                                 </c:when>
+                                                                <c:when test="${order.statusID == 10}">
+                                                                    <span class="badge bg-danger">Giao không thành công</span>
+                                                                </c:when>
                                                                 <c:otherwise>
                                                                     <span class="badge bg-secondary">${order.statusName}</span>
                                                                 </c:otherwise>
@@ -443,21 +402,21 @@
                                                                     <i class="fas fa-eye"></i>
                                                                 </button>
                                                                 
-                                                                <c:if test="${order.statusID == 2 || order.statusID == 9}">
+                                                                <c:if test="${order.statusID == 2}">
                                                                     <button class="btn btn-sm btn-primary" onclick="updateStatus('${order.maHD}', '3')">
                                                                         <i class="fas fa-truck me-1"></i>
                                                                         Bắt đầu giao
                                                                     </button>
                                                                 </c:if>
                                                                 <c:if test="${order.statusID == 3}">
-                                                                    <button class="btn btn-sm btn-success" onclick="updateStatus('${order.maHD}', '4')">
+                                                                    <button class="btn btn-sm btn-success" onclick="showDeliveryModal('${order.maHD}', '4')">
                                                                         <i class="fas fa-check me-1"></i>
                                                                         Đã giao
                                                                     </button>
                                                                 </c:if>
                                                                 <c:if test="${order.statusID == 3}">
-                                                                    <button class="btn btn-sm btn-danger" onclick="cancelOrder('${order.maHD}')" 
-                                                                            data-bs-toggle="tooltip" title="Hủy đơn hàng">
+                                                                    <button class="btn btn-sm btn-danger" onclick="showDeliveryModal('${order.maHD}', '10')" 
+                                                                            data-bs-toggle="tooltip" title="Giao không thành công">
                                                                         <i class="fas fa-times"></i>
                                                                     </button>
                                                                 </c:if>
@@ -512,21 +471,73 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="cancelOrderModalLabel">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Hủy đơn hàng
+                         Giao hàng không thành công                   
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Bạn có chắc chắn muốn hủy đơn hàng này không?</p>
+                    <p>Bạn có chắc chắn đơn hàng này không được giao thành công không?</p>
                     <div class="mb-3">
-                        <label for="cancelReason" class="form-label">Lý do hủy đơn hàng:</label>
-                        <textarea class="form-control" id="cancelReason" rows="3" placeholder="Vui lòng nhập lý do hủy đơn hàng..." required></textarea>
+                        <label for="cancelReason" class="form-label">Lý do Giao hàng không thành công:</label>
+                        <textarea class="form-control" id="cancelReason" rows="3" placeholder="Vui lòng nhập lý do Giao hàng không thành công đơn hàng..." required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                     <button type="button" class="btn btn-danger" onclick="confirmCancel()">Xác nhận hủy</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery Status Modal -->
+    <div class="modal fade" id="deliveryStatusModal" tabindex="-1" aria-labelledby="deliveryStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deliveryStatusModalLabel">
+                        <i class="fas fa-truck me-2"></i>
+                        Cập nhật trạng thái giao hàng
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="deliveryForm" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="modalOrderId" name="orderId" value="">
+                        <input type="hidden" id="modalStatusId" name="statusId" value="">
+                        
+                        <div id="noteSection" class="mb-3" style="display: none;">
+                            <label for="deliveryNote" class="form-label">Lý do giao không thành công: <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="deliveryNote" name="note" rows="3" 
+                                placeholder="Vui lòng nhập lý do cụ thể..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="deliveryImage" class="form-label">
+                                Ảnh minh chứng: 
+                                <span id="imageRequired" class="text-danger" style="display: none;">*</span>
+                                <span id="imageOptional" class="text-muted" style="display: none;">(Tùy chọn)</span>
+                            </label>
+                            <input type="file" class="form-control" id="deliveryImage" name="image" 
+                                accept="image/*" onchange="previewImage(this)">
+                            <div class="form-text">Chỉ chấp nhận file JPG, JPEG, PNG, GIF. Tối đa 5MB.</div>
+                        </div>
+                        
+                        <div id="imagePreview" class="mb-3" style="display: none;">
+                            <label class="form-label">Xem trước ảnh:</label>
+                            <div class="text-center">
+                                <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" onclick="confirmDeliveryStatus()">
+                            <i class="fas fa-save me-2"></i>
+                            Xác nhận
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -592,7 +603,7 @@
                     2: 'Đơn hàng đã duyệt',
                     3: 'Đơn hàng đang giao',
                     4: 'Đơn hàng đã giao',
-                    6: 'Đơn hàng đã hủy'
+                    10: 'Giao hàng không thành công'
                 };
                 document.getElementById('orderListTitle').textContent = statusNames[status];
             }
@@ -654,9 +665,9 @@
                             subtitle: 'Hiện tại không có đơn hàng nào ở trạng thái "Đã giao"',
                             icon: 'fas fa-check-circle'
                         },
-                        6: {
-                            title: 'Không có đơn hàng đã hủy',
-                            subtitle: 'Hiện tại không có đơn hàng nào ở trạng thái "Đã hủy"',
+                        10: {
+                            title: 'Giao hàng không thành công',
+                            subtitle: 'Hiện tại không có đơn hàng nào ở trạng thái "Giao hàng không thành công"',
                             icon: 'fas fa-times-circle'
                         }
                     };
@@ -680,6 +691,118 @@
         document.addEventListener('DOMContentLoaded', function() {
             filterOrders('all');
         });
+        
+        // Delivery Modal Functions
+        function showDeliveryModal(orderId, statusId) {
+            document.getElementById('modalOrderId').value = orderId;
+            document.getElementById('modalStatusId').value = statusId;
+            
+            const noteSection = document.getElementById('noteSection');
+            const imageRequired = document.getElementById('imageRequired');
+            const imageOptional = document.getElementById('imageOptional');
+            const deliveryNote = document.getElementById('deliveryNote');
+            const deliveryImage = document.getElementById('deliveryImage');
+            
+            if (statusId == 10) {
+                // Failed delivery - require both note and image
+                noteSection.style.display = 'block';
+                imageRequired.style.display = 'inline';
+                imageOptional.style.display = 'none';
+                deliveryNote.required = true;
+                deliveryImage.required = true;
+                document.getElementById('deliveryStatusModalLabel').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle me-2"></i>Giao hàng không thành công';
+            } else {
+                // Successful delivery - optional image
+                noteSection.style.display = 'none';
+                imageRequired.style.display = 'none';
+                imageOptional.style.display = 'inline';
+                deliveryNote.required = false;
+                deliveryImage.required = false;
+                document.getElementById('deliveryStatusModalLabel').innerHTML = 
+                    '<i class="fas fa-check-circle me-2"></i>Giao hàng thành công';
+            }
+            
+            // Reset form
+            document.getElementById('deliveryForm').reset();
+            document.getElementById('modalOrderId').value = orderId;
+            document.getElementById('modalStatusId').value = statusId;
+            hideImagePreview();
+            
+            // Show modal using Bootstrap 5 JavaScript API
+            const modal = new bootstrap.Modal(document.getElementById('deliveryStatusModal'));
+            modal.show();
+        }
+        
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                hideImagePreview();
+            }
+        }
+        
+        function hideImagePreview() {
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('previewImg').src = '';
+        }
+        
+        function confirmDeliveryStatus() {
+            const orderId = document.getElementById('modalOrderId').value;
+            const statusId = document.getElementById('modalStatusId').value;
+            const note = document.getElementById('deliveryNote').value.trim();
+            const imageFile = document.getElementById('deliveryImage').files[0];
+            
+            // Validation
+            if (statusId == 10) {
+                if (!note) {
+                    alert('Vui lòng nhập lý do giao hàng không thành công');
+                    return;
+                }
+                if (!imageFile) {
+                    alert('Vui lòng chọn ảnh minh chứng cho việc giao hàng không thành công');
+                    return;
+                }
+            }
+            
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('orderId', orderId);
+            formData.append('statusId', statusId);
+            if (note) {
+                formData.append('note', note);
+            }
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+            
+            // Send request using fetch API
+            fetch('${pageContext.request.contextPath}/shipper/update-status', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Cập nhật trạng thái thành công!');
+                    // Hide modal using Bootstrap 5 JavaScript API
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('deliveryStatusModal'));
+                    modal.hide();
+                    location.reload();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .catch(error => {
+                alert('Có lỗi xảy ra: ' + error.message);
+            });
+        }
     </script>
 </body>
 </html>

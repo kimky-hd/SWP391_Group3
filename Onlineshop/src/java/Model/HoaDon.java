@@ -14,6 +14,8 @@ public class HoaDon {
     private String paymentMethod;
     private String note; // Thêm trường note để lưu lý do hủy
 
+    private String imageNote; // Thêm trường imageNote để lưu đường dẫn ảnh
+
     private Integer shippingID; // ID của shipper được giao đơn hàng
 
     
@@ -171,6 +173,14 @@ public class HoaDon {
         this.note = note;
     }
 
+    
+    public String getImageNote() {
+        return imageNote;
+    }
+    
+    public void setImageNote(String imageNote) {
+        this.imageNote = imageNote;
+    }
     
     public Integer getShippingID() {
         return shippingID;

@@ -46,14 +46,17 @@
                                                     <c:when test="${order.statusID == 3}">
                                                         <span class="badge bg-primary">Đang giao</span>
                                                     </c:when>
+                                                    <c:when test="${order.statusID == 2}">
+                                                        <span class="badge bg-info">Đã duyệt</span>
+                                                    </c:when>
                                                     <c:when test="${order.statusID == 4}">
                                                         <span class="badge bg-success">Đã giao</span>
                                                     </c:when>
-                                                    <c:when test="${order.statusID == 6}">
-                                                        <span class="badge bg-danger">Đã hủy</span>
+                                                    <c:when test="${order.statusID == 10}">
+                                                        <span class="badge bg-danger">Không thành công</span>
                                                     </c:when>
-                                                    <c:when test="${order.statusID == 9}">
-                                                        <span class="badge bg-secondary">Sẵn sàng giao</span>
+                                                    <c:when test="${order.statusID == 3}">
+                                                        <span class="badge bg-primary">Đang vận chuyển</span>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <span class="badge bg-light text-dark">${order.statusName}</span>
@@ -181,12 +184,12 @@
                         <div class="card-body">
                             <c:choose>
                                 <c:when test="${order.statusID == 2}">
-                                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="updateOrderStatusInModal(${order.maHD}, 9)">
+                                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="updateOrderStatusInModal(${order.maHD}, 10)">
                                         <i class="fas fa-check me-2"></i>
                                         Chuẩn bị giao hàng
                                     </button>
                                 </c:when>
-                                <c:when test="${order.statusID == 9}">
+                                <c:when test="${order.statusID == 10}">
                                     <button class="btn btn-primary btn-sm mb-2 w-100" onclick="updateOrderStatusInModal(${order.maHD}, 3)">
                                         <i class="fas fa-shipping-fast me-2"></i>
                                         Bắt đầu giao hàng

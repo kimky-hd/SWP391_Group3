@@ -309,7 +309,7 @@ public class MaterialBatchDAO extends DBContext {
     public List<MaterialReplacement> autoReplaceWiltedMaterial(int productBatchID) throws SQLException {
         List<MaterialReplacement> replacements = new ArrayList<>();
 
-        // 1. Lấy ProductBatch
+        // 1️⃣ Lấy thông tin ProductBatch
         ProductBatchDAO pbdao = new ProductBatchDAO();
         ProductBatch batch = pbdao.getProductBatchByID(productBatchID);
         if (batch == null) {
@@ -317,19 +317,29 @@ public class MaterialBatchDAO extends DBContext {
         }
 
         int productID = batch.getProductID();
-        int quantityToRecover = batch.getQuantity();
 
-        // 2. Lấy công thức sản phẩm
+        // 2️⃣ Lấy danh sách thành phần sản phẩm
         ProductDAO pdao = new ProductDAO();
         List<ProductComponent> components = pdao.getProductComponentsByProductID(productID);
 
+        // 3️⃣ Lấy danh sách số lượng nguyên liệu bị héo (theo từng materialID)
+        Map<Integer, Integer> wiltedMap = getWiltedMaterialQuantities(productBatchID);
+
+        // 4️⃣ Vòng lặp qua từng nguyên liệu trong công thức sản phẩm
         for (ProductComponent pc : components) {
             int materialID = pc.getMaterial().getMaterialID();
-            int totalNeeded = pc.getMaterialQuantity() * quantityToRecover;
+            int wiltedQty = wiltedMap.getOrDefault(materialID, 0);
 
-            // 3. Lấy các MaterialBatch còn sử dụng được theo FIFO
+            // ✅ Nếu nguyên liệu này KHÔNG bị héo => bỏ qua
+            if (wiltedQty == 0) {
+                continue;
+            }
+
+            int totalNeeded = wiltedQty;
+
+            // 5️⃣ Lấy danh sách batch còn sử dụng được (FIFO)
             MaterialDAO mbdao = new MaterialDAO();
-            List<MaterialBatch> availableBatches = mbdao.getAvailableMaterialBatches(materialID); // status = 'Tươi mới', quantity > 0
+            List<MaterialBatch> availableBatches = mbdao.getAvailableMaterialBatches(materialID);
 
             for (MaterialBatch batchAvailable : availableBatches) {
                 if (totalNeeded <= 0) {
@@ -338,14 +348,15 @@ public class MaterialBatchDAO extends DBContext {
 
                 int deductQty = Math.min(totalNeeded, batchAvailable.getQuantity());
 
-                // Trừ số lượng trong batch
-                updateMaterialBatchQuantity(batchAvailable.getMaterialBatchID(), batchAvailable.getQuantity() - deductQty);
+                // Trừ số lượng trong batch mới
+                updateMaterialBatchQuantity(batchAvailable.getMaterialBatchID(),
+                        batchAvailable.getQuantity() - deductQty);
 
                 // Ghi nhận thay thế
                 MaterialReplacement rep = new MaterialReplacement();
                 rep.setProductBatchID(productBatchID);
                 rep.setMaterialID(materialID);
-                rep.setOldMaterialBatchID(0); // Không cần nếu chỉ quan tâm thay mới
+                rep.setOldMaterialBatchID(0); // có thể bổ sung sau nếu cần track batch cũ
                 rep.setNewMaterialBatchID(batchAvailable.getMaterialBatchID());
                 rep.setQuantity(deductQty);
                 replacements.add(rep);
@@ -353,14 +364,14 @@ public class MaterialBatchDAO extends DBContext {
                 totalNeeded -= deductQty;
             }
 
-            // Nếu không đủ nguyên liệu thay thế, rollback những gì đã trừ
+            // ⚠️ Nếu sau khi duyệt hết mà vẫn thiếu nguyên liệu => rollback
             if (totalNeeded > 0) {
                 for (MaterialReplacement rep : replacements) {
                     int batchID = rep.getNewMaterialBatchID();
                     MaterialBatch mb = getMaterialBatchByID(batchID);
                     updateMaterialBatchQuantity(batchID, mb.getQuantity() + rep.getQuantity());
                 }
-                return new ArrayList<>(); // Trả về rỗng để báo lỗi
+                return new ArrayList<>(); // trả về rỗng báo lỗi
             }
         }
 
@@ -403,6 +414,30 @@ public class MaterialBatchDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("updateMaterialBatchQuantity: " + e.getMessage());
         }
+    }
+
+
+    public Map<Integer, Integer> getWiltedMaterialQuantities(int productBatchID) {
+        Map<Integer, Integer> wiltedMap = new HashMap<>();
+        String sql = "SELECT mb.materialID, SUM(mbu.quantityUsed) AS wiltedQty "
+                + "FROM MaterialBatchUsage mbu "
+                + "JOIN MaterialBatch mb ON mbu.materialBatchID = mb.materialBatchID "
+                + "WHERE mbu.productBatchID = ? AND mb.dateExpire < CURDATE() "
+                + "GROUP BY mb.materialID";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productBatchID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    wiltedMap.put(rs.getInt("materialID"),
+                            rs.getInt("wiltedQty"));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("getWiltedMaterialQuantities " + e.getMessage());
+        }
+        return wiltedMap;
     }
 
 }

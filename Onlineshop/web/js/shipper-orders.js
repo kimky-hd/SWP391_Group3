@@ -142,7 +142,7 @@ function updateStatus(orderId, statusId) {
             confirmMessage = `Bạn có chắc chắn đã giao thành công đơn hàng #${orderId}?`;
             actionText = 'Hoàn thành giao hàng';
             break;
-        case '6':
+        case '10':
             // Handle cancellation with note
             cancelOrder(orderId);
             return;
@@ -234,7 +234,7 @@ function cancelOrder(orderId) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `orderId=${orderId}&statusId=6&note=${encodeURIComponent(note)}`
+            body: `orderId=${orderId}&statusId=10&note=${encodeURIComponent(note)}`
         })
         .then(response => {
             if (response.ok) {
