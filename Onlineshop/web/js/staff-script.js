@@ -1257,4 +1257,175 @@ window.addEventListener('load', function() {
     }
 });
 
+// ===== REVIEW CONTENT TOGGLE FUNCTION =====
+// Toggle review content expand/collapse for reviews page
+function toggleReviewContent(reviewId) {
+    console.log('🔄 Toggling review content for ID:', reviewId);
+
+    const contentDiv = document.getElementById('content-' + reviewId);
+    if (!contentDiv) {
+        console.error('❌ Content div not found for review ID:', reviewId);
+        return;
+    }
+
+    const shortText = contentDiv.querySelector('.short-text');
+    const fullText = contentDiv.querySelector('.full-text');
+    const expandText = contentDiv.querySelector('.expand-text');
+
+    if (!shortText || !fullText || !expandText) {
+        console.error('❌ Required elements not found for review ID:', reviewId);
+        return;
+    }
+
+    if (contentDiv.classList.contains('collapsed')) {
+        // Expand
+        console.log('📖 Expanding review content');
+        contentDiv.classList.remove('collapsed');
+        contentDiv.classList.add('expanded');
+        shortText.style.display = 'none';
+        fullText.style.display = 'inline';
+        expandText.textContent = 'Thu gọn';
+    } else {
+        // Collapse
+        console.log('📕 Collapsing review content');
+        contentDiv.classList.remove('expanded');
+        contentDiv.classList.add('collapsed');
+        shortText.style.display = 'inline';
+        fullText.style.display = 'none';
+        expandText.textContent = 'Xem chi tiết';
+    }
+}
+
+// Make function globally available
+window.toggleReviewContent = toggleReviewContent;
+
+// ===== REVIEW IMAGES MODAL FUNCTIONS =====
+let currentImageIndex = 0;
+let reviewImages = [];
+let currentReviewId = null;
+
+// View review images
+function viewReviewImages(reviewId, imageCount) {
+    console.log('🖼️ Opening images modal for review:', reviewId, 'Images:', imageCount);
+
+    currentReviewId = reviewId;
+    currentImageIndex = 0;
+
+    // Generate demo images (replace with actual images from database)
+    reviewImages = [];
+    for (let i = 1; i <= imageCount; i++) {
+        reviewImages.push({
+            url: `https://picsum.photos/600/400?random=${reviewId}${i}`,
+            thumbnail: `https://picsum.photos/60/60?random=${reviewId}${i}`
+        });
+    }
+
+    // Update modal title
+    document.getElementById('modalReviewId').textContent = reviewId;
+    document.getElementById('totalImages').textContent = imageCount;
+
+    // Generate thumbnails and page numbers
+    generateThumbnails();
+    generatePageNumbers();
+
+    // Show first image
+    showImage(0);
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('reviewImagesModal'));
+    modal.show();
+}
+
+// Show specific image
+function showImage(index) {
+    if (index < 0 || index >= reviewImages.length) return;
+
+    currentImageIndex = index;
+
+    // Update main image
+    document.getElementById('currentImage').src = reviewImages[index].url;
+    document.getElementById('currentImageIndex').textContent = index + 1;
+
+    // Update active thumbnail
+    document.querySelectorAll('.thumbnail-nav img').forEach((img, i) => {
+        img.classList.toggle('active', i === index);
+    });
+
+    // Update active page number
+    document.querySelectorAll('.page-numbers .btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+    });
+}
+
+// Navigate to previous image
+function previousImage() {
+    const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : reviewImages.length - 1;
+    showImage(newIndex);
+}
+
+// Navigate to next image
+function nextImage() {
+    const newIndex = currentImageIndex < reviewImages.length - 1 ? currentImageIndex + 1 : 0;
+    showImage(newIndex);
+}
+
+// Generate thumbnail navigation
+function generateThumbnails() {
+    const container = document.getElementById('thumbnailContainer');
+    container.innerHTML = reviewImages.map((img, index) => `
+        <img src="${img.thumbnail}"
+             alt="Thumbnail ${index + 1}"
+             onclick="showImage(${index})"
+             class="${index === 0 ? 'active' : ''}">
+    `).join('');
+}
+
+// Generate page numbers
+function generatePageNumbers() {
+    const container = document.getElementById('pageNumbers');
+    container.innerHTML = reviewImages.map((_, index) => `
+        <button type="button"
+                class="btn ${index === 0 ? 'active' : ''}"
+                onclick="showImage(${index})">
+            ${index + 1}
+        </button>
+    `).join('');
+}
+
+// Download current image
+function downloadImage() {
+    if (currentImageIndex >= 0 && currentImageIndex < reviewImages.length) {
+        const link = document.createElement('a');
+        link.href = reviewImages[currentImageIndex].url;
+        link.download = `review-${currentReviewId}-image-${currentImageIndex + 1}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        console.log('📥 Downloading image:', currentImageIndex + 1);
+    }
+}
+
+// Make functions globally available
+window.viewReviewImages = viewReviewImages;
+window.showImage = showImage;
+window.previousImage = previousImage;
+window.nextImage = nextImage;
+window.downloadImage = downloadImage;
+
+// Add keyboard navigation for image modal
+document.addEventListener('keydown', function(e) {
+    const modal = document.getElementById('reviewImagesModal');
+    if (modal && modal.classList.contains('show')) {
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            previousImage();
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextImage();
+        } else if (e.key === 'Escape') {
+            bootstrap.Modal.getInstance(modal).hide();
+        }
+    }
+});
+
 console.log('🌿 Staff Panel JavaScript Loaded Successfully!');

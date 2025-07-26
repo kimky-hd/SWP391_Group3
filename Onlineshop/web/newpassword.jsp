@@ -7,8 +7,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Đặt lại mật khẩu - Flower Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
     <style>
         .search-input {
             border-radius: 20px 0 0 20px;
@@ -112,14 +124,7 @@
             color: #FFA5B5 !important;
         }
         
-        /* Đảm bảo không ảnh hưởng đến style của header */
-        .row.bg-secondary {
-            background-color: #6c757d !important;
-        }
 
-        .row.bg-light {
-            background-color: #f8f9fa !important;
-        }
 
         /* Đảm bảo chiều cao phù hợp */
         @media (min-height: 800px) {
@@ -179,7 +184,7 @@
                            <div class="mb-3">
                                <div class="form-floating">
                                    <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Mật khẩu mới" required>
-                                  <label for="newPassword"><i class="fas fa-lock me-2"></i>Mật khẩu mới</label>
+                                  <label for="newPassword"></label>
                                </div>
                                   <small class="form-text text-muted">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số, không được chứa khoảng trắng, và không được giống mật khẩu cũ</small>
                            </div>
@@ -188,12 +193,12 @@
                                 <div class="mb-4">
                                     <div class="form-floating">
                                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Xác nhận mật khẩu mới" required>
-                                        <label for="confirmPassword"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu mới</label>
+                                        <label for="confirmPassword"></label>
                                     </div>
                                 </div>
                                 
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-pink py-3">
+                                <div class="d-grid gap-2 text-center">
+                                    <button type="submit" class="btn btn-pink py-3 px-5 rounded-pill mx-auto">
                                         <i class="fas fa-save me-2"></i>Đặt lại mật khẩu
                                     </button>
                                 </div>
@@ -221,18 +226,8 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        window.onload = function () {
-            // Đảm bảo header hiển thị đúng
-            document.querySelectorAll('.row.bg-secondary').forEach(function (el) {
-                el.style.backgroundColor = '#6c757d !important';
-            });
 
-            document.querySelectorAll('.row.bg-light').forEach(function (el) {
-                el.style.backgroundColor = '#f8f9fa !important';
-            });
-        }
+    <script>
         
                function validateForm() {
             var newPassword = document.getElementById("newPassword").value;

@@ -408,4 +408,14 @@
         <servlet-name>FeedbackController</servlet-name>
         <url-pattern>/FeedbackController</url-pattern>
     </servlet-mapping>
+
+    <!-- StaffReviewController -->
+    <servlet>
+        <servlet-name>StaffReviewController</servlet-name>
+        <servlet-class>Controller.staff.StaffReviewController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StaffReviewController</servlet-name>
+        <url-pattern>/staff/reviews</url-pattern>
+    </servlet-mapping>
 </web-app>

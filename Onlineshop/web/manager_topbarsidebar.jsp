@@ -251,9 +251,15 @@
                     </a>
                 </li>
                 <li>
+
                     <a href="${pageContext.request.contextPath}/staff/staff_custom-orders" class="nav-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Quản lý Đơn hàng tự thiết kế</span>
+
+                    <a href="${pageContext.request.contextPath}/staff/reviews" class="nav-link">
+                        <i class="fas fa-star"></i>
+                        <span>Quản lý Đánh giá</span>
+
                     </a>
                 </li>
 
