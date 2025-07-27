@@ -405,6 +405,8 @@ public class OrderDAO extends DBContext {
         }
     }
 
+
+
     public List<OrderDetail> getOrderDetails(int orderId) {
         List<OrderDetail> details = new ArrayList<>(); // Khởi tạo danh sách chi tiết đơn hàng
         String sql = "SELECT * FROM OrderDetail WHERE maHD = ?"; // Câu lệnh SQL để lấy tất cả chi tiết của một đơn hàng

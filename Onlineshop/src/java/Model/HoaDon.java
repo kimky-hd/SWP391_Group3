@@ -13,7 +13,11 @@ public class HoaDon {
     private int statusID;
     private String paymentMethod;
     private String note; // Thêm trường note để lưu lý do hủy
+
+    private String imageNote; // Thêm trường imageNote để lưu đường dẫn ảnh
+
     private Integer shippingID; // ID của shipper được giao đơn hàng
+
     
     // Additional fields for joined data
     private String username;
@@ -168,6 +172,15 @@ public class HoaDon {
     public void setNote(String note) {
         this.note = note;
     }
+
+    
+    public String getImageNote() {
+        return imageNote;
+    }
+    
+    public void setImageNote(String imageNote) {
+        this.imageNote = imageNote;
+    }
     
     public Integer getShippingID() {
         return shippingID;
@@ -177,6 +190,7 @@ public class HoaDon {
         this.shippingID = shippingID;
     }
     
+
     // Convenience methods for compatibility with test JSPs
     public int getOrderID() {
         return maHD;

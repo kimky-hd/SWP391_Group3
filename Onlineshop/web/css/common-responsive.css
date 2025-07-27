@@ -69,7 +69,6 @@
     bottom: 0;
     z-index: 1020;
     overflow-y: auto;
-    transition: transform var(--transition-speed) ease;
 }
 
 .main-content {
@@ -77,7 +76,6 @@
     margin-top: var(--topbar-height);
     padding: 20px;
     min-height: calc(100vh - var(--topbar-height));
-    transition: margin-left var(--transition-speed) ease;
 }
 
 /* Mobile Responsive */

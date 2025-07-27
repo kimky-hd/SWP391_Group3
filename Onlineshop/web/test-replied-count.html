@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Replied Count Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>🧪 Test Replied Count Demo</h2>
+        <p>Trang này để test logic đếm số "Đã phản hồi" tự động khi load trang.</p>
+        
+        <!-- Statistics Card -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success bg-gradient rounded-3 p-3">
+                                <i class="fas fa-reply text-white fa-lg"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="fw-bold fs-4" id="replied-reviews">0</div>
+                                <div class="text-muted small">Đã phản hồi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-gradient rounded-3 p-3">
+                                <i class="fas fa-list text-white fa-lg"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="fw-bold fs-4" id="total-reviews">0</div>
+                                <div class="text-muted small">Tổng đánh giá</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5>📋 Bảng Test Reviews</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="reviewsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Khách hàng</th>
+                                <th>Sản phẩm</th>
+                                <th>Đánh giá</th>
+                                <th>Nội dung</th>
+                                <th>Ngày tạo</th>
+                                <th>Phản hồi</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviewsTableBody">
+                            <!-- Row 1 - Đã phản hồi -->
+                            <tr>
+                                <td>1</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>Hoa hồng đỏ</td>
+                                <td><span class="badge bg-warning">5/5</span></td>
+                                <td>Sản phẩm rất đẹp!</td>
+                                <td><small class="text-muted">2025-01-26 10:00:00</small></td>
+                                <td><span class="badge bg-success">Đã phản hồi</span></td>
+                                <td><button class="btn btn-sm btn-primary">Xem</button></td>
+                            </tr>
+                            
+                            <!-- Row 2 - Chưa phản hồi -->
+                            <tr>
+                                <td>2</td>
+                                <td>Trần Thị B</td>
+                                <td>Hoa cúc trắng</td>
+                                <td><span class="badge bg-warning">4/5</span></td>
+                                <td>Hoa tươi, giao hàng nhanh</td>
+                                <td><small class="text-muted">2025-01-26 11:00:00</small></td>
+                                <td><span class="badge bg-warning">Chưa phản hồi</span></td>
+                                <td><button class="btn btn-sm btn-primary">Xem</button></td>
+                            </tr>
+                            
+                            <!-- Row 3 - Đã phản hồi -->
+                            <tr>
+                                <td>3</td>
+                                <td>Lê Văn C</td>
+                                <td>Hoa lan tím</td>
+                                <td><span class="badge bg-warning">5/5</span></td>
+                                <td>Chất lượng tuyệt vời</td>
+                                <td><small class="text-muted">2025-01-26 12:00:00</small></td>
+                                <td><span class="badge bg-success">Đã phản hồi</span></td>
+                                <td><button class="btn btn-sm btn-primary">Xem</button></td>
+                            </tr>
+                            
+                            <!-- Row 4 - Chưa phản hồi -->
+                            <tr>
+                                <td>4</td>
+                                <td>Phạm Thị D</td>
+                                <td>Hoa tulip vàng</td>
+                                <td><span class="badge bg-warning">3/5</span></td>
+                                <td>Bình thường</td>
+                                <td><small class="text-muted">2025-01-26 13:00:00</small></td>
+                                <td><span class="badge bg-warning">Chưa phản hồi</span></td>
+                                <td><button class="btn btn-sm btn-primary">Xem</button></td>
+                            </tr>
+                            
+                            <!-- Row 5 - Đã phản hồi -->
+                            <tr>
+                                <td>5</td>
+                                <td>Hoàng Văn E</td>
+                                <td>Hoa hướng dương</td>
+                                <td><span class="badge bg-warning">5/5</span></td>
+                                <td>Rất hài lòng!</td>
+                                <td><small class="text-muted">2025-01-26 14:00:00</small></td>
+                                <td><span class="badge bg-success">Đã phản hồi</span></td>
+                                <td><button class="btn btn-sm btn-primary">Xem</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Buttons -->
+        <div class="mt-4">
+            <button class="btn btn-primary" onclick="manualCount()">
+                <i class="fas fa-calculator me-1"></i>Đếm thủ công
+            </button>
+            <button class="btn btn-success" onclick="resetCount()">
+                <i class="fas fa-refresh me-1"></i>Reset về 0
+            </button>
+        </div>
+
+        <!-- Console Log Display -->
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6>📝 Console Log</h6>
+                </div>
+                <div class="card-body">
+                    <div id="console-log" class="bg-dark text-light p-3 rounded" style="height: 200px; overflow-y: auto; font-family: monospace;">
+                        <!-- Console logs will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Custom console.log to display in page
+        const originalLog = console.log;
+        const logContainer = document.getElementById('console-log');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const logEntry = document.createElement('div');
+            logEntry.textContent = new Date().toLocaleTimeString() + ' - ' + args.join(' ');
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        };
+
+        // Function to count replied reviews (same logic as main page)
+        function countRepliedReviews() {
+            console.log('🚀 Starting countRepliedReviews...');
+            
+            const rows = document.querySelectorAll('#reviewsTableBody tr');
+            let repliedCount = 0;
+            let totalCount = rows.length;
+            
+            console.log('🔍 Found rows:', totalCount);
+            
+            rows.forEach((row, index) => {
+                if (row.cells && row.cells.length > 6) {
+                    const replyCell = row.cells[6]; // Cột Phản hồi (index 6)
+                    const hasReplyBadge = replyCell.querySelector('.badge.bg-success');
+                    
+                    console.log('Row ' + index + ' reply cell:', replyCell.innerHTML.trim());
+                    console.log('Row ' + index + ' has reply badge:', !!hasReplyBadge);
+                    
+                    if (hasReplyBadge) {
+                        repliedCount++;
+                        console.log('✅ Row ' + index + ' counted as replied');
+                    }
+                }
+            });
+            
+            // Update display
+            document.getElementById('replied-reviews').textContent = repliedCount;
+            document.getElementById('total-reviews').textContent = totalCount;
+            
+            console.log('🎉 Final count - Replied:', repliedCount, 'Total:', totalCount);
+            
+            return repliedCount;
+        }
+
+        // Manual count function
+        function manualCount() {
+            console.log('👆 Manual count triggered');
+            countRepliedReviews();
+        }
+
+        // Reset function
+        function resetCount() {
+            console.log('🔄 Reset triggered');
+            document.getElementById('replied-reviews').textContent = '0';
+            document.getElementById('total-reviews').textContent = '0';
+        }
+
+        // Auto count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 Page loaded - DOMContentLoaded');
+            
+            // Try immediate count
+            setTimeout(function() {
+                console.log('⏰ Auto-count after 500ms delay');
+                countRepliedReviews();
+            }, 500);
+        });
+
+        // Backup - window load
+        window.addEventListener('load', function() {
+            console.log('🪟 Window load event');
+            setTimeout(function() {
+                console.log('⏰ Backup auto-count after 1000ms delay');
+                countRepliedReviews();
+            }, 1000);
+        });
+
+        console.log('🎬 Script loaded and ready');
+    </script>
+</body>
+</html>

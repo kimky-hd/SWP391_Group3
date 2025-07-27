@@ -121,6 +121,12 @@ public class FeedbackController extends HttpServlet {
                 case "deleteOrderFeedbackById":
                     deleteOrderFeedbackById(request, response);
                     break;
+                case "updateProductFeedback":
+                    updateProductFeedback(request, response);
+                    break;
+                case "deleteProductFeedback":
+                    deleteProductFeedback(request, response);
+                    break;
                 default:
                     sendErrorResponse(response, "Invalid action");
                     break;
@@ -867,6 +873,109 @@ public class FeedbackController extends HttpServlet {
 
         } catch (NumberFormatException e) {
             sendErrorResponse(response, "Thông tin không hợp lệ");
+        }
+    }
+
+    /**
+     * Update product feedback
+     */
+    private void updateProductFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, SQLException {
+
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+
+        if (account == null) {
+            sendErrorResponse(response, "Bạn cần đăng nhập để thực hiện chức năng này");
+            return;
+        }
+
+        String feedbackIdStr = request.getParameter("feedbackId");
+        String ratingStr = request.getParameter("rating");
+        String comment = request.getParameter("comment");
+
+        if (feedbackIdStr == null || ratingStr == null) {
+            sendErrorResponse(response, "Thiếu thông tin cần thiết");
+            return;
+        }
+
+        try {
+            int feedbackId = Integer.parseInt(feedbackIdStr);
+            int rating = Integer.parseInt(ratingStr);
+
+            // Validate rating
+            if (rating < 1 || rating > 5) {
+                sendErrorResponse(response, "Đánh giá phải từ 1 đến 5 sao");
+                return;
+            }
+
+            // Check ownership - get existing feedback first
+            Feedback existingFeedback = feedbackDAO.getProductFeedbackById(feedbackId);
+            if (existingFeedback == null || existingFeedback.getAccountId() != account.getAccountID()) {
+                sendErrorResponse(response, "Bạn không có quyền sửa đánh giá này");
+                return;
+            }
+
+            // Update feedback using feedbacks table
+            boolean success = feedbackDAO.updateProductFeedback(feedbackId, account.getAccountID(), rating, comment != null ? comment.trim() : "");
+
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("success", success);
+            responseData.put("message", success ? "Cập nhật đánh giá thành công!" : "Không thể cập nhật đánh giá");
+
+            PrintWriter out = response.getWriter();
+            out.print(gson.toJson(responseData));
+            out.flush();
+
+        } catch (NumberFormatException e) {
+            sendErrorResponse(response, "Dữ liệu không hợp lệ");
+        }
+    }
+
+    /**
+     * Delete product feedback
+     */
+    private void deleteProductFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, SQLException {
+
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+
+        if (account == null) {
+            sendErrorResponse(response, "Bạn cần đăng nhập để thực hiện chức năng này");
+            return;
+        }
+
+        String feedbackIdStr = request.getParameter("feedbackId");
+
+        if (feedbackIdStr == null) {
+            sendErrorResponse(response, "Thiếu thông tin feedback ID");
+            return;
+        }
+
+        try {
+            int feedbackId = Integer.parseInt(feedbackIdStr);
+
+            // Check ownership - get existing feedback first
+            Feedback existingFeedback = feedbackDAO.getProductFeedbackById(feedbackId);
+            if (existingFeedback == null || existingFeedback.getAccountId() != account.getAccountID()) {
+                sendErrorResponse(response, "Bạn không có quyền xóa đánh giá này");
+                return;
+            }
+
+            // Delete feedback using feedbacks table
+            boolean success = feedbackDAO.deleteProductFeedbackById(feedbackId, account.getAccountID());
+
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("success", success);
+            responseData.put("message", success ? "Xóa đánh giá thành công!" : "Không thể xóa đánh giá");
+
+            PrintWriter out = response.getWriter();
+            out.print(gson.toJson(responseData));
+            out.flush();
+
+        } catch (NumberFormatException e) {
+            sendErrorResponse(response, "Dữ liệu không hợp lệ");
         }
     }
 

@@ -184,12 +184,12 @@
                         <div class="card-body">
                             <c:choose>
                                 <c:when test="${order.statusID == 2}">
-                                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="updateOrderStatusInModal(${order.maHD}, 9)">
+                                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="updateOrderStatusInModal(${order.maHD}, 10)">
                                         <i class="fas fa-check me-2"></i>
                                         Chuẩn bị giao hàng
                                     </button>
                                 </c:when>
-                                <c:when test="${order.statusID == 9}">
+                                <c:when test="${order.statusID == 10}">
                                     <button class="btn btn-primary btn-sm mb-2 w-100" onclick="updateOrderStatusInModal(${order.maHD}, 3)">
                                         <i class="fas fa-shipping-fast me-2"></i>
                                         Bắt đầu giao hàng

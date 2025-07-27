@@ -7,8 +7,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Quên mật khẩu - Flower Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
     <style>
         .search-input {
             border-radius: 20px 0 0 20px;
@@ -112,14 +124,7 @@
             color: #FFA5B5 !important;
         }
         
-        /* Đảm bảo không ảnh hưởng đến style của header */
-        .row.bg-secondary {
-            background-color: #6c757d !important;
-        }
 
-        .row.bg-light {
-            background-color: #f8f9fa !important;
-        }
 
         /* Đảm bảo chiều cao phù hợp */
         @media (min-height: 800px) {
@@ -183,13 +188,13 @@
                                 <div class="mb-4">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="emailOrPhone" name="email" placeholder="Email" required value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
-                                        <label for="emailOrPhone"><i class="fas fa-envelope me-2"></i>Email</label>
+                                        <label for="emailOrPhone"></label>
                                     </div>
                                     <small class="form-text text-muted">Nhập email đã đăng ký để nhận mã xác nhận</small>
                                 </div>
                                 
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-pink py-3">
+                                <div class="d-grid gap-2 text-center">
+                                    <button type="submit" class="btn btn-pink py-3 px-5 rounded-pill mx-auto">
                                         <i class="fas fa-paper-plane me-2"></i>Gửi mã xác nhận
                                     </button>
                                 </div>
@@ -215,18 +220,7 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-    window.onload = function () {
-        // Đảm bảo header hiển thị đúng
-        document.querySelectorAll('.row.bg-secondary').forEach(function (el) {
-            el.style.backgroundColor = '#6c757d !important';
-        });
 
-        document.querySelectorAll('.row.bg-light').forEach(function (el) {
-            el.style.backgroundColor = '#f8f9fa !important';
-        });
-    }
 </script>
 </body>
 </html>

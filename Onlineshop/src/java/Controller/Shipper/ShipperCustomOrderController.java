@@ -153,10 +153,10 @@ public class ShipperCustomOrderController extends HttpServlet {
         // Lấy danh sách đơn hàng tự thiết kế theo bộ lọc
         List<CustomOrderCart> filteredOrders = customOrderCartDAO.getFilteredCustomOrderCarts(orderId, customerName, statusId);
 
-        // Lọc chỉ lấy các đơn hàng đã duyệt, đang giao hoặc đã giao thành công (statusID = 2, 3, 4 hoặc 9)
+        // Lọc chỉ lấy các đơn hàng đã duyệt, đang giao hoặc đã giao thành công (statusID = 2, 3, 4 hoặc 10)
         List<CustomOrderCart> shipperCustomOrders = new ArrayList<>();
         for (CustomOrderCart order : filteredOrders) {
-            if (order.getStatusID() == 2 || order.getStatusID() == 3 || order.getStatusID() == 4 || order.getStatusID() == 9) {
+            if (order.getStatusID() == 2 || order.getStatusID() == 3 || order.getStatusID() == 4 || order.getStatusID() == 10) {
                 shipperCustomOrders.add(order);
             }
         }
@@ -193,7 +193,7 @@ public class ShipperCustomOrderController extends HttpServlet {
         }
 
         // Kiểm tra xem đơn hàng có phải đã duyệt, đang giao hoặc đã giao thành công không
-        if (customOrder.getStatusID() != 2 && customOrder.getStatusID() != 3 && customOrder.getStatusID() != 4 && customOrder.getStatusID() != 9) {
+        if (customOrder.getStatusID() != 2 && customOrder.getStatusID() != 3 && customOrder.getStatusID() != 4 && customOrder.getStatusID() != 10) {
             request.setAttribute("errorMessage", "Bạn chỉ có thể xem các đơn hàng đã duyệt, đang giao hoặc đã giao thành công!");
             request.getRequestDispatcher("/shipper/shipper_custom_orders.jsp").forward(request, response);
             return;
@@ -219,7 +219,7 @@ public class ShipperCustomOrderController extends HttpServlet {
         }
 
         // Kiểm tra trạng thái hợp lệ cho shipper
-        if (statusId != 3 && statusId != 4 && statusId != 9) {
+        if (statusId != 3 && statusId != 4 && statusId != 10) {
             sendJsonResponse(response, false, "Trạng thái không hợp lệ cho shipper!");
             return;
         }
@@ -228,10 +228,10 @@ public class ShipperCustomOrderController extends HttpServlet {
         boolean isValidTransition = false;
         switch (customOrder.getStatusID()) {
             case 2: // Đã duyệt
-                isValidTransition = (statusId == 3 || statusId == 9); // Chuyển sang đang giao hoặc không thành công
+                isValidTransition = (statusId == 3 || statusId == 10); // Chuyển sang đang giao hoặc không thành công
                 break;
             case 3: // Đang giao
-                isValidTransition = (statusId == 4 || statusId == 9); // Chuyển sang đã giao hoặc không thành công
+                isValidTransition = (statusId == 4 || statusId == 10); // Chuyển sang đã giao hoặc không thành công
                 break;
             default:
                 isValidTransition = false;
@@ -243,7 +243,7 @@ public class ShipperCustomOrderController extends HttpServlet {
         }
 
         // Nếu hủy đơn, yêu cầu ghi chú
-        if (statusId == 9 && (note == null || note.trim().isEmpty())) {
+        if (statusId == 10 && (note == null || note.trim().isEmpty())) {
             sendJsonResponse(response, false, "Vui lòng nhập lý do không thành công!");
             return;
         }
