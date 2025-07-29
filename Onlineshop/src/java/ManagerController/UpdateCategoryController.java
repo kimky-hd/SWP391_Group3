@@ -72,7 +72,7 @@ public class UpdateCategoryController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         int categoryID = Integer.parseInt(request.getParameter("categoryID"));
-        String categoryName =request.getParameter("categoryName");
+        String categoryName =request.getParameter("categoryName").trim();
         request.setAttribute("oldValue", categoryName);
         CategoryDAO catedao =new CategoryDAO();
         HttpSession session = request.getSession();

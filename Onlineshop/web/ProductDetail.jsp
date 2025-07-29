@@ -201,7 +201,7 @@
                 <!-- Tên sản phẩm & Đánh giá lệch trái -->
                 <div class="mb-4">
                     <h2 class="font-weight-bold text-left">${detail.getTitle()}</h2>
-                    <p class="text-left mb-0"><span class="text-warning font-weight-bold">${rate} ★</span></p>
+                    
                 </div>
 
                 <!-- Bố cục chính -->
