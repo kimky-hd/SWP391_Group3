@@ -451,6 +451,7 @@
         <c:if test="${showModal == true}">
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
+                    document.getElementById("batchMaterialID").value = "${materialID}";
                     var myModal = new bootstrap.Modal(document.getElementById('addQuantityModal'));
                     myModal.show();
                 });
