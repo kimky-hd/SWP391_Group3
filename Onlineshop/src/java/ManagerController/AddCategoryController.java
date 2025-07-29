@@ -72,7 +72,7 @@ public class AddCategoryController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String categoryName = request.getParameter("categoryName");
+        String categoryName = request.getParameter("categoryName").trim();
         request.setAttribute("oldValue", categoryName);
         
         CategoryDAO cateDAO = new CategoryDAO();

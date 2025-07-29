@@ -73,6 +73,14 @@ public class AddProductController extends HttpServlet {
             request.setAttribute("errorTitle", "Tên sản phẩm đã tồn tại.");
             hasError = true;
         }
+        
+        if(description == null || description.trim().isEmpty()){
+            request.setAttribute("errorDiscript", "Vui lòng nhập mô tả");
+            hasError = true;
+        }else if(description.length()>200){
+            request.setAttribute("errorDiscript", "Mô tả không được quá 200 ký tự. Vui lòng nhập lại.");
+            hasError = true;
+        }
 
         // --- Validate giá ---
         if (priceRaw == null || priceRaw.trim().isEmpty()) {

@@ -415,7 +415,7 @@
 <div class="container-fluid pt-5">
     <div class="text-center mb-5">
         
-        <h2 style="color: #e91e63; font-weight: 700; font-size: 32px; margin-bottom: 15px;">Danh Mục Bán Chạy</h2>
+        <h2 style="color: #e91e63; font-weight: 700; font-size: 32px; margin-bottom: 15px;">Danh Mục</h2>
         <p style="color: #666; font-size: 16px; max-width: 600px; margin: 0 auto;">Khám phá bộ sưu tập hoa tươi nhập khẩu với chất lượng hoàn hảo</p>
     </div>
     <div class="row px-xl-5 pb-3 justify-content-center">
@@ -544,15 +544,15 @@
         <div class="container-fluid pt-5 pb-3">
             <div class="text-center mb-5">
                
-                <h2 style="color: #e91e63; font-weight: 700; font-size: 32px; margin-bottom: 15px;">Sản Phẩm Đặc Biệt</h2>
+                <h2 style="color: #e91e63; font-weight: 700; font-size: 32px; margin-bottom: 15px;">Sản Phẩm Rẻ Nhất</h2>
                 <p style="color: #666; font-size: 16px; max-width: 600px; margin: 0 auto;">Những thiết kế hoa tươi độc đáo được tuyển chọn kỹ lưỡng</p>
             </div>
             <div class="row px-xl-5">
-                <c:if test="${empty featuredProducts}">
+                <c:if test="${empty cheapestProducts}">
                     <div class="alert alert-info w-100 text-center">Không có sản phẩm nào!</div>
                 </c:if>
-                <c:forEach var="product" items="${featuredProducts}" varStatus="status">
-                    <div class="col-lg-4 col-md-6 col-sm-6 pb-4">
+                <c:forEach var="product" items="${cheapestProducts}" varStatus="status">
+                    <div class="col-lg-3 col-md-6 col-sm-6 pb-4">
                         <div style="
                             background: white;
                             border-radius: 16px;
@@ -573,24 +573,17 @@
                             <!-- Discount Badges -->
                             <div style="position: absolute; top: 12px; left: 12px; z-index: 10;">
                                 <c:choose>
-                                    <c:when test="${status.index % 6 == 0}">
-                                        <span style="background: #4CAF50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 4px;">✓ MỚI</span>
-                                        <span style="background: #FF9800; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">⚡ BÁN CHẠY</span>
+                                    <c:when test="${status.index == 0}">
+                                        <span style="background: #FFD700; color: #333; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 4px;">👑 RẺ NHẤT</span>
                                     </c:when>
-                                    <c:when test="${status.index % 6 == 1}">
-                                        <span style="background: #F44336; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">-17%</span>
+                                    <c:when test="${status.index == 1}">
+                                        <span style="background: #C0C0C0; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">🥈 RẺ THỨ 2</span>
                                     </c:when>
-                                    <c:when test="${status.index % 6 == 2}">
-                                        <span style="background: #FF9800; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">⚡ BÁN CHẠY</span>
-                                    </c:when>
-                                    <c:when test="${status.index % 6 == 3}">
-                                        <span style="background: #F44336; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">-18%</span>
-                                    </c:when>
-                                    <c:when test="${status.index % 6 == 4}">
-                                        <span style="background: #4CAF50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ MỚI</span>
+                                    <c:when test="${status.index == 2}">
+                                        <span style="background: #CD7F32; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">🥉 RẺ THỨ 3</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span style="background: #F44336; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">-12%</span>
+                                        <span style="background: #4CAF50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">💰 GIÁ TỐT</span>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -638,11 +631,7 @@
                                             font-size: 11px;
                                             font-weight: 500;
                                         ">
-                                            <c:choose>
-                                                <c:when test="${status.index % 3 == 0}">Premium</c:when>
-                                                <c:when test="${status.index % 3 == 1}">Cao cấp</c:when>
-                                                <c:otherwise>Hà Lan</c:otherwise>
-                                            </c:choose>
+                                            
                                         </span>
                                         <span style="
                                             background: #f8f9fa;
@@ -652,11 +641,7 @@
                                             font-size: 11px;
                                             font-weight: 500;
                                         ">
-                                            <c:choose>
-                                                <c:when test="${status.index % 3 == 0}">Nhập khẩu</c:when>
-                                                <c:when test="${status.index % 3 == 1}">Tình khôi</c:when>
-                                                <c:otherwise>Đa sắc</c:otherwise>
-                                            </c:choose>
+                                            
                                         </span>
                                     </div>
                                     
@@ -671,6 +656,7 @@
                                         display: -webkit-box;
                                         -webkit-line-clamp: 2;
                                         -webkit-box-orient: vertical;
+                                        text-align: center;
                                     ">
                                         ${product.title}
                                     </h6>
@@ -682,24 +668,14 @@
                                         margin-bottom: 12px;
                                         line-height: 1.3;
                                     ">
-                                        <c:choose>
-                                            <c:when test="${status.index % 3 == 0}">Nhập khẩu trực tiếp</c:when>
-                                            <c:when test="${status.index % 3 == 1}">Thiết kế sang trọng</c:when>
-                                            <c:otherwise>Màu sắc rực rỡ</c:otherwise>
-                                        </c:choose>
+                                        
                                     </p>
                                     
                                     <!-- Rating -->
                                     <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                        <div style="color: #ffc107; font-size: 14px; margin-right: 6px;">
-                                            ★★★★<span style="color: #e9ecef;">★</span>
-                                        </div>
+                                        
                                         <span style="color: #6c757d; font-size: 12px;">
-                                            <c:choose>
-                                                <c:when test="${status.index % 3 == 0}">4.9 (127 đánh giá)</c:when>
-                                                <c:when test="${status.index % 3 == 1}">4.8 (89 đánh giá)</c:when>
-                                                <c:otherwise>4.7 (156 đánh giá)</c:otherwise>
-                                            </c:choose>
+                                            
                                         </span>
                                     </div>
                                 </div>

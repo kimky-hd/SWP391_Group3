@@ -73,7 +73,7 @@
             <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
                 <!-- Left: Brand -->
-                <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "managerproductlist" : (roleId == 2 ? "staffdashboard" : (roleId == 3 ? "dashboard" : "#")) %>">
+                <a class="topbar-brand fw-bold text-uppercase" href="<%= roleId == 1 ? "revenue-chart" : (roleId == 2 ? "listwiltedbatches" : (roleId == 3 ? "dashboard" : "#")) %>">
                     <div class="brand-icon">
                         <% if (roleId == 1) { %>
                         <i class="fas fa-crown"></i>
@@ -100,17 +100,7 @@
 
                 <!-- Right: Actions -->
                 <ul class="navbar-nav topbar-actions d-flex align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" hloref="#" data-bs-toggle="tooltip" title="Thông báo">
-                            <i class="fas fa-bell"></i>
-                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">3</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="tooltip" title="Cài đặt">
-                            <i class="fas fa-cog"></i>
-                        </a>
-                    </li>
+                    
                     <li class="nav-item dropdown">
                         <% if(session.getAttribute("account") != null) { 
                             Account acc = (Account)session.getAttribute("account");
@@ -261,9 +251,15 @@
                     </a>
                 </li>
                 <li>
+
                     <a href="${pageContext.request.contextPath}/staff/staff_custom-orders" class="nav-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Quản lý Đơn hàng tự thiết kế</span>
+
+                    <a href="${pageContext.request.contextPath}/staff/reviews" class="nav-link">
+                        <i class="fas fa-star"></i>
+                        <span>Quản lý Đánh giá</span>
+
                     </a>
                 </li>
 

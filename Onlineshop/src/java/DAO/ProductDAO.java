@@ -809,6 +809,34 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
+    /**
+     * Get top 4 cheapest products for homepage
+     * @return List of top 4 cheapest products
+     */
+    public List<Product> getTop4CheapestProducts() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Product WHERE isActive = TRUE ORDER BY price ASC LIMIT 4";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                List<ProductBatch> batches = getBatchesByProductID(rs.getInt(1));
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getBoolean(8),
+                        batches));
+            }
+        } catch (SQLException e) {
+            System.out.println("getTop4CheapestProducts: " + e.getMessage());
+        }
+        return list;
+    }
+
     public boolean isTitleDuplicated(String title) {
         ProductDAO product = new ProductDAO();
         List<Product> listproduct = product.getAllProduct();

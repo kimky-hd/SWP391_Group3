@@ -188,7 +188,19 @@ public class FeedbackDAO extends DBContext {
                 feedback.setAccountId(rs.getInt("accountID"));
                 feedback.setProductId(rs.getInt("product_id"));
                 feedback.setRating(rs.getInt("rating"));
-                feedback.setComment(rs.getString("comment"));
+
+                // Process comment to separate original comment and staff reply
+                String fullComment = rs.getString("comment");
+                String originalComment = getOriginalComment(fullComment);
+                String staffReply = getStaffReply(fullComment);
+
+                // Debug logging
+                System.out.println("DEBUG ProductDetail - Feedback ID: " + rs.getInt("feedback_id"));
+                System.out.println("DEBUG ProductDetail - Full comment: " + fullComment);
+                System.out.println("DEBUG ProductDetail - Staff reply: " + staffReply);
+
+                feedback.setComment(originalComment); // Set only original comment
+                feedback.setReplyText(staffReply); // Set staff reply separately
                 feedback.setCreatedAt(rs.getTimestamp("created_at"));
                 feedback.setUsername(rs.getString("username"));
                 feedbacks.add(feedback);
@@ -584,5 +596,349 @@ public class FeedbackDAO extends DBContext {
         }
 
         return false;
+    }
+
+    // Update product feedback using feedbacks table
+    public boolean updateProductFeedback(int feedbackId, int accountId, int rating, String comment) {
+        String sql = "UPDATE feedbacks SET rating = ?, comment = ? WHERE feedback_id = ? AND accountID = ? AND feedback_type = 'PRODUCT'";
+
+        System.out.println("=== DEBUG updateProductFeedback ===");
+        System.out.println("FeedbackID: " + feedbackId);
+        System.out.println("AccountID: " + accountId);
+        System.out.println("Rating: " + rating);
+        System.out.println("Comment: " + comment);
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, rating);
+            ps.setString(2, comment);
+            ps.setInt(3, feedbackId);
+            ps.setInt(4, accountId);
+
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected);
+
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating product feedback: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Delete product feedback by ID using feedbacks table
+    public boolean deleteProductFeedbackById(int feedbackId, int accountId) {
+        String sql = "DELETE FROM feedbacks WHERE feedback_id = ? AND accountID = ? AND feedback_type = 'PRODUCT'";
+
+        System.out.println("=== DEBUG deleteProductFeedbackById ===");
+        System.out.println("FeedbackID: " + feedbackId);
+        System.out.println("AccountID: " + accountId);
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, feedbackId);
+            ps.setInt(2, accountId);
+
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected);
+
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting product feedback: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Get product feedback by ID from feedbacks table
+    public Feedback getProductFeedbackById(int feedbackId) {
+        String sql = "SELECT f.feedback_id, f.accountID, f.target_id as productId, f.rating, f.comment, " +
+                    "f.created_date, a.username " +
+                    "FROM feedbacks f " +
+                    "JOIN Account a ON f.accountID = a.accountID " +
+                    "WHERE f.feedback_id = ? AND f.feedback_type = 'PRODUCT'";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, feedbackId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setFeedbackId(rs.getInt("feedback_id"));
+                feedback.setAccountId(rs.getInt("accountID"));
+                feedback.setProductId(rs.getInt("productId"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setComment(rs.getString("comment"));
+                feedback.setCreatedAt(rs.getTimestamp("created_date"));
+                feedback.setUsername(rs.getString("username"));
+                return feedback;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting product feedback by ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    // Get all product feedbacks for staff management
+    public List<Feedback> getAllProductFeedbacksForStaff() {
+        List<Feedback> feedbacks = new ArrayList<>();
+
+        // Query with JOINs to get user and product info
+        String sql1 = "SELECT f.feedback_id, f.accountID, f.target_id, f.rating, f.comment, " +
+                     "f.created_date, f.is_active, " +
+                     "a.username, a.email, " +
+                     "COALESCE(p.title, 'Sản phẩm đã bị xóa') as productTitle, " +
+                     "COALESCE(p.price, 0) as price, " +
+                     "COALESCE(p.image, 'default.jpg') as productImage " +
+                     "FROM feedbacks f " +
+                     "JOIN Account a ON f.accountID = a.accountID " +
+                     "LEFT JOIN Product p ON f.target_id = p.productID " +
+                     "WHERE f.feedback_type = 'PRODUCT' " +
+                     "ORDER BY f.created_date DESC";
+
+        // System.out.println("=== DEBUG getAllProductFeedbacksForStaff ===");
+        // System.out.println("SQL: " + sql1);
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql1)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                try {
+                    Feedback feedback = new Feedback();
+                    feedback.setFeedbackId(rs.getInt("feedback_id"));
+                    feedback.setAccountId(rs.getInt("accountID"));
+                    feedback.setProductId(rs.getInt("target_id"));
+                    feedback.setRating(rs.getInt("rating"));
+
+                    // Process comment to separate original comment and staff reply
+                    String fullComment = rs.getString("comment");
+                    String originalComment = getOriginalComment(fullComment);
+                    String staffReply = getStaffReply(fullComment);
+
+                    // Debug logging
+                    System.out.println("DEBUG - Feedback ID: " + rs.getInt("feedback_id"));
+                    System.out.println("DEBUG - Full comment: " + fullComment);
+                    System.out.println("DEBUG - Staff reply: " + staffReply);
+
+                    feedback.setComment(originalComment); // Set only original comment
+                    feedback.setReplyText(staffReply); // Set staff reply separately
+                    feedback.setCreatedAt(rs.getTimestamp("created_date"));
+
+                    // Set user info from JOIN
+                    feedback.setUsername(rs.getString("username"));
+                    feedback.setEmail(rs.getString("email"));
+
+                    // Set product info from JOIN
+                    feedback.setProductTitle(rs.getString("productTitle"));
+                    feedback.setProductPrice(rs.getDouble("price"));
+                    feedback.setProductImage(rs.getString("productImage"));
+
+                    // Set random image count for demo (0-5 images)
+                    // TODO: Replace with actual count from feedback_images table
+                    feedback.setImageCount((int)(Math.random() * 6));
+
+                    // Set status based on is_active
+                    boolean isActive = rs.getBoolean("is_active");
+                    feedback.setActive(isActive);
+                    feedback.setStatus(isActive ? "VISIBLE" : "HIDDEN");
+
+                    feedbacks.add(feedback);
+
+                    // System.out.println("Found feedback: ID=" + feedback.getFeedbackId() +
+                    //                  ", Customer=" + feedback.getUsername() +
+                    //                  ", Product=" + feedback.getProductTitle() +
+                    //                  ", Rating=" + feedback.getRating());
+                } catch (SQLException e) {
+                    System.err.println("Error processing feedback row: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting feedbacks from 'feedbacks' table: " + e.getMessage());
+
+            // If feedbacks table fails, try the old feedback table
+            String sql2 = "SELECT f.feedback_id, f.account_id as accountID, f.product_id as productId, f.rating, f.comment, " +
+                         "f.created_at as created_date, " +
+                         "a.username, a.email, " +
+                         "p.title as productTitle, p.price, p.img " +
+                         "FROM feedback f " +
+                         "JOIN Account a ON f.account_id = a.accountID " +
+                         "JOIN Product p ON f.product_id = p.productID " +
+                         "ORDER BY f.created_at DESC";
+
+            try (Connection conn2 = getConnection();
+                 PreparedStatement ps2 = conn2.prepareStatement(sql2)) {
+
+                ResultSet rs2 = ps2.executeQuery();
+
+                while (rs2.next()) {
+                    Feedback feedback = new Feedback();
+                    feedback.setFeedbackId(rs2.getInt("feedback_id"));
+                    feedback.setAccountId(rs2.getInt("accountID"));
+                    feedback.setProductId(rs2.getInt("productId"));
+                    feedback.setRating(rs2.getInt("rating"));
+                    feedback.setComment(rs2.getString("comment"));
+                    feedback.setCreatedAt(rs2.getTimestamp("created_date"));
+
+                    // Additional info for staff view
+                    feedback.setUsername(rs2.getString("username"));
+                    feedback.setProductTitle(rs2.getString("productTitle"));
+                    feedback.setProductImage(rs2.getString("img"));
+
+                    feedbacks.add(feedback);
+                }
+
+            } catch (SQLException e2) {
+                System.err.println("Error getting feedbacks from 'feedback' table: " + e2.getMessage());
+                e2.printStackTrace();
+            }
+        }
+
+        // System.out.println("Found " + feedbacks.size() + " feedbacks for staff management");
+        return feedbacks;
+    }
+
+    // Update review visibility (hide/show)
+    public boolean updateReviewVisibility(int feedbackId, boolean isVisible) {
+        String sql = "UPDATE feedbacks SET is_active = ? WHERE feedback_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBoolean(1, isVisible);
+            ps.setInt(2, feedbackId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating review visibility: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
+    // Check if review is visible
+    public boolean isReviewVisible(int feedbackId) {
+        String sql = "SELECT is_active FROM feedbacks WHERE feedback_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, feedbackId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean("is_active");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error checking review visibility: " + e.getMessage());
+        }
+
+        return true; // Default to visible if error
+    }
+
+    // Add staff reply to feedback by appending to comment field
+    public boolean addStaffReplyToFeedback(int feedbackId, int staffAccountId, String replyText) {
+        // First get current comment
+        String currentComment = getCurrentFeedbackComment(feedbackId);
+        if (currentComment == null) {
+            return false;
+        }
+
+        // Create reply format with clear separation
+        String staffReply = "\n\n=== PHẢN HỒI TỪ SHOP ===\n" + replyText.trim() + "\n=== HẾT PHẢN HỒI ===";
+        String updatedComment = currentComment + staffReply;
+
+        // Update the comment field
+        String sql = "UPDATE feedbacks SET comment = ? WHERE feedback_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, updatedComment);
+            ps.setInt(2, feedbackId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error adding staff reply to feedback: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Get current comment of a feedback
+    private String getCurrentFeedbackComment(int feedbackId) {
+        String sql = "SELECT comment FROM feedbacks WHERE feedback_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, feedbackId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("comment");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting current feedback comment: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    // Check if feedback has staff reply
+    public boolean hasStaffReply(String comment) {
+        return comment != null && comment.contains("=== PHẢN HỒI TỪ SHOP ===");
+    }
+
+    // Extract original comment (without staff reply)
+    public String getOriginalComment(String comment) {
+        if (comment == null) return "";
+
+        int replyIndex = comment.indexOf("\n\n=== PHẢN HỒI TỪ SHOP ===");
+        if (replyIndex > 0) {
+            return comment.substring(0, replyIndex);
+        }
+
+        return comment;
+    }
+
+    // Extract staff reply from comment
+    public String getStaffReply(String comment) {
+        if (comment == null) return null;
+
+        int startIndex = comment.indexOf("\n\n=== PHẢN HỒI TỪ SHOP ===\n");
+        if (startIndex >= 0) {
+            int contentStart = startIndex + "\n\n=== PHẢN HỒI TỪ SHOP ===\n".length();
+            int endIndex = comment.indexOf("\n=== HẾT PHẢN HỒI ===", contentStart);
+
+            if (endIndex > contentStart) {
+                return comment.substring(contentStart, endIndex);
+            } else {
+                // Fallback if no end marker
+                return comment.substring(contentStart);
+            }
+        }
+
+        return null;
     }
 }

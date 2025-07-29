@@ -9,6 +9,7 @@ import Model.Order;
 import Model.OrderDetail;
 import Model.Product;
 import Model.Account;
+import Model.Shipper;
 import Utility.EmailSender;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -239,9 +240,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             case "notify":  // THÊM CASE NÀY
                 sendCustomNotification(request, response);
                 break;
-            case "assignShipper":
-                assignShipper(request, response);
-                break;
             
             default:
                 sendJsonError(response, "Hành động không được hỗ trợ");
@@ -403,8 +401,41 @@ private String createOrderDetailsHtml(List<OrderDetail> orderDetails) {
         if (statusId == 2 && currentOrder.getStatusId() != 2) {
     // Cập nhật trạng thái đơn hàng
     success = orderDAO.updateOrderStatus(orderId, statusId);
-    
+
     if (success) {
+        // Tự động phân công shipper có ít đơn hàng nhất
+        try {
+            System.out.println("🚀 Bắt đầu tự động phân công shipper cho đơn hàng " + orderId);
+            ShipperDAO shipperDAO = new ShipperDAO();
+            Shipper selectedShipper = shipperDAO.getShipperWithLeastOrders();
+
+            if (selectedShipper != null) {
+                System.out.println("📋 Shipper được chọn: ID=" + selectedShipper.getShipperID() +
+                                 ", Username=" + selectedShipper.getUsername() +
+                                 ", OrdersDelivered=" + selectedShipper.getOrdersDelivered());
+                boolean shipperAssigned = orderDAO.updateShippingID(orderId, selectedShipper.getShipperID());
+                if (shipperAssigned) {
+                    System.out.println("✅ Đã tự động phân công shipper ID: " + selectedShipper.getShipperID() +
+                                     " (" + selectedShipper.getUsername() + ") cho đơn hàng " + orderId);
+
+                    // Tăng số đơn hàng đã giao cho shipper ngay khi phân công
+                    boolean incrementSuccess = shipperDAO.incrementOrdersDelivered(selectedShipper.getShipperID());
+                    if (incrementSuccess) {
+                        System.out.println("✅ Đã tăng ordersDelivered cho shipper ID: " + selectedShipper.getShipperID() +
+                                         " (từ " + selectedShipper.getOrdersDelivered() + " lên " + (selectedShipper.getOrdersDelivered() + 1) + ")");
+                    } else {
+                        System.err.println("❌ Không thể tăng ordersDelivered cho shipper ID: " + selectedShipper.getShipperID());
+                    }
+                } else {
+                    System.err.println("❌ Không thể phân công shipper cho đơn hàng " + orderId);
+                }
+            } else {
+                System.err.println("⚠️ Không tìm thấy shipper nào để phân công cho đơn hàng " + orderId);
+            }
+        } catch (Exception e) {
+            System.err.println("💥 Lỗi khi tự động phân công shipper: " + e.getMessage());
+            e.printStackTrace();
+        }
         // Gửi email thông báo duyệt đơn hàng
         try {
             // Kiểm tra thông tin email trước khi gửi
@@ -960,43 +991,5 @@ private String createOrderNotificationEmailTemplate(Order order, String customMe
             response.getWriter().write(gson.toJson(errorResponse));
         }
     }
-    
-    // Phân công shipper cho đơn hàng
-    private void assignShipper(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        try {
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
-            int shipperId = Integer.parseInt(request.getParameter("shipperId"));
-            
-            // Cập nhật shippingID trong bảng HoaDon
-            boolean success = orderDAO.updateShippingID(orderId, shipperId);
-            
-            Map<String, Object> jsonResponse = new HashMap<>();
-            if (success) {
-                // Lấy thông tin shipper để trả về
-                Model.Shipper shipper = shipperDAO.getShipperById(shipperId);
-                jsonResponse.put("success", true);
-                jsonResponse.put("message", "Phân công shipper thành công");
-                if (shipper != null) {
-                    jsonResponse.put("shipperName", shipper.getUsername());
-                    jsonResponse.put("shipperPhone", shipper.getPhone());
-                    jsonResponse.put("shipperEmail", shipper.getEmail());
-                }
-            } else {
-                jsonResponse.put("success", false);
-                jsonResponse.put("message", "Không thể phân công shipper");
-            }
-            
-            response.getWriter().write(gson.toJson(jsonResponse));
-            
-        } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "Lỗi khi phân công shipper: " + e.getMessage());
-            response.getWriter().write(gson.toJson(errorResponse));
-        }
-    }
+
 }

@@ -17,8 +17,9 @@ import com.google.gson.JsonObject;
 import java.io.PrintWriter;
 
 /**
- * Servlet xử lý các yêu cầu liên quan đến xem và cập nhật đơn hàng tự thiết kế từ phía shipper.
- * Shipper có thể xem các đơn hàng đã được duyệt và sẵn sàng giao, cập nhật trạng thái giao hàng.
+ * Servlet xử lý các yêu cầu liên quan đến xem và cập nhật đơn hàng tự thiết kế
+ * từ phía shipper. Shipper có thể xem các đơn hàng đã được duyệt và sẵn sàng
+ * giao, cập nhật trạng thái giao hàng.
  */
 @WebServlet(name = "ShipperCustomOrderController", urlPatterns = {"/shipper/custom-orders"})
 public class ShipperCustomOrderController extends HttpServlet {
@@ -62,7 +63,7 @@ public class ShipperCustomOrderController extends HttpServlet {
                 break;
         }
     }
-    
+
     /**
      * Xử lý các yêu cầu POST.
      */
@@ -111,7 +112,8 @@ public class ShipperCustomOrderController extends HttpServlet {
     }
 
     /**
-     * Hiển thị các đơn hàng tự thiết kế sẵn sàng giao, đang giao hoặc đã giao thành công.
+     * Hiển thị các đơn hàng tự thiết kế sẵn sàng giao, đang giao hoặc đã giao
+     * thành công.
      */
     private void viewCustomOrdersForShipper(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -233,6 +235,10 @@ public class ShipperCustomOrderController extends HttpServlet {
             case 3: // Đang giao
                 isValidTransition = (statusId == 4 || statusId == 9); // Chuyển sang đã giao hoặc không thành công
                 break;
+            case 9: // Không thành công (trạng thái hiện tại)
+                // Cho phép chuyển từ 'Không thành công' sang 'Đang giao'
+                isValidTransition = (statusId == 3);
+                break;
             default:
                 isValidTransition = false;
         }
@@ -249,7 +255,7 @@ public class ShipperCustomOrderController extends HttpServlet {
         }
 
         customOrder.setStatusID(statusId);
-        
+
         // Cập nhật trạng thái dựa trên statusId
         switch (statusId) {
             case 3: // Đang vận chuyển

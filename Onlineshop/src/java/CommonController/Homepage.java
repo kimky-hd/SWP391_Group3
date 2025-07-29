@@ -70,9 +70,14 @@ public class Homepage extends HttpServlet {
             featuredProducts = productDAO.getProductByIndex(page);
             totalProducts = productDAO.countAllProduct();
         }
+
+        // Get top 4 cheapest products for "Sản Phẩm Rẻ Nhất" section
+        List<Product> cheapestProducts = productDAO.getTop4CheapestProducts();
+
         int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
         request.setAttribute("countWL", count);
         request.setAttribute("featuredProducts", featuredProducts);
+        request.setAttribute("cheapestProducts", cheapestProducts);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("banners", banners);

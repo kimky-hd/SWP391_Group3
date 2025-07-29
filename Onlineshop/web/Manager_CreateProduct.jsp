@@ -104,6 +104,9 @@
                 <div class="form-section">
                     <label for="description" class="form-label">Mô tả</label>
                     <textarea class="form-control" name="description" id="description" rows="3">${description != null ? description : ''}</textarea>
+                    <c:if test="${not empty errorDiscript}">
+                        <div class="text-danger mt-1">${errorDiscript}</div>
+                    </c:if>
                 </div>
 
                 <!-- Màu -->

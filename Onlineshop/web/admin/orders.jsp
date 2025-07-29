@@ -1009,21 +1009,14 @@
                                                                 <c:when test="${order.shipperName != null}">
                                                                     <div class="fw-bold">${order.shipperName}</div>
                                                                     <small class="text-muted">${order.shipperPhone}</small>
-                                                                    <button class="btn btn-sm btn-outline-warning mt-1" 
-                                                                            onclick="changeShipper(${order.orderId}, '${order.shipperName}')"
-                                                                            title="Thay đổi shipper">
-                                                                        <i class="fas fa-edit"></i> Đổi
-                                                                    </button>
+                                                                    <div class="text-success mt-1">
+                                                                        <i class="fas fa-check-circle"></i> Đã phân công
+                                                                    </div>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <div class="text-muted">
-                                                                        <i class="fas fa-user-plus"></i> Chưa phân công
+                                                                        <i class="fas fa-truck"></i> Tự động phân công
                                                                     </div>
-                                                                    <button class="btn btn-sm btn-outline-primary mt-1" 
-                                                                            onclick="assignShipper(${order.orderId})"
-                                                                            title="Phân công shipper">
-                                                                        <i class="fas fa-plus"></i> Phân công
-                                                                    </button>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </div>
@@ -1040,8 +1033,8 @@
                                                         <c:otherwise>
                                                             <span class="tooltip-text">
                                                                 <strong>Trạng thái shipper:</strong><br>
-                                                                Đơn hàng chưa được phân công cho shipper nào.<br>
-                                                                Nhấn "Phân công" để chọn shipper.
+                                                                Shipper sẽ được tự động phân công khi duyệt đơn hàng.<br>
+                                                                Hệ thống sẽ chọn shipper có ít đơn hàng nhất.
                                                             </span>
                                                         </c:otherwise>
                                                     </c:choose>
@@ -1157,7 +1150,7 @@
                                                         <c:if test="${order.statusId == 1}">
                                                             <button class="action-btn btn-approve"
                                                                 onclick="updateStatus('${order.orderId}', 2)"
-                                                                title="Duyệt đơn hàng #${order.orderId}">
+                                                                title="Xác nhận đơn hàng #${order.orderId}">
                                                                 <i class="fas fa-check"></i>
                                                             </button>
 
@@ -1360,7 +1353,7 @@
 
                     <!-- Modal nhập lý do hủy -->
                     <div class="modal fade" id="cancelOrderModal" tabindex="-1">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header bg-danger text-white">
                                     <h5 class="modal-title"><i class="fas fa-times me-2"></i>Hủy đơn hàng</h5>
@@ -1369,10 +1362,55 @@
                                 </div>
                                 <div class="modal-body">
                                     <input type="hidden" id="cancelOrderId">
+                                    <input type="hidden" id="cancelOrderPaymentMethod">
+
                                     <div class="mb-3">
                                         <label class="form-label">Lý do hủy đơn hàng</label>
                                         <textarea class="form-control" id="cancelReason" rows="3"
                                             placeholder="Nhập lý do hủy..."></textarea>
+                                    </div>
+
+                                    <!-- Form xin thông tin hoàn tiền cho VNPay -->
+                                    <div id="refundInfoSection" class="mt-4" style="display: none;">
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>Đơn hàng đã thanh toán qua VNPay</strong><br>
+                                            Vui lòng gửi tin nhắn cho khách hàng để xin thông tin hoàn tiền.
+                                        </div>
+
+                                        <div class="card">
+                                            <div class="card-header bg-info text-white">
+                                                <h6 class="mb-0"><i class="fas fa-envelope me-2"></i>Mẫu tin nhắn xin thông tin hoàn tiền</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea class="form-control" id="refundMessageTemplate" rows="8" readonly>Kính chào Quý khách,
+
+Đơn hàng #[ORDER_ID] của Quý khách đã được hủy theo yêu cầu. Do Quý khách đã thanh toán qua VNPay, chúng tôi sẽ tiến hành hoàn tiền cho Quý khách.
+
+Để thực hiện việc hoàn tiền, vui lòng cung cấp thông tin sau:
+1. Tên chủ tài khoản ngân hàng
+2. Số tài khoản ngân hàng
+3. Tên ngân hàng
+4. Chi nhánh ngân hàng (nếu có)
+
+Số tiền hoàn: [ORDER_TOTAL]
+Thời gian hoàn tiền: 3-5 ngngày làm việc
+
+Xin cảm ơn Quý khách đã tin tưởng sử dụng dịch vụ của chúng tôi.
+
+Trân trọng,
+Đội ngũ hỗ trợ khách hàng</textarea>
+
+                                                <div class="mt-3">
+                                                    <button type="button" class="btn btn-info btn-sm" onclick="copyRefundMessage()">
+                                                        <i class="fas fa-copy me-2"></i>Sao chép tin nhắn
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary btn-sm ms-2" onclick="sendRefundMessage()">
+                                                        <i class="fas fa-paper-plane me-2"></i>Gửi tin nhắn cho khách hàng
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -2194,19 +2232,133 @@
                         function showCancelModal(orderId) {
                             document.getElementById('cancelOrderId').value = orderId;
                             document.getElementById('cancelReason').value = '';
+
+                            // Tìm thông tin đơn hàng để kiểm tra phương thức thanh toán
+                            const orderRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
+                            let paymentMethod = '';
+                            let orderTotal = '';
+
+                            if (orderRow) {
+                                // Lấy thông tin từ tooltip của cột tổng tiền
+                                const totalCell = orderRow.querySelector('.fw-bold.text-success.custom-tooltip .tooltip-text');
+                                if (totalCell) {
+                                    const tooltipText = totalCell.textContent;
+                                    // Tìm phương thức thanh toán trong tooltip
+                                    const paymentMatch = tooltipText.match(/Phương thức:\s*([^<\n]+)/);
+                                    if (paymentMatch) {
+                                        paymentMethod = paymentMatch[1].trim();
+                                    }
+
+                                    // Lấy tổng tiền
+                                    const totalMatch = tooltipText.match(/Tổng tiền:\s*([^<\n]+)/);
+                                    if (totalMatch) {
+                                        orderTotal = totalMatch[1].trim();
+                                    }
+                                }
+                            }
+
+                            document.getElementById('cancelOrderPaymentMethod').value = paymentMethod;
+
+                            // Hiển thị form hoàn tiền nếu thanh toán bằng VNPay
+                            const refundSection = document.getElementById('refundInfoSection');
+                            if (paymentMethod && paymentMethod.toLowerCase().includes('vnpay')) {
+                                refundSection.style.display = 'block';
+
+                                // Cập nhật template tin nhắn với thông tin đơn hàng
+                                const template = document.getElementById('refundMessageTemplate');
+                                let message = template.value;
+                                message = message.replace('[ORDER_ID]', orderId);
+                                message = message.replace('[ORDER_TOTAL]', orderTotal || 'Đang cập nhật...');
+                                template.value = message;
+                            } else {
+                                refundSection.style.display = 'none';
+                            }
+
                             var modal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
                             modal.show();
                         }
                         function confirmCancelOrder() {
                             var orderId = document.getElementById('cancelOrderId').value;
                             var reason = document.getElementById('cancelReason').value.trim();
+                            var paymentMethod = document.getElementById('cancelOrderPaymentMethod').value;
+
                             if (!reason) {
                                 Swal.fire({ icon: 'warning', title: 'Vui lòng nhập lý do hủy đơn!' });
                                 return;
                             }
-                            updateStatus(orderId, 6, reason);
-                            var modal = bootstrap.Modal.getInstance(document.getElementById('cancelOrderModal'));
-                            modal.hide();
+
+                            // Nếu thanh toán bằng VNPay, nhắc nhở admin gửi tin nhắn hoàn tiền
+                            if (paymentMethod && paymentMethod.toLowerCase().includes('vnpay')) {
+                                Swal.fire({
+                                    title: 'Lưu ý quan trọng!',
+                                    html: `
+                                        <div class="text-start">
+                                            <p><i class="fas fa-exclamation-triangle text-warning me-2"></i>Đơn hàng này đã thanh toán qua <strong>VNPay</strong></p>
+                                            <p><i class="fas fa-info-circle text-info me-2"></i>Vui lòng nhớ gửi tin nhắn xin thông tin hoàn tiền cho khách hàng</p>
+                                            <p><i class="fas fa-clock text-secondary me-2"></i>Thời gian hoàn tiền: 3-5 ngày làm việc</p>
+                                        </div>
+                                    `,
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Đã hiểu, tiếp tục hủy',
+                                    cancelButtonText: 'Quay lại',
+                                    confirmButtonColor: '#dc3545'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        updateStatus(orderId, 6, reason);
+                                        var modal = bootstrap.Modal.getInstance(document.getElementById('cancelOrderModal'));
+                                        modal.hide();
+                                    }
+                                });
+                            } else {
+                                updateStatus(orderId, 6, reason);
+                                var modal = bootstrap.Modal.getInstance(document.getElementById('cancelOrderModal'));
+                                modal.hide();
+                            }
+                        }
+
+                        // Function sao chép tin nhắn hoàn tiền
+                        function copyRefundMessage() {
+                            const template = document.getElementById('refundMessageTemplate');
+                            template.select();
+                            template.setSelectionRange(0, 99999); // For mobile devices
+
+                            try {
+                                document.execCommand('copy');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Đã sao chép!',
+                                    text: 'Tin nhắn đã được sao chép vào clipboard',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            } catch (err) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi!',
+                                    text: 'Không thể sao chép tin nhắn'
+                                });
+                            }
+                        }
+
+                        // Function gửi tin nhắn hoàn tiền cho khách hàng
+                        function sendRefundMessage() {
+                            const orderId = document.getElementById('cancelOrderId').value;
+                            const message = document.getElementById('refundMessageTemplate').value;
+
+                            // Mở modal gửi thông báo với tin nhắn hoàn tiền đã điền sẵn
+                            document.getElementById('notificationOrderId').value = orderId;
+                            document.getElementById('notificationMessage').value = message;
+
+                            // Đóng modal hủy đơn hàng
+                            var cancelModal = bootstrap.Modal.getInstance(document.getElementById('cancelOrderModal'));
+                            cancelModal.hide();
+
+                            // Mở modal gửi thông báo
+                            setTimeout(() => {
+                                var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                                notificationModal.show();
+                            }, 300);
                         }
                         // Sửa hàm updateStatus để nhận thêm lý do hủy (nếu có)
                         function updateStatus(orderId, statusId, cancelReason) {
@@ -2270,136 +2422,11 @@
                             });
                         }
 
-                        // Hàm phân công shipper
-                        function assignShipper(orderId) {
-                            // Hiển thị modal để chọn shipper
-                            showShipperModal(orderId);
-                        }
 
-                        // Hàm thay đổi shipper
-                        function changeShipper(orderId, currentShipperName) {
-                            Swal.fire({
-                                title: 'Thay đổi shipper',
-                                text: `Shipper hiện tại: ${currentShipperName}. Bạn có muốn thay đổi?`,
-                                icon: 'question',
-                                showCancelButton: true,
-                                confirmButtonText: 'Thay đổi',
-                                cancelButtonText: 'Hủy'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    showShipperModal(orderId);
-                                }
-                            });
-                        }
 
-                        // Hàm hiển thị modal chọn shipper
-                        function showShipperModal(orderId) {
-                            // Tạo modal động để chọn shipper
-                            Swal.fire({
-                                title: 'Chọn Shipper',
-                                html: `
-                                    <div class="mb-3">
-                                        <label class="form-label">Chọn shipper cho đơn hàng #${orderId}:</label>
-                                        <select id="shipperSelect" class="form-select">
-                                            <option value="">Đang tải danh sách shipper...</option>
-                                        </select>
-                                    </div>
-                                `,
-                                showCancelButton: true,
-                                confirmButtonText: 'Phân công',
-                                cancelButtonText: 'Hủy',
-                                didOpen: () => {
-                                    // Load danh sách shipper
-                                    loadShippers(orderId);
-                                },
-                                preConfirm: () => {
-                                    const shipperId = document.getElementById('shipperSelect').value;
-                                    if (!shipperId) {
-                                        Swal.showValidationMessage('Vui lòng chọn shipper');
-                                        return false;
-                                    }
-                                    return shipperId;
-                                }
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    assignShipperToOrder(orderId, result.value);
-                                }
-                            });
-                        }
 
-                        function loadShippers(orderId) {
-    $.ajax({
-        url: '${pageContext.request.contextPath}/shipper-assignment',
-        type: 'GET',
-        data: { action: 'getActiveShippers' },
-        success: function(response) {
-            const select = document.getElementById('shipperSelect');
-            // Clear existing options
-            select.innerHTML = '';
-            
-            // Add default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = '-- Chọn shipper --';
-            select.appendChild(defaultOption);
-            
-            if (response && response.length > 0) {
-                response.forEach((shipper, index) => {
-                    const option = document.createElement('option');
-                    option.value = shipper.shipperID;
-                    option.textContent = shipper.username || `Shipper ${shipper.shipperID}`;
-                    select.appendChild(option);
-                });
-            }
-        },
-        error: function() {
-            const select = document.getElementById('shipperSelect');
-            select.innerHTML = '<option value="">Lỗi khi tải danh sách shipper</option>';
-        }
-    });
-}
 
-                        // Hàm phân công shipper cho đơn hàng
-                        function assignShipperToOrder(orderId, shipperId) {
-                            showLoading();
-                            $.ajax({
-                                url: '${pageContext.request.contextPath}/orders',
-                                type: 'POST',
-                                data: {
-                                    action: 'assignShipper',
-                                    orderId: orderId,
-                                    shipperId: shipperId
-                                },
-                                success: function(response) {
-                                    hideLoading();
-                                    if (response.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Thành công!',
-                                            text: 'Đã phân công shipper thành công',
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        }).then(() => {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Lỗi!',
-                                            text: response.message || 'Có lỗi xảy ra khi phân công shipper'
-                                        });
-                                    }
-                                },
-                                error: function() {
-                                    hideLoading();
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Lỗi!',
-                                        text: 'Có lỗi xảy ra khi phân công shipper'
-                                    });
-                                }
-                            });
-                        }
+
 
                     </script>
                 </body>
